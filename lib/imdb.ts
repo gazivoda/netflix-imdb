@@ -14,7 +14,13 @@ export async function searchTitle(query: string): Promise<ImdbTitle | null> {
   const res = await fetch(url)
   if (!res.ok) return null
 
-  const data = await res.json()
+  let data: { titles?: { id: string; primaryTitle: string; startYear: number; type: string; rating?: { aggregateRating: number; voteCount: number } }[] }
+  try {
+    data = await res.json()
+  } catch {
+    return null
+  }
+
   const first = data.titles?.[0]
   if (!first) return null
 

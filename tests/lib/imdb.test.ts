@@ -92,4 +92,15 @@ describe('searchTitle', () => {
       voteCount: null,
     })
   })
+
+  it('returns null when response JSON is invalid', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => { throw new SyntaxError('Unexpected token') },
+    })
+
+    const result = await searchTitle('Inception')
+
+    expect(result).toBeNull()
+  })
 })
