@@ -4,11 +4,19 @@
   const IMDB_API = 'https://api.imdbapi.dev';
   const RATED_ATTR = 'data-imdb-rated';
   let debounceTimer = null;
+  let isScanning = false;
+
+  function extractTitle(ariaLabel) {
+    return ariaLabel
+      .replace(/,\s*(Season|Part|Volume|Episode)\s+\d+.*/i, '')
+      .replace(/:\s*(More Info|Play|Resume|Watch)$/i, '')
+      .trim();
+  }
 
   function getUnratedAnchors() {
     return Array.from(
-      document.querySelectorAll(`.title-card a[aria-label]:not([${RATED_ATTR}])`)
-    );
+      document.querySelectorAll(`a[aria-label]:not([${RATED_ATTR}])`)
+    ).filter((a) => a.querySelector('.boxart-container'));
   }
 
   function injectPlaceholder(anchor) {
@@ -37,26 +45,32 @@
   }
 
   async function scanAndRate() {
-    const anchors = getUnratedAnchors();
-    if (!anchors.length) return;
+    if (isScanning) return;
+    isScanning = true;
+    try {
+      const anchors = getUnratedAnchors();
+      if (!anchors.length) return;
 
-    const entries = anchors
-      .map((anchor) => ({
-        title: anchor.getAttribute('aria-label'),
-        badge: injectPlaceholder(anchor),
-      }))
-      .filter((e) => e.badge !== null);
+      const entries = anchors
+        .map((anchor) => ({
+          title: extractTitle(anchor.getAttribute('aria-label')),
+          badge: injectPlaceholder(anchor),
+        }))
+        .filter((e) => e.badge !== null);
 
-    await Promise.allSettled(
-      entries.map(async ({ title, badge }) => {
-        const rating = await fetchRating(title);
-        if (rating !== null) {
-          badge.textContent = `⭐ ${rating}`;
-        } else {
-          badge.remove();
-        }
-      })
-    );
+      await Promise.allSettled(
+        entries.map(async ({ title, badge }) => {
+          const rating = await fetchRating(title);
+          if (rating !== null) {
+            badge.textContent = `⭐ ${rating}`;
+          } else {
+            badge.remove();
+          }
+        })
+      );
+    } finally {
+      isScanning = false;
+    }
   }
 
   function debouncedScan() {
