@@ -12,7 +12,9 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { titles } = body as Record<string, unknown>
+  const titles = (body !== null && typeof body === 'object' && !Array.isArray(body))
+    ? (body as Record<string, unknown>).titles
+    : undefined
 
   if (
     !Array.isArray(titles) ||

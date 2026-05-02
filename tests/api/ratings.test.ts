@@ -59,6 +59,8 @@ describe('POST /api/ratings', () => {
     })
     const res = await POST(req)
     expect(res.status).toBe(400)
+    const body = await res.json()
+    expect(body.error).toBe('invalid JSON body')
   })
 
   it('returns 200 with results for valid titles', async () => {
