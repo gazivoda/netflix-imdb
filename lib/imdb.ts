@@ -10,7 +10,7 @@ export interface ImdbTitle {
 }
 
 export async function searchTitle(query: string): Promise<ImdbTitle | null> {
-  const url = `${IMDB_API_BASE}/titles?primaryTitle=${encodeURIComponent(query)}`
+  const url = `${IMDB_API_BASE}/search/titles?query=${encodeURIComponent(query)}`
   const res = await fetch(url)
   if (!res.ok) return null
 

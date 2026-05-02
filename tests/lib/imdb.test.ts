@@ -62,7 +62,7 @@ describe('searchTitle', () => {
     await searchTitle('The Dark Knight')
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'https://api.imdbapi.dev/titles?primaryTitle=The%20Dark%20Knight'
+      'https://api.imdbapi.dev/search/titles?query=The%20Dark%20Knight'
     )
   })
 
