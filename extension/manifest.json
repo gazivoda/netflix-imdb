@@ -8,6 +8,9 @@
     "https://www.netflix.com/*",
     "https://api.imdbapi.dev/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.netflix.com/*"],

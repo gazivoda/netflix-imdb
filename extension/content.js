@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  const IMDB_API = 'https://api.imdbapi.dev';
   const RATED_ATTR = 'data-imdb-rated';
   let debounceTimer = null;
   let isScanning = false;
@@ -31,17 +30,12 @@
     return badge;
   }
 
-  async function fetchRating(title) {
-    try {
-      const res = await fetch(
-        `${IMDB_API}/search/titles?query=${encodeURIComponent(title)}`
-      );
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data.titles?.[0]?.rating?.aggregateRating ?? null;
-    } catch {
-      return null;
-    }
+  function fetchRating(title) {
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage({ type: 'FETCH_RATING', title }, (response) => {
+        resolve(response?.rating ?? null);
+      });
+    });
   }
 
   async function scanAndRate() {
