@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Netflix IMDB Ratings",
+  "version": "1.0",
+  "description": "Shows IMDB ratings on Netflix title cards",
+  "permissions": [],
+  "host_permissions": [
+    "https://www.netflix.com/*",
+    "https://api.imdbapi.dev/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.netflix.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "128": "icon.png"
+  }
+}
