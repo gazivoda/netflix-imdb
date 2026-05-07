@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Netflix IMDB Ratings",
-  "version": "1.0",
-  "description": "Shows IMDB ratings on Netflix title cards",
+  "version": "1.0.0",
+  "description": "Displays IMDB ratings as badges on Netflix title cards while you browse. Ratings are fetched from OMDb in parallel — no tab-switching required.",
   "permissions": [],
   "host_permissions": [
     "https://www.netflix.com/*",
-    "https://api.imdbapi.dev/*"
+    "https://www.omdbapi.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -19,7 +19,12 @@
       "run_at": "document_idle"
     }
   ],
+  "action": {
+    "default_title": "Netflix IMDB Ratings"
+  },
   "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
     "128": "icon.png"
   }
 }

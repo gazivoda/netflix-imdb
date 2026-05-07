@@ -1,47 +1,37 @@
 'use strict';
 
+const OMDB_API_KEY = '901841e0';
 const cache = new Map();
-const queue = [];
-let processing = false;
 
-async function processQueue() {
-  if (processing) return;
-  processing = true;
-
-  while (queue.length > 0) {
-    const { title, resolve } = queue.shift();
-
-    if (cache.has(title)) {
-      resolve(cache.get(title));
-      continue;
-    }
-
-    try {
-      const res = await fetch(
-        `https://api.imdbapi.dev/search/titles?query=${encodeURIComponent(title)}`
-      );
-      const rating = res.ok
-        ? ((await res.json()).titles?.[0]?.rating?.aggregateRating ?? null)
+async function getRating(title) {
+  if (cache.has(title)) return cache.get(title);
+  try {
+    const res = await fetch(
+      `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
+    );
+    const data = res.ok ? await res.json() : null;
+    const rating =
+      data?.imdbRating && data.imdbRating !== 'N/A'
+        ? parseFloat(data.imdbRating)
         : null;
-      cache.set(title, rating);
-      resolve(rating);
-    } catch {
-      resolve(null);
-    }
-
-    await new Promise((r) => setTimeout(r, 200));
+    cache.set(title, rating);
+    return rating;
+  } catch {
+    return null;
   }
-
-  processing = false;
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message.type !== 'FETCH_RATING') return false;
+chrome.runtime.onConnect.addListener((port) => {
+  if (port.name !== 'ratings') return;
 
-  new Promise((resolve) => {
-    queue.push({ title: message.title, resolve });
-    processQueue();
-  }).then((rating) => sendResponse({ rating }));
-
-  return true; // keep channel open for async response
+  port.onMessage.addListener(({ type, title, id }) => {
+    if (type !== 'FETCH_RATING') return;
+    getRating(title).then((rating) => {
+      try {
+        port.postMessage({ id, rating });
+      } catch {
+        // port disconnected before response — discard
+      }
+    });
+  });
 });

@@ -5,6 +5,41 @@
   let debounceTimer = null;
   let isScanning = false;
 
+  let port = null;
+  const pending = new Map();
+  let nextId = 0;
+
+  function getPort() {
+    if (port) return port;
+    port = chrome.runtime.connect({ name: 'ratings' });
+    port.onMessage.addListener(({ id, rating }) => {
+      const resolve = pending.get(id);
+      if (resolve) {
+        pending.delete(id);
+        resolve(rating);
+      }
+    });
+    port.onDisconnect.addListener(() => {
+      port = null;
+      pending.forEach((resolve) => resolve(null));
+      pending.clear();
+    });
+    return port;
+  }
+
+  function fetchRating(title) {
+    return new Promise((resolve) => {
+      const id = ++nextId;
+      pending.set(id, resolve);
+      try {
+        getPort().postMessage({ type: 'FETCH_RATING', title, id });
+      } catch {
+        pending.delete(id);
+        resolve(null);
+      }
+    });
+  }
+
   function extractTitle(ariaLabel) {
     return ariaLabel
       .replace(/,\s*(Season|Part|Volume|Episode)\s+\d+.*/i, '')
@@ -15,27 +50,17 @@
   function getUnratedAnchors() {
     return Array.from(
       document.querySelectorAll(`a[aria-label]:not([${RATED_ATTR}])`)
-    ).filter((a) => a.querySelector('.boxart-container'));
-  }
-
-  function injectPlaceholder(anchor) {
-    anchor.setAttribute(RATED_ATTR, 'true');
-    const boxart = anchor.querySelector('.boxart-container');
-    if (!boxart) return null;
-    const badge = document.createElement('div');
-    badge.className = 'imdb-badge';
-    badge.textContent = '⭐ …';
-    boxart.style.position = 'relative';
-    boxart.appendChild(badge);
-    return badge;
-  }
-
-  function fetchRating(title) {
-    return new Promise((resolve) => {
-      chrome.runtime.sendMessage({ type: 'FETCH_RATING', title }, (response) => {
-        resolve(response?.rating ?? null);
-      });
+    ).filter((a) => {
+      if (!a.querySelector('img')) return false;
+      const href = a.getAttribute('href') || '';
+      return href.includes('/watch/') || href.includes('/title/');
     });
+  }
+
+  function prepareAnchor(anchor) {
+    anchor.setAttribute(RATED_ATTR, 'true');
+    anchor.setAttribute('data-imdb-rating', '⭐ …');
+    return anchor;
   }
 
   async function scanAndRate() {
@@ -45,20 +70,18 @@
       const anchors = getUnratedAnchors();
       if (!anchors.length) return;
 
-      const entries = anchors
-        .map((anchor) => ({
-          title: extractTitle(anchor.getAttribute('aria-label')),
-          badge: injectPlaceholder(anchor),
-        }))
-        .filter((e) => e.badge !== null);
+      const entries = anchors.map((anchor) => ({
+        title: extractTitle(anchor.getAttribute('aria-label')),
+        el: prepareAnchor(anchor),
+      }));
 
       await Promise.allSettled(
-        entries.map(async ({ title, badge }) => {
+        entries.map(async ({ title, el }) => {
           const rating = await fetchRating(title);
           if (rating !== null) {
-            badge.textContent = `⭐ ${rating}`;
+            el.setAttribute('data-imdb-rating', `⭐ ${rating}`);
           } else {
-            badge.remove();
+            el.removeAttribute('data-imdb-rating');
           }
         })
       );

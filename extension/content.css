@@ -1,4 +1,9 @@
-.imdb-badge {
+a[data-imdb-rating] {
+  position: relative;
+}
+
+a[data-imdb-rating]::after {
+  content: attr(data-imdb-rating);
   position: absolute;
   top: 6px;
   right: 6px;
