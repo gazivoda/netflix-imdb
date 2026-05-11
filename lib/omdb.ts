@@ -62,7 +62,7 @@ export async function searchTitle(
   return {
     imdbId: data.imdbID,
     title: data.Title ?? '',
-    year: parseInt(data.Year ?? '0', 10),
+    year: data.Year && data.Year !== 'N/A' ? parseInt(data.Year, 10) : 0,
     type: data.Type ?? '',
     rating,
     voteCount,

@@ -12,6 +12,23 @@ function makeRequest(body: unknown): NextRequest {
   })
 }
 
+function omdbResponse(overrides = {}) {
+  return {
+    ok: true,
+    json: async () => ({
+      Response: 'True',
+      imdbID: 'tt1375666',
+      Title: 'Inception',
+      Year: '2010',
+      Type: 'movie',
+      imdbRating: '8.8',
+      imdbVotes: '2,500,000',
+      Ratings: [{ Source: 'Rotten Tomatoes', Value: '87%' }],
+      ...overrides,
+    }),
+  }
+}
+
 describe('POST /api/ratings', () => {
   beforeEach(() => mockFetch.mockReset())
 
@@ -63,21 +80,8 @@ describe('POST /api/ratings', () => {
     expect(body.error).toBe('invalid JSON body')
   })
 
-  it('returns 200 with results for valid titles', async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
-        titles: [
-          {
-            id: 'tt1375666',
-            primaryTitle: 'Inception',
-            startYear: 2010,
-            type: 'movie',
-            rating: { aggregateRating: 8.8, voteCount: 2500000 },
-          },
-        ],
-      }),
-    })
+  it('returns 200 with both rating and rtRating for valid titles', async () => {
+    mockFetch.mockResolvedValue(omdbResponse())
 
     const res = await POST(makeRequest({ titles: ['Inception'] }))
     expect(res.status).toBe(200)
@@ -93,13 +97,22 @@ describe('POST /api/ratings', () => {
       type: 'movie',
       rating: 8.8,
       voteCount: 2500000,
+      rtRating: 87,
     })
   })
 
-  it('marks title as found:false when IMDB returns no match', async () => {
+  it('returns rtRating: null when RT score is absent', async () => {
+    mockFetch.mockResolvedValue(omdbResponse({ Ratings: [] }))
+
+    const res = await POST(makeRequest({ titles: ['Inception'] }))
+    const body = await res.json()
+    expect(body[0].rtRating).toBeNull()
+  })
+
+  it('marks title as found:false when OMDB returns Response:False', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: async () => ({ titles: [] }),
+      json: async () => ({ Response: 'False', Error: 'Movie not found!' }),
     })
 
     const res = await POST(makeRequest({ titles: ['xyz not a real title'] }))
@@ -118,20 +131,17 @@ describe('POST /api/ratings', () => {
   it('isolates failures — one bad title does not affect others', async () => {
     mockFetch
       .mockRejectedValueOnce(new Error('network error'))
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          titles: [
-            {
-              id: 'tt0903747',
-              primaryTitle: 'Breaking Bad',
-              startYear: 2008,
-              type: 'tvSeries',
-              rating: { aggregateRating: 9.5, voteCount: 2609166 },
-            },
-          ],
-        }),
-      })
+      .mockResolvedValueOnce(
+        omdbResponse({
+          imdbID: 'tt0903747',
+          Title: 'Breaking Bad',
+          Year: '2008',
+          Type: 'series',
+          imdbRating: '9.5',
+          imdbVotes: '2,609,166',
+          Ratings: [{ Source: 'Rotten Tomatoes', Value: '96%' }],
+        })
+      )
 
     const res = await POST(makeRequest({ titles: ['bad title', 'Breaking Bad'] }))
     const body = await res.json()
@@ -139,5 +149,6 @@ describe('POST /api/ratings', () => {
     expect(body[0]).toEqual({ query: 'bad title', found: false })
     expect(body[1].found).toBe(true)
     expect(body[1].title).toBe('Breaking Bad')
+    expect(body[1].rtRating).toBe(96)
   })
 })

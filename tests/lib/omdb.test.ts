@@ -93,4 +93,24 @@ describe('searchTitle', () => {
     const result = await searchTitle('Inception')
     expect(result).toBeNull()
   })
+
+  it('returns year: 0 when Year is N/A', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        Response: 'True',
+        imdbID: 'tt9999999',
+        Title: 'Some Show',
+        Year: 'N/A',
+        Type: 'series',
+        imdbRating: '8.0',
+        imdbVotes: '1,000',
+        Ratings: [],
+      }),
+    })
+
+    const result = await searchTitle('Some Show')
+    expect(result?.year).toBe(0)
+    expect(Number.isNaN(result?.year)).toBe(false)
+  })
 })

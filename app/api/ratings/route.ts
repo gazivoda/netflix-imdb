@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { searchTitle } from '@/lib/imdb'
+import { searchTitle } from '@/lib/omdb'
 
 export async function POST(req: NextRequest) {
   let body: unknown
@@ -43,8 +43,8 @@ export async function POST(req: NextRequest) {
     if (result.status === 'rejected' || result.value === null) {
       return { query, found: false }
     }
-    const { imdbId, title, year, type, rating, voteCount } = result.value
-    return { query, found: true, imdbId, title, year, type, rating, voteCount }
+    const { imdbId, title, year, type, rating, voteCount, rtRating } = result.value
+    return { query, found: true, imdbId, title, year, type, rating, voteCount, rtRating }
   })
 
   return NextResponse.json(response)
