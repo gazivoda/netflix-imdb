@@ -12,16 +12,16 @@
   function getPort() {
     if (port) return port;
     port = chrome.runtime.connect({ name: 'ratings' });
-    port.onMessage.addListener(({ id, rating }) => {
+    port.onMessage.addListener(({ id, rating, rtRating }) => {
       const resolve = pending.get(id);
       if (resolve) {
         pending.delete(id);
-        resolve(rating);
+        resolve({ rating, rtRating });
       }
     });
     port.onDisconnect.addListener(() => {
       port = null;
-      pending.forEach((resolve) => resolve(null));
+      pending.forEach((resolve) => resolve({ rating: null, rtRating: null }));
       pending.clear();
     });
     return port;
@@ -35,7 +35,7 @@
         getPort().postMessage({ type: 'FETCH_RATING', title, id });
       } catch {
         pending.delete(id);
-        resolve(null);
+        resolve({ rating: null, rtRating: null });
       }
     });
   }
@@ -77,9 +77,12 @@
 
       await Promise.allSettled(
         entries.map(async ({ title, el }) => {
-          const rating = await fetchRating(title);
-          if (rating !== null) {
-            el.setAttribute('data-imdb-rating', `⭐ ${rating}`);
+          const { rating, rtRating } = await fetchRating(title);
+          const parts = [];
+          if (rating !== null) parts.push(`⭐ ${rating}`);
+          if (rtRating !== null) parts.push(`🍅 ${rtRating}%`);
+          if (parts.length) {
+            el.setAttribute('data-imdb-rating', parts.join('  '));
           } else {
             el.removeAttribute('data-imdb-rating');
           }
