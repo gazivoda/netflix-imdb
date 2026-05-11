@@ -6,9 +6,29 @@ const cache = new Map();
 async function getRatings(title) {
   if (cache.has(title)) return cache.get(title);
   try {
-    const res = await fetch(
-      `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
-    );
+    // Step 1: search to resolve ambiguous titles (e.g. two films named "Cover-Up").
+    // Pick the exact-title match with the most recent year; fall back to ?t= if search fails.
+    let candidateId = null;
+    try {
+      const searchRes = await fetch(
+        `https://www.omdbapi.com/?s=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
+      );
+      const searchData = searchRes.ok ? await searchRes.json() : null;
+      if (searchData?.Response === 'True' && searchData.Search?.length) {
+        const normalized = title.toLowerCase().trim();
+        const exact = searchData.Search
+          .filter(r => r.Title.toLowerCase().trim() === normalized)
+          .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0));
+        candidateId = (exact[0] ?? searchData.Search[0]).imdbID;
+      }
+    } catch { /* fall through to ?t= */ }
+
+    // Step 2: fetch full details (by imdbID when resolved, else by title)
+    const url = candidateId
+      ? `https://www.omdbapi.com/?i=${candidateId}&apikey=${OMDB_API_KEY}`
+      : `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`;
+
+    const res = await fetch(url);
     const data = res.ok ? await res.json() : null;
 
     const rating =

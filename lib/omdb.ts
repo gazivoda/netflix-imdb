@@ -10,7 +10,7 @@ export interface OmdbTitle {
   rtRating: number | null
 }
 
-type OmdbResponse = {
+type OmdbDetailResponse = {
   Response: string
   imdbID?: string
   Title?: string
@@ -21,28 +21,12 @@ type OmdbResponse = {
   Ratings?: { Source: string; Value: string }[]
 }
 
-export async function searchTitle(
-  query: string,
-  apiKey = process.env.OMDB_API_KEY ?? ''
-): Promise<OmdbTitle | null> {
-  const url = `${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`
+type OmdbSearchResponse = {
+  Response: string
+  Search?: { Title: string; Year: string; imdbID: string }[]
+}
 
-  let res: Response
-  try {
-    res = await fetch(url)
-  } catch {
-    return null
-  }
-
-  if (!res.ok) return null
-
-  let data: OmdbResponse
-  try {
-    data = await res.json()
-  } catch {
-    return null
-  }
-
+function parseDetail(data: OmdbDetailResponse): OmdbTitle | null {
   if (data.Response !== 'True' || !data.imdbID) return null
 
   const rating =
@@ -68,4 +52,51 @@ export async function searchTitle(
     voteCount,
     rtRating,
   }
+}
+
+export async function searchTitle(
+  query: string,
+  apiKey = process.env.OMDB_API_KEY ?? ''
+): Promise<OmdbTitle | null> {
+  // Step 1: search to resolve ambiguous titles (e.g. two films named "Cover-Up").
+  // Pick the exact-title match with the most recent year; fall back to ?t= if search fails.
+  let candidateId: string | null = null
+  try {
+    const searchRes = await fetch(`${OMDB_API_BASE}/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
+    if (searchRes.ok) {
+      const searchData: OmdbSearchResponse = await searchRes.json()
+      if (searchData.Response === 'True' && searchData.Search?.length) {
+        const normalized = query.toLowerCase().trim()
+        const exact = searchData.Search
+          .filter(r => r.Title.toLowerCase().trim() === normalized)
+          .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0))
+        candidateId = (exact[0] ?? searchData.Search[0]).imdbID
+      }
+    }
+  } catch {
+    // search failed — fall through to ?t= below
+  }
+
+  // Step 2: fetch full details (by imdbID when resolved, else by title)
+  const detailUrl = candidateId
+    ? `${OMDB_API_BASE}/?i=${candidateId}&apikey=${apiKey}`
+    : `${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`
+
+  let res: Response
+  try {
+    res = await fetch(detailUrl)
+  } catch {
+    return null
+  }
+
+  if (!res.ok) return null
+
+  let data: OmdbDetailResponse
+  try {
+    data = await res.json()
+  } catch {
+    return null
+  }
+
+  return parseDetail(data)
 }

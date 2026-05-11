@@ -129,19 +129,31 @@ describe('POST /api/ratings', () => {
   })
 
   it('isolates failures — one bad title does not affect others', async () => {
-    mockFetch
-      .mockRejectedValueOnce(new Error('network error'))
-      .mockResolvedValueOnce(
-        omdbResponse({
-          imdbID: 'tt0903747',
-          Title: 'Breaking Bad',
-          Year: '2008',
-          Type: 'series',
-          imdbRating: '9.5',
-          imdbVotes: '2,609,166',
-          Ratings: [{ Source: 'Rotten Tomatoes', Value: '96%' }],
+    // Each title triggers 2 fetch calls: ?s= search then ?i=/?t= detail.
+    // "bad title": both calls throw. "Breaking Bad": search succeeds, detail succeeds.
+    mockFetch.mockImplementation((url: string) => {
+      if ((url as string).includes('bad%20title')) {
+        return Promise.reject(new Error('network error'))
+      }
+      if ((url as string).includes('?s=')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            Response: 'True',
+            Search: [{ Title: 'Breaking Bad', Year: '2008', imdbID: 'tt0903747', Type: 'series' }],
+          }),
         })
-      )
+      }
+      return Promise.resolve(omdbResponse({
+        imdbID: 'tt0903747',
+        Title: 'Breaking Bad',
+        Year: '2008',
+        Type: 'series',
+        imdbRating: '9.5',
+        imdbVotes: '2,609,166',
+        Ratings: [{ Source: 'Rotten Tomatoes', Value: '96%' }],
+      }))
+    })
 
     const res = await POST(makeRequest({ titles: ['bad title', 'Breaking Bad'] }))
     const body = await res.json()

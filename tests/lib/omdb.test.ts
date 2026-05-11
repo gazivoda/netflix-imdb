@@ -94,6 +94,39 @@ describe('searchTitle', () => {
     expect(result).toBeNull()
   })
 
+  it('picks the most recent exact match when multiple titles share the same name', async () => {
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          Response: 'True',
+          Search: [
+            { Title: 'Cover-Up', Year: '1991', imdbID: 'tt0099312', Type: 'movie' },
+            { Title: 'Cover-Up', Year: '2025', imdbID: 'tt37660887', Type: 'movie' },
+          ],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          Response: 'True',
+          imdbID: 'tt37660887',
+          Title: 'Cover-Up',
+          Year: '2025',
+          Type: 'movie',
+          imdbRating: '7.5',
+          imdbVotes: '1,034',
+          Ratings: [{ Source: 'Rotten Tomatoes', Value: '98%' }],
+        }),
+      })
+
+    const result = await searchTitle('Cover-Up')
+    // detail fetch must use the 2025 imdbID, not the 1991 one
+    expect((mockFetch.mock.calls[1][0] as string)).toContain('tt37660887')
+    expect(result?.year).toBe(2025)
+    expect(result?.rtRating).toBe(98)
+  })
+
   it('returns year: 0 when Year is N/A', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
