@@ -7,6 +7,11 @@ const FEATURES = [
     desc: 'Every title card shows the current IMDB rating pulled directly from the database — no guessing, no leaving Netflix.',
   },
   {
+    icon: '🍅',
+    title: 'Rotten Tomatoes Scores',
+    desc: 'RT critic scores appear right alongside IMDB ratings. Get both perspectives at a glance before you commit to watching.',
+  },
+  {
     icon: '⚡',
     title: 'Instant & Parallel',
     desc: 'All visible cards load ratings simultaneously. Scroll, and the next batch fires automatically. No waiting card by card.',
@@ -14,7 +19,7 @@ const FEATURES = [
   {
     icon: '🔒',
     title: 'Privacy First',
-    desc: 'No account, no login, no tracking. The extension only talks to the IMDB data source — your watch history stays yours.',
+    desc: 'No account, no login, no tracking. The extension only talks to the ratings data source — your watch history stays yours.',
   },
   {
     icon: '🎨',
@@ -26,18 +31,13 @@ const FEATURES = [
     title: 'Always Up to Date',
     desc: 'Ratings refresh automatically as you browse. New rows, search results, "More Like This" — all covered.',
   },
-  {
-    icon: '📦',
-    title: 'Zero Setup',
-    desc: 'Install the extension, open Netflix. That\'s it. No configuration, no API keys, no dashboard to manage.',
-  },
 ];
 
 const CARDS = [
-  { label: 'Stranger Things', color: '#1a1a2e', rating: '⭐ 8.7' },
-  { label: 'The Crown', color: '#16213e', rating: '⭐ 8.6' },
-  { label: 'Squid Game', color: '#1a0a0a', rating: '⭐ 8.0' },
-  { label: 'Ozark', color: '#0a1628', rating: '⭐ 8.4' },
+  { label: 'Stranger Things', color: '#1a1a2e', rating: '⭐ 8.7  🍅 86%' },
+  { label: 'The Crown', color: '#16213e', rating: '⭐ 8.6  🍅 80%' },
+  { label: 'Squid Game', color: '#1a0a0a', rating: '⭐ 8.0  🍅 95%' },
+  { label: 'Ozark', color: '#0a1628', rating: '⭐ 8.4  🍅 92%' },
 ];
 
 export default function Page() {
@@ -47,16 +47,24 @@ export default function Page() {
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
           <div className={styles.navLogoIcon}>★</div>
-          Netflix IMDB
+          Netflix Ratings
         </div>
-        <a
-          href="https://github.com/igorgazivoda/netflix-imdb"
-          className={styles.navInstall}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Get Extension
-        </a>
+        <div className={styles.navLinks}>
+          <a
+            href="/camera-vision"
+            className={styles.navLink}
+          >
+            Camera Vision Demo
+          </a>
+          <a
+            href="https://github.com/igorgazivoda/netflix-imdb"
+            className={styles.navInstall}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get Extension
+          </a>
+        </div>
       </nav>
 
       {/* HERO */}
@@ -69,7 +77,7 @@ export default function Page() {
             Know if it&apos;s worth<br />watching — <span>instantly</span>
           </h1>
           <p className={styles.heroSubtitle}>
-            IMDB ratings appear directly on every Netflix title card as you browse.
+            IMDB and Rotten Tomatoes ratings appear directly on every Netflix title card as you browse.
             No tab-switching, no searching. Just scroll and decide.
           </p>
           <div className={styles.heroCta}>
@@ -86,7 +94,7 @@ export default function Page() {
             </a>
           </div>
           <div className={styles.heroNote}>
-            <span>✓</span> Works on all Netflix plans &nbsp;·&nbsp; <span>✓</span> No account needed
+            <span>✓</span> IMDB + Rotten Tomatoes &nbsp;·&nbsp; <span>✓</span> Works on all Netflix plans &nbsp;·&nbsp; <span>✓</span> No account needed
           </div>
         </div>
 
@@ -125,10 +133,10 @@ export default function Page() {
             <div className={styles.rowLabel}>Popular on Netflix</div>
             <div className={styles.cardRow}>
               {[
-                { label: 'Wednesday', color: '#0d0d1a', rating: '⭐ 8.1' },
-                { label: 'The Witcher', color: '#0a1a0a', rating: '⭐ 8.2' },
-                { label: 'Bridgerton', color: '#1a0a16', rating: '⭐ 7.3' },
-                { label: 'Narcos', color: '#1a1000', rating: '⭐ 8.8' },
+                { label: 'Wednesday', color: '#0d0d1a', rating: '⭐ 8.1  🍅 67%' },
+                { label: 'The Witcher', color: '#0a1a0a', rating: '⭐ 8.2  🍅 82%' },
+                { label: 'Bridgerton', color: '#1a0a16', rating: '⭐ 7.3  🍅 69%' },
+                { label: 'Narcos', color: '#1a1000', rating: '⭐ 8.8  🍅 89%' },
               ].map((c) => (
                 <div key={c.label} className={styles.card}>
                   <div className={styles.cardBg} style={{ background: c.color }}>
@@ -178,7 +186,7 @@ export default function Page() {
               {
                 n: '3',
                 title: 'See ratings everywhere',
-                desc: 'Every title card shows an IMDB badge. Scroll to load more — they appear instantly.',
+                desc: 'Every title card shows both IMDB and Rotten Tomatoes scores. Scroll to load more — they appear instantly.',
               },
             ].map((s) => (
               <div key={s.n} className={styles.step}>
@@ -246,7 +254,7 @@ export default function Page() {
       <footer className={styles.footer}>
         <div className={styles.footerLeft}>
           <div className={styles.navLogoIcon} style={{ width: 20, height: 20, fontSize: 11 }}>★</div>
-          Netflix IMDB Ratings
+          Netflix Ratings
         </div>
         <div className={styles.footerRight}>
           <a
