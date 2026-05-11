@@ -82,7 +82,7 @@
           if (rating !== null) parts.push(`⭐ ${rating}`);
           if (rtRating !== null) parts.push(`🍅 ${rtRating}%`);
           if (parts.length) {
-            el.setAttribute('data-imdb-rating', parts.join('  '));
+            el.setAttribute('data-imdb-rating', parts.join('   '));
           } else {
             el.removeAttribute('data-imdb-rating');
           }
