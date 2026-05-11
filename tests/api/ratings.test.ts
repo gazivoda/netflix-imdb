@@ -129,8 +129,7 @@ describe('POST /api/ratings', () => {
   })
 
   it('isolates failures — one bad title does not affect others', async () => {
-    // Each title triggers 2 fetch calls: ?s= search then ?i=/?t= detail.
-    // "bad title": both calls throw. "Breaking Bad": search succeeds, detail succeeds.
+    // "bad title": ?t= throws. "Breaking Bad": ?t= returns full data with RT — 1 call only.
     mockFetch.mockImplementation((url: string) => {
       if ((url as string).includes('bad%20title')) {
         return Promise.reject(new Error('network error'))

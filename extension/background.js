@@ -3,44 +3,63 @@
 const OMDB_API_KEY = '901841e0';
 const cache = new Map();
 
+function parseRatings(data) {
+  const rating =
+    data?.imdbRating && data.imdbRating !== 'N/A'
+      ? parseFloat(data.imdbRating)
+      : null;
+  const rtEntry = data?.Ratings?.find((r) => r.Source === 'Rotten Tomatoes');
+  const rtParsed = rtEntry ? parseInt(rtEntry.Value.replace('%', ''), 10) : null;
+  const rtRating = rtParsed !== null && !Number.isNaN(rtParsed) ? rtParsed : null;
+  return { rating, rtRating };
+}
+
 async function getRatings(title) {
   if (cache.has(title)) return cache.get(title);
   try {
-    // Step 1: search to resolve ambiguous titles (e.g. two films named "Cover-Up").
-    // Pick the exact-title match with the most recent year; fall back to ?t= if search fails.
-    let candidateId = null;
-    try {
-      const searchRes = await fetch(
-        `https://www.omdbapi.com/?s=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
-      );
-      const searchData = searchRes.ok ? await searchRes.json() : null;
-      if (searchData?.Response === 'True' && searchData.Search?.length) {
-        const normalized = title.toLowerCase().trim();
-        const exact = searchData.Search
-          .filter(r => r.Title.toLowerCase().trim() === normalized)
-          .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0));
-        candidateId = (exact[0] ?? searchData.Search[0]).imdbID;
-      }
-    } catch { /* fall through to ?t= */ }
-
-    // Step 2: fetch full details (by imdbID when resolved, else by title)
-    const url = candidateId
-      ? `https://www.omdbapi.com/?i=${candidateId}&apikey=${OMDB_API_KEY}`
-      : `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`;
-
-    const res = await fetch(url);
+    // Step 1: direct lookup — 1 API call for the common case.
+    const res = await fetch(
+      `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
+    );
     const data = res.ok ? await res.json() : null;
+    const { rating, rtRating } = parseRatings(data);
 
-    const rating =
-      data?.imdbRating && data.imdbRating !== 'N/A'
-        ? parseFloat(data.imdbRating)
-        : null;
+    // Found with RT data, or not found at all → return immediately (1 call total).
+    if (data?.Response !== 'True' || rtRating !== null) {
+      const result = { rating, rtRating };
+      cache.set(title, result);
+      return result;
+    }
 
-    const rtEntry = data?.Ratings?.find((r) => r.Source === 'Rotten Tomatoes');
-    const rtParsed = rtEntry ? parseInt(rtEntry.Value.replace('%', ''), 10) : null;
-    const rtRating = rtParsed !== null && !Number.isNaN(rtParsed) ? rtParsed : null;
+    // Found but no RT score: ?t= may have picked the wrong entry when multiple
+    // titles share the same name. Search for a newer exact-title match with RT data.
+    const searchRes = await fetch(
+      `https://www.omdbapi.com/?s=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
+    );
+    const searchData = searchRes.ok ? await searchRes.json() : null;
 
-    const result = { rating, rtRating };
+    let result = { rating, rtRating };
+
+    if (searchData?.Response === 'True' && searchData.Search?.length) {
+      const normalized = title.toLowerCase().trim();
+      const exact = searchData.Search
+        .filter(r => r.Title.toLowerCase().trim() === normalized)
+        .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0));
+
+      const best = exact[0];
+      const directImdbId = data?.imdbID;
+
+      if (best && best.imdbID !== directImdbId) {
+        const betterRes = await fetch(
+          `https://www.omdbapi.com/?i=${best.imdbID}&apikey=${OMDB_API_KEY}`
+        );
+        const betterData = betterRes.ok ? await betterRes.json() : null;
+        if (betterData?.Response === 'True') {
+          result = parseRatings(betterData);
+        }
+      }
+    }
+
     cache.set(title, result);
     return result;
   } catch {

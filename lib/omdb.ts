@@ -54,49 +54,54 @@ function parseDetail(data: OmdbDetailResponse): OmdbTitle | null {
   }
 }
 
-export async function searchTitle(
-  query: string,
-  apiKey = process.env.OMDB_API_KEY ?? ''
-): Promise<OmdbTitle | null> {
-  // Step 1: search to resolve ambiguous titles (e.g. two films named "Cover-Up").
-  // Pick the exact-title match with the most recent year; fall back to ?t= if search fails.
-  let candidateId: string | null = null
-  try {
-    const searchRes = await fetch(`${OMDB_API_BASE}/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
-    if (searchRes.ok) {
-      const searchData: OmdbSearchResponse = await searchRes.json()
-      if (searchData.Response === 'True' && searchData.Search?.length) {
-        const normalized = query.toLowerCase().trim()
-        const exact = searchData.Search
-          .filter(r => r.Title.toLowerCase().trim() === normalized)
-          .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0))
-        candidateId = (exact[0] ?? searchData.Search[0]).imdbID
-      }
-    }
-  } catch {
-    // search failed — fall through to ?t= below
-  }
-
-  // Step 2: fetch full details (by imdbID when resolved, else by title)
-  const detailUrl = candidateId
-    ? `${OMDB_API_BASE}/?i=${candidateId}&apikey=${apiKey}`
-    : `${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`
-
+async function fetchDetail(url: string): Promise<OmdbTitle | null> {
   let res: Response
   try {
-    res = await fetch(detailUrl)
+    res = await fetch(url)
   } catch {
     return null
   }
-
   if (!res.ok) return null
-
   let data: OmdbDetailResponse
   try {
     data = await res.json()
   } catch {
     return null
   }
-
   return parseDetail(data)
+}
+
+export async function searchTitle(
+  query: string,
+  apiKey = process.env.OMDB_API_KEY ?? ''
+): Promise<OmdbTitle | null> {
+  // Step 1: direct lookup — 1 API call for the common case.
+  const direct = await fetchDetail(`${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`)
+
+  // Found with RT data, or not found at all → return immediately (1 call total).
+  if (direct === null || direct.rtRating !== null) return direct
+
+  // Found but no RT score: the ?t= endpoint may have picked the wrong entry when
+  // multiple titles share the same name (e.g. Cover-Up 1991 vs Cover-Up 2025).
+  // Search for a newer exact-title match that has RT data.
+  try {
+    const searchRes = await fetch(`${OMDB_API_BASE}/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
+    if (!searchRes.ok) return direct
+    const searchData: OmdbSearchResponse = await searchRes.json()
+    if (searchData.Response !== 'True' || !searchData.Search?.length) return direct
+
+    const normalized = query.toLowerCase().trim()
+    const exact = searchData.Search
+      .filter(r => r.Title.toLowerCase().trim() === normalized)
+      .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0))
+
+    const best = exact[0]
+    if (!best || best.imdbID === direct.imdbId) return direct
+
+    // A different (newer) candidate exists — fetch its full details.
+    const better = await fetchDetail(`${OMDB_API_BASE}/?i=${best.imdbID}&apikey=${apiKey}`)
+    return better ?? direct
+  } catch {
+    return direct
+  }
 }
