@@ -44,6 +44,7 @@
     return ariaLabel
       .replace(/,\s*(Season|Part|Volume|Episode)\s+\d+.*/i, '')
       .replace(/:\s*(More Info|Play|Resume|Watch)$/i, '')
+      .replace(/\s*\([A-Z][A-Z.]{1,9}\)\s*$/, '')  // strip Netflix country codes: (U.S.), (UK), (U.K.)
       .trim();
   }
 
