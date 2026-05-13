@@ -4,6 +4,7 @@ import '../globals.css'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { createWorker } from 'tesseract.js'
+import { extractMovieTitles } from '@/lib/extract-titles'
 
 interface DetectedContent {
   id: string
@@ -52,6 +53,7 @@ export default function CameraVision() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [lastProcessedTime, setLastProcessedTime] = useState(0)
   const ocrWorkerRef = useRef<any>(null)
+  const ocrFailureCountRef = useRef(0)
   const [ocrReady, setOcrReady] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [ocrFailureCount, setOcrFailureCount] = useState(0)
@@ -107,6 +109,7 @@ export default function CameraVision() {
       setDetectedContent([])
       setIsProcessing(false)
       setOcrFailureCount(0) // Reset failure count
+      ocrFailureCountRef.current = 0
     }
   }
 
@@ -155,20 +158,18 @@ export default function CameraVision() {
 
       const { data: { words } } = await ocrWorkerRef.current.recognize(preprocessed)
 
-      // Reset failure count on success
       setOcrFailureCount(0)
+      ocrFailureCountRef.current = 0
 
-      // Process detected text
-      const detectedTitles = extractMovieTitles('', words)
+      const detectedTitles = extractMovieTitles(words, 3)
       console.log('Extracted titles:', detectedTitles)
 
-      // Update detected content
       const newContent: DetectedContent[] = detectedTitles.map((title, index) => ({
         id: `detected-${Date.now()}-${index}`,
         title: title.title,
         confidence: title.confidence,
-        x: title.x || Math.random() * (canvas.width - 200),
-        y: title.y || Math.random() * (canvas.height - 100),
+        x: title.x ?? 20,
+        y: title.y ?? 20 + index * 90,
         width: 200,
         height: 80,
       }))
@@ -192,14 +193,12 @@ export default function CameraVision() {
 
     } catch (error) {
       console.error('OCR processing error:', error)
-      setOcrFailureCount(prev => prev + 1)
-      
-      // Stop processing after too many failures
-      if (ocrFailureCount >= 5) {
+      ocrFailureCountRef.current += 1
+      setOcrFailureCount(ocrFailureCountRef.current)
+
+      if (ocrFailureCountRef.current >= 5) {
         console.error('Too many OCR failures, stopping processing')
-        setIsStreaming(false)
-        setDetectedContent([])
-        setIsProcessing(false)
+        stopCamera()
         alert('OCR processing failed too many times. Please check your camera and try again.')
         return
       }
@@ -208,56 +207,6 @@ export default function CameraVision() {
       setLastProcessedTime(Date.now())
     }
   }, [ocrWorkerRef, isProcessing])
-
-  // Extract movie titles from OCR text
-  const extractMovieTitles = (text: string, words: any[]) => {
-    // Validate inputs
-    if (!text || typeof text !== 'string') return []
-    if (!words || !Array.isArray(words)) return []
-    
-    const titles: Array<{title: string, confidence: number, x?: number, y?: number}> = []
-
-    // Common movie title patterns
-    const titlePatterns = [
-      // Capitalized words (typical movie titles)
-      /\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g,
-      // Title case patterns
-      /\b(?:The|A|An)\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g,
-    ]
-
-    const lines = text.split('\n').filter(line => line.trim().length > 3)
-
-    for (const line of lines) {
-      for (const pattern of titlePatterns) {
-        const matches = line.match(pattern)
-        if (matches) {
-          for (const match of matches) {
-            // Filter out common UI text
-            if (!/^(Home|TV Shows|Movies|Search|Menu|Play|Watch|More|Like|This|New)$/i.test(match)) {
-              // Find position information
-              const wordData = words.find(w => w.text.includes(match) || match.includes(w.text))
-              titles.push({
-                title: match,
-                confidence: wordData?.confidence || 50,
-                x: wordData?.bbox?.x0,
-                y: wordData?.bbox?.y0,
-              })
-            }
-          }
-        }
-      }
-    }
-
-    // Remove duplicates and filter by confidence
-    const uniqueTitles = titles
-      .filter(title => title.confidence > 30)
-      .filter((title, index, self) =>
-        index === self.findIndex(t => t.title === title.title)
-      )
-      .slice(0, 3) // Limit to top 3 detections
-
-    return uniqueTitles
-  }
 
   // Process frames periodically with better performance
   useEffect(() => {
