@@ -15,6 +15,7 @@ interface DetectedContent {
   height: number
   rating?: number
   voteCount?: number
+  rtRating?: number | null
 }
 
 function preprocessFrame(source: HTMLVideoElement): HTMLCanvasElement {
@@ -183,7 +184,7 @@ export default function CameraVision() {
           prev.map(content => {
             const rating = ratings.find((r: any) => r.query === content.title)
             return rating && rating.found
-              ? { ...content, rating: rating.rating, voteCount: rating.voteCount }
+              ? { ...content, rating: rating.rating, voteCount: rating.voteCount, rtRating: rating.rtRating }
               : content
           })
         )
@@ -356,8 +357,8 @@ export default function CameraVision() {
               key={content.id}
               className="absolute bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-purple-500 shadow-lg"
               style={{
-                left: content.x || Math.random() * 60 + '%',
-                top: content.y || Math.random() * 60 + '%',
+                left: `${content.x}px`,
+                top: `${content.y}px`,
                 minWidth: '180px',
               }}
             >
@@ -365,7 +366,7 @@ export default function CameraVision() {
               <div className="text-xs text-gray-400 mb-2">
                 Confidence: {content.confidence.toFixed(1)}%
               </div>
-              {content.rating ? (
+              {content.rating != null ? (
                 <div className="flex items-center gap-2">
                   <div className="text-yellow-400 text-lg">⭐</div>
                   <div className="text-white font-bold">{content.rating.toFixed(1)}</div>
@@ -377,6 +378,12 @@ export default function CameraVision() {
                 </div>
               ) : (
                 <div className="text-gray-400 text-sm">Loading rating...</div>
+              )}
+              {content.rtRating != null && (
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="text-red-500 text-lg">🍅</div>
+                  <div className="text-white font-bold">{content.rtRating}%</div>
+                </div>
               )}
             </div>
           ))}
