@@ -17,6 +17,31 @@ interface DetectedContent {
   voteCount?: number
 }
 
+function preprocessFrame(source: HTMLVideoElement): HTMLCanvasElement {
+  const scale = 3
+  const canvas = document.createElement('canvas')
+  canvas.width = source.videoWidth * scale
+  canvas.height = source.videoHeight * scale
+
+  const ctx = canvas.getContext('2d')!
+  ctx.filter = 'grayscale(1) contrast(2) brightness(1.1)'
+  ctx.drawImage(source, 0, 0, canvas.width, canvas.height)
+  ctx.filter = 'none'
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  const data = imageData.data
+  for (let i = 0; i < data.length; i += 4) {
+    const luminance = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+    const value = luminance >= 128 ? 255 : 0
+    data[i] = value
+    data[i + 1] = value
+    data[i + 2] = value
+  }
+  ctx.putImageData(imageData, 0, 0)
+
+  return canvas
+}
+
 export default function CameraVision() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -117,29 +142,23 @@ export default function CameraVision() {
     setIsProcessing(true)
 
     try {
-      // Set canvas size to match video
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
+      const preprocessed = preprocessFrame(video)
 
-      // Draw current video frame to canvas
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-
-      // Validate canvas has content
-      const imageData = ctx.getImageData(0, 0, 1, 1) // Check a single pixel
-      if (imageData.data.every(pixel => pixel === 0)) {
+      // Validate the preprocessed frame has content
+      const checkCtx = preprocessed.getContext('2d')!
+      const checkData = checkCtx.getImageData(0, 0, 1, 1)
+      if (checkData.data.every(pixel => pixel === 0)) {
         console.warn('Canvas appears empty, skipping OCR')
         return
       }
 
-      // Perform OCR on the canvas directly (more reliable than ImageData)
-      const { data: { text, confidence, words } } = await ocrWorkerRef.current.recognize(canvas)
+      const { data: { words } } = await ocrWorkerRef.current.recognize(preprocessed)
 
       // Reset failure count on success
       setOcrFailureCount(0)
 
       // Process detected text
-      const detectedTitles = extractMovieTitles(text, words)
-      console.log('Detected text:', text)
+      const detectedTitles = extractMovieTitles('', words)
       console.log('Extracted titles:', detectedTitles)
 
       // Update detected content
