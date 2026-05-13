@@ -151,7 +151,7 @@ export default function CameraVision() {
       // Validate the preprocessed frame has content
       const checkCtx = preprocessed.getContext('2d')!
       const checkData = checkCtx.getImageData(0, 0, 1, 1)
-      if (checkData.data.every(pixel => pixel === 0)) {
+      if (checkData.data[0] === 0 && checkData.data[1] === 0 && checkData.data[2] === 0) {
         console.warn('Canvas appears empty, skipping OCR')
         return
       }
@@ -168,8 +168,8 @@ export default function CameraVision() {
         id: `detected-${Date.now()}-${index}`,
         title: title.title,
         confidence: title.confidence,
-        x: title.x ?? 20,
-        y: title.y ?? 20 + index * 90,
+        x: ((title.x ?? 20) / video.videoWidth) * 100,
+        y: ((title.y ?? (20 + index * 90)) / video.videoHeight) * 100,
         width: 200,
         height: 80,
       }))
@@ -306,8 +306,8 @@ export default function CameraVision() {
               key={content.id}
               className="absolute bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-purple-500 shadow-lg"
               style={{
-                left: `${content.x}px`,
-                top: `${content.y}px`,
+                left: `${content.x}%`,
+                top: `${content.y}%`,
                 minWidth: '180px',
               }}
             >
