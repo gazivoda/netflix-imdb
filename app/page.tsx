@@ -1,278 +1,262 @@
 import styles from './page.module.css';
-
-const FEATURES = [
-  {
-    icon: '⭐',
-    title: 'Live IMDB Scores',
-    desc: 'Every title card shows the current IMDB rating pulled directly from the database — no guessing, no leaving Netflix.',
-  },
-  {
-    icon: '🍅',
-    title: 'Rotten Tomatoes Scores',
-    desc: 'RT critic scores appear right alongside IMDB ratings. Get both perspectives at a glance before you commit to watching.',
-  },
-  {
-    icon: '⚡',
-    title: 'Instant & Parallel',
-    desc: 'All visible cards load ratings simultaneously. Scroll, and the next batch fires automatically. No waiting card by card.',
-  },
-  {
-    icon: '🔒',
-    title: 'Privacy First',
-    desc: 'No account, no login, no tracking. The extension only talks to the ratings data source — your watch history stays yours.',
-  },
-  {
-    icon: '🎨',
-    title: 'Non-Intrusive Design',
-    desc: 'A subtle badge in the corner of each card. Fits Netflix\'s UI perfectly without covering artwork or disrupting browsing.',
-  },
-  {
-    icon: '🔄',
-    title: 'Always Up to Date',
-    desc: 'Ratings refresh automatically as you browse. New rows, search results, "More Like This" — all covered.',
-  },
-];
+import { FEATURES, STATS, TESTIMONIALS, FAQS, REPO_URL } from '../lib/content';
 
 const CARDS = [
-  { label: 'Stranger Things', color: '#1a1a2e', rating: '⭐ 8.7  🍅 86%' },
-  { label: 'The Crown', color: '#16213e', rating: '⭐ 8.6  🍅 80%' },
-  { label: 'Squid Game', color: '#1a0a0a', rating: '⭐ 8.0  🍅 95%' },
-  { label: 'Ozark', color: '#0a1628', rating: '⭐ 8.4  🍅 92%' },
+  { label: 'Stranger Things', color: '#241a2e', imdb: '8.7', rt: '86%' },
+  { label: 'The Crown', color: '#16213e', imdb: '8.6', rt: '80%' },
+  { label: 'Squid Game', color: '#2a0f0f', imdb: '8.0', rt: '95%' },
+  { label: 'Ozark', color: '#0a1f2e', imdb: '8.4', rt: '92%' },
 ];
+
+const CARDS2 = [
+  { label: 'Wednesday', color: '#16162a', imdb: '8.1', rt: '67%' },
+  { label: 'The Witcher', color: '#10240f', imdb: '8.2', rt: '82%' },
+  { label: 'Bridgerton', color: '#2a0f24', imdb: '7.3', rt: '69%' },
+  { label: 'Narcos', color: '#2a1d00', imdb: '8.8', rt: '89%' },
+];
+
+function ScoreBadge({ imdb, rt }: { imdb: string; rt: string }) {
+  return (
+    <div className={styles.cardBadge}>
+      <span className={styles.imdbChip}>★ {imdb}</span>
+      <span className={styles.rtChip}>🍅 {rt}</span>
+    </div>
+  );
+}
 
 export default function Page() {
   return (
     <div className={styles.page}>
       {/* NAV */}
       <nav className={styles.nav}>
-        <div className={styles.navLogo}>
-          <div className={styles.navLogoIcon}>★</div>
+        <a className={styles.navLogo} href="/">
+          <span className={styles.navLogoIcon} aria-hidden>★</span>
           Netflix Ratings
-        </div>
+        </a>
         <div className={styles.navLinks}>
-          <a
-            href="/camera-vision"
-            className={styles.navLink}
-          >
-            Camera Vision Demo
+          <a href="/compare/imdb-vs-rotten-tomatoes" className={styles.navLink}>
+            IMDb vs Rotten Tomatoes
           </a>
-          <a
-            href="https://github.com/igorgazivoda/netflix-imdb"
-            className={styles.navInstall}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Get Extension
+          <a href="#faq" className={styles.navLink}>FAQ</a>
+          <a href={REPO_URL} className={styles.navInstall} target="_blank" rel="noopener noreferrer">
+            Get the extension
           </a>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className={styles.hero}>
-        <div>
-          <div className={styles.heroBadge}>
-            <span>★</span> Free Chrome Extension
-          </div>
-          <h1 className={styles.heroTitle}>
-            Know if it&apos;s worth<br />watching — <span>instantly</span>
-          </h1>
-          <p className={styles.heroSubtitle}>
-            IMDB and Rotten Tomatoes ratings appear directly on every Netflix title card as you browse.
-            No tab-switching, no searching. Just scroll and decide.
-          </p>
-          <div className={styles.heroCta}>
-            <a
-              href="https://github.com/igorgazivoda/netflix-imdb"
-              className={styles.btnPrimary}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ↓ Install Free
-            </a>
-            <a href="#how-it-works" className={styles.btnSecondary}>
-              See how it works →
-            </a>
-          </div>
-          <div className={styles.heroNote}>
-            <span>✓</span> IMDB + Rotten Tomatoes &nbsp;·&nbsp; <span>✓</span> Works on all Netflix plans &nbsp;·&nbsp; <span>✓</span> No account needed
-          </div>
-        </div>
-
-        {/* MOCKUP */}
-        <div className={styles.mockupWrap}>
-          <div className={styles.mockup}>
-            <div className={styles.mockupBar}>
-              <div className={`${styles.mockupDot}`} />
-              <div className={`${styles.mockupDot}`} />
-              <div className={`${styles.mockupDot}`} />
-              <div className={styles.mockupUrl}>netflix.com/browse</div>
+      <main>
+        {/* HERO */}
+        <section className={styles.hero} aria-labelledby="hero-title">
+          <div className={styles.heroCopy}>
+            <div className={`${styles.heroBadge} ${styles.reveal}`}>
+              <span aria-hidden>★</span> Free open-source Chrome extension
             </div>
+            <h1 id="hero-title" className={`${styles.heroTitle} ${styles.reveal} ${styles.d1}`}>
+              Know if it&apos;s worth watching <em>before</em> you press play.
+            </h1>
+            <p className={`${styles.heroSubtitle} ${styles.reveal} ${styles.d2}`}>
+              Netflix Ratings drops the <strong>IMDb</strong> and <strong>Rotten Tomatoes</strong>{' '}
+              score onto every title card as you browse. No second tab, no searching — just scroll
+              and decide.
+            </p>
+            <div className={`${styles.heroCta} ${styles.reveal} ${styles.d3}`}>
+              <a href={REPO_URL} className={styles.btnPrimary} target="_blank" rel="noopener noreferrer">
+                Install free <span aria-hidden>→</span>
+              </a>
+              <a href="#how" className={styles.btnSecondary}>
+                See how it works
+              </a>
+            </div>
+            <ul className={`${styles.heroNote} ${styles.reveal} ${styles.d4}`}>
+              <li>IMDb + Rotten Tomatoes</li>
+              <li>Works on every plan</li>
+              <li>No account needed</li>
+            </ul>
+          </div>
 
-            <div className={styles.netflixBar}>
-              <div className={styles.netflixLogo}>NETFLIX</div>
-              <div className={styles.netflixNav}>
-                <span>Home</span>
-                <span>TV Shows</span>
-                <span>Movies</span>
-                <span>My List</span>
+          {/* MOCKUP */}
+          <div className={`${styles.mockupWrap} ${styles.reveal} ${styles.d2}`}>
+            <div className={styles.mockup}>
+              <div className={styles.mockupBar}>
+                <span className={styles.mockupDot} />
+                <span className={styles.mockupDot} />
+                <span className={styles.mockupDot} />
+                <span className={styles.mockupUrl}>netflix.com/browse</span>
+              </div>
+              <div className={styles.netflixBar}>
+                <span className={styles.netflixLogo}>NETFLIX</span>
+                <div className={styles.netflixNav}>
+                  <span>Home</span><span>TV Shows</span><span>Movies</span><span>My List</span>
+                </div>
+              </div>
+
+              <div className={styles.rowLabel}>Continue Watching</div>
+              <div className={styles.cardRow}>
+                {CARDS.map((c) => (
+                  <div key={c.label} className={styles.card}>
+                    <div className={styles.cardBg} style={{ background: c.color }}>{c.label}</div>
+                    <ScoreBadge imdb={c.imdb} rt={c.rt} />
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.rowLabel}>Popular on Netflix</div>
+              <div className={styles.cardRow}>
+                {CARDS2.map((c) => (
+                  <div key={c.label} className={styles.card}>
+                    <div className={styles.cardBg} style={{ background: c.color }}>{c.label}</div>
+                    <ScoreBadge imdb={c.imdb} rt={c.rt} />
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className={styles.rowLabel}>Continue Watching</div>
-            <div className={styles.cardRow}>
-              {CARDS.map((c) => (
-                <div key={c.label} className={styles.card}>
-                  <div className={styles.cardBg} style={{ background: c.color }}>
-                    {c.label}
-                  </div>
-                  <div className={styles.cardBadge}>{c.rating}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className={styles.rowLabel}>Popular on Netflix</div>
-            <div className={styles.cardRow}>
-              {[
-                { label: 'Wednesday', color: '#0d0d1a', rating: '⭐ 8.1  🍅 67%' },
-                { label: 'The Witcher', color: '#0a1a0a', rating: '⭐ 8.2  🍅 82%' },
-                { label: 'Bridgerton', color: '#1a0a16', rating: '⭐ 7.3  🍅 69%' },
-                { label: 'Narcos', color: '#1a1000', rating: '⭐ 8.8  🍅 89%' },
-              ].map((c) => (
-                <div key={c.label} className={styles.card}>
-                  <div className={styles.cardBg} style={{ background: c.color }}>
-                    {c.label}
-                  </div>
-                  <div className={styles.cardBadge}>{c.rating}</div>
-                </div>
-              ))}
-            </div>
+            <div className={styles.glow} aria-hidden />
           </div>
-          <div className={styles.glow} />
-        </div>
-      </section>
+        </section>
 
-      {/* FEATURES */}
-      <section className={styles.features}>
-        <div className={styles.sectionLabel}>Features</div>
-        <h2 className={styles.sectionTitle}>Everything you need, nothing you don&apos;t</h2>
-        <div className={styles.featureGrid}>
-          {FEATURES.map((f) => (
-            <div key={f.title} className={styles.featureCard}>
-              <div className={styles.featureIcon}>{f.icon}</div>
-              <div className={styles.featureTitle}>{f.title}</div>
-              <p className={styles.featureDesc}>{f.desc}</p>
+        {/* STATS */}
+        <section className={styles.stats} aria-label="At a glance">
+          {STATS.map((s) => (
+            <div key={s.label} className={styles.stat}>
+              <div className={styles.statValue}>{s.value}</div>
+              <div className={styles.statLabel}>{s.label}</div>
+              <div className={styles.statSub}>{s.sub}</div>
             </div>
           ))}
-        </div>
-      </section>
+        </section>
 
-      {/* HOW IT WORKS */}
-      <section className={styles.howSection} id="how-it-works">
-        <div className={styles.howInner}>
-          <div className={styles.sectionLabel}>How It Works</div>
-          <h2 className={styles.sectionTitle}>Up and running in 60 seconds</h2>
-          <div className={styles.steps}>
-            {[
-              {
-                n: '1',
-                title: 'Install the extension',
-                desc: 'Download from the Chrome Web Store or load unpacked from GitHub. One click.',
-              },
-              {
-                n: '2',
-                title: 'Open Netflix',
-                desc: 'Browse normally. The extension activates automatically on netflix.com.',
-              },
-              {
-                n: '3',
-                title: 'See ratings everywhere',
-                desc: 'Every title card shows both IMDB and Rotten Tomatoes scores. Scroll to load more — they appear instantly.',
-              },
-            ].map((s) => (
-              <div key={s.n} className={styles.step}>
-                <div className={styles.stepNum}>{s.n}</div>
-                <div className={styles.stepTitle}>{s.title}</div>
-                <p className={styles.stepDesc}>{s.desc}</p>
-              </div>
+        {/* FEATURES */}
+        <section className={styles.features} aria-labelledby="features-title">
+          <p className={styles.sectionLabel}>Features</p>
+          <h2 id="features-title" className={styles.sectionTitle}>
+            Everything you need, nothing you don&apos;t
+          </h2>
+          <div className={styles.featureGrid}>
+            {FEATURES.map((f) => (
+              <article key={f.title} className={styles.featureCard}>
+                <div className={styles.featureIcon} aria-hidden>{f.icon}</div>
+                <h3 className={styles.featureTitle}>{f.title}</h3>
+                <p className={styles.featureDesc}>{f.desc}</p>
+              </article>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* INSTALL */}
-      <section className={styles.installSection}>
-        <h2 className={styles.installTitle}>Install in seconds</h2>
-        <p className={styles.installSub}>Load the unpacked extension from GitHub — free forever.</p>
-        <div className={styles.installSteps}>
-          {[
-            {
-              i: '1',
-              content: (
-                <>
-                  <strong>Download the repo</strong> — clone or download the ZIP from{' '}
-                  <code>github.com/igorgazivoda/netflix-imdb</code>
-                </>
-              ),
-            },
-            {
-              i: '2',
-              content: (
-                <>
-                  Open Chrome and go to <code>chrome://extensions</code>, then enable{' '}
-                  <strong>Developer mode</strong> (top-right toggle)
-                </>
-              ),
-            },
-            {
-              i: '3',
-              content: (
-                <>
-                  Click <strong>Load unpacked</strong> and select the <code>extension/</code>{' '}
-                  folder from the downloaded repo
-                </>
-              ),
-            },
-            {
-              i: '4',
-              content: (
-                <>
-                  Navigate to <strong>netflix.com</strong> — ratings will appear on every title card
-                  automatically
-                </>
-              ),
-            },
-          ].map((s) => (
-            <div key={s.i} className={styles.installStep}>
-              <div className={styles.installIdx}>{s.i}</div>
-              <div className={styles.installText}>{s.content}</div>
+        {/* HOW IT WORKS */}
+        <section className={styles.howSection} id="how" aria-labelledby="how-title">
+          <div className={styles.howInner}>
+            <p className={styles.sectionLabel}>How it works</p>
+            <h2 id="how-title" className={styles.sectionTitle}>Up and running in 60 seconds</h2>
+            <ol className={styles.steps}>
+              {[
+                { n: '1', title: 'Install the extension', desc: 'Load it unpacked from GitHub in a couple of clicks. No store account required.' },
+                { n: '2', title: 'Open Netflix', desc: 'Browse like you always do. The extension activates automatically on netflix.com.' },
+                { n: '3', title: 'See ratings everywhere', desc: 'IMDb and Rotten Tomatoes scores appear on every card — and on new rows as you scroll.' },
+              ].map((s) => (
+                <li key={s.n} className={styles.step}>
+                  <span className={styles.stepNum}>{s.n}</span>
+                  <h3 className={styles.stepTitle}>{s.title}</h3>
+                  <p className={styles.stepDesc}>{s.desc}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* TESTIMONIALS */}
+        <section className={styles.testimonials} aria-labelledby="loved-title">
+          <p className={styles.sectionLabel}>Loved by binge-watchers</p>
+          <h2 id="loved-title" className={styles.sectionTitle}>
+            People stop guessing &mdash; and start choosing
+          </h2>
+          <div className={styles.quoteGrid}>
+            {TESTIMONIALS.map((t) => (
+              <figure key={t.name} className={styles.quoteCard}>
+                <span className={styles.quoteScore} aria-hidden>{t.rating}</span>
+                <blockquote className={styles.quoteText}>&ldquo;{t.quote}&rdquo;</blockquote>
+                <figcaption className={styles.quoteMeta}>
+                  <span className={styles.quoteAvatar} aria-hidden>{t.name.charAt(0)}</span>
+                  <span>
+                    <strong>{t.name}</strong>
+                    <span className={styles.quoteRole}>{t.role}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        {/* COMPARE CTA */}
+        <section className={styles.compareCta} aria-labelledby="compare-title">
+          <div>
+            <p className={styles.sectionLabel}>Two scores, one card</p>
+            <h2 id="compare-title" className={styles.compareTitle}>
+              IMDb tells you what audiences think. Rotten Tomatoes tells you what critics think.
+            </h2>
+            <p className={styles.compareDesc}>
+              They often disagree — and that gap is exactly what helps you pick. We break down how
+              the two systems work and when to trust each.
+            </p>
+            <a href="/compare/imdb-vs-rotten-tomatoes" className={styles.btnGhost}>
+              Read: IMDb vs Rotten Tomatoes <span aria-hidden>→</span>
+            </a>
+          </div>
+          <div className={styles.compareDial}>
+            <div className={styles.dialRow}>
+              <span className={styles.dialName}>★ IMDb</span>
+              <span className={styles.dialBarTrack}><span className={styles.dialBarImdb} style={{ width: '87%' }} /></span>
+              <span className={styles.dialNum}>8.7</span>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className={styles.dialRow}>
+              <span className={styles.dialName}>🍅 RT</span>
+              <span className={styles.dialBarTrack}><span className={styles.dialBarRt} style={{ width: '86%' }} /></span>
+              <span className={styles.dialNum}>86%</span>
+            </div>
+            <div className={styles.dialCaption}>Stranger Things, as shown on your Netflix cards</div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className={styles.faqSection} id="faq" aria-labelledby="faq-title">
+          <div className={styles.faqInner}>
+            <p className={styles.sectionLabel}>FAQ</p>
+            <h2 id="faq-title" className={styles.sectionTitle}>Questions, answered</h2>
+            <div className={styles.faqList}>
+              {FAQS.map((f, i) => (
+                <details key={f.q} className={styles.faqItem} open={i === 0}>
+                  <summary className={styles.faqQ}>
+                    {f.q}
+                    <span className={styles.faqChevron} aria-hidden>+</span>
+                  </summary>
+                  <p className={styles.faqA}>{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FINAL CTA */}
+        <section className={styles.finalCta} aria-labelledby="cta-title">
+          <h2 id="cta-title" className={styles.finalTitle}>Stop opening that second tab.</h2>
+          <p className={styles.finalSub}>Add IMDb and Rotten Tomatoes to Netflix in under a minute — free, forever.</p>
+          <a href={REPO_URL} className={styles.btnPrimary} target="_blank" rel="noopener noreferrer">
+            Install free <span aria-hidden>→</span>
+          </a>
+        </section>
+      </main>
 
       {/* FOOTER */}
       <footer className={styles.footer}>
         <div className={styles.footerLeft}>
-          <div className={styles.navLogoIcon} style={{ width: 20, height: 20, fontSize: 11 }}>★</div>
+          <span className={styles.navLogoIcon} style={{ width: 20, height: 20, fontSize: 11 }} aria-hidden>★</span>
           Netflix Ratings
         </div>
-        <div className={styles.footerRight}>
-          <a
-            href="https://github.com/igorgazivoda/netflix-imdb"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://www.omdbapi.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Powered by OMDb
-          </a>
-          <a href="/privacy">Privacy Policy</a>
-        </div>
+        <nav className={styles.footerRight} aria-label="Footer">
+          <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>
+          <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">Powered by OMDb</a>
+          <a href="/privacy">Privacy</a>
+        </nav>
       </footer>
     </div>
   );

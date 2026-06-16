@@ -1,0 +1,22 @@
+# Netflix Ratings
+
+> Netflix Ratings is a free, open-source Chrome extension that overlays IMDb and Rotten Tomatoes scores directly onto Netflix title cards while you browse. It removes the need to open a second tab or search for a rating — you see both the audience (IMDb) and critic (Rotten Tomatoes) score at a glance, then decide what to watch.
+
+## Key facts
+
+- **What it is:** A browser extension for Netflix that adds IMDb + Rotten Tomatoes ratings to every title card.
+- **Price:** Free and open source. No account, no subscription, no tracking.
+- **Browsers:** Chrome, Edge, Brave, and other Chromium-based browsers.
+- **Privacy:** No login required; viewing history is never stored or shared. Only title names are sent to the ratings source to fetch scores.
+- **Install time:** Under one minute via "Load unpacked" from the GitHub repository.
+
+## Pages
+
+- [Homepage](https://netflix-ratings.app/): Overview, features, how it works, testimonials, and FAQ.
+- [IMDb vs Rotten Tomatoes](https://netflix-ratings.app/compare/imdb-vs-rotten-tomatoes): How the two rating systems differ, when to trust each, and why seeing both together helps you choose.
+- [Camera Vision demo](https://netflix-ratings.app/camera-vision): Experimental on-device demo that reads titles from a camera feed.
+- [Privacy Policy](https://netflix-ratings.app/privacy): What data the extension touches and why.
+
+## Source
+
+- [GitHub repository](https://github.com/gazivoda/netflix-imdb): Full source code, install instructions, and issues.
