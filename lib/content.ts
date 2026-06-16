@@ -77,6 +77,22 @@ export const TESTIMONIALS = [
   },
 ];
 
+// Titles for the auto-scrolling marquee strip. Scores are illustrative.
+export const MARQUEE = [
+  { title: 'Breaking Bad', imdb: '9.5', rt: '96%' },
+  { title: 'The Queen’s Gambit', imdb: '8.5', rt: '97%' },
+  { title: 'Dark', imdb: '8.7', rt: '95%' },
+  { title: 'Black Mirror', imdb: '8.7', rt: '83%' },
+  { title: 'Money Heist', imdb: '8.2', rt: '90%' },
+  { title: 'Arcane', imdb: '9.0', rt: '100%' },
+  { title: 'The Witcher', imdb: '8.0', rt: '68%' },
+  { title: 'Stranger Things', imdb: '8.7', rt: '86%' },
+  { title: 'Wednesday', imdb: '8.1', rt: '67%' },
+  { title: 'BoJack Horseman', imdb: '8.8', rt: '93%' },
+  { title: 'Squid Game', imdb: '8.0', rt: '95%' },
+  { title: 'Narcos', imdb: '8.8', rt: '89%' },
+];
+
 export const FAQS = [
   {
     q: 'What is Netflix Ratings?',

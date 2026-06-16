@@ -29,8 +29,11 @@
 
   --badge-bg: rgba(8, 6, 7, 0.82);
 
-  --font-display: var(--font-display), 'Bricolage Grotesque', sans-serif;
-  --font-body: var(--font-body), 'Hanken Grotesk', sans-serif;
+  /* next/font injects --font-display / --font-body on <html>; alias them here
+     with fallbacks. Do NOT name these the same as the injected vars or the
+     reference becomes circular and fonts silently drop to serif. */
+  --display: var(--font-display), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --body: var(--font-body), 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
 
   --radius: 14px;
 }
@@ -40,7 +43,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;

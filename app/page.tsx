@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import { FEATURES, STATS, TESTIMONIALS, FAQS, REPO_URL } from '../lib/content';
+import { FEATURES, STATS, TESTIMONIALS, FAQS, MARQUEE, REPO_URL } from '../lib/content';
 
 const CARDS = [
   { label: 'Stranger Things', color: '#241a2e', imdb: '8.7', rt: '86%' },
@@ -123,6 +123,82 @@ export default function Page() {
               <div className={styles.statSub}>{s.sub}</div>
             </div>
           ))}
+        </section>
+
+        {/* MARQUEE */}
+        <section className={styles.marquee} aria-label="Ratings shown on popular Netflix titles">
+          <div className={styles.marqueeTrack}>
+            {[...MARQUEE, ...MARQUEE].map((m, i) => (
+              <span key={`${m.title}-${i}`} className={styles.marqueeItem} aria-hidden={i >= MARQUEE.length}>
+                <span className={styles.marqueeTitle}>{m.title}</span>
+                <span className={styles.marqueeImdb}>★ {m.imdb}</span>
+                <span className={styles.marqueeRt}>🍅 {m.rt}</span>
+              </span>
+            ))}
+          </div>
+        </section>
+
+        {/* NARRATIVE */}
+        <section className={styles.story} aria-labelledby="story-title">
+          <div className={styles.storyHead}>
+            <p className={styles.sectionLabel}>Why it matters</p>
+            <h2 id="story-title" className={styles.storyTitle}>
+              A rating on the card changes how you choose what to watch.
+            </h2>
+          </div>
+          <div className={styles.storyBody}>
+            <p>
+              The average person spends close to <strong>18 minutes</strong> deciding what to watch
+              before giving up or settling for something forgettable. Netflix shows you gorgeous
+              artwork and a one-line hook — but never the one number that actually predicts whether
+              you&apos;ll enjoy it. So you open a second tab, search the title, skim a rating, switch
+              back, and repeat. Every single time.
+            </p>
+            <p>
+              Netflix Ratings removes that loop entirely. By placing the <strong>IMDb</strong> user
+              score and the <strong>Rotten Tomatoes</strong> critic score directly on each title
+              card, the decision happens where you already are. You glance, you compare the audience
+              and the critics in the same look, and you press play with confidence — or scroll on
+              without a second thought.
+            </p>
+            <p>
+              Because both numbers load in parallel as you browse, there&apos;s no lag and no
+              card-by-card waiting. New rows, search results and &ldquo;More Like This&rdquo;
+              suggestions are all covered automatically. It&apos;s the context Netflix should have
+              shipped years ago — quietly added back in.
+            </p>
+            <blockquote className={styles.pullQuote}>
+              &ldquo;Two trusted scores, on every card, in the time it takes to scroll.&rdquo;
+            </blockquote>
+          </div>
+        </section>
+
+        {/* BEFORE / AFTER */}
+        <section className={styles.beforeAfter} aria-labelledby="ba-title">
+          <p className={styles.sectionLabel}>Before &amp; after</p>
+          <h2 id="ba-title" className={styles.sectionTitle}>The same card, two very different decisions</h2>
+          <div className={styles.baGrid}>
+            <div className={styles.baCol}>
+              <span className={`${styles.baTag} ${styles.baTagOff}`}>Without the extension</span>
+              <div className={styles.baCard}>
+                <div className={styles.baArt} style={{ background: '#241a2e' }}>Stranger Things</div>
+              </div>
+              <p className={styles.baNote}>Great artwork. Zero idea if it&apos;s actually good.</p>
+            </div>
+            <div className={styles.baCol}>
+              <span className={`${styles.baTag} ${styles.baTagOn}`}>With Netflix Ratings</span>
+              <div className={styles.baCard}>
+                <div className={styles.baArt} style={{ background: '#241a2e' }}>
+                  Stranger Things
+                  <span className={styles.baBadge}>
+                    <span className={styles.imdbChip}>★ 8.7</span>
+                    <span className={styles.rtChip}>🍅 86%</span>
+                  </span>
+                </div>
+              </div>
+              <p className={styles.baNote}>Audience <strong>8.7</strong>, critics <strong>86%</strong>. Press play.</p>
+            </div>
+          </div>
         </section>
 
         {/* FEATURES */}
