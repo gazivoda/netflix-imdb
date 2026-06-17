@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import styles from './compare.module.css';
-import { SITE_URL, REPO_URL } from '../../../lib/content';
+import { SITE_URL, REPO_URL, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED, LAST_UPDATED_LABEL } from '../../../lib/content';
 
 const TITLE = 'IMDb vs Rotten Tomatoes: What the Difference Means for What You Watch';
 const DESCRIPTION =
@@ -91,7 +91,9 @@ const jsonLd = {
       headline: TITLE,
       description: DESCRIPTION,
       mainEntityOfPage: `${SITE_URL}${PATH}`,
-      author: { '@type': 'Organization', name: 'Netflix Ratings', url: SITE_URL },
+      datePublished: PUBLISHED_DATE,
+      dateModified: LAST_UPDATED,
+      author: { '@type': 'Person', name: AUTHOR_NAME, url: REPO_URL },
       publisher: { '@type': 'Organization', name: 'Netflix Ratings', url: SITE_URL },
       inLanguage: 'en',
       about: ['IMDb', 'Rotten Tomatoes', 'movie ratings', 'Netflix'],
@@ -129,6 +131,12 @@ export default function ComparePage() {
 
         <header className={styles.head}>
           <h1 className={styles.h1}>IMDb vs Rotten Tomatoes</h1>
+          <p className={styles.byline}>
+            By{' '}
+            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">{AUTHOR_NAME}</a>
+            {' · Updated '}
+            <time dateTime={LAST_UPDATED}>{LAST_UPDATED_LABEL}</time>
+          </p>
           <p className={styles.lede}>
             Two of the most-quoted ratings in film disagree all the time — because they measure
             different things. <strong>IMDb is an average audience score out of 10. Rotten Tomatoes

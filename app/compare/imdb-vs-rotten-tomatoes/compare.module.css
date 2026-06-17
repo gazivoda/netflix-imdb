@@ -77,6 +77,13 @@
   margin-bottom: 20px;
   text-wrap: balance;
 }
+.byline {
+  font-size: 13px;
+  color: var(--faint);
+  margin: -8px 0 20px;
+}
+.byline a { color: var(--faint); text-decoration: underline; }
+.byline a:hover { color: var(--text); }
 .lede {
   font-size: clamp(16px, 1.6vw, 19px);
   line-height: 1.6;

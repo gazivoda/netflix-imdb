@@ -6,6 +6,14 @@ export const SITE_URL =
 
 export const REPO_URL = 'https://github.com/gazivoda/netflix-imdb';
 
+// Author + freshness signals. Surfaced as a visible byline/date on pages and in
+// the JSON-LD graph (Person, datePublished/dateModified) so AI search engines
+// and AI Overviews can attribute and date the content.
+export const AUTHOR_NAME = 'Igor Gazivoda';
+export const PUBLISHED_DATE = '2026-05-01'; // first public release
+export const LAST_UPDATED = '2026-06-17'; // ISO; keep in sync with real edits
+export const LAST_UPDATED_LABEL = 'June 17, 2026';
+
 export const FEATURES = [
   {
     icon: '★',

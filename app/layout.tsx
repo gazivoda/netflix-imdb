@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google';
-import { SITE_URL, REPO_URL, FAQS } from '../lib/content';
+import { SITE_URL, REPO_URL, FAQS, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED } from '../lib/content';
 
 const display = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -80,6 +80,13 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
+      '@type': 'Person',
+      '@id': `${SITE_URL}/#author`,
+      name: AUTHOR_NAME,
+      url: REPO_URL,
+      sameAs: [REPO_URL],
+    },
+    {
       '@type': 'WebSite',
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
@@ -95,6 +102,7 @@ const jsonLd = {
       url: SITE_URL,
       description:
         'Maker of Netflix Ratings, a free open-source browser extension that adds IMDb and Rotten Tomatoes scores to Netflix.',
+      founder: { '@id': `${SITE_URL}/#author` },
       sameAs: [REPO_URL],
     },
     {
@@ -107,8 +115,11 @@ const jsonLd = {
       url: SITE_URL,
       downloadUrl: REPO_URL,
       softwareVersion: '1.0.0',
+      datePublished: PUBLISHED_DATE,
+      dateModified: LAST_UPDATED,
       isAccessibleForFree: true,
-      author: { '@id': `${SITE_URL}/#org` },
+      author: { '@id': `${SITE_URL}/#author` },
+      publisher: { '@id': `${SITE_URL}/#org` },
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       featureList: [
         'IMDb ratings on every Netflix title card',

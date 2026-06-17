@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import { FEATURES, STATS, TESTIMONIALS, FAQS, MARQUEE, REPO_URL } from '../lib/content';
+import { FEATURES, STATS, TESTIMONIALS, FAQS, MARQUEE, REPO_URL, AUTHOR_NAME, LAST_UPDATED, LAST_UPDATED_LABEL } from '../lib/content';
 
 const CARDS = [
   { label: 'Stranger Things', color: '#241a2e', imdb: '8.7', rt: '86%' },
@@ -333,6 +333,12 @@ export default function Page() {
           <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">Powered by OMDb</a>
           <a href="/privacy">Privacy</a>
         </nav>
+        <p className={styles.footerMeta}>
+          Built by{' '}
+          <a href={REPO_URL} target="_blank" rel="noopener noreferrer">{AUTHOR_NAME}</a>
+          {' · '}
+          Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED_LABEL}</time>
+        </p>
       </footer>
     </div>
   );
