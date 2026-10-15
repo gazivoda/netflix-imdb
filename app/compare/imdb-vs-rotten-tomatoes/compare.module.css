@@ -1,68 +1,138 @@
-/* versus visual */
+/* versus: two giant ticket stubs with a hard VS stamp between them */
 .versus {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: clamp(10px, 2vw, 20px);
-  margin: 8px 0 48px;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: clamp(28px, 6vw, 56px);
+  margin: 8px 0 40px;
 }
 .vsCard {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  min-width: 0;
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
 }
-.vsImdb { border-color: rgba(245, 197, 24, 0.3); }
-.vsRt { border-color: rgba(250, 50, 10, 0.3); }
-.vsTag { font-size: 13px; font-weight: 700; }
-.vsImdb .vsTag { color: var(--imdb); }
-.vsRt .vsTag { color: #ff7a5c; }
+.vsImdb { background: var(--gold); color: var(--ink); }
+.vsRt { background: var(--signal); color: #fff; }
+
+/* ink header strip holding the chip label */
+.vsTag {
+  display: block;
+  padding: 10px 14px;
+  background: var(--ink);
+  border-bottom: 3px solid var(--ink);
+  --chip-fs: 13px;
+}
 .vsScore {
+  display: block;
+  padding: clamp(18px, 3vw, 30px) 18px 10px;
   font-family: var(--display);
-  font-size: clamp(40px, 7vw, 60px);
-  font-weight: 800;
-  letter-spacing: -2px;
-  line-height: 1;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(104px, 17vw, 168px);
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
 }
-.vsUnit { font-size: 0.4em; color: var(--faint); font-weight: 600; margin-left: 4px; }
-.vsWho { font-size: 13px; color: var(--muted); }
+.vsUnit {
+  font-size: 0.34em;
+  font-weight: 900;
+  margin-left: 6px;
+  letter-spacing: 0.02em;
+}
+/* perforation line + caption */
+.vsWho {
+  margin-top: auto;
+  padding: 14px 18px 16px;
+  border-top: 3px dashed var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.35;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.vsRt .vsWho { border-top-color: #fff; }
+
+/* hard VS stamp, centred on the seam between the stubs */
 .vsDivider {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  background: var(--ink);
+  color: var(--paper);
+  border: 3px solid var(--paper);
+  outline: 3px solid var(--ink);
+  border-radius: 0;
   font-family: var(--display);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--faint);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 46px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-/* when grid */
+/* when to trust: two hard-bordered slips with ink headings */
 .whenGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 16px 0;
+  gap: 28px;
+  margin: 20px 0 24px;
 }
 .whenCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
+  padding: 0 24px 20px;
+  box-shadow: var(--shadow-hard-sm);
+  overflow: hidden;
 }
 .whenTitle {
-  font-family: var(--display);
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  margin: 0 -24px 18px;
+  padding: 14px 24px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 0.9;
 }
+.whenMark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--paper);
+  font-family: var(--mono);
+  font-stretch: 100%;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+.whenMarkImdb { background: var(--gold); color: var(--ink); }
+.whenMarkRt { background: var(--signal); }
 .whenCard ul { margin-bottom: 0; }
-.whenCard li { font-size: 14.5px; }
+.whenCard li { font-size: 16px; }
+
+/* comparison table column labels */
+.thChip { white-space: nowrap; }
 
 @media (max-width: 620px) {
-  .versus { grid-template-columns: 1fr; }
-  .vsDivider { padding: 4px 0; }
+  .versus { grid-template-columns: 1fr; gap: 44px; margin-bottom: 48px; }
+  .vsDivider { width: 64px; height: 64px; font-size: 38px; }
   .whenGrid { grid-template-columns: 1fr; }
 }
