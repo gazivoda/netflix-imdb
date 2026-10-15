@@ -47,3 +47,9 @@ USER UPDATE (iteration 2): user now AUTHORIZES commit + push to main after every
 - Privacy page: "Last updated May 4, 2025" predates the project (published 2026-05-01) and policy only mentions IMDb, not Rotten Tomatoes.
 - OMDb API key committed in extension/background.js.
 - Home "18 minutes" stat is unsourced; STATS/MARQUEE illustrative.
+
+## Wave 2 (queued, user request 2026-10-15): paper & ink redesign by 20 agents
+Spec: docs/DESIGN.md (owner-supplied; repo did NOT already contain it — homepage was still dark theme).
+Sequenced AFTER wave 1 merges (both waves edit page.module.css / guide.module.css / layout.tsx; running together = conflicts).
+Plan: (0) main thread merges wave 1, then lands design foundation (tokens in globals/guide css, next/font Archivo wdth axis + Instrument Serif + JetBrains Mono) and splits the homepage into per-section components with their own CSS modules so 20 agents can own disjoint files; (1) launch 20 slice agents; (2) merge, verify (tsc/jest/build/seo:validate), screenshot QA, commit+push.
+Conflicts to resolve with the user: spec says 'no emoji' (🍅 used in badges/marquee), TESTIMONIALS are fabricated (still flagged).
