@@ -56,12 +56,17 @@ export const PAGES: SitePage[] = [
     title: 'How to Show IMDb Ratings on Netflix (Free)',
     description:
       'Show IMDb ratings on Netflix cards with the free Netflix Ratings extension: install, open Netflix, read the top-right badge. What the score means, and limits.',
+    path: '/how-to/show-rotten-tomatoes-on-netflix',
+    title: 'Show Rotten Tomatoes Scores on Netflix',
+    description:
+      'Netflix has no Rotten Tomatoes scores. Install the free Netflix Ratings extension to see the Tomatometer on every title card, and what the percentage means.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'guide',
     label: 'Show IMDb ratings on Netflix',
+    label: 'Show Rotten Tomatoes on Netflix',
     ogType: 'article',
   },
   {
