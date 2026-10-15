@@ -1,0 +1,16 @@
+/* Fallback look for the score chips. The global .ds-chip-imdb / .ds-chip-rt helpers (globals.css)
+   may restyle them; size per context with --chip-fs, --chip-py, --chip-px, --chip-bw on a parent. */
+.chip {
+  display: inline-block;
+  font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-size: var(--chip-fs, 12px);
+  font-weight: 800;
+  line-height: 1;
+  padding: var(--chip-py, 0.3em) var(--chip-px, 0.5em);
+  border: var(--chip-bw, 2px) solid var(--ink, #0c0a0b);
+  border-radius: 0;
+  color: var(--ink, #0c0a0b);
+  white-space: nowrap;
+}
+.imdb { background: var(--imdb, #f5c518); }
+.rt { background: var(--signal, var(--rt, #fa320a)); }

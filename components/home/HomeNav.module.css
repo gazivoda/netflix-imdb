@@ -1,0 +1,67 @@
+/* ── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(20px, 5vw, 48px);
+  height: 66px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--border);
+}
+
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  text-decoration: none;
+}
+
+.navLogoIcon {
+  width: 28px;
+  height: 28px;
+  background: var(--red);
+  color: #fff;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 22px);
+}
+
+.navLink {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.navLink:hover { color: var(--text); }
+
+.navInstall {
+  background: var(--red);
+  color: #fff;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.12s;
+}
+.navInstall:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+@media (max-width: 560px) {
+  .navLinks .navLink { display: none; }
+}
