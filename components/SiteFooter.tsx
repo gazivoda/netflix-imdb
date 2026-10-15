@@ -7,6 +7,7 @@ import { REPO_URL, AUTHOR_NAME } from '../lib/content';
 export default function SiteFooter({ updated }: { updated?: { iso: string; label: string } }) {
   const guides = pagesInGroup('guide');
   const compare = pagesInGroup('compare');
+  const about = pagesInGroup('about');
   const legal = pagesInGroup('legal');
   const home = PAGES.find((p) => p.path === '/');
 
@@ -27,6 +28,9 @@ export default function SiteFooter({ updated }: { updated?: { iso: string; label
           {home && <a href={home.path}>Home</a>}
           <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub (open source)</a>
           <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">Powered by OMDb</a>
+          {about.map((p) => (
+            <a key={p.path} href={p.path}>{p.label ?? p.title}</a>
+          ))}
           {legal.map((p) => (
             <a key={p.path} href={p.path}>{p.label ?? p.title}</a>
           ))}
