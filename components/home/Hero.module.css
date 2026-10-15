@@ -1,222 +1,280 @@
-/* ── HERO ── */
+/* ── HERO: paper & ink ticket ──
+   Headline spans the full width; copy and the ticket mockup sit side by side underneath. */
 .hero {
   display: grid;
-  grid-template-columns: 1.05fr 1fr;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  gap: clamp(32px, 5vw, 64px);
-  max-width: 1200px;
+  gap: clamp(28px, 4vw, 56px) clamp(32px, 5vw, 64px);
+  max-width: 1320px;
   margin: 0 auto;
-  padding: clamp(56px, 9vw, 104px) clamp(20px, 5vw, 48px) clamp(48px, 7vw, 84px);
+  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 48px) clamp(56px, 7vw, 96px);
 }
+
+.heroHead { grid-column: 1 / -1; min-width: 0; }
 
 .heroBadge {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(229, 9, 20, 0.12);
-  border: 1px solid rgba(229, 9, 20, 0.32);
-  color: #ff7a72;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  padding: 5px 12px;
-  border-radius: 100px;
-  margin-bottom: 22px;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  padding: 7px 14px;
+  margin-bottom: clamp(20px, 3vw, 32px);
 }
 
 .heroTitle {
   font-family: var(--display);
-  font-size: clamp(38px, 6vw, 60px);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -1.8px;
-  margin-bottom: 22px;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(76px, 13vw, 184px);
+  line-height: 0.84;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  max-width: 11.5em;
   text-wrap: balance;
 }
 .heroTitle em {
+  font-family: var(--serif);
   font-style: italic;
-  color: var(--imdb);
+  font-weight: 400;
+  font-stretch: 100%;
+  text-transform: none;
+  letter-spacing: -0.02em;
+  font-size: 1.06em;
+  color: var(--red-text);
 }
 
+.heroCopy { min-width: 0; }
+
 .heroSubtitle {
-  font-size: clamp(16px, 1.4vw, 19px);
+  font-size: clamp(17px, 1.5vw, 20px);
   color: var(--muted);
-  line-height: 1.6;
+  line-height: 1.55;
   margin-bottom: 32px;
-  max-width: 460px;
+  max-width: 34em;
 }
-.heroSubtitle strong { color: var(--text); font-weight: 600; }
+.heroSubtitle strong { color: var(--text); font-weight: 700; }
 
 .heroCta {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px 20px;
   flex-wrap: wrap;
+  /* room for the 5px button shadows */
+  padding: 0 5px 5px 0;
 }
 
-.btnSecondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  border-bottom: 1px solid var(--border-strong);
-  padding-bottom: 2px;
-  transition: border-color 0.2s, color 0.2s;
+/* Secondary CTA: ink outline on paper; the .ds-btn press effect still applies. */
+.heroCta .btnSecondary {
+  background: transparent;
+  color: var(--ink);
 }
-.btnSecondary:hover { border-color: var(--red); color: #ff7a72; }
+.heroCta .btnSecondary:hover { background: var(--card); }
 
 .heroNote {
   list-style: none;
-  margin-top: 18px;
+  margin-top: 26px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 18px;
-  font-size: 13px;
+  gap: 8px 22px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--faint);
 }
 .heroNote li {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .heroNote li::before {
   content: '✓';
-  color: var(--imdb);
+  color: var(--ink);
   font-weight: 700;
 }
 
-/* ── MOCKUP ── */
-.mockupWrap { position: relative; }
+/* ── MOCKUP: ticket / poster tags ── */
+.mockupWrap { position: relative; min-width: 0; }
+
+.mockupStage { position: relative; }
 
 .mockup {
   position: relative;
   z-index: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: 0;
   padding: 16px;
-  box-shadow: 0 50px 90px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
-  transform: perspective(1400px) rotateY(-5deg) rotateX(2deg);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-hard);
+  transform: rotate(-1.5deg);
+  transition: transform 0.25s ease;
 }
-.mockupWrap:hover .mockup {
-  transform: perspective(1400px) rotateY(0deg) rotateX(0deg);
-}
+.mockupWrap:hover .mockup { transform: rotate(0deg); }
 
+/* Ticket header: mono address strip above a dashed perforation. */
 .mockupBar {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 14px;
-  padding: 0 4px;
+  padding: 0 0 12px;
+  border-bottom: 2px dashed var(--ink);
 }
-.mockupDot { width: 10px; height: 10px; border-radius: 50%; }
-.mockupDot:nth-child(1) { background: #ff5f57; }
-.mockupDot:nth-child(2) { background: #febc2e; }
-.mockupDot:nth-child(3) { background: #28c840; }
+.mockupDot { width: 10px; height: 10px; border: 2px solid var(--ink); flex: none; }
+.mockupDot:nth-child(1) { background: var(--signal); }
+.mockupDot:nth-child(2) { background: var(--gold); }
+.mockupDot:nth-child(3) { background: var(--teal); }
 .mockupUrl {
   flex: 1;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 5px;
-  height: 22px;
+  min-width: 0;
   margin-left: 8px;
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
+  font-family: var(--mono);
   font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .netflixBar {
-  background: #000;
-  padding: 9px 16px;
+  background: var(--ink);
+  padding: 9px 14px;
   display: flex;
   align-items: center;
-  gap: 22px;
-  margin: -16px -16px 14px;
+  gap: 18px;
+  margin: 0 0 16px;
 }
 .netflixLogo {
-  color: var(--red);
-  font-size: 20px;
+  color: #fff;
+  font-family: var(--display);
+  font-stretch: 62%;
   font-weight: 900;
-  letter-spacing: -1px;
-  font-style: italic;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: var(--signal);
+  padding: 3px 7px;
 }
-.netflixNav { display: flex; gap: 14px; }
-.netflixNav span { font-size: 12px; color: #999; }
-.netflixNav span:first-child { color: #fff; }
+.netflixNav { display: flex; gap: 14px; min-width: 0; overflow: hidden; }
+.netflixNav span {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--card);
+  white-space: nowrap;
+}
+.netflixNav span:not(:first-child) { opacity: 0.7; }
 
 .rowLabel {
-  font-size: 12px;
-  font-weight: 600;
-  color: #8d8480;
-  margin-bottom: 8px;
-  padding: 0 2px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 10px;
 }
 
 .cardRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 7px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 18px;
 }
+.cardRow:last-child { margin-bottom: 2px; }
 
+/* Flat colour-block "poster" with a score tag stuck on the corner. */
 .card {
   position: relative;
-  border-radius: 5px;
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 5;
 }
 .cardBg {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: flex-end;
-  padding: 6px;
-  font-size: 9px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.55);
+  padding: 7px;
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  font-family: var(--display);
+  font-stretch: 62%;
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--card);
 }
 
-/* Chip sizing for the ScoreChip components inside the mockup cards. */
 .cardBadge {
-  --chip-fs: 8px;
-  --chip-bw: 1px;
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: -8px;
+  right: -7px;
+  z-index: 1;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 3px;
+  transform: rotate(4deg);
+  transform-origin: top right;
+}
+.card:nth-child(even) .cardBadge { transform: rotate(-3deg); }
+.card:nth-child(3n) .cardBadge { transform: rotate(2deg); }
+.cardBadge > span {
+  font-size: 10.5px;
+  padding: 3px 5px;
+  border-width: 2px;
+  line-height: 1;
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
+/* Flat offset block behind the ticket (was a blurred glow). */
 .glow {
   position: absolute;
-  inset: -40px -20px;
+  inset: 16px -14px -16px 14px;
   z-index: 0;
-  background: radial-gradient(60% 60% at 60% 40%, rgba(229, 9, 20, 0.22), transparent 70%);
-  filter: blur(30px);
+  background: var(--gold);
+  border: 3px solid var(--ink);
   pointer-events: none;
 }
 
 .illustrative {
-  margin-top: 14px;
+  margin-top: 30px;
+  font-family: var(--mono);
   font-size: 12px;
+  letter-spacing: 0.04em;
   text-align: center;
   color: var(--faint);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .btnSecondary:hover { transform: none; }
+  .mockup { transition: none; }
+  .mockupWrap:hover .mockup { transform: rotate(-1.5deg); }
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 940px) {
   .hero { grid-template-columns: 1fr; }
-  .mockupWrap { order: -1; }
-  .mockup { transform: none; }
+  .mockupWrap { padding-right: 14px; }
+}
+
+@media (max-width: 560px) {
+  .cardRow { grid-template-columns: repeat(2, 1fr); }
+  .card { aspect-ratio: 16 / 10; }
+  .cardBg { font-size: 16px; }
+  .netflixNav span:nth-child(n + 3) { display: none; }
+  .mockup { padding: 12px; }
 }
