@@ -56,6 +56,15 @@ export const PAGES: SitePage[] = [
     title: 'How to Show IMDb Ratings on Netflix (Free)',
     description:
       'Show IMDb ratings on Netflix cards with the free Netflix Ratings extension: install, open Netflix, read the top-right badge. What the score means, and limits.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.9,
+    group: 'guide',
+    label: 'Show IMDb ratings on Netflix',
+    ogType: 'article',
+  },
+  {
     path: '/how-to/show-rotten-tomatoes-on-netflix',
     title: 'Show Rotten Tomatoes Scores on Netflix',
     description:
@@ -65,8 +74,33 @@ export const PAGES: SitePage[] = [
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'guide',
-    label: 'Show IMDb ratings on Netflix',
     label: 'Show Rotten Tomatoes on Netflix',
+    ogType: 'article',
+  },
+  {
+    path: '/how-to/find-what-to-watch-on-netflix',
+    title: 'How to Find What to Watch on Netflix',
+    description:
+      'A 60-second routine for choosing what to watch on Netflix: read IMDb and Rotten Tomatoes together, spot split scores, and know when ratings mislead.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    group: 'guide',
+    label: 'Find what to watch',
+    ogType: 'article',
+  },
+  {
+    path: '/research/imdb-vs-rotten-tomatoes-gap',
+    title: 'IMDb vs Rotten Tomatoes Gap: Netflix Data Study',
+    description:
+      'We compared IMDb and Rotten Tomatoes scores for 44 Netflix Original films: the average gap is 18.7 points and 61% differ by 15+. Method and raw data included.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'yearly',
+    priority: 0.8,
+    group: 'guide',
+    label: 'IMDb vs RT data study',
     ogType: 'article',
   },
   {
@@ -82,10 +116,6 @@ export const PAGES: SitePage[] = [
     ogType: 'article',
   },
   {
-    path: '/how-to/find-what-to-watch-on-netflix',
-    title: 'How to Find What to Watch on Netflix',
-    description:
-      'A 60-second routine for choosing what to watch on Netflix: read IMDb and Rotten Tomatoes together, spot split scores, and know when ratings mislead.',
     path: '/compare/alternatives',
     title: 'Ratings on Netflix: Reelgood, JustWatch & More',
     description:
@@ -94,21 +124,11 @@ export const PAGES: SitePage[] = [
     updated: '2026-10-15',
     changeFrequency: 'monthly',
     priority: 0.8,
-    group: 'guide',
-    label: 'Find what to watch',
     group: 'compare',
     label: 'Rating alternatives',
-    path: '/research/imdb-vs-rotten-tomatoes-gap',
-    title: 'IMDb vs Rotten Tomatoes Gap: Netflix Data Study',
-    description:
-      'We compared IMDb and Rotten Tomatoes scores for 44 Netflix Original films: the average gap is 18.7 points and 61% differ by 15+. Method and raw data included.',
-    published: '2026-10-15',
-    updated: '2026-10-15',
-    changeFrequency: 'yearly',
-    priority: 0.8,
-    group: 'guide',
-    label: 'IMDb vs RT data study',
     ogType: 'article',
+  },
+  {
     path: '/about',
     title: 'About Netflix Ratings and Its Maker',
     description:
@@ -129,6 +149,7 @@ export const PAGES: SitePage[] = [
     updated: '2026-06-17',
     changeFrequency: 'monthly',
     priority: 0.5,
+    group: 'about',
     label: 'Camera Vision demo',
     ogType: 'website',
   },
