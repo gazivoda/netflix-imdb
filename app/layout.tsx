@@ -1,19 +1,27 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google';
+import { Archivo, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import { SITE_URL, REPO_URL, FAQS, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED } from '../lib/content';
 
-const display = Bricolage_Grotesque({
+const sans = Archivo({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
-  variable: '--font-display',
+  axes: ['wdth'],
+  variable: '--font-sans',
   display: 'swap',
 });
 
-const body = Hanken_Grotesk({
+const serif = Instrument_Serif({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-body',
+  weight: '400',
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+  variable: '--font-mono',
   display: 'swap',
 });
 
@@ -70,8 +78,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0c0a0b',
-  colorScheme: 'dark',
+  themeColor: '#ece6d8',
 };
 
 // Structured data — helps both Google rich results and AI search engines
@@ -143,7 +150,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
       <head>
         <script
           type="application/ld+json"

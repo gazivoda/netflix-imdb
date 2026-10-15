@@ -29,11 +29,11 @@
 
   --badge-bg: rgba(8, 6, 7, 0.82);
 
-  /* next/font injects --font-display / --font-body on <html>; alias them here
-     with fallbacks. Do NOT name these the same as the injected vars or the
-     reference becomes circular and fonts silently drop to serif. */
-  --display: var(--font-display), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
-  --body: var(--font-body), 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  /* next/font injects --font-* on <html>; alias with fallbacks (never reuse the injected names). */
+  --display: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --body: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --serif: var(--font-serif), Georgia, serif;
+  --mono: var(--font-mono), ui-monospace, monospace;
 
   --radius: 14px;
 }
