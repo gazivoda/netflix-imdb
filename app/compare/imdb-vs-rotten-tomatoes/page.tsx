@@ -1,6 +1,7 @@
 import styles from './compare.module.css';
 import g from '../../../components/guide.module.css';
 import GuideLayout from '../../../components/GuideLayout';
+import { ImdbChip, RtChip } from '../../../components/ScoreChip';
 import { pageMetadata } from '../../../lib/seo';
 
 const PATH = '/compare/imdb-vs-rotten-tomatoes';
@@ -93,13 +94,13 @@ export default function ComparePage() {
         {/* score visual */}
       <div className={styles.versus}>
         <div className={`${styles.vsCard} ${styles.vsImdb}`}>
-          <span className={styles.vsTag}>★ IMDb</span>
+          <span className={styles.vsTag}><ImdbChip value="8.7" text="★ IMDb" /></span>
           <span className={styles.vsScore}>8.7<span className={styles.vsUnit}>/10</span></span>
           <span className={styles.vsWho}>What audiences rated it</span>
         </div>
         <span className={styles.vsDivider} aria-hidden>vs</span>
         <div className={`${styles.vsCard} ${styles.vsRt}`}>
-          <span className={styles.vsTag}>🍅 Rotten Tomatoes</span>
+          <span className={styles.vsTag}><RtChip value="86%" text="Rotten Tomatoes" /></span>
           <span className={styles.vsScore}>86<span className={styles.vsUnit}>%</span></span>
           <span className={styles.vsWho}>Share of critics who approved</span>
         </div>
@@ -120,8 +121,8 @@ export default function ComparePage() {
           <thead>
             <tr>
               <th scope="col">&nbsp;</th>
-              <th scope="col"><span className={g.thImdb}>★ IMDb</span></th>
-              <th scope="col"><span className={g.thRt}>🍅 Rotten Tomatoes</span></th>
+              <th scope="col"><span className={`ds-chip-imdb ${styles.thChip}`}>★ IMDb</span></th>
+              <th scope="col"><span className={`ds-chip-rt ${styles.thChip}`}>Rotten Tomatoes</span></th>
             </tr>
           </thead>
           <tbody>
@@ -143,16 +144,16 @@ export default function ComparePage() {
         read on a new release, or want to avoid something critics broadly panned.
       </p>
       <div className={styles.whenGrid}>
-        <div className={styles.whenCard}>
-          <h3 className={styles.whenTitle}><span aria-hidden>★</span> Lean on IMDb when…</h3>
+        <div className={`${styles.whenCard} ds-card`}>
+          <h3 className={styles.whenTitle}><span className={`${styles.whenMark} ${styles.whenMarkImdb}`} aria-hidden>★</span> Lean on IMDb when…</h3>
           <ul className={g.list}>
             <li>You want to know if regular viewers actually enjoyed it.</li>
             <li>The title is older — fan ratings have settled over years.</li>
             <li>You&apos;re choosing a comfort rewatch or a crowd-pleaser.</li>
           </ul>
         </div>
-        <div className={styles.whenCard}>
-          <h3 className={styles.whenTitle}><span aria-hidden>🍅</span> Lean on Rotten Tomatoes when…</h3>
+        <div className={`${styles.whenCard} ds-card`}>
+          <h3 className={styles.whenTitle}><span className={`${styles.whenMark} ${styles.whenMarkRt}`} aria-hidden /> Lean on Rotten Tomatoes when…</h3>
           <ul className={g.list}>
             <li>It&apos;s a new release and you want the critical read.</li>
             <li>You care about craft — direction, writing, performances.</li>
