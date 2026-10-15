@@ -25,7 +25,8 @@
 
   --text: #f6f2ef;
   --muted: #b3a9a4;       /* warm-tinted, not gray-on-color */
-  --faint: #6f6561;
+  --faint: #948a86;       /* >=5.2:1 on every surface (WCAG AA) */
+  --red-text: #ff4d57;    /* red for small text on dark; --red fails AA as text */
 
   --badge-bg: rgba(8, 6, 7, 0.82);
 
@@ -40,6 +41,12 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -57,4 +64,29 @@ body {
 
 a {
   color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--imdb);
+  outline-offset: 3px;
+}
+
+[tabindex="-1"]:focus {
+  outline: none; /* skip-link target, not an interactive control */
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -64px;
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 12px;
 }

@@ -44,7 +44,7 @@ export default function GuideLayout({
       <JsonLd data={jsonLd} />
       <SiteHeader />
 
-      <main>
+      <main id="main" tabIndex={-1}>
         <article className={g.article}>
           <nav className={g.crumbs} aria-label="Breadcrumb">
             {trail.slice(0, -1).map((t) => (
