@@ -5,34 +5,49 @@
 }
 
 :root {
-  /* Brand */
-  --red: #e50914;
-  --red-dark: #b20710;
-  --imdb: #f5c518;       /* authentic IMDb gold */
-  --rt: #fa320a;         /* authentic Rotten Tomatoes red */
+  /* ── Brand tokens: "paper & ink ticket stub" (see docs/DESIGN.md) ── */
+  --paper: #ece6d8;      /* page background */
+  --ink: #111111;        /* text, borders, hard shadows */
+  --signal: #e5241b;     /* Rotten Tomatoes / CTA / accent (white text only) */
+  --gold: #f2c230;       /* IMDb / highlights (ink text only) */
+  --teal: #2b4a5c;       /* secondary fill (paper text) */
+  --card: #f6f1e5;       /* lighter card paper */
 
-  /* Neutrals — tinted warm toward the brand, never pure black/white */
-  --bg: #0c0a0b;
-  --bg-2: #0f0c0d;
-  --surface: #161213;
-  --surface-2: #1d1819;
-  --border: rgba(245, 240, 235, 0.09);
-  --border-strong: rgba(245, 240, 235, 0.16);
+  /* Typography. next/font injects --font-archivo / --font-serif-src /
+     --font-mono-src on <html>; alias them here with fallbacks. Do NOT name
+     these the same as the injected vars or the reference becomes circular and
+     fonts silently drop to the default serif. */
+  --display: var(--font-archivo), 'Archivo', 'Arial Narrow', ui-sans-serif, system-ui, sans-serif;
+  --body: var(--font-archivo), 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --serif: var(--font-serif-src), 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --mono: var(--font-mono-src), 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --text: #f6f2ef;
-  --muted: #b3a9a4;       /* warm-tinted, not gray-on-color */
-  --faint: #948a86;       /* >=5.2:1 on every surface (WCAG AA) */
-  --red-text: #ff4d57;    /* red for small text on dark; --red fails AA as text */
+  /* Hard offset shadows only (no blur). */
+  --shadow-hard: 6px 6px 0 var(--ink);
+  --shadow-hard-sm: 3px 3px 0 var(--ink);
 
-  --badge-bg: rgba(8, 6, 7, 0.82);
+  /* ── Legacy variable names (existing CSS modules), remapped to paper/ink ──
+     Text pairs verified >= 4.5:1 by tests/design-tokens.test.ts. */
+  --bg: var(--paper);
+  --bg-2: #e4dccb;        /* slightly deeper paper for alternating bands */
+  --surface: var(--card);
+  --surface-2: #e6dfcd;
+  --border: var(--ink);
+  --border-strong: var(--ink);
 
-  /* next/font injects --font-display / --font-body on <html>; alias them here
-     with fallbacks. Do NOT name these the same as the injected vars or the
-     reference becomes circular and fonts silently drop to serif. */
-  --display: var(--font-display), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
-  --body: var(--font-body), 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --text: var(--ink);
+  --muted: #4a4640;       /* ink at ~72%, solid: 7.5:1 on paper, 8.3:1 on card */
+  --faint: #5c574f;       /* 5.8:1 on paper, 6.4:1 on card */
 
-  --radius: 14px;
+  --red: var(--signal);
+  --red-dark: #b81810;    /* hover state for --red fills */
+  --red-text: #c41d15;    /* red for small text on paper (--signal fails AA as text) */
+  --imdb: var(--gold);
+  --rt: var(--signal);
+
+  --badge-bg: var(--ink);
+
+  --radius: 0;
 }
 
 html {
@@ -43,18 +58,26 @@ html {
   html {
     scroll-behavior: auto;
   }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
   font-family: var(--body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--paper);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--red);
+  background: var(--signal);
   color: #fff;
 }
 
@@ -63,7 +86,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid var(--imdb);
+  outline: 3px solid var(--ink);
   outline-offset: 3px;
 }
 
@@ -77,12 +100,127 @@ a {
   top: -64px;
   z-index: 200;
   padding: 10px 16px;
-  border-radius: 8px;
-  background: var(--text);
-  color: var(--bg);
+  border: 3px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
   font-weight: 700;
   text-decoration: none;
 }
 .skip-link:focus {
   top: 12px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Design-system helpers (global by design; use as plain class names) ──
+   Documented in docs/DESIGN.md "Token contract". Hard borders, hard shadows,
+   no radius, no blur, no gradients. */
+
+/* Condensed display headline. */
+.ds-display {
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: 0;
+}
+
+/* Serif accent (use on one <em> per heading). */
+.ds-serif {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: 100%;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Mono label / data text. */
+.ds-label {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Paper card with hard shadow. */
+.ds-card {
+  background: var(--card);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* Button: paper fill, hard border + shadow; presses into the shadow on hover. */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: 5px 5px 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.ds-btn:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.ds-btn:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+/* Primary CTA variant: add alongside .ds-btn (<a class="ds-btn ds-btn-signal">). */
+.ds-btn-signal {
+  background: var(--signal);
+  color: #fff;
+}
+
+/* Score chips. IMDb = gold/ink, Rotten Tomatoes = signal/white. */
+.ds-chip-imdb,
+.ds-chip-rt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+}
+.ds-chip-imdb {
+  background: var(--gold);
+  color: var(--ink);
+}
+.ds-chip-rt {
+  background: var(--signal);
+  color: #fff;
 }

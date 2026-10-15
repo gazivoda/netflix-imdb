@@ -1,21 +1,32 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google';
+import { Archivo, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import { SITE_URL, REPO_URL } from '../lib/content';
 import { HOME_TITLE, HOME_DESCRIPTION } from '../lib/pages';
 import { TITLE_SUFFIX, jsonLdString, siteGraph } from '../lib/seo';
 
-const display = Bricolage_Grotesque({
+// Variable Archivo with the width axis: `font-stretch: 62%` + weight 900 gives the
+// condensed display face; normal width (100%) is the body text.
+const archivo = Archivo({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
-  variable: '--font-display',
+  weight: 'variable',
+  axes: ['wdth'],
+  variable: '--font-archivo',
   display: 'swap',
 });
 
-const body = Hanken_Grotesk({
+const serif = Instrument_Serif({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-body',
+  weight: '400',
+  style: 'italic',
+  variable: '--font-serif-src',
+  display: 'swap',
+});
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+  variable: '--font-mono-src',
   display: 'swap',
 });
 
@@ -72,8 +83,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0c0a0b',
-  colorScheme: 'dark',
+  themeColor: '#ece6d8',
+  colorScheme: 'light',
 };
 
 // Structured data — helps both Google rich results and AI search engines
@@ -82,7 +93,7 @@ const jsonLd = siteGraph();
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${serif.variable} ${mono.variable}`}>
       <head>
         <script
           type="application/ld+json"
