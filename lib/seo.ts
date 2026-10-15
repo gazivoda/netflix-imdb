@@ -4,6 +4,7 @@
 import type { Metadata } from 'next';
 import { SITE_URL, PUBLISHED_DATE } from './content';
 import { getPage, type SitePage } from './pages';
+import { OG_SIZE, OG_ALT } from './og';
 
 export const SITE_NAME = 'Netflix Ratings';
 export const TITLE_SUFFIX = ' · Netflix Ratings';
@@ -32,11 +33,14 @@ export function pageMetadata(path: string): Metadata {
       title: renderedTitle(page),
       description: page.description,
       locale: 'en_US',
+      // Explicit: a page-level openGraph object replaces the file-convention image.
+      images: [{ url: '/opengraph-image', ...OG_SIZE, alt: OG_ALT }],
     },
     twitter: {
       card: 'summary_large_image',
       title: renderedTitle(page),
       description: page.description,
+      images: [{ url: '/twitter-image', ...OG_SIZE, alt: OG_ALT }],
     },
   };
 }

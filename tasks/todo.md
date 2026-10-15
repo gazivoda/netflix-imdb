@@ -8,7 +8,7 @@ Source of truth for scope: docs/seo/IMPLEMENTATION-ROADMAP.md, SITE-STRUCTURE.md
 
 ## Queue
 - [x] 1  Foundation: `lib/pages.ts` registry, `lib/seo.ts` metadata+JSON-LD builders, `components/JsonLd`, registry-driven sitemap w/ real lastmod, per-page canonical (fixed: privacy/camera-vision inherited canonical '/'), title/desc length tests (also covers old item 15 harness). NOTE: shared nav/footer chrome deferred to iteration 3 when the first guide page exists.
-- [ ] 2  Root OG/Twitter image (app/opengraph-image.tsx via next/og) — no page has an image today
+- [x] 2  OG/Twitter image (lib/og.tsx + app/opengraph-image.tsx + twitter-image.tsx; explicit images in pageMetadata because a page-level openGraph object drops the file-convention image). Gotcha: next/og can't fetch fonts offline — avoid non-ASCII glyphs like ★.
 - [ ] 2b /install page (HowTo schema) + shared nav/footer w/ registry-driven Guides links
 - [ ] 3  /how-to/show-imdb-ratings-on-netflix
 - [ ] 4  /how-to/show-rotten-tomatoes-on-netflix
@@ -33,7 +33,8 @@ Source of truth for scope: docs/seo/IMPLEMENTATION-ROADMAP.md, SITE-STRUCTURE.md
 - `lib/content.ts` TESTIMONIALS are fabricated names/quotes; marquee scores "illustrative". Trust/FTC/E-E-A-T risk; schema must never mark them up as Review.
 
 ## Progress
-iteration: 1 / 20
+iteration: 2 / 20
+USER UPDATE (iteration 2): user now AUTHORIZES commit + push to main after every iteration (explicit). Also asked to use /seo /geo skills. Google guidance (seo-geo skill): llms.txt is not a Google lever; add Claude-SearchBot to robots.
 
 ## Learnings
 - Baseline `next build` ≈ 5s. Shared JS 87 kB; /camera-vision isolated (107 kB) — tfjs/tesseract do NOT leak into shared bundle (item 11 mostly moot).
