@@ -52,6 +52,19 @@ export const PAGES: SitePage[] = [
     ogType: 'article',
   },
   {
+    path: '/how-to/show-imdb-ratings-on-netflix',
+    title: 'How to Show IMDb Ratings on Netflix (Free)',
+    description:
+      'Show IMDb ratings on Netflix cards with the free Netflix Ratings extension: install, open Netflix, read the top-right badge. What the score means, and limits.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.9,
+    group: 'guide',
+    label: 'Show IMDb ratings on Netflix',
+    ogType: 'article',
+  },
+  {
     path: '/compare/imdb-vs-rotten-tomatoes',
     title: 'IMDb vs Rotten Tomatoes: Which Rating to Trust',
     description:
