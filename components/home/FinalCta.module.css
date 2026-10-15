@@ -1,0 +1,20 @@
+/* ── FINAL CTA ── */
+.finalCta {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(72px, 10vw, 120px) clamp(20px, 5vw, 48px);
+  text-align: center;
+}
+.finalTitle {
+  font-family: var(--display);
+  font-size: clamp(28px, 4.5vw, 46px);
+  font-weight: 800;
+  letter-spacing: -1.4px;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+.finalSub {
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: var(--muted);
+  margin-bottom: 32px;
+}

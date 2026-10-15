@@ -1,0 +1,47 @@
+/* ── MARQUEE ── */
+.marquee {
+  margin-top: clamp(48px, 7vw, 80px);
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  gap: 14px;
+  animation: scrollX 46s linear infinite;
+}
+.marquee:hover .marqueeTrack { animation-play-state: paused; }
+@keyframes scrollX {
+  to { transform: translateX(-50%); }
+}
+/* --chip-fs sizes the ScoreChip components inside each pill. */
+.marqueeItem {
+  --chip-fs: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  background: var(--surface);
+  white-space: nowrap;
+  font-size: 13.5px;
+}
+.marqueeTitle { font-weight: 600; color: var(--text); }
+/* Static fallback: show one wrapped copy of the strip instead of a frozen, clipped one. */
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack { animation: none; width: auto; flex-wrap: wrap; justify-content: center; padding: 0 clamp(20px, 5vw, 48px); }
+  .marqueeDup { display: none; }
+  .marquee { -webkit-mask-image: none; mask-image: none; }
+}
+.marqueeCaption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--faint);
+}

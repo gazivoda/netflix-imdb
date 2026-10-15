@@ -1,0 +1,222 @@
+/* ── HERO ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 64px);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(56px, 9vw, 104px) clamp(20px, 5vw, 48px) clamp(48px, 7vw, 84px);
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.32);
+  color: #ff7a72;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 22px;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  font-family: var(--display);
+  font-size: clamp(38px, 6vw, 60px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -1.8px;
+  margin-bottom: 22px;
+  text-wrap: balance;
+}
+.heroTitle em {
+  font-style: italic;
+  color: var(--imdb);
+}
+
+.heroSubtitle {
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  max-width: 460px;
+}
+.heroSubtitle strong { color: var(--text); font-weight: 600; }
+
+.heroCta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btnSecondary:hover { border-color: var(--red); color: #ff7a72; }
+
+.heroNote {
+  list-style: none;
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 13px;
+  color: var(--faint);
+}
+.heroNote li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.heroNote li::before {
+  content: '✓';
+  color: var(--imdb);
+  font-weight: 700;
+}
+
+/* ── MOCKUP ── */
+.mockupWrap { position: relative; }
+
+.mockup {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 16px;
+  box-shadow: 0 50px 90px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  transform: perspective(1400px) rotateY(-5deg) rotateX(2deg);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mockupWrap:hover .mockup {
+  transform: perspective(1400px) rotateY(0deg) rotateX(0deg);
+}
+
+.mockupBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+.mockupDot { width: 10px; height: 10px; border-radius: 50%; }
+.mockupDot:nth-child(1) { background: #ff5f57; }
+.mockupDot:nth-child(2) { background: #febc2e; }
+.mockupDot:nth-child(3) { background: #28c840; }
+.mockupUrl {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  height: 22px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.netflixBar {
+  background: #000;
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: -16px -16px 14px;
+}
+.netflixLogo {
+  color: var(--red);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+.netflixNav { display: flex; gap: 14px; }
+.netflixNav span { font-size: 12px; color: #999; }
+.netflixNav span:first-child { color: #fff; }
+
+.rowLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8d8480;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.card {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+.cardBg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Chip sizing for the ScoreChip components inside the mockup cards. */
+.cardBadge {
+  --chip-fs: 8px;
+  --chip-bw: 1px;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 3px;
+}
+
+.glow {
+  position: absolute;
+  inset: -40px -20px;
+  z-index: 0;
+  background: radial-gradient(60% 60% at 60% 40%, rgba(229, 9, 20, 0.22), transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.illustrative {
+  margin-top: 14px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnSecondary:hover { transform: none; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 940px) {
+  .hero { grid-template-columns: 1fr; }
+  .mockupWrap { order: -1; }
+  .mockup { transform: none; }
+}

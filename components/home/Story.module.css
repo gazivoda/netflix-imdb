@@ -1,0 +1,43 @@
+/* ── NARRATIVE / STORY ── */
+.story {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(72px, 9vw, 110px) clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+.storyHead { position: sticky; top: 96px; }
+.storyTitle {
+  font-family: var(--display);
+  font-size: clamp(26px, 3.4vw, 38px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+.storyBody { display: flex; flex-direction: column; gap: 20px; }
+.storyBody p {
+  font-size: clamp(15.5px, 1.4vw, 17.5px);
+  line-height: 1.72;
+  color: var(--muted);
+}
+.storyBody strong { color: var(--text); font-weight: 600; }
+.pullQuote {
+  margin: 8px 0 0;
+  padding: 20px 24px;
+  border-left: 3px solid var(--red);
+  background: var(--surface);
+  border-radius: 0 12px 12px 0;
+  font-family: var(--display);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+@media (max-width: 940px) {
+  .story { grid-template-columns: 1fr; }
+  .storyHead { position: static; }
+}
