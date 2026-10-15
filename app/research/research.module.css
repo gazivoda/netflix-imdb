@@ -1,43 +1,224 @@
+/* Paper & ink data study: scoreboard, hard-ruled ledger, caveat slip.
+   Tokens and fonts come from globals.css; nothing here redeclares them. */
+
+/* ---------- scoreboard ---------- */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  margin: 8px 0 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  margin: 8px 0 40px;
+  background: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
 }
 .stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 18px 16px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(14px, 3vw, 24px) clamp(14px, 3vw, 24px) clamp(14px, 3vw, 20px);
 }
+.statInk { background: var(--ink); color: var(--paper); }
+.statGold { background: var(--gold); color: var(--ink); }
+.statSignal { background: var(--signal); color: #fff; }
+.statCard { background: var(--card); color: var(--ink); }
+
 .statValue {
   font-family: var(--display);
-  font-size: clamp(26px, 4vw, 34px);
-  font-weight: 800;
-  letter-spacing: -1px;
-  color: var(--text);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(64px, 16vw, 148px);
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.statUnit {
+  font-family: var(--mono);
+  font-stretch: 100%;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  margin-left: 6px;
+}
+.statInk .statUnit { color: var(--gold); }
+.statLabel {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-top: 2px solid currentColor;
+  padding-top: 10px;
+}
+
+/* ---------- ledger ---------- */
+.ledger {
+  max-height: min(72vh, 680px);
+  overflow: auto; /* both axes: keeps the sticky header and the 390px scroll inside the wrapper */
+  margin: 20px 0 12px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  -webkit-overflow-scrolling: touch;
+}
+
+.dataTable {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.dataTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 12px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: left;
+  border-bottom: 3px solid var(--ink);
+}
+.dataTable thead th.num { text-align: right; }
+.dataTable tbody th,
+.dataTable tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--ink);
+  vertical-align: middle;
+  line-height: 1.35;
+}
+.dataTable tbody tr:last-child th,
+.dataTable tbody tr:last-child td { border-bottom: 0; }
+.dataTable tbody tr:nth-child(even) { background: var(--card); }
+.dataTable tbody tr:nth-child(odd) { background: var(--paper); }
+.dataTable tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: inherit;
+  text-align: left;
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  min-width: 190px;
+  border-right: 2px solid var(--ink);
+}
+.dataTable thead th:first-child {
+  left: 0;
+  z-index: 3;
+  border-right: 2px solid var(--paper);
+}
+
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.year { font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--faint); }
+.dataTable td.num { font-weight: 500; color: var(--ink); }
+
+/* score column heads: flat IMDb gold / Rotten Tomatoes signal tags */
+.thImdb, .thRt {
+  display: inline-block;
+  padding: 3px 7px;
+  border: 2px solid var(--paper);
+  font-weight: 700;
+}
+.thImdb { background: var(--gold); color: var(--ink); }
+.thRt { background: var(--signal); color: #fff; }
+
+/* gap: signed figure + flat diverging bar (centre axis = 0) */
+.gapCell { min-width: 240px; white-space: nowrap; text-align: left; }
+.gapCell > * { vertical-align: middle; }
+.gapVal { display: inline-block; width: 3.4ch; margin-right: 12px; font-weight: 700; color: var(--ink); }
+.bar {
+  position: relative;
+  display: inline-block;
+  width: 168px;
+  height: 14px;
+}
+.bar::before { /* zero axis */
+  content: '';
+  position: absolute;
+  left: calc(50% - 1px);
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--ink);
+}
+.barPos, .barNeg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border: 2px solid var(--ink);
+}
+.barPos { left: 50%; background: var(--signal); }
+.barNeg { right: 50%; background: var(--gold); }
+
+/* ---------- caveat slip ---------- */
+ul > li.slip {
+  position: relative;
+  list-style: none;
+  margin: 8px 0 8px -22px; /* undo the list indent so the slip spans the column */
+  padding: 18px 18px 18px 64px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+}
+ul > li.slip::before {
+  content: '!';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 46px;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--gold);
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 40px;
   line-height: 1;
 }
-.statUnit { font-size: 0.55em; font-weight: 700; color: var(--muted); margin-left: 2px; }
-.statLabel { font-size: 13px; line-height: 1.4; color: var(--muted); }
-
-.dataTable { min-width: 560px; }
-.dataTable th[scope='col'] { white-space: nowrap; }
-.dataTable td, .dataTable th[scope='row'] { padding: 10px 16px; }
-.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.pos { color: #ff7a5c; font-weight: 600; }
-.neg { color: var(--imdb); font-weight: 600; }
-.year { color: var(--faint); font-weight: 400; }
+ul > li.slip a { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+ul > li.slip strong { color: var(--ink); }
 
 .small { font-size: 14px; }
+
+/* ---------- download ---------- */
 .download {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 48px;
   margin: 4px 0 16px;
-  font-weight: 600;
-  color: var(--text);
+  padding: 0 20px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+@media (min-width: 720px) {
+  .statLabel { font-size: 13px; }
+}
+
+@media (max-width: 520px) {
+  .dataTable tbody th { min-width: 132px; font-size: 13px; padding-left: 10px; padding-right: 8px; }
+  .dataTable thead th, .dataTable tbody td { padding-left: 10px; padding-right: 10px; }
+  .gapCell { min-width: 0; }
+  .gapVal { margin-right: 8px; }
+  .bar { width: 124px; }
 }
