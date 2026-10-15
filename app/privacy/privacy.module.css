@@ -1,0 +1,104 @@
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(32px, 6vw, 72px) clamp(16px, 5vw, 32px) clamp(48px, 8vw, 96px);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  outline: none;
+}
+
+.h1 {
+  font-size: clamp(56px, 11vw, 112px);
+  margin: 0 0 20px;
+  overflow-wrap: anywhere;
+}
+
+/* mono "last updated" label, set as a flat ink tag */
+.updated {
+  display: inline-block;
+  margin: 0 0 clamp(32px, 5vw, 48px);
+  padding: 8px 12px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font-weight: 700;
+}
+
+/* each policy section is a hard-bordered slip */
+.slip {
+  margin: 0 0 28px;
+  padding: clamp(20px, 4vw, 32px);
+  background: var(--card);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  border-radius: 0;
+}
+
+.h2 {
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--ink);
+  font-size: clamp(30px, 5vw, 44px);
+  overflow-wrap: anywhere;
+}
+
+.slip p,
+.slip li {
+  margin: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.slip p + p,
+.slip p + ul,
+.slip ul + p {
+  margin-top: 14px;
+}
+
+.slip ul {
+  margin: 0;
+  padding-left: 22px;
+}
+.slip li + li {
+  margin-top: 8px;
+}
+.slip li::marker {
+  color: var(--signal);
+  font-weight: 700;
+}
+
+.slip strong {
+  font-weight: 700;
+}
+
+.slip code {
+  padding: 1px 6px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* links: ink text, signal underline */
+.slip a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+}
+.slip a:hover {
+  background: var(--signal);
+  color: #fff;
+  text-decoration-color: var(--ink);
+}
