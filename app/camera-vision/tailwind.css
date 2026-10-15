@@ -1,5 +1,0 @@
-/* Tailwind is only used by the /camera-vision demo; keep it out of globals.css
-   so the utilities don't ship in the render-blocking CSS of every other page. */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
