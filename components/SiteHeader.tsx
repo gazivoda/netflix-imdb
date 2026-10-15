@@ -1,17 +1,17 @@
-import g from './guide.module.css';
+import c from './site-chrome.module.css';
 
 export default function SiteHeader() {
   return (
     <>
       <a className="skip-link" href="#main">Skip to main content</a>
-      <nav className={g.nav} aria-label="Primary">
-        <a className={g.navLogo} href="/">
-          <span className={g.navLogoIcon} aria-hidden>★</span>
+      <nav className={c.nav} aria-label="Primary">
+        <a className={c.navLogo} href="/">
+          <span className={c.navLogoIcon} aria-hidden>★</span>
           Netflix Ratings
         </a>
-        <div className={g.navRight}>
-          <a href="/compare/imdb-vs-rotten-tomatoes" className={g.navLink}>IMDb vs Rotten Tomatoes</a>
-          <a href="/install" className={g.navInstall}>Install</a>
+        <div className={c.navRight}>
+          <a href="/compare/imdb-vs-rotten-tomatoes" className={c.navLink}>IMDb vs Rotten Tomatoes</a>
+          <a href="/install" className={c.navInstall}>Install</a>
         </div>
       </nav>
     </>

@@ -1,0 +1,228 @@
+/* Site chrome for GuideLayout pages: page shell, masthead, breadcrumb,
+   article head and footer. Content styles live in guide.module.css. */
+
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── masthead ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 clamp(16px, 5vw, 48px);
+  min-height: 68px;
+  background: var(--paper);
+  border-bottom: 3px solid var(--ink);
+}
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+}
+.navLogoIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: var(--signal);
+  color: #fff;
+  border: 3px solid var(--ink);
+  font-family: var(--body);
+  font-stretch: 100%;
+  font-size: 16px;
+  line-height: 1;
+}
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 28px);
+}
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.navLink:hover { border-bottom-color: var(--ink); }
+.navInstall {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  background: var(--signal);
+  color: #fff;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.navInstall:hover,
+.navInstall:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+@media (max-width: 640px) {
+  .navLink { display: none; }
+  .navLogo { font-size: 22px; }
+}
+
+/* ── article shell (wide head, then the 760px content column) ── */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(20px, 3vw, 36px) clamp(16px, 5vw, 48px) 0;
+}
+
+.crumbs {
+  margin-bottom: clamp(20px, 3vw, 36px);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.crumbs a {
+  display: inline-block;
+  padding: 10px 0;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.crumbs a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.crumbs [aria-hidden] { margin: 0 6px; }
+
+.head {
+  margin-bottom: clamp(8px, 2vw, 24px);
+  padding-bottom: clamp(24px, 4vw, 40px);
+  border-bottom: 3px solid var(--ink);
+}
+.h1 {
+  margin: 0 0 clamp(20px, 3vw, 32px);
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(56px, 10vw, 128px);
+  line-height: 0.86;
+  letter-spacing: -0.005em;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+.byline {
+  margin: 0 0 20px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.byline a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.byline a:hover { background: var(--gold); }
+.lede {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(18px, 1.6vw, 20px);
+  line-height: 1.55;
+  color: var(--ink);
+}
+/* Gold marker under the bold first sentence: a thick solid underline, no gradient. */
+.lede strong {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 0.46em;
+  text-underline-offset: -0.26em;
+  text-decoration-skip-ink: none;
+}
+
+/* ── footer: ink band ── */
+.footer {
+  margin-top: 64px;
+  padding: clamp(36px, 5vw, 56px) clamp(16px, 5vw, 48px) 40px;
+  background: var(--ink);
+  color: var(--paper);
+  border-top: 3px solid var(--ink);
+}
+.footerInner { max-width: 1200px; margin: 0 auto; }
+.footerCols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px 80px;
+  padding-bottom: 32px;
+  margin-bottom: 28px;
+  border-bottom: 2px dashed var(--paper);
+}
+.footerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.footerHead {
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--paper);
+  text-decoration: none;
+}
+.footerCol a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.footer a:focus-visible { outline-color: var(--paper); }
+.footerMeta {
+  max-width: 820px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--paper);
+}
+.footerMeta a {
+  display: inline;
+  min-height: 0;
+  color: var(--paper);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.footerMeta a:hover { background: var(--gold); color: var(--ink); }

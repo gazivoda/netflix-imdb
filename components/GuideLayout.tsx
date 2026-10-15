@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import g from './guide.module.css';
+import c from './site-chrome.module.css';
 import JsonLd from './JsonLd';
 import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
@@ -40,49 +41,53 @@ export default function GuideLayout({
   const jsonLd = graph(webPage(path), { ...breadcrumbList(trail), '@id': nodeId(path, 'breadcrumb') }, article(path), ...schema, ...(faqs ? [faqPage(faqs)] : []));
 
   return (
-    <div className={g.page}>
+    <div className={c.page}>
       <JsonLd data={jsonLd} />
       <SiteHeader />
 
       <main id="main" tabIndex={-1}>
-        <article className={g.article}>
-          <nav className={g.crumbs} aria-label="Breadcrumb">
-            {trail.slice(0, -1).map((t) => (
-              <span key={t.path}>
-                <a href={t.path}>{t.name}</a> <span aria-hidden>/</span>{' '}
-              </span>
-            ))}
-            {trail[trail.length - 1].name}
-          </nav>
+        <article>
+          <div className={c.wrap}>
+            <nav className={c.crumbs} aria-label="Breadcrumb">
+              {trail.slice(0, -1).map((t) => (
+                <span key={t.path}>
+                  <a href={t.path}>{t.name}</a> <span aria-hidden>/</span>{' '}
+                </span>
+              ))}
+              {trail[trail.length - 1].name}
+            </nav>
 
-          <header className={g.head}>
-            <h1 className={g.h1}>{h1}</h1>
-            <p className={g.byline}>
-              By <a href={REPO_URL} target="_blank" rel="noopener noreferrer">{AUTHOR_NAME}</a>
-              {' · Updated '}
-              <time dateTime={page.updated}>{formatDate(page.updated)}</time>
-            </p>
-            <p className={g.lede}>{lede}</p>
-          </header>
+            <header className={c.head}>
+              <h1 className={c.h1}>{h1}</h1>
+              <p className={c.byline}>
+                By <a href={REPO_URL} target="_blank" rel="noopener noreferrer">{AUTHOR_NAME}</a>
+                {' · Updated '}
+                <time dateTime={page.updated}>{formatDate(page.updated)}</time>
+              </p>
+              <p className={c.lede}>{lede}</p>
+            </header>
+          </div>
 
-          {children}
+          <div className={g.article}>
+            {children}
 
-          {faqs && (
-            <>
-              <h2 className={g.h2} id="faq">Frequently asked questions</h2>
-              <div className={g.faqList}>
-                {faqs.map((f, i) => (
-                  <details key={f.q} className={g.faqItem} open={i === 0}>
-                    <summary className={g.faqQ}>
-                      {f.q}
-                      <span className={g.faqChevron} aria-hidden>+</span>
-                    </summary>
-                    <p className={g.faqA}>{f.a}</p>
-                  </details>
-                ))}
-              </div>
-            </>
-          )}
+            {faqs && (
+              <>
+                <h2 className={g.h2} id="faq">Frequently asked questions</h2>
+                <div className={g.faqList}>
+                  {faqs.map((f, i) => (
+                    <details key={f.q} className={g.faqItem} open={i === 0}>
+                      <summary className={g.faqQ}>
+                        {f.q}
+                        <span className={g.faqChevron} aria-hidden>+</span>
+                      </summary>
+                      <p className={g.faqA}>{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </article>
       </main>
 
