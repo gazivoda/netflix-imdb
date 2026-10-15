@@ -1,5 +1,7 @@
 import styles from './page.module.css';
-import { pageMetadata } from '../lib/seo';
+import { pageMetadata, faqPage, graph } from '../lib/seo';
+import JsonLd from '../components/JsonLd';
+import { PAGES } from '../lib/pages';
 import { FEATURES, STATS, TESTIMONIALS, FAQS, MARQUEE, REPO_URL, AUTHOR_NAME, LAST_UPDATED, LAST_UPDATED_LABEL } from '../lib/content';
 
 export const metadata = pageMetadata('/');
@@ -30,6 +32,8 @@ function ScoreBadge({ imdb, rt }: { imdb: string; rt: string }) {
 export default function Page() {
   return (
     <div className={styles.page}>
+      {/* FAQPage schema lives only here — it must match the visible FAQ on this page */}
+      <JsonLd data={graph(faqPage(FAQS))} />
       {/* NAV */}
       <nav className={styles.nav}>
         <a className={styles.navLogo} href="/">
@@ -41,7 +45,7 @@ export default function Page() {
             IMDb vs Rotten Tomatoes
           </a>
           <a href="#faq" className={styles.navLink}>FAQ</a>
-          <a href={REPO_URL} className={styles.navInstall} target="_blank" rel="noopener noreferrer">
+          <a href="/install" className={styles.navInstall}>
             Get the extension
           </a>
         </div>
@@ -331,16 +335,18 @@ export default function Page() {
           Netflix Ratings
         </div>
         <nav className={styles.footerRight} aria-label="Footer">
-          <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>
+          {PAGES.filter((p) => p.group).map((p) => (
+            <a key={p.path} href={p.path}>{p.label ?? p.title}</a>
+          ))}
           <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">Powered by OMDb</a>
-          <a href="/privacy">Privacy</a>
         </nav>
         <p className={styles.footerMeta}>
           Built by{' '}
           <a href={REPO_URL} target="_blank" rel="noopener noreferrer">{AUTHOR_NAME}</a>
           {' · '}
           Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED_LABEL}</time>
+          {'. '}Independent open-source project, not affiliated with or endorsed by Netflix, IMDb or Rotten Tomatoes.
         </p>
       </footer>
     </div>

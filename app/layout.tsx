@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google';
-import { SITE_URL, REPO_URL, FAQS, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED } from '../lib/content';
+import { SITE_URL, REPO_URL, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED } from '../lib/content';
 import { HOME_TITLE, HOME_DESCRIPTION } from '../lib/pages';
 import { TITLE_SUFFIX, jsonLdString } from '../lib/seo';
 
@@ -128,15 +128,6 @@ const jsonLd = {
         'No account or login required',
         'Privacy-friendly, no tracking',
       ],
-    },
-    {
-      '@type': 'FAQPage',
-      '@id': `${SITE_URL}/#faq`,
-      mainEntity: FAQS.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
     },
   ],
 };

@@ -10,6 +10,8 @@ import {
   jsonLdString,
   absoluteUrl,
 } from '../../lib/seo';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 import sitemap from '../../app/sitemap';
 import { SITE_URL } from '../../lib/content';
 
@@ -36,6 +38,11 @@ describe('page registry', () => {
     for (const p of PAGES) {
       expect(`${p.title} ${p.description}`).not.toMatch(/Netflix IMDB Ratings/i);
     }
+  });
+
+  it.each(PAGES.map((p) => [p.path] as const))('%s has a page file on disk', (path) => {
+    const file = path === '/' ? 'app/page.tsx' : `app${path}/page.tsx`;
+    expect(existsSync(join(__dirname, '../..', file))).toBe(true);
   });
 
   it('getPage throws for unregistered paths', () => {
@@ -116,5 +123,12 @@ describe('JSON-LD builders', () => {
     const s = jsonLdString({ x: '</script><script>alert(1)</script>' });
     expect(s).not.toContain('</script>');
     expect(JSON.parse(s).x).toBe('</script><script>alert(1)</script>');
+  });
+});
+
+describe('layout JSON-LD', () => {
+  it('does not put FAQPage in the root layout (it would leak onto every page)', () => {
+    const src = readFileSync(join(__dirname, '../../app/layout.tsx'), 'utf8');
+    expect(src).not.toContain('FAQPage');
   });
 });

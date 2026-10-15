@@ -33,7 +33,8 @@ Source of truth for scope: docs/seo/IMPLEMENTATION-ROADMAP.md, SITE-STRUCTURE.md
 - `lib/content.ts` TESTIMONIALS are fabricated names/quotes; marquee scores "illustrative". Trust/FTC/E-E-A-T risk; schema must never mark them up as Review.
 
 ## Progress
-iteration: 2 / 20
+iteration: 3 / 20 (foundation: GuideLayout/SiteHeader/SiteFooter/guide.module.css, /install page, compare migrated, FAQPage schema moved off root layout to home only)
+MODE CHANGE (user: 'launch 20 agents to work on all this'): iterations 4-20 are replaced by 20 parallel worktree agents (see AGENT-BRIEF.md); main thread merges branches, resolves conflicts, runs full verification, commits + pushes.
 USER UPDATE (iteration 2): user now AUTHORIZES commit + push to main after every iteration (explicit). Also asked to use /seo /geo skills. Google guidance (seo-geo skill): llms.txt is not a Google lever; add Claude-SearchBot to robots.
 
 ## Learnings

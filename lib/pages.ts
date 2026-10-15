@@ -39,6 +39,19 @@ export const PAGES: SitePage[] = [
     label: 'Home',
   },
   {
+    path: '/install',
+    title: 'Install Netflix Ratings on Chrome, Edge, Brave',
+    description:
+      'Install the free Netflix Ratings extension in about a minute: download from GitHub, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.9,
+    group: 'guide',
+    label: 'How to install',
+    ogType: 'article',
+  },
+  {
     path: '/compare/imdb-vs-rotten-tomatoes',
     title: 'IMDb vs Rotten Tomatoes: Which Rating to Trust',
     description:
