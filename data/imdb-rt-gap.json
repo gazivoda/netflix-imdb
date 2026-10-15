@@ -1,0 +1,734 @@
+{
+  "name": "IMDb vs Rotten Tomatoes scores for popular Netflix Original films",
+  "description": "IMDb rating (0-10) and Rotten Tomatoes Tomatometer (0-100%) for Netflix Original films, as returned by the OMDb API. Gap = RT% minus IMDb x10; positive means critics rated it higher.",
+  "source": "OMDb API (https://www.omdbapi.com/)",
+  "license": "Scores belong to IMDb and Rotten Tomatoes; this file is a small factual snapshot for research and reproduction.",
+  "fetchedAt": "2026-10-15T20:35:08.850Z",
+  "fetchedFrom": "2026-10-15T20:34:19.808Z",
+  "selectionRule": "Netflix Original films and series that are widely discussed or award-winning, listed in scripts/research/imdb-rt-gap.mjs before any score was fetched. No title was added, removed or swapped after seeing its result; titles OMDb could not score are listed under \"excluded\". OMDb returned no Rotten Tomatoes score for any TV series, so every usable title is a film.",
+  "candidates": 88,
+  "omdbRequests": 88,
+  "script": "scripts/research/imdb-rt-gap.mjs",
+  "titles": [
+    {
+      "title": "Roma",
+      "year": 2018,
+      "type": "movie",
+      "imdbId": "tt6155172",
+      "imdbRating": 7.6,
+      "imdbVotes": 179999,
+      "rtPercent": 96
+    },
+    {
+      "title": "The Irishman",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt1302006",
+      "imdbRating": 7.8,
+      "imdbVotes": 480837,
+      "rtPercent": 95
+    },
+    {
+      "title": "Marriage Story",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt7653254",
+      "imdbRating": 7.9,
+      "imdbVotes": 376077,
+      "rtPercent": 95
+    },
+    {
+      "title": "Bird Box",
+      "year": 2018,
+      "type": "movie",
+      "imdbId": "tt2737304",
+      "imdbRating": 6.6,
+      "imdbVotes": 428283,
+      "rtPercent": 64
+    },
+    {
+      "title": "All Quiet on the Western Front",
+      "year": 2022,
+      "type": "movie",
+      "imdbId": "tt1016150",
+      "imdbRating": 7.8,
+      "imdbVotes": 347635,
+      "rtPercent": 90
+    },
+    {
+      "title": "The Power of the Dog",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt10293406",
+      "imdbRating": 6.8,
+      "imdbVotes": 245292,
+      "rtPercent": 94
+    },
+    {
+      "title": "Red Notice",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt7991608",
+      "imdbRating": 6.3,
+      "imdbVotes": 361059,
+      "rtPercent": 36
+    },
+    {
+      "title": "The Gray Man",
+      "year": 2022,
+      "type": "movie",
+      "imdbId": "tt1649418",
+      "imdbRating": 6.5,
+      "imdbVotes": 279552,
+      "rtPercent": 45
+    },
+    {
+      "title": "Extraction",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt8936646",
+      "imdbRating": 6.8,
+      "imdbVotes": 294732,
+      "rtPercent": 67
+    },
+    {
+      "title": "The Adam Project",
+      "year": 2022,
+      "type": "movie",
+      "imdbId": "tt2463208",
+      "imdbRating": 6.7,
+      "imdbVotes": 263145,
+      "rtPercent": 68
+    },
+    {
+      "title": "Enola Holmes",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt7846844",
+      "imdbRating": 6.7,
+      "imdbVotes": 256059,
+      "rtPercent": 91
+    },
+    {
+      "title": "Klaus",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt4729430",
+      "imdbRating": 8.2,
+      "imdbVotes": 243321,
+      "rtPercent": 95
+    },
+    {
+      "title": "The Mitchells vs. the Machines",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt7979580",
+      "imdbRating": 7.6,
+      "imdbVotes": 145255,
+      "rtPercent": 97
+    },
+    {
+      "title": "Okja",
+      "year": 2017,
+      "type": "movie",
+      "imdbId": "tt3967856",
+      "imdbRating": 7.3,
+      "imdbVotes": 143489,
+      "rtPercent": 87
+    },
+    {
+      "title": "The Two Popes",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt8404614",
+      "imdbRating": 7.6,
+      "imdbVotes": 148274,
+      "rtPercent": 89
+    },
+    {
+      "title": "Mudbound",
+      "year": 2017,
+      "type": "movie",
+      "imdbId": "tt2396589",
+      "imdbRating": 7.4,
+      "imdbVotes": 55422,
+      "rtPercent": 97
+    },
+    {
+      "title": "Bright",
+      "year": 2017,
+      "type": "movie",
+      "imdbId": "tt5519340",
+      "imdbRating": 6.3,
+      "imdbVotes": 211307,
+      "rtPercent": 26
+    },
+    {
+      "title": "Army of the Dead",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt0993840",
+      "imdbRating": 5.8,
+      "imdbVotes": 203317,
+      "rtPercent": 68
+    },
+    {
+      "title": "The Old Guard",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt7556122",
+      "imdbRating": 6.7,
+      "imdbVotes": 213164,
+      "rtPercent": 80
+    },
+    {
+      "title": "Project Power",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt7550000",
+      "imdbRating": 6,
+      "imdbVotes": 104739,
+      "rtPercent": 61
+    },
+    {
+      "title": "6 Underground",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt8106534",
+      "imdbRating": 6.1,
+      "imdbVotes": 213997,
+      "rtPercent": 36
+    },
+    {
+      "title": "Triple Frontier",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt1488606",
+      "imdbRating": 6.5,
+      "imdbVotes": 163933,
+      "rtPercent": 71
+    },
+    {
+      "title": "Murder Mystery",
+      "year": 2019,
+      "type": "movie",
+      "imdbId": "tt1618434",
+      "imdbRating": 6.1,
+      "imdbVotes": 193830,
+      "rtPercent": 43
+    },
+    {
+      "title": "The Kissing Booth",
+      "year": 2018,
+      "type": "movie",
+      "imdbId": "tt3799232",
+      "imdbRating": 5.9,
+      "imdbVotes": 106300,
+      "rtPercent": 17
+    },
+    {
+      "title": "To All the Boys I've Loved Before",
+      "year": 2018,
+      "type": "movie",
+      "imdbId": "tt3846674",
+      "imdbRating": 7,
+      "imdbVotes": 143495,
+      "rtPercent": 96
+    },
+    {
+      "title": "tick, tick... BOOM!",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt8721424",
+      "imdbRating": 7.5,
+      "imdbVotes": 130365,
+      "rtPercent": 87
+    },
+    {
+      "title": "The Trial of the Chicago 7",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt1070874",
+      "imdbRating": 7.7,
+      "imdbVotes": 207540,
+      "rtPercent": 89
+    },
+    {
+      "title": "Ma Rainey's Black Bottom",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt10514222",
+      "imdbRating": 6.9,
+      "imdbVotes": 78809,
+      "rtPercent": 97
+    },
+    {
+      "title": "Mank",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt10618286",
+      "imdbRating": 6.8,
+      "imdbVotes": 105916,
+      "rtPercent": 83
+    },
+    {
+      "title": "Da 5 Bloods",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt9777644",
+      "imdbRating": 6.5,
+      "imdbVotes": 58011,
+      "rtPercent": 92
+    },
+    {
+      "title": "I'm Thinking of Ending Things",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt7939766",
+      "imdbRating": 6.5,
+      "imdbVotes": 112438,
+      "rtPercent": 82
+    },
+    {
+      "title": "Hustle",
+      "year": 2022,
+      "type": "movie",
+      "imdbId": "tt8009428",
+      "imdbRating": 7.3,
+      "imdbVotes": 167669,
+      "rtPercent": 94
+    },
+    {
+      "title": "Guillermo del Toro's Pinocchio",
+      "year": 2022,
+      "type": "movie",
+      "imdbId": "tt1488589",
+      "imdbRating": 7.6,
+      "imdbVotes": 167410,
+      "rtPercent": 27
+    },
+    {
+      "title": "Nimona",
+      "year": 2023,
+      "type": "movie",
+      "imdbId": "tt19500164",
+      "imdbRating": 7.5,
+      "imdbVotes": 63688,
+      "rtPercent": 92
+    },
+    {
+      "title": "Leave the World Behind",
+      "year": 2023,
+      "type": "movie",
+      "imdbId": "tt12747748",
+      "imdbRating": 6.4,
+      "imdbVotes": 248187,
+      "rtPercent": 73
+    },
+    {
+      "title": "Rebel Moon - Part One: A Child of Fire",
+      "year": 2023,
+      "type": "movie",
+      "imdbId": "tt14998742",
+      "imdbRating": 5.6,
+      "imdbVotes": 142713,
+      "rtPercent": 22
+    },
+    {
+      "title": "Atlas",
+      "year": 2024,
+      "type": "movie",
+      "imdbId": "tt14856980",
+      "imdbRating": 5.7,
+      "imdbVotes": 61048,
+      "rtPercent": 17
+    },
+    {
+      "title": "Carry-On",
+      "year": 2024,
+      "type": "movie",
+      "imdbId": "tt21382296",
+      "imdbRating": 6.5,
+      "imdbVotes": 199562,
+      "rtPercent": 87
+    },
+    {
+      "title": "Spenser Confidential",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt8629748",
+      "imdbRating": 6.2,
+      "imdbVotes": 107874,
+      "rtPercent": 35
+    },
+    {
+      "title": "The Midnight Sky",
+      "year": 2020,
+      "type": "movie",
+      "imdbId": "tt10539608",
+      "imdbRating": 5.7,
+      "imdbVotes": 95573,
+      "rtPercent": 50
+    },
+    {
+      "title": "Moxie",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt6432466",
+      "imdbRating": 6.7,
+      "imdbVotes": 31076,
+      "rtPercent": 70
+    },
+    {
+      "title": "Malcolm & Marie",
+      "year": 2021,
+      "type": "movie",
+      "imdbId": "tt12676326",
+      "imdbRating": 6.6,
+      "imdbVotes": 44369,
+      "rtPercent": 57
+    },
+    {
+      "title": "Rustin",
+      "year": 2023,
+      "type": "movie",
+      "imdbId": "tt14160834",
+      "imdbRating": 6.5,
+      "imdbVotes": 14959,
+      "rtPercent": 83
+    },
+    {
+      "title": "Lift",
+      "year": 2024,
+      "type": "movie",
+      "imdbId": "tt14371878",
+      "imdbRating": 5.6,
+      "imdbVotes": 53838,
+      "rtPercent": 30
+    }
+  ],
+  "excluded": [
+    {
+      "title": "Glass Onion: A Knives Out Mystery",
+      "year": 2022,
+      "type": "movie",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Don't Look Up",
+      "year": 2021,
+      "type": "movie",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Maestro",
+      "year": 2023,
+      "type": "movie",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Society of the Snow",
+      "year": 2023,
+      "type": "movie",
+      "reason": "Not found in OMDb"
+    },
+    {
+      "title": "The Platform",
+      "year": 2019,
+      "type": "movie",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Fear Street: 1994",
+      "year": 2021,
+      "type": "movie",
+      "reason": "Missing IMDb rating in OMDb"
+    },
+    {
+      "title": "Stranger Things",
+      "year": 2016,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "The Crown",
+      "year": 2016,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Squid Game",
+      "year": 2021,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Wednesday",
+      "year": 2022,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Bridgerton",
+      "year": 2020,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "The Witcher",
+      "year": 2019,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Ozark",
+      "year": 2017,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Narcos",
+      "year": 2015,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Mindhunter",
+      "year": 2017,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Black Mirror",
+      "year": 2011,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "The Queen's Gambit",
+      "year": 2020,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Dark",
+      "year": 2017,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Money Heist",
+      "year": 2017,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Lupin",
+      "year": 2021,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Sex Education",
+      "year": 2019,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Cobra Kai",
+      "year": 2018,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "You",
+      "year": 2018,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "13 Reasons Why",
+      "year": 2017,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "The Umbrella Academy",
+      "year": 2019,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "BoJack Horseman",
+      "year": 2014,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Arcane",
+      "year": 2021,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Beef",
+      "year": 2023,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Baby Reindeer",
+      "year": 2024,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Adolescence",
+      "year": 2025,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "The Sandman",
+      "year": 2022,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "One Piece",
+      "year": 2023,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Avatar: The Last Airbender",
+      "year": 2024,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "3 Body Problem",
+      "year": 2024,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Love, Death & Robots",
+      "year": 2019,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Ginny & Georgia",
+      "year": 2021,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Heartstopper",
+      "year": 2022,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Orange Is the New Black",
+      "year": 2013,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "House of Cards",
+      "year": 2013,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Daredevil",
+      "year": 2015,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "The Haunting of Hill House",
+      "year": 2018,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Monster: The Jeffrey Dahmer Story",
+      "year": 2022,
+      "type": "series",
+      "reason": "Not found in OMDb"
+    },
+    {
+      "title": "Tiger King",
+      "year": 2020,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    },
+    {
+      "title": "Making a Murderer",
+      "year": 2015,
+      "type": "series",
+      "reason": "Missing Rotten Tomatoes score in OMDb"
+    }
+  ],
+  "flagged": [
+    {
+      "title": "Guillermo del Toro's Pinocchio",
+      "omdbRtPercent": 27,
+      "rtSitePercent": 96,
+      "rtSiteReviews": 298,
+      "checkedOn": "2026-10-15",
+      "checkedUrl": "https://www.rottentomatoes.com/m/guillermo_del_toros_pinocchio"
+    }
+  ],
+  "summary": {
+    "n": 44,
+    "meanAbsGap": 18.7,
+    "medianAbsGap": 17.5,
+    "meanSignedGap": 2.1,
+    "shareBigGap": 0.6136363636363636,
+    "bigGapThreshold": 15,
+    "criticsHigherCount": 29,
+    "audienceHigherCount": 15,
+    "tieCount": 0,
+    "pearson": 0.71,
+    "biggestCriticsHigher": {
+      "title": "Ma Rainey's Black Bottom",
+      "imdb": 6.9,
+      "rt": 97,
+      "gap": 28
+    },
+    "biggestAudienceHigher": {
+      "title": "Guillermo del Toro's Pinocchio",
+      "imdb": 7.6,
+      "rt": 27,
+      "gap": -49
+    }
+  },
+  "summaryExcludingFlagged": {
+    "n": 43,
+    "meanAbsGap": 18,
+    "medianAbsGap": 17,
+    "meanSignedGap": 3.3,
+    "shareBigGap": 0.6046511627906976,
+    "bigGapThreshold": 15,
+    "criticsHigherCount": 29,
+    "audienceHigherCount": 14,
+    "tieCount": 0,
+    "pearson": 0.79,
+    "biggestCriticsHigher": {
+      "title": "Ma Rainey's Black Bottom",
+      "imdb": 6.9,
+      "rt": 97,
+      "gap": 28
+    },
+    "biggestAudienceHigher": {
+      "title": "The Kissing Booth",
+      "imdb": 5.9,
+      "rt": 17,
+      "gap": -42
+    }
+  }
+}

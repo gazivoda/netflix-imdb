@@ -64,6 +64,19 @@ export const PAGES: SitePage[] = [
     ogType: 'article',
   },
   {
+    path: '/research/imdb-vs-rotten-tomatoes-gap',
+    title: 'IMDb vs Rotten Tomatoes Gap: Netflix Data Study',
+    description:
+      'We compared IMDb and Rotten Tomatoes scores for 44 Netflix Original films: the average gap is 18.7 points and 61% differ by 15+. Method and raw data included.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'yearly',
+    priority: 0.8,
+    group: 'guide',
+    label: 'IMDb vs RT data study',
+    ogType: 'article',
+  },
+  {
     path: '/camera-vision',
     title: 'Camera Vision Demo: Read Titles by Camera',
     description:
