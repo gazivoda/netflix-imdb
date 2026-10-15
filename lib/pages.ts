@@ -52,6 +52,19 @@ export const PAGES: SitePage[] = [
     ogType: 'article',
   },
   {
+    path: '/how-to/show-rotten-tomatoes-on-netflix',
+    title: 'Show Rotten Tomatoes Scores on Netflix',
+    description:
+      'Netflix has no Rotten Tomatoes scores. Install the free Netflix Ratings extension to see the Tomatometer on every title card, and what the percentage means.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.9,
+    group: 'guide',
+    label: 'Show Rotten Tomatoes on Netflix',
+    ogType: 'article',
+  },
+  {
     path: '/compare/imdb-vs-rotten-tomatoes',
     title: 'IMDb vs Rotten Tomatoes: Which Rating to Trust',
     description:
