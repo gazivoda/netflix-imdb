@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import g from '../components/guide.module.css';
+import s from './not-found.module.css';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { pagesInGroup } from '../lib/pages';
@@ -15,24 +15,32 @@ export default function NotFound() {
   const pages = [...pagesInGroup('guide'), ...pagesInGroup('compare')];
 
   return (
-    <div className={g.page}>
+    <div className={s.page}>
       <SiteHeader />
-      <main>
-        <section className={g.article}>
-          <header className={g.head}>
-            <h1 className={g.h1}>404: that page does not exist</h1>
-            <p className={g.lede}>
-              The link may be old or mistyped. Netflix Ratings is a free extension that shows IMDb
-              and Rotten Tomatoes scores on Netflix title cards. Here is where to go next.
-            </p>
+      <main id="main" tabIndex={-1} className={s.main}>
+        <section className={s.inner}>
+          <header className={s.slab}>
+            <h1 className={s.h1}>
+              <span className={`ds-display ${s.numeral}`}>404</span>
+              <span className={s.seat}>
+                This seat is <em className="ds-serif">empty.</em>
+              </span>
+            </h1>
           </header>
 
-          <p className={g.p}>
-            <a className={g.btnPrimary} href="/">Back to the home page</a>
+          <p className={s.lede}>
+            That page does not exist. The link may be old or mistyped. Netflix Ratings is a free
+            extension that shows IMDb and Rotten Tomatoes scores on Netflix title cards. Here is
+            where to go next.
           </p>
 
-          <h2 className={g.h2}>Guides</h2>
-          <ul className={g.list}>
+          <div className={s.actions}>
+            <a className={`ds-btn ds-btn-signal ${s.bigBtn}`} href="/">Back to the home page</a>
+            <a className={`ds-btn ${s.bigBtn}`} href="/install">Install the extension</a>
+          </div>
+
+          <h2 className={`ds-display ${s.h2}`}>Guides</h2>
+          <ul className={s.rows}>
             <li><a href="/">Home</a></li>
             {pages.map((p) => (
               <li key={p.path}>

@@ -1,5 +1,5 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
-import g from '../../components/guide.module.css';
+import s from './about.module.css';
 import { AUTHOR_NAME, PUBLISHED_DATE, REPO_URL, SITE_URL } from '../../lib/content';
 import { absoluteUrl, authorRef, pageMetadata } from '../../lib/seo';
 
@@ -64,8 +64,35 @@ export default function AboutPage() {
       faqs={FAQS}
       schema={[aboutPage]}
     >
-      <h2 className={g.h2}>Who makes Netflix Ratings?</h2>
-      <p className={g.p}>
+      <section className={s.credits} aria-label="Maker credit">
+        <div className={s.creditsMain}>
+          <p className={`ds-label ${s.creditsKicker}`}>Maker credit</p>
+          <p className={`ds-display ${s.creditsName}`}>{AUTHOR_NAME}</p>
+        </div>
+        <dl className={s.creditsStub}>
+          <div className={s.stubRow}>
+            <dt className="ds-label">Role</dt>
+            <dd>Independent developer</dd>
+          </div>
+          <div className={s.stubRow}>
+            <dt className="ds-label">Source</dt>
+            <dd>
+              <a href={AUTHOR_PROFILE_URL} target="_blank" rel="noopener noreferrer">
+                GitHub / gazivoda
+              </a>
+            </dd>
+          </div>
+          <div className={s.stubRow}>
+            <dt className="ds-label">First release</dt>
+            <dd>
+              <time dateTime={PUBLISHED_DATE}>May 1, 2026</time>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <h2 className={s.h2}>Who makes Netflix Ratings?</h2>
+      <p className={s.p}>
         Netflix Ratings is built and maintained by {AUTHOR_NAME}, an independent developer. The
         code, the issue tracker and the release history all live on GitHub, so you can check the
         work directly: see the{' '}
@@ -79,8 +106,8 @@ export default function AboutPage() {
         . It is a personal project, not a company product.
       </p>
 
-      <h2 className={g.h2}>Why does it exist?</h2>
-      <p className={g.p}>
+      <h2 className={s.h2}>Why does it exist?</h2>
+      <p className={s.p}>
         Choosing what to watch on Netflix usually means leaving Netflix to look the title up on
         IMDb or Rotten Tomatoes. Netflix Ratings removes that step by putting both scores in a
         small badge in the top-right corner of every title card, so the rating is there while you
@@ -88,15 +115,15 @@ export default function AboutPage() {
         access to only two sites.
       </p>
 
-      <h2 className={g.h2}>How long has it been around?</h2>
-      <p className={g.p}>
+      <h2 className={s.h2}>How long has it been around?</h2>
+      <p className={s.p}>
         The first public release was on <time dateTime={PUBLISHED_DATE}>May 1, 2026</time>. It is
         currently installed as an unpacked extension from GitHub rather than from the Chrome Web
         Store; the <a href="/install">install guide</a> walks through it in about a minute.
       </p>
 
-      <h2 className={g.h2}>Where do the ratings come from?</h2>
-      <p className={g.p}>
+      <h2 className={s.h2}>Where do the ratings come from?</h2>
+      <p className={s.p}>
         All scores come from{' '}
         <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">OMDb</a>, a
         third-party movie database. The extension&apos;s background worker sends a title to OMDb,
@@ -106,13 +133,13 @@ export default function AboutPage() {
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes: which rating to trust</a>.
       </p>
 
-      <h2 className={g.h2}>How is accuracy handled?</h2>
-      <aside className={g.note}>
+      <h2 className={s.h2}>How is accuracy handled?</h2>
+      <aside className={s.note}>
         <strong>Scores are third-party data, shown as received.</strong> Netflix Ratings does not
         edit, round up or curate them. If a score looks wrong, it is usually wrong, outdated or
         missing at the source.
       </aside>
-      <ul className={g.list}>
+      <ul className={s.ledger}>
         <li>If OMDb lacks one of the two scores for a title, only the available one is shown.</li>
         <li>If OMDb has neither score, or cannot match the title, the card shows no rating.</li>
         <li>
@@ -122,16 +149,16 @@ export default function AboutPage() {
         </li>
       </ul>
 
-      <h2 className={g.h2}>Is it independent of Netflix?</h2>
-      <p className={g.p}>
+      <h2 className={s.h2}>Is it independent of Netflix?</h2>
+      <p className={s.p}>
         Yes. Netflix Ratings is not affiliated with, endorsed by or sponsored by Netflix, IMDb or
         Rotten Tomatoes. Those names and any related marks belong to their owners and are used only
         to describe what the extension shows. It does not collect your viewing history; the{' '}
         <a href="/privacy">privacy policy</a> lists exactly what is sent.
       </p>
 
-      <h2 className={g.h2}>Is it open source, and how do I get in touch?</h2>
-      <p className={g.p}>
+      <h2 className={s.h2}>Is it open source, and how do I get in touch?</h2>
+      <p className={s.p}>
         The full source is public in the{' '}
         <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub repository</a>, so
         anyone can read, audit and discuss it. For bugs, wrong ratings and ideas, a GitHub issue is
