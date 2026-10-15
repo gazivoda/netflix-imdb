@@ -1,0 +1,275 @@
+/* Shared visuals for the three how-to guides. Tokens and fonts come from globals.css.
+   Selectors are compounded (div.x, .x ol > li) so they win over the shared guide.module.css
+   regardless of stylesheet order. */
+
+/* ── Score ticket (IMDb gold / Tomatometer signal): stub + perforation + copy ── */
+.ticket {
+  display: grid;
+  grid-template-columns: minmax(210px, 270px) 1fr;
+  margin: 28px 0 32px;
+  background: var(--card);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
+}
+.stub {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 22px;
+  border-right: 3px dashed var(--ink);
+}
+.gold .stub { background: var(--gold); color: var(--ink); }
+.signal .stub { background: var(--signal); color: #fff; border-right-color: var(--ink); }
+
+.stubLabel {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.score {
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.82;
+  font-size: clamp(76px, 12vw, 108px);
+  letter-spacing: 0;
+}
+.outOf {
+  font-size: 0.46em;
+  margin-left: 0.06em;
+}
+
+/* 10-block scale for "x out of 10" */
+.scale {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 3px;
+}
+.scale span {
+  height: 18px;
+  background: var(--card);
+  border: 2px solid var(--ink);
+}
+.scale span.on { background: var(--ink); }
+
+/* Rotten / Fresh split bar at the 60% line */
+.split {
+  display: flex;
+  border: 3px solid var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.split span { padding: 7px 8px; white-space: nowrap; overflow: hidden; }
+.rotten { flex: 0 0 60%; background: var(--card); color: var(--ink); border-right: 3px solid var(--ink); }
+.fresh { flex: 1; background: var(--ink); color: var(--paper); text-align: right; }
+
+.ticketBody {
+  align-self: center;
+  margin: 0;
+  padding: 26px 28px;
+  color: var(--ink);
+}
+.ticketBody a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+.ticketBody :global(.ds-chip-imdb),
+.ticketBody :global(.ds-chip-rt) { vertical-align: 0.1em; margin: 0 2px; }
+
+@media (max-width: 620px) {
+  .ticket { grid-template-columns: 1fr; box-shadow: var(--shadow-hard-sm); }
+  .stub { border-right: 0; border-bottom: 3px dashed var(--ink); padding: 20px 18px; }
+  .signal .stub { border-right: 0; }
+  .ticketBody { padding: 20px 18px; }
+}
+
+/* ── Big numbered stubs for ordered steps ── */
+.stubs { margin: 12px 0 20px; }
+.stubs ol {
+  list-style: none;
+  counter-reset: stub;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+}
+.stubs ol > li {
+  counter-increment: stub;
+  position: relative;
+  min-height: 104px;
+  padding: 20px 22px 20px 124px;
+  background: var(--card);
+  color: var(--muted);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard-sm);
+  font-size: 16.5px;
+  line-height: 1.6;
+}
+.stubs ol > li::before {
+  content: counter(stub, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 98px;
+  height: auto;
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  border-right: 3px dashed var(--ink);
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 68px;
+  line-height: 1;
+}
+.stubs ol > li:nth-child(3n + 2)::before { background: var(--signal); color: #fff; }
+.stubs ol > li:nth-child(3n)::before { background: var(--teal); color: var(--paper); }
+.stubs ol > li > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(24px, 3.4vw, 30px);
+  line-height: 0.95;
+}
+
+@media (max-width: 520px) {
+  .stubs ol > li { padding: 16px 16px 16px 84px; min-height: 92px; }
+  .stubs ol > li::before { width: 66px; font-size: 48px; }
+}
+
+/* ── Scoreboard decision table ── */
+div.board {
+  overflow-x: auto;
+  margin: 24px 0 32px;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
+}
+.boardTable {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  font-size: 15.5px;
+  color: var(--ink);
+}
+.boardTable thead th {
+  padding: 13px 16px;
+  text-align: left;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.boardTable tbody tr { border-top: 3px solid var(--ink); }
+.boardTable tbody tr:first-child { border-top: 0; }
+.boardTable tbody th,
+.boardTable tbody td {
+  padding: 16px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.boardTable tbody th {
+  width: 32%;
+  font-weight: 800;
+  font-size: 16.5px;
+  color: var(--ink);
+  border-right: 3px solid var(--ink);
+}
+.boardTable tbody td { color: var(--muted); border-right: 3px solid var(--ink); }
+.boardTable tbody td:last-child {
+  border-right: 0;
+  color: var(--ink);
+  font-weight: 700;
+}
+.boardTable tbody tr.go td:last-child { background: var(--gold); }
+.boardTable tbody tr.skip td:last-child { background: var(--signal); color: #fff; }
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.chips :global(.ds-chip-imdb),
+.chips :global(.ds-chip-rt) { font-size: 12px; padding: 3px 8px; text-transform: uppercase; }
+.tag {
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Narrow screens: each row becomes its own ticket line (roles are set in the markup
+   so the table semantics survive the display change). */
+@media (max-width: 600px) {
+  div.board { overflow: visible; background: transparent; border: 0; box-shadow: none; }
+  .boardTable, .boardTable tbody, .boardTable tr, .boardTable th, .boardTable td { display: block; min-width: 0; width: auto; }
+  .boardTable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .boardTable tbody tr,
+  .boardTable tbody tr:first-child {
+    margin-bottom: 18px;
+    background: var(--card);
+    border: 3px solid var(--ink);
+    box-shadow: var(--shadow-hard-sm);
+  }
+  .boardTable tbody th {
+    width: auto;
+    padding: 14px 16px;
+    font-size: 17px;
+    background: var(--paper);
+    border-right: 0;
+    border-bottom: 3px solid var(--ink);
+  }
+  .boardTable tbody td { padding: 12px 16px; border-right: 0; }
+  .boardTable tbody td + td { border-top: 2px dashed var(--ink); }
+  .boardTable tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .boardTable tbody tr.skip td:last-child::before { color: #fff; }
+  .boardTable tbody td:last-child { border-top: 3px solid var(--ink); }
+}

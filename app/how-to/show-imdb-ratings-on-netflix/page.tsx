@@ -1,5 +1,7 @@
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
+import { ImdbChip } from '../../../components/ScoreChip';
+import h from '../how-to.module.css';
 import { howTo, pageMetadata } from '../../../lib/seo';
 import { STEPS } from './steps';
 
@@ -56,14 +58,16 @@ export default function ShowImdbRatingsOnNetflixPage() {
       ]}
     >
       <h2 className={g.h2}>How do I show IMDb ratings on Netflix?</h2>
-      <ol className={g.steps}>
-        {STEPS.map((s) => (
-          <li key={s.name}>
-            <strong>{s.name}</strong>
-            {s.text}
-          </li>
-        ))}
-      </ol>
+      <div className={h.stubs}>
+        <ol className={g.steps}>
+          {STEPS.map((s) => (
+            <li key={s.name}>
+              <strong>{s.name}</strong>
+              {s.text}
+            </li>
+          ))}
+        </ol>
+      </div>
       <p className={g.p}>
         <a href="/install" className={g.btnPrimary}>
           Install Netflix Ratings <span aria-hidden>→</span>
@@ -75,13 +79,27 @@ export default function ShowImdbRatingsOnNetflixPage() {
       </p>
 
       <h2 className={g.h2}>What does the IMDb rating on the badge mean?</h2>
-      <p className={g.p}>
-        The badge shows the title&rsquo;s IMDb user rating: the average of votes cast by IMDb
-        members, on a scale from 1 to 10. A badge reading &ldquo;⭐ 8.1&rdquo; means IMDb users
-        rate that title 8.1 out of 10 on average. It is an audience score, so it says how viewers
-        felt, not what critics concluded. The badge does not show how many people voted; open the
-        title on IMDb if you want to judge how much weight a score carries.
-      </p>
+      <div className={`${h.ticket} ${h.gold}`}>
+        <div className={h.stub} aria-hidden="true">
+          <span className={h.stubLabel}>IMDb user rating</span>
+          <span className={h.score}>
+            8.1<span className={h.outOf}>/10</span>
+          </span>
+          <span className={h.scale}>
+            {Array.from({ length: 10 }, (_, i) => (
+              <span key={i} className={i < 8 ? h.on : undefined} />
+            ))}
+          </span>
+        </div>
+        <p className={`${g.p} ${h.ticketBody}`}>
+          The badge shows the title&rsquo;s IMDb user rating: the average of votes cast by IMDb
+          members, on a scale from 1 to 10. A badge reading &ldquo;<ImdbChip value="8.1" />&rdquo;
+          means IMDb users rate that title 8.1 out of 10 on average. It is an audience score, so it
+          says how viewers felt, not what critics concluded. The badge does not show how many
+          people voted; open the title on IMDb if you want to judge how much weight a score
+          carries.
+        </p>
+      </div>
       <p className={g.p}>
         Where available, the badge also shows a Rotten Tomatoes percentage, the share of critics
         who gave the title a positive review. The two often disagree, and the{' '}

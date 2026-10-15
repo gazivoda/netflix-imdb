@@ -1,5 +1,7 @@
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
+import { ImdbChip, RtChip } from '../../../components/ScoreChip';
+import h from '../how-to.module.css';
 import { howTo, pageMetadata } from '../../../lib/seo';
 
 const PATH = '/how-to/find-what-to-watch-on-netflix';
@@ -34,39 +36,49 @@ const STEPS = [
   },
 ];
 
-const TABLE = [
+// Visual-only score examples for each row (decorative; the row text carries the meaning).
+const TABLE: { seen: string; tone?: 'go' | 'skip'; marks: { imdb?: string; rt?: string; tag?: string }; means: string; action: string }[] = [
   {
     seen: 'Both scores high',
+    tone: 'go',
+    marks: { imdb: 'High', rt: 'High' },
     means: 'Audiences and critics agree it is good.',
     action: 'Safe pick. Watch it.',
   },
   {
     seen: 'IMDb high, Rotten Tomatoes lower',
+    marks: { imdb: 'High', rt: 'Lower' },
     means: 'A crowd-pleaser that critics were cooler on.',
     action: 'Good for a fun, low-effort night.',
   },
   {
     seen: 'Rotten Tomatoes high, IMDb lower',
+    marks: { imdb: 'Lower', rt: 'High' },
     means: 'A critics’ favorite that did not win over everyone.',
     action: 'Choose it when you want something ambitious.',
   },
   {
     seen: 'Both scores low',
+    tone: 'skip',
+    marks: { imdb: 'Low', rt: 'Low' },
     means: 'Neither audiences nor critics were impressed.',
     action: 'Skip it.',
   },
   {
     seen: 'Only one score shown',
+    marks: { tag: 'One score' },
     means: 'The other score is not in the OMDb database for that title.',
     action: 'Use the one you have, with less confidence.',
   },
   {
     seen: 'No badge at all',
+    marks: { tag: 'No badge' },
     means: 'OMDb has no rating for that title.',
     action: 'Judge it by trailer and description instead.',
   },
   {
     seen: 'Brand-new release',
+    marks: { tag: 'New' },
     means: 'Scores are still settling.',
     action: 'Treat them as a first impression and re-check later.',
   },
@@ -156,31 +168,40 @@ export default function FindWhatToWatchPage() {
         top-right corner of each title card showing the IMDb rating and the Rotten Tomatoes
         percentage. Without it, you would be opening two other sites for every title.
       </p>
-      <ol className={g.steps}>
-        {STEPS.map((s) => (
-          <li key={s.name}>
-            <strong>{s.name}</strong>
-            {s.text}
-          </li>
-        ))}
-      </ol>
+      <div className={h.stubs}>
+        <ol className={g.steps}>
+          {STEPS.map((s) => (
+            <li key={s.name}>
+              <strong>{s.name}</strong>
+              {s.text}
+            </li>
+          ))}
+        </ol>
+      </div>
 
       <h2 className={g.h2}>What should I do for each score pattern?</h2>
-      <div className={g.tableWrap}>
-        <table className={g.table}>
-          <thead>
-            <tr>
-              <th scope="col">What the badge shows</th>
-              <th scope="col">What it usually means</th>
-              <th scope="col">What to do</th>
+      <div className={`${g.tableWrap} ${h.board}`}>
+        <table className={h.boardTable} role="table">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th scope="col" role="columnheader">What the badge shows</th>
+              <th scope="col" role="columnheader">What it usually means</th>
+              <th scope="col" role="columnheader">What to do</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody role="rowgroup">
             {TABLE.map((r) => (
-              <tr key={r.seen}>
-                <th scope="row">{r.seen}</th>
-                <td>{r.means}</td>
-                <td>{r.action}</td>
+              <tr key={r.seen} role="row" className={r.tone ? h[r.tone] : undefined}>
+                <th scope="row" role="rowheader">
+                  {r.seen}
+                  <span className={h.chips} aria-hidden="true">
+                    {r.marks.imdb && <ImdbChip value={r.marks.imdb} />}
+                    {r.marks.rt && <RtChip value={r.marks.rt} />}
+                    {r.marks.tag && <span className={h.tag}>{r.marks.tag}</span>}
+                  </span>
+                </th>
+                <td role="cell" data-label="What it usually means">{r.means}</td>
+                <td role="cell" data-label="What to do">{r.action}</td>
               </tr>
             ))}
           </tbody>
