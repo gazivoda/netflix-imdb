@@ -24,7 +24,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .reveal { animation: none; opacity: 1; transform: none; }
-  .page { scroll-behavior: auto; }
+  .dialBarImdb, .dialBarRt, .baBadge { animation: none; }
+  .btnPrimary:hover, .btnGhost:hover, .btnSecondary:hover { transform: none; }
 }
 
 /* ── NAV ── */
@@ -350,7 +351,7 @@
   font-weight: 700;
   letter-spacing: 1.6px;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--red-text);
   margin-bottom: 12px;
 }
 .sectionTitle {
@@ -761,8 +762,31 @@
 .marqueeTitle { font-weight: 600; color: var(--text); }
 .marqueeImdb { font-weight: 800; color: var(--imdb); font-size: 12.5px; }
 .marqueeRt { font-weight: 800; color: #ff7a5c; font-size: 12.5px; }
+/* Static fallback: show one wrapped copy of the strip instead of a frozen, clipped one. */
 @media (prefers-reduced-motion: reduce) {
-  .marqueeTrack { animation: none; }
+  .marqueeTrack { animation: none; width: auto; flex-wrap: wrap; justify-content: center; padding: 0 clamp(20px, 5vw, 48px); }
+  .marqueeDup { display: none; }
+  .marquee { -webkit-mask-image: none; mask-image: none; }
+}
+.marqueeCaption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--faint);
+}
+.illustrative {
+  margin-top: 14px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--faint);
+}
+.howInner .sectionTitle { margin-bottom: 16px; }
+.howLead {
+  max-width: 62ch;
+  margin: 0 0 40px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
 /* ── NARRATIVE / STORY ── */

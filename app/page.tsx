@@ -32,10 +32,11 @@ function ScoreBadge({ imdb, rt }: { imdb: string; rt: string }) {
 export default function Page() {
   return (
     <div className={styles.page}>
+      <a className="skip-link" href="#main">Skip to main content</a>
       {/* FAQPage schema lives only here — it must match the visible FAQ on this page */}
       <JsonLd data={graph(faqPage(FAQS))} />
       {/* NAV */}
-      <nav className={styles.nav}>
+      <nav className={styles.nav} aria-label="Primary">
         <a className={styles.navLogo} href="/">
           <span className={styles.navLogoIcon} aria-hidden>★</span>
           Netflix Ratings
@@ -51,7 +52,7 @@ export default function Page() {
         </div>
       </nav>
 
-      <main>
+      <main id="main" tabIndex={-1}>
         {/* HERO */}
         <section className={styles.hero} aria-labelledby="hero-title">
           <div className={styles.heroCopy}>
@@ -62,9 +63,10 @@ export default function Page() {
               Know if it&apos;s worth watching <em>before</em> you press play.
             </h1>
             <p className={`${styles.heroSubtitle} ${styles.reveal} ${styles.d2}`}>
-              Netflix Ratings drops the <strong>IMDb</strong> and <strong>Rotten Tomatoes</strong>{' '}
-              score onto every title card as you browse. No second tab, no searching — just scroll
-              and decide.
+              Netflix Ratings is a free, open-source Chrome extension that shows the{' '}
+              <strong>IMDb</strong> rating and the <strong>Rotten Tomatoes</strong> score on every
+              Netflix title card as you browse. No account, no second tab, no searching — just
+              scroll and decide.
             </p>
             <div className={`${styles.heroCta} ${styles.reveal} ${styles.d3}`}>
               <a href={REPO_URL} className={styles.btnPrimary} target="_blank" rel="noopener noreferrer">
@@ -83,22 +85,26 @@ export default function Page() {
 
           {/* MOCKUP */}
           <div className={`${styles.mockupWrap} ${styles.reveal} ${styles.d2}`}>
-            <div className={styles.mockup}>
-              <div className={styles.mockupBar}>
+            <div
+              className={styles.mockup}
+              role="img"
+              aria-label="Illustration of the Netflix browse page with an IMDb rating and a Rotten Tomatoes score badge in the corner of each title card. Scores shown are illustrative."
+            >
+              <div className={styles.mockupBar} aria-hidden>
                 <span className={styles.mockupDot} />
                 <span className={styles.mockupDot} />
                 <span className={styles.mockupDot} />
                 <span className={styles.mockupUrl}>netflix.com/browse</span>
               </div>
-              <div className={styles.netflixBar}>
+              <div className={styles.netflixBar} aria-hidden>
                 <span className={styles.netflixLogo}>NETFLIX</span>
                 <div className={styles.netflixNav}>
                   <span>Home</span><span>TV Shows</span><span>Movies</span><span>My List</span>
                 </div>
               </div>
 
-              <div className={styles.rowLabel}>Continue Watching</div>
-              <div className={styles.cardRow}>
+              <div className={styles.rowLabel} aria-hidden>Continue Watching</div>
+              <div className={styles.cardRow} aria-hidden>
                 {CARDS.map((c) => (
                   <div key={c.label} className={styles.card}>
                     <div className={styles.cardBg} style={{ background: c.color }}>{c.label}</div>
@@ -107,8 +113,8 @@ export default function Page() {
                 ))}
               </div>
 
-              <div className={styles.rowLabel}>Popular on Netflix</div>
-              <div className={styles.cardRow}>
+              <div className={styles.rowLabel} aria-hidden>Popular on Netflix</div>
+              <div className={styles.cardRow} aria-hidden>
                 {CARDS2.map((c) => (
                   <div key={c.label} className={styles.card}>
                     <div className={styles.cardBg} style={{ background: c.color }}>{c.label}</div>
@@ -117,6 +123,7 @@ export default function Page() {
                 ))}
               </div>
             </div>
+            <p className={styles.illustrative}>Illustrative scores. The extension fetches real ratings as you browse.</p>
             <div className={styles.glow} aria-hidden />
           </div>
         </section>
@@ -133,10 +140,10 @@ export default function Page() {
         </section>
 
         {/* MARQUEE */}
-        <section className={styles.marquee} aria-label="Ratings shown on popular Netflix titles">
+        <section className={styles.marquee} aria-hidden>
           <div className={styles.marqueeTrack}>
             {[...MARQUEE, ...MARQUEE].map((m, i) => (
-              <span key={`${m.title}-${i}`} className={styles.marqueeItem} aria-hidden={i >= MARQUEE.length}>
+              <span key={`${m.title}-${i}`} className={`${styles.marqueeItem}${i >= MARQUEE.length ? ` ${styles.marqueeDup}` : ''}`}>
                 <span className={styles.marqueeTitle}>{m.title}</span>
                 <span className={styles.marqueeImdb}>★ {m.imdb}</span>
                 <span className={styles.marqueeRt}>🍅 {m.rt}</span>
@@ -144,19 +151,20 @@ export default function Page() {
             ))}
           </div>
         </section>
+        <p className={styles.marqueeCaption}>Illustrative scores, for demonstration only.</p>
 
         {/* NARRATIVE */}
         <section className={styles.story} aria-labelledby="story-title">
           <div className={styles.storyHead}>
             <p className={styles.sectionLabel}>Why it matters</p>
             <h2 id="story-title" className={styles.storyTitle}>
-              A rating on the card changes how you choose what to watch.
+              Why put IMDb and Rotten Tomatoes scores on Netflix title cards?
             </h2>
           </div>
           <div className={styles.storyBody}>
             <p>
-              The average person spends close to <strong>18 minutes</strong> deciding what to watch
-              before giving up or settling for something forgettable. Netflix shows you gorgeous
+              Choosing what to watch often turns into a long scroll that ends with giving up or
+              settling for something forgettable. Netflix shows you gorgeous
               artwork and a one-line hook — but never the one number that actually predicts whether
               you&apos;ll enjoy it. So you open a second tab, search the title, skim a rating, switch
               back, and repeat. Every single time.
@@ -183,18 +191,18 @@ export default function Page() {
         {/* BEFORE / AFTER */}
         <section className={styles.beforeAfter} aria-labelledby="ba-title">
           <p className={styles.sectionLabel}>Before &amp; after</p>
-          <h2 id="ba-title" className={styles.sectionTitle}>The same card, two very different decisions</h2>
+          <h2 id="ba-title" className={styles.sectionTitle}>What changes on a Netflix card with the extension?</h2>
           <div className={styles.baGrid}>
             <div className={styles.baCol}>
               <span className={`${styles.baTag} ${styles.baTagOff}`}>Without the extension</span>
-              <div className={styles.baCard}>
+              <div className={styles.baCard} aria-hidden>
                 <div className={styles.baArt} style={{ background: '#241a2e' }}>Stranger Things</div>
               </div>
               <p className={styles.baNote}>Great artwork. Zero idea if it&apos;s actually good.</p>
             </div>
             <div className={styles.baCol}>
               <span className={`${styles.baTag} ${styles.baTagOn}`}>With Netflix Ratings</span>
-              <div className={styles.baCard}>
+              <div className={styles.baCard} aria-hidden>
                 <div className={styles.baArt} style={{ background: '#241a2e' }}>
                   Stranger Things
                   <span className={styles.baBadge}>
@@ -203,7 +211,7 @@ export default function Page() {
                   </span>
                 </div>
               </div>
-              <p className={styles.baNote}>Audience <strong>8.7</strong>, critics <strong>86%</strong>. Press play.</p>
+              <p className={styles.baNote}>Audience <strong>8.7</strong>, critics <strong>86%</strong> (illustrative). Press play.</p>
             </div>
           </div>
         </section>
@@ -212,7 +220,7 @@ export default function Page() {
         <section className={styles.features} aria-labelledby="features-title">
           <p className={styles.sectionLabel}>Features</p>
           <h2 id="features-title" className={styles.sectionTitle}>
-            Everything you need, nothing you don&apos;t
+            What can Netflix Ratings do?
           </h2>
           <div className={styles.featureGrid}>
             {FEATURES.map((f) => (
@@ -229,7 +237,12 @@ export default function Page() {
         <section className={styles.howSection} id="how" aria-labelledby="how-title">
           <div className={styles.howInner}>
             <p className={styles.sectionLabel}>How it works</p>
-            <h2 id="how-title" className={styles.sectionTitle}>Up and running in 60 seconds</h2>
+            <h2 id="how-title" className={styles.sectionTitle}>How does Netflix Ratings work?</h2>
+            <p className={styles.howLead}>
+              Netflix Ratings reads the title cards on netflix.com, looks up each title&apos;s IMDb
+              rating and Rotten Tomatoes score through the OMDb API, and draws a small badge in the
+              top-right corner of the card. Setup takes three steps.
+            </p>
             <ol className={styles.steps}>
               {[
                 { n: '1', title: 'Install the extension', desc: 'Load it unpacked from GitHub in a couple of clicks. No store account required.' },
@@ -295,7 +308,7 @@ export default function Page() {
               <span className={styles.dialBarTrack}><span className={styles.dialBarRt} style={{ width: '86%' }} /></span>
               <span className={styles.dialNum}>86%</span>
             </div>
-            <div className={styles.dialCaption}>Stranger Things, as shown on your Netflix cards</div>
+            <div className={styles.dialCaption}>Illustrative example: Stranger Things</div>
           </div>
         </section>
 
