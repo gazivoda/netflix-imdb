@@ -5,7 +5,7 @@ import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
 import { getPage } from '../lib/pages';
 import { AUTHOR_NAME, REPO_URL } from '../lib/content';
-import { article, breadcrumbList, faqPage, graph } from '../lib/seo';
+import { article, breadcrumbList, faqPage, graph, nodeId, webPage } from '../lib/seo';
 
 export interface Faq { q: string; a: string }
 
@@ -37,7 +37,7 @@ export default function GuideLayout({
 }) {
   const page = getPage(path);
   const trail = [{ name: 'Home', path: '/' }, ...crumbs, { name: page.label ?? page.title, path }];
-  const jsonLd = graph(breadcrumbList(trail), article(path), ...schema, ...(faqs ? [faqPage(faqs)] : []));
+  const jsonLd = graph(webPage(path), { ...breadcrumbList(trail), '@id': nodeId(path, 'breadcrumb') }, article(path), ...schema, ...(faqs ? [faqPage(faqs)] : []));
 
   return (
     <div className={g.page}>
