@@ -1,13 +1,12 @@
 import styles from './Testimonials.module.css';
-import shared from './shared.module.css';
 import { TESTIMONIALS } from '../../lib/content';
 
 export default function Testimonials() {
   return (
     <section className={styles.testimonials} aria-labelledby="loved-title">
-      <p className={shared.sectionLabel}>Loved by binge-watchers</p>
-      <h2 id="loved-title" className={shared.sectionTitle}>
-        People stop guessing &mdash; and start choosing
+      <p className={`ds-label ${styles.label}`}>Loved by binge-watchers</p>
+      <h2 id="loved-title" className={`ds-display ${styles.title}`}>
+        People stop guessing &mdash; and start <em className="ds-serif">choosing</em>
       </h2>
       <div className={styles.quoteGrid}>
         {TESTIMONIALS.map((t) => (

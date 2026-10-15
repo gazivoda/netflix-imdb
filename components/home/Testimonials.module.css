@@ -1,66 +1,120 @@
-/* ── TESTIMONIALS ── */
+/* ── TESTIMONIALS: review slips / poster tags. Alternating card + teal fills, hard shadows. ── */
 .testimonials {
   max-width: 1200px;
   margin: 0 auto;
   padding: clamp(72px, 9vw, 104px) clamp(20px, 5vw, 48px);
 }
-.quoteGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-}
-.quoteCard {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px 28px 24px;
-  margin: 0;
-  overflow: hidden;
-}
-.quoteCard::before {
-  content: '\201C';
-  position: absolute;
-  top: -18px;
-  left: 14px;
-  font-family: var(--display);
-  font-size: 110px;
-  line-height: 1;
-  color: rgba(245, 197, 24, 0.10);
-}
-.quoteScore {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--imdb);
+.label {
+  color: var(--red-text);
   margin-bottom: 14px;
 }
-.quoteText {
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--text);
-  margin-bottom: 22px;
+.title {
+  font-size: clamp(44px, 7vw, 88px);
+  margin-bottom: clamp(36px, 5vw, 56px);
+  text-wrap: balance;
+}
+.title em {
+  font-size: 1.04em;
+  color: var(--red-text);
+}
+
+.quoteGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 3vw, 34px);
+}
+.quoteCard {
+  --pad: clamp(20px, 3vw, 30px);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 var(--pad) clamp(20px, 2.6vw, 26px);
+  background: var(--card);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
+}
+/* Poster-tag punch hole. */
+.quoteCard::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 14px;
+  height: 14px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+}
+.quoteCard:nth-child(even) {
+  background: var(--teal);
+  color: var(--paper);
+}
+
+/* Rating strip across the top of the slip: plain mono text on a flat band. */
+.quoteScore {
+  align-self: flex-start;
+  margin: 0 0 22px calc(-1 * var(--pad));
+  padding: 8px 16px 8px var(--pad);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+}
+.quoteCard:nth-child(even) .quoteScore {
+  background: var(--paper);
+  color: var(--ink);
+}
+.quoteText {
+  margin: 0 0 26px;
+  font-size: clamp(17px, 1.6vw, 19px);
+  line-height: 1.55;
 }
 .quoteMeta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 13.5px;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 3px solid currentColor;
+  font-size: 14px;
 }
-.quoteMeta strong { display: block; font-weight: 700; }
-.quoteRole { color: var(--faint); font-size: 12.5px; }
+.quoteMeta strong {
+  display: block;
+  font-weight: 800;
+}
+.quoteRole {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.quoteCard:not(:nth-child(even)) .quoteRole { color: var(--muted); }
 .quoteAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  flex-shrink: 0;
   display: grid;
   place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--ink);
+  border-radius: 0;
   font-family: var(--display);
-  font-weight: 700;
-  color: var(--bg);
-  background: linear-gradient(135deg, var(--imdb), #e0860a);
-  flex-shrink: 0;
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: 26px;
+  line-height: 1;
+  background: var(--gold);
+  color: var(--ink);
+}
+.quoteCard:nth-child(even) .quoteAvatar {
+  background: var(--signal);
+  color: #fff;
+  border-color: var(--paper);
 }
 
 @media (max-width: 940px) {
