@@ -1,0 +1,3268 @@
+{
+ "responses": {
+  "Roma|2018|movie": {
+   "fetchedAt": "2026-10-15T20:34:19.808Z",
+   "data": {
+    "Title": "Roma",
+    "Year": "2018",
+    "Rated": "R",
+    "Released": "14 Dec 2018",
+    "Runtime": "135 min",
+    "Genre": "Drama",
+    "Director": "Alfonso Cuarón",
+    "Writer": "Alfonso Cuarón",
+    "Actors": "Yalitza Aparicio, Marina de Tavira, Diego Cortina Autrey",
+    "Plot": "A year in the life of an upper-middle-class family's maid in Mexico City in the early 1970s.",
+    "Language": "Spanish, Mixtec, English, Japanese, German, French, Norwegian",
+    "Country": "Mexico, United States",
+    "Awards": "Won 3 Oscars. 256 wins & 230 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTU0OTc3ODk4Ml5BMl5BanBnXkFtZTgwMzM4NzI5NjM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "96%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "96/100"
+     }
+    ],
+    "Metascore": "96",
+    "imdbRating": "7.6",
+    "imdbVotes": "179,999",
+    "imdbID": "tt6155172",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Irishman|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:20.367Z",
+   "data": {
+    "Title": "The Irishman",
+    "Year": "2019",
+    "Rated": "R",
+    "Released": "27 Nov 2019",
+    "Runtime": "209 min",
+    "Genre": "Biography, Crime, Drama",
+    "Director": "Martin Scorsese",
+    "Writer": "Steven Zaillian, Charles Brandt",
+    "Actors": "Robert De Niro, Al Pacino, Joe Pesci",
+    "Plot": "An illustration of Frank Sheeran's life, from W.W.II veteran to hit-man for the Bufalino crime family and his alleged assassination of his close friend Jimmy Hoffa.",
+    "Language": "English, Italian, Latin, Spanish, German",
+    "Country": "United States",
+    "Awards": "Nominated for 10 Oscars. 72 wins & 354 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTY2YThkNmQtOWJhYy00ZDc3LWEzOGEtMmQwNzM0YjFmZWIyXkEyXkFqcGc@._V1_QL75_UY562_CR2,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.8/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "95%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "94/100"
+     }
+    ],
+    "Metascore": "94",
+    "imdbRating": "7.8",
+    "imdbVotes": "480,837",
+    "imdbID": "tt1302006",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Marriage Story|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:20.926Z",
+   "data": {
+    "Title": "Marriage Story",
+    "Year": "2019",
+    "Rated": "R",
+    "Released": "06 Dec 2019",
+    "Runtime": "137 min",
+    "Genre": "Drama, Romance",
+    "Director": "Noah Baumbach",
+    "Writer": "Noah Baumbach",
+    "Actors": "Adam Driver, Scarlett Johansson, Julia Greer",
+    "Plot": "A stage director and his actor wife struggle through a grueling divorce that pushes them to their personal and creative extremes. Noah Baumbach's incisive and compassionate look at a marriage breaking up and a family staying toget...",
+    "Language": "English, Spanish",
+    "Country": "United Kingdom, United States",
+    "Awards": "Won 1 Oscar. 129 wins & 269 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNmE0OWJlM2MtNzhmMi00YmQyLTlmY2EtZmUzNzBiNGRlN2JkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.9/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "95%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "94/100"
+     }
+    ],
+    "Metascore": "94",
+    "imdbRating": "7.9",
+    "imdbVotes": "376,077",
+    "imdbID": "tt7653254",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Bird Box|2018|movie": {
+   "fetchedAt": "2026-10-15T20:34:21.484Z",
+   "data": {
+    "Title": "Bird Box",
+    "Year": "2018",
+    "Rated": "R",
+    "Released": "21 Dec 2018",
+    "Runtime": "124 min",
+    "Genre": "Horror, Mystery, Sci-Fi",
+    "Director": "Susanne Bier",
+    "Writer": "Eric Heisserer, Josh Malerman",
+    "Actors": "Sandra Bullock, Trevante Rhodes, John Malkovich",
+    "Plot": "Five years after an ominous unseen presence drives most of society to suicide, a mother and her two children make a desperate bid to reach safety.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "6 wins & 9 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjAzMTI1MjMyN15BMl5BanBnXkFtZTgwNzU5MTE2NjM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "64%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "51/100"
+     }
+    ],
+    "Metascore": "51",
+    "imdbRating": "6.6",
+    "imdbVotes": "428,283",
+    "imdbID": "tt2737304",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Glass Onion: A Knives Out Mystery|2022|movie": {
+   "fetchedAt": "2026-10-15T20:34:22.045Z",
+   "data": {
+    "Title": "Netflix: The Glass Onion Cast Reacts to the Trailer for Glass Onion: A Knives Out Mystery",
+    "Year": "2022",
+    "Rated": "N/A",
+    "Released": "09 Nov 2022",
+    "Runtime": "3 min",
+    "Genre": "Short, Mystery",
+    "Director": "N/A",
+    "Writer": "N/A",
+    "Actors": "Madelyn Cline, Kathryn Hahn, Jessica Henwick",
+    "Plot": "N/A",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "N/A",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BODc1MTkzM2MtNzMzZS00YTM5LWE5Y2EtZGQ0ZjBlYWQ5YTJhXkEyXkFqcGc@._V1_QL75_UY280_CR47,0,280,280_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.3/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "6.3",
+    "imdbVotes": "60",
+    "imdbID": "tt23724524",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "All Quiet on the Western Front|2022|movie": {
+   "fetchedAt": "2026-10-15T20:34:22.611Z",
+   "data": {
+    "Title": "All Quiet on the Western Front",
+    "Year": "2022",
+    "Rated": "R",
+    "Released": "28 Oct 2022",
+    "Runtime": "148 min",
+    "Genre": "Drama, History, War",
+    "Director": "Edward Berger",
+    "Writer": "Edward Berger, Lesley Paterson, Ian Stokell",
+    "Actors": "Felix Kammerer, Albrecht Schuch, Aaron Hilmer",
+    "Plot": "A young German soldier's eagerness to serve his country quickly fades when he witnesses the horrors of combat on the Western Front during World War I.",
+    "Language": "German, French",
+    "Country": "Germany, United States, United Kingdom",
+    "Awards": "Won 4 Oscars. 59 wins & 89 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOWJiYWMyYTktZThhOS00ZjgxLWE0YTQtZDMyNTQxMjMyYjI2XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.8/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "90%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "76/100"
+     }
+    ],
+    "Metascore": "76",
+    "imdbRating": "7.8",
+    "imdbVotes": "347,635",
+    "imdbID": "tt1016150",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Power of the Dog|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:23.178Z",
+   "data": {
+    "Title": "The Power of the Dog",
+    "Year": "2021",
+    "Rated": "R",
+    "Released": "01 Dec 2021",
+    "Runtime": "126 min",
+    "Genre": "Drama, Western",
+    "Director": "Jane Campion",
+    "Writer": "Jane Campion, Thomas Savage",
+    "Actors": "Benedict Cumberbatch, Kirsten Dunst, Jesse Plemons",
+    "Plot": "Charismatic rancher Phil Burbank inspires fear and awe in those around him. When his brother brings home a new wife and her son, Phil torments them until he finds himself exposed to the possibility of love.",
+    "Language": "English, Shoshoni, Italian, French",
+    "Country": "New Zealand, United Kingdom, Canada, Australia, United States",
+    "Awards": "Won 1 Oscar. 291 wins & 320 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzgyMzA2NDEtZWUxNy00MDNmLTllMDYtNzZmNTU5ZWVmMzhlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.8/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "94%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "89/100"
+     }
+    ],
+    "Metascore": "89",
+    "imdbRating": "6.8",
+    "imdbVotes": "245,292",
+    "imdbID": "tt10293406",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Don't Look Up|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:23.738Z",
+   "data": {
+    "Title": "Don't Look Up",
+    "Year": "2021",
+    "Rated": "R",
+    "Released": "24 Dec 2021",
+    "Runtime": "138 min",
+    "Genre": "Comedy, Drama, Sci-Fi",
+    "Director": "Adam McKay",
+    "Writer": "Adam McKay, David Sirota",
+    "Actors": "Leonardo DiCaprio, Jennifer Lawrence, Meryl Streep",
+    "Plot": "Two low-level astronomers must go on a giant media tour to warn humankind of an approaching comet that will destroy planet Earth.",
+    "Language": "English",
+    "Country": "United States, Canada",
+    "Awards": "Nominated for 4 Oscars. 25 wins & 100 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjhhNWFjNzctYTJjOS00MDc0LThiNjItZmM0ZDVmMWViY2UzXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.1/10"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "49/100"
+     }
+    ],
+    "Metascore": "49",
+    "imdbRating": "7.1",
+    "imdbVotes": "682,844",
+    "imdbID": "tt11286314",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Red Notice|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:24.296Z",
+   "data": {
+    "Title": "Red Notice",
+    "Year": "2021",
+    "Rated": "PG-13",
+    "Released": "12 Nov 2021",
+    "Runtime": "118 min",
+    "Genre": "Action, Comedy, Thriller",
+    "Director": "Rawson Marshall Thurber",
+    "Writer": "Rawson Marshall Thurber",
+    "Actors": "Dwayne Johnson, Ryan Reynolds, Gal Gadot",
+    "Plot": "An Interpol agent successfully tracks down the world's most wanted art thief with help from a rival thief. But nothing is as it seems as a series of double-crosses ensues.",
+    "Language": "English, Russian, Italian, Spanish, Indonesian",
+    "Country": "United States, Italy",
+    "Awards": "2 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOGNjNGQ3MmItYTM5NS00NjBiLWI0ZTItZDE5ZjQyNjg3ODBjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.3/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "36%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "37/100"
+     }
+    ],
+    "Metascore": "37",
+    "imdbRating": "6.3",
+    "imdbVotes": "361,059",
+    "imdbID": "tt7991608",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Gray Man|2022|movie": {
+   "fetchedAt": "2026-10-15T20:34:24.859Z",
+   "data": {
+    "Title": "The Gray Man",
+    "Year": "2022",
+    "Rated": "PG-13",
+    "Released": "22 Jul 2022",
+    "Runtime": "122 min",
+    "Genre": "Action, Mystery, Thriller",
+    "Director": "Anthony Russo, Joe Russo",
+    "Writer": "Joe Russo, Christopher Markus, Stephen McFeely",
+    "Actors": "Ryan Gosling, Chris Evans, Ana de Armas",
+    "Plot": "When the CIA's most skilled operative, whose true identity is known to none, accidentally uncovers dark agency secrets, a psychopathic former colleague puts a bounty on his head, setting off a global manhunt by international assas...",
+    "Language": "English",
+    "Country": "United States, Czech Republic, United Kingdom, Canada, France, Denmark, Thailand, Vietnam, Cambodia",
+    "Awards": "7 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZmFhZTNlNzctZGQzZi00MTA3LThiNjMtYWQzNjUzMjNjZjA3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "45%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "49/100"
+     }
+    ],
+    "Metascore": "49",
+    "imdbRating": "6.5",
+    "imdbVotes": "279,552",
+    "imdbID": "tt1649418",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Extraction|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:25.418Z",
+   "data": {
+    "Title": "Extraction",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "24 Apr 2020",
+    "Runtime": "116 min",
+    "Genre": "Action, Crime, Thriller",
+    "Director": "Sam Hargrave",
+    "Writer": "Joe Russo, Ande Parks, Anthony Russo",
+    "Actors": "Chris Hemsworth, Bryon Lerum, Ryder Lerum",
+    "Plot": "Tyler Rake, a fearless black market mercenary, embarks on the most deadly extraction of his career when he's enlisted to rescue the kidnapped son of an imprisoned international crime lord.",
+    "Language": "English, Hindi, Bengali",
+    "Country": "United States, India, Thailand, Australia, Canada, Bangladesh",
+    "Awards": "4 wins & 15 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNDBhMmI3OWYtZTA2Ny00Y2RjLTliMWQtYWY5MGIwN2RlZGFjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.8/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "67%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "56/100"
+     }
+    ],
+    "Metascore": "56",
+    "imdbRating": "6.8",
+    "imdbVotes": "294,732",
+    "imdbID": "tt8936646",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Adam Project|2022|movie": {
+   "fetchedAt": "2026-10-15T20:34:25.977Z",
+   "data": {
+    "Title": "The Adam Project",
+    "Year": "2022",
+    "Rated": "PG-13",
+    "Released": "11 Mar 2022",
+    "Runtime": "106 min",
+    "Genre": "Action, Adventure, Comedy",
+    "Director": "Shawn Levy",
+    "Writer": "Jonathan Tropper, T.S. Nowlin, Jennifer Flackett",
+    "Actors": "Ryan Reynolds, Walker Scobell, Mark Ruffalo",
+    "Plot": "After accidentally crash-landing in 2022, time-traveling fighter pilot Adam Reed teams up with his 12-year-old self for a mission to save the future.",
+    "Language": "English",
+    "Country": "United States, United Kingdom",
+    "Awards": "2 wins & 13 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNWU1NDJlYWUtYWE1OC00MGVlLTliNzYtMjg4OTk0MWE4MDQ4XkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "68%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "55/100"
+     }
+    ],
+    "Metascore": "55",
+    "imdbRating": "6.7",
+    "imdbVotes": "263,145",
+    "imdbID": "tt2463208",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Enola Holmes|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:26.559Z",
+   "data": {
+    "Title": "Enola Holmes",
+    "Year": "2020",
+    "Rated": "PG-13",
+    "Released": "23 Sep 2020",
+    "Runtime": "123 min",
+    "Genre": "Adventure, Crime, Drama",
+    "Director": "Harry Bradbeer",
+    "Writer": "Jack Thorne, Nancy Springer, Arthur Conan Doyle",
+    "Actors": "Millie Bobby Brown, Henry Cavill, Sam Claflin",
+    "Plot": "When Enola Holmes, Sherlock's sister, discovers her mother is missing, she endeavors to find her, becoming a super-sleuth in her own right as she outwits her famous brother and unravels a dangerous conspiracy.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "5 wins & 12 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTRlYmI1NTMtYTVkYi00MjJkLWE3ZGItOThkYTdhNzBhMThhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "91%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "68/100"
+     }
+    ],
+    "Metascore": "68",
+    "imdbRating": "6.7",
+    "imdbVotes": "256,059",
+    "imdbID": "tt7846844",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Klaus|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:27.120Z",
+   "data": {
+    "Title": "Klaus",
+    "Year": "2019",
+    "Rated": "PG",
+    "Released": "15 Nov 2019",
+    "Runtime": "96 min",
+    "Genre": "Animation, Adventure, Comedy",
+    "Director": "Carlos Martínez López, Sergio Pablos",
+    "Writer": "Sergio Pablos, Jim Mahoney, Zach Lewis",
+    "Actors": "Jason Schwartzman, J.K. Simmons, Rashida Jones",
+    "Plot": "A simple act of kindness always sparks another, even in a frozen, faraway place. When Smeerensburg's new postman, Jesper, befriends toymaker Klaus, their gifts melt an age-old feud and deliver a sleigh full of holiday traditions.",
+    "Language": "English, Saami",
+    "Country": "Spain, United Kingdom, United States, Austria, Canada, France",
+    "Awards": "Nominated for 1 Oscar. 11 wins & 27 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZDA4ODhlMzctNGRmYi00NmViLTkxZGYtZjRkNGQ5YzYwYWVlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.2/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "95%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "65/100"
+     }
+    ],
+    "Metascore": "65",
+    "imdbRating": "8.2",
+    "imdbVotes": "243,321",
+    "imdbID": "tt4729430",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Mitchells vs. the Machines|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:27.679Z",
+   "data": {
+    "Title": "The Mitchells vs. the Machines",
+    "Year": "2021",
+    "Rated": "PG",
+    "Released": "30 Apr 2021",
+    "Runtime": "114 min",
+    "Genre": "Animation, Adventure, Comedy",
+    "Director": "Michael Rianda, Jeff Rowe",
+    "Writer": "Michael Rianda, Jeff Rowe, Peter Szilagyi",
+    "Actors": "Abbi Jacobson, Danny McBride, Maya Rudolph",
+    "Plot": "A quirky, dysfunctional family's road trip is upended when they find themselves in the middle of the robot apocalypse and suddenly become humanity's unlikeliest last hope.",
+    "Language": "English",
+    "Country": "Hong Kong, Canada, United States",
+    "Awards": "Nominated for 1 Oscar. 46 wins & 65 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzAyOWNiMjAtNWUzMi00ZDk1LWE5NzYtNDUzMWE1Y2M0NDM2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "97%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "81/100"
+     }
+    ],
+    "Metascore": "81",
+    "imdbRating": "7.6",
+    "imdbVotes": "145,255",
+    "imdbID": "tt7979580",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Okja|2017|movie": {
+   "fetchedAt": "2026-10-15T20:34:28.239Z",
+   "data": {
+    "Title": "Okja",
+    "Year": "2017",
+    "Rated": "TV-MA",
+    "Released": "28 Jun 2017",
+    "Runtime": "120 min",
+    "Genre": "Action, Adventure, Drama",
+    "Director": "Bong Joon Ho",
+    "Writer": "Bong Joon Ho, Jon Ronson",
+    "Actors": "Tilda Swinton, Paul Dano, Ahn Seo-hyun",
+    "Plot": "A young girl risks everything to prevent a powerful, multinational company from kidnapping her best friend - a fascinating beast named Okja.",
+    "Language": "English, Korean, Spanish",
+    "Country": "South Korea, United States",
+    "Awards": "7 wins & 14 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjQxMTcxNDgxN15BMl5BanBnXkFtZTgwOTczNTIzMjI@._V1_QL75_UX380_CR0,1,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.3/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "87%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "75/100"
+     }
+    ],
+    "Metascore": "75",
+    "imdbRating": "7.3",
+    "imdbVotes": "143,489",
+    "imdbID": "tt3967856",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Two Popes|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:28.799Z",
+   "data": {
+    "Title": "The Two Popes",
+    "Year": "2019",
+    "Rated": "PG-13",
+    "Released": "20 Dec 2019",
+    "Runtime": "125 min",
+    "Genre": "Biography, Drama",
+    "Director": "Fernando Meirelles",
+    "Writer": "Anthony McCarten",
+    "Actors": "Jonathan Pryce, Anthony Hopkins, Juan Minujín",
+    "Plot": "Behind Vatican walls, the conservative Pope Benedict XVI and the liberal future Pope Francis must find common ground to forge a new path for the Catholic Church.",
+    "Language": "English, Spanish, Italian, Latin, Portuguese, French, German",
+    "Country": "United Kingdom, Italy, Argentina, United States, Brazil",
+    "Awards": "Nominated for 3 Oscars. 11 wins & 57 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BN2NlYjdkOGEtMGYyOC00MzM5LWE5MzYtYzUyZjE3NTM5NGIyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "89%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "75/100"
+     }
+    ],
+    "Metascore": "75",
+    "imdbRating": "7.6",
+    "imdbVotes": "148,274",
+    "imdbID": "tt8404614",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Mudbound|2017|movie": {
+   "fetchedAt": "2026-10-15T20:34:29.355Z",
+   "data": {
+    "Title": "Mudbound",
+    "Year": "2017",
+    "Rated": "R",
+    "Released": "17 Nov 2017",
+    "Runtime": "134 min",
+    "Genre": "Drama, War",
+    "Director": "Dee Rees",
+    "Writer": "Virgil Williams, Dee Rees, Hillary Jordan",
+    "Actors": "Jason Mitchell, Carey Mulligan, Jason Clarke",
+    "Plot": "Two men return home from World War II to work on a farm in rural Mississippi, where they struggle to deal with racism and adjusting to life after war.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 4 Oscars. 36 wins & 117 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMGJmNWIzYjMtMzg0ZC00YmU1LThmZDctYWM4MzBlMWQ1OTg3XkEyXkFqcGc@._V1_SX300.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.4/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "97%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "85/100"
+     }
+    ],
+    "Metascore": "85",
+    "imdbRating": "7.4",
+    "imdbVotes": "55,422",
+    "imdbID": "tt2396589",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Bright|2017|movie": {
+   "fetchedAt": "2026-10-15T20:34:29.915Z",
+   "data": {
+    "Title": "Bright",
+    "Year": "2017",
+    "Rated": "TV-MA",
+    "Released": "22 Dec 2017",
+    "Runtime": "117 min",
+    "Genre": "Action, Fantasy, Thriller",
+    "Director": "David Ayer",
+    "Writer": "Max Landis",
+    "Actors": "Will Smith, Joel Edgerton, Noomi Rapace",
+    "Plot": "A detective must work with an Orc to find a powerful wand before evil creatures do.",
+    "Language": "English, Spanish",
+    "Country": "United States, Canada, Australia, Mexico, India",
+    "Awards": "1 win & 7 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTcyNzk5NDg1Nl5BMl5BanBnXkFtZTgwNTM5MDQxNDM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.3/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "26%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "29/100"
+     }
+    ],
+    "Metascore": "29",
+    "imdbRating": "6.3",
+    "imdbVotes": "211,307",
+    "imdbID": "tt5519340",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Army of the Dead|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:30.480Z",
+   "data": {
+    "Title": "Army of the Dead",
+    "Year": "2021",
+    "Rated": "R",
+    "Released": "21 May 2021",
+    "Runtime": "148 min",
+    "Genre": "Action, Adventure, Crime",
+    "Director": "Zack Snyder",
+    "Writer": "Zack Snyder, Shay Hatten, Joby Harold",
+    "Actors": "Dave Bautista, Ella Purnell, Ana de la Reguera",
+    "Plot": "Following a zombie outbreak in Las Vegas, a group of mercenaries take the ultimate gamble, venturing into the quarantine zone to pull off the greatest heist ever attempted.",
+    "Language": "English, Spanish, German, French, Bable, Polish",
+    "Country": "United States",
+    "Awards": "1 win & 4 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNjc0MDFjZmQtMWMxZi00YzY4LWI5N2EtOGQwM2IzZjRkYmY1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "5.8/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "68%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "57/100"
+     }
+    ],
+    "Metascore": "57",
+    "imdbRating": "5.8",
+    "imdbVotes": "203,317",
+    "imdbID": "tt0993840",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Old Guard|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:31.048Z",
+   "data": {
+    "Title": "The Old Guard",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "10 Jul 2020",
+    "Runtime": "125 min",
+    "Genre": "Action, Fantasy, Thriller",
+    "Director": "Gina Prince-Bythewood",
+    "Writer": "Greg Rucka, Leandro Fernandez",
+    "Actors": "Charlize Theron, KiKi Layne, Matthias Schoenaerts",
+    "Plot": "A covert group of tight-knit mercenaries with an inability to die have fought to protect the world for centuries. But when their abilities are suddenly exposed, they need to eliminate the threat of those who seek to replicate thei...",
+    "Language": "English, Arabic, French, Italian",
+    "Country": "United States, United Kingdom, Morocco",
+    "Awards": "5 wins & 24 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYzMwNjVjNTEtZDVhOC00NzQzLTg0MGYtMGI1Yzc0Nzg2MjNmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "80%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "70/100"
+     }
+    ],
+    "Metascore": "70",
+    "imdbRating": "6.7",
+    "imdbVotes": "213,164",
+    "imdbID": "tt7556122",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Project Power|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:31.606Z",
+   "data": {
+    "Title": "Project Power",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "14 Aug 2020",
+    "Runtime": "113 min",
+    "Genre": "Action, Crime, Sci-Fi",
+    "Director": "Henry Joost, Ariel Schulman",
+    "Writer": "Mattson Tomlin",
+    "Actors": "Jamie Foxx, Joseph Gordon-Levitt, Dominique Fishback",
+    "Plot": "When a pill that gives its users unpredictable superpowers for five minutes hits the streets of New Orleans, a teenage dealer and a local cop must team with an ex-soldier to take down the group responsible for its creation.",
+    "Language": "English, Spanish",
+    "Country": "United States",
+    "Awards": "2 wins & 7 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BM2QxNjM4YTAtMjY1Yi00YjMwLTlkOWUtZmIzYmZmNzUwNDU1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.0/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "61%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "51/100"
+     }
+    ],
+    "Metascore": "51",
+    "imdbRating": "6.0",
+    "imdbVotes": "104,739",
+    "imdbID": "tt7550000",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "6 Underground|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:32.164Z",
+   "data": {
+    "Title": "6 Underground",
+    "Year": "2019",
+    "Rated": "R",
+    "Released": "13 Dec 2019",
+    "Runtime": "128 min",
+    "Genre": "Action, Thriller",
+    "Director": "Michael Bay",
+    "Writer": "Paul Wernick, Rhett Reese",
+    "Actors": "Ryan Reynolds, Mélanie Laurent, Manuel Garcia-Rulfo",
+    "Plot": "It follows a group of people who fake their deaths and decide to form a vigilante team in order to stage a coup d'état against a ruthless dictator.",
+    "Language": "English, Turkmen, Cantonese, Italian, Spanish, Ukrainian, French",
+    "Country": "United States, Canada, United Arab Emirates, Italy, Hungary",
+    "Awards": "1 win & 10 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNTNmZDgzMmMtMzJhMy00NGI3LWI5YTktYjg5MTllZmYyYTMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.1/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "36%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "41/100"
+     }
+    ],
+    "Metascore": "41",
+    "imdbRating": "6.1",
+    "imdbVotes": "213,997",
+    "imdbID": "tt8106534",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Triple Frontier|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:32.727Z",
+   "data": {
+    "Title": "Triple Frontier",
+    "Year": "2019",
+    "Rated": "R",
+    "Released": "13 Mar 2019",
+    "Runtime": "125 min",
+    "Genre": "Action, Adventure, Thriller",
+    "Director": "J.C. Chandor",
+    "Writer": "Mark Boal, J.C. Chandor",
+    "Actors": "Ben Affleck, Oscar Isaac, Charlie Hunnam",
+    "Plot": "Loyalties are tested when five friends and former special forces operatives reunite to take down a South American drug lord, unleashing a chain of unintended consequences.",
+    "Language": "English, Spanish, Portuguese",
+    "Country": "United States, Colombia, United Kingdom",
+    "Awards": "3 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BODU4MzM2MDAxMl5BMl5BanBnXkFtZTgwNDEzNjM0NzM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "71%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "61/100"
+     }
+    ],
+    "Metascore": "61",
+    "imdbRating": "6.5",
+    "imdbVotes": "163,933",
+    "imdbID": "tt1488606",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Murder Mystery|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:33.288Z",
+   "data": {
+    "Title": "Murder Mystery",
+    "Year": "2019",
+    "Rated": "PG-13",
+    "Released": "14 Jun 2019",
+    "Runtime": "97 min",
+    "Genre": "Crime, Mystery, Romance",
+    "Director": "Kyle Newacheck",
+    "Writer": "James Vanderbilt",
+    "Actors": "Adam Sandler, Jennifer Aniston, Luke Evans",
+    "Plot": "A New York cop and his wife go on a European vacation to reinvigorate the spark in their marriage, but end up getting framed and on the run for the death of an elderly billionaire.",
+    "Language": "English, French, Latin, Spanish",
+    "Country": "United States, Italy, Canada",
+    "Awards": "1 win & 6 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMzg4NDFjNmYtZjQxMy00MDY4LWEyZjUtYzRjNjNkNjJiZTZhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.1/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "43%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "38/100"
+     }
+    ],
+    "Metascore": "38",
+    "imdbRating": "6.1",
+    "imdbVotes": "193,830",
+    "imdbID": "tt1618434",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Kissing Booth|2018|movie": {
+   "fetchedAt": "2026-10-15T20:34:33.847Z",
+   "data": {
+    "Title": "The Kissing Booth",
+    "Year": "2018",
+    "Rated": "TV-14",
+    "Released": "11 May 2018",
+    "Runtime": "105 min",
+    "Genre": "Comedy, Romance",
+    "Director": "Vince Marcello",
+    "Writer": "Vince Marcello, Beth Reekles",
+    "Actors": "Joey King, Jacob Elordi, Joel Courtney",
+    "Plot": "A high school student is forced to confront her secret crush at a kissing booth.",
+    "Language": "English",
+    "Country": "United Kingdom, United States",
+    "Awards": "1 win & 2 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNjQ0Mzk0OTE5MF5BMl5BanBnXkFtZTgwNDkyOTI0NTM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "5.9/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "17%"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "5.9",
+    "imdbVotes": "106,300",
+    "imdbID": "tt3799232",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "To All the Boys I've Loved Before|2018|movie": {
+   "fetchedAt": "2026-10-15T20:34:34.408Z",
+   "data": {
+    "Title": "To All the Boys I've Loved Before",
+    "Year": "2018",
+    "Rated": "TV-14",
+    "Released": "17 Aug 2018",
+    "Runtime": "99 min",
+    "Genre": "Comedy, Drama, Romance",
+    "Director": "Susan Johnson",
+    "Writer": "Sofia Alvarez, Jenny Han",
+    "Actors": "Lana Condor, Noah Centineo, Janel Parrish",
+    "Plot": "A teenage girl's secret love letters are exposed and wreak havoc on her love life.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "5 wins & 11 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjQ3NjM5MTAzN15BMl5BanBnXkFtZTgwODQzMDAwNjM@._V1_QL75_UX380_CR0,16,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.0/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "96%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "64/100"
+     }
+    ],
+    "Metascore": "64",
+    "imdbRating": "7.0",
+    "imdbVotes": "143,495",
+    "imdbID": "tt3846674",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Tick, Tick... Boom!|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:34.966Z",
+   "data": {
+    "Title": "tick, tick... BOOM!",
+    "Year": "2021",
+    "Rated": "PG-13",
+    "Released": "19 Nov 2021",
+    "Runtime": "115 min",
+    "Genre": "Biography, Comedy, Drama",
+    "Director": "Lin-Manuel Miranda",
+    "Writer": "Steven Levenson, Jonathan Larson, David Auburn",
+    "Actors": "Andrew Garfield, Alexandra Shipp, Robin de Jesus",
+    "Plot": "On the brink of turning 30, a promising theater composer navigates love, friendship and the pressure to create something great before time runs out.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 2 Oscars. 39 wins & 115 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOGYyNGJmNzctYzZjZi00MzUzLTg3YTYtYjk0OTNjMzA1OTE4XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "87%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "74/100"
+     }
+    ],
+    "Metascore": "74",
+    "imdbRating": "7.5",
+    "imdbVotes": "130,365",
+    "imdbID": "tt8721424",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Trial of the Chicago 7|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:35.677Z",
+   "data": {
+    "Title": "The Trial of the Chicago 7",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "16 Oct 2020",
+    "Runtime": "129 min",
+    "Genre": "Drama, History, Thriller",
+    "Director": "Aaron Sorkin",
+    "Writer": "Aaron Sorkin",
+    "Actors": "Eddie Redmayne, Alex Sharp, Sacha Baron Cohen",
+    "Plot": "The story of 7 people on trial stemming from various charges surrounding the uprising at the 1968 Democratic National Convention in Chicago, Illinois.",
+    "Language": "English, Latin, French",
+    "Country": "United Kingdom, India, United States",
+    "Awards": "Nominated for 6 Oscars. 61 wins & 195 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZjY2ZGFlOTgtOGQ1MS00YWJhLWIyZjQtNWNmNTQ0YTk0MTZjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "89%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "76/100"
+     }
+    ],
+    "Metascore": "76",
+    "imdbRating": "7.7",
+    "imdbVotes": "207,540",
+    "imdbID": "tt1070874",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Ma Rainey's Black Bottom|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:36.244Z",
+   "data": {
+    "Title": "Ma Rainey's Black Bottom",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "18 Dec 2020",
+    "Runtime": "94 min",
+    "Genre": "Drama, Music",
+    "Director": "George C. Wolfe",
+    "Writer": "Ruben Santiago-Hudson, August Wilson",
+    "Actors": "Viola Davis, Chadwick Boseman, Glynn Turman",
+    "Plot": "Tensions rise when trailblazing blues singer Ma Rainey and her band gather at a recording studio in Chicago in 1927.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 2 Oscars. 83 wins & 192 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOWIzMTAyZGMtZTIzZi00YTc4LTlmNGEtMzMxYTgzYWM5ODM3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.9/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "97%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "87/100"
+     }
+    ],
+    "Metascore": "87",
+    "imdbRating": "6.9",
+    "imdbVotes": "78,809",
+    "imdbID": "tt10514222",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Mank|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:36.803Z",
+   "data": {
+    "Title": "Mank",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "04 Dec 2020",
+    "Runtime": "131 min",
+    "Genre": "Biography, Drama",
+    "Director": "David Fincher",
+    "Writer": "Jack Fincher",
+    "Actors": "Gary Oldman, Amanda Seyfried, Lily Collins",
+    "Plot": "Scathing social critic and alcoholic screenwriter Herman J. Mankiewicz reflects on 1930s Hollywood as he races to finish the screenplay of Citizen Kane (1941).",
+    "Language": "English, German, Latin",
+    "Country": "United States",
+    "Awards": "Won 2 Oscars. 65 wins & 270 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOTA0NTI1ODYtZDVkMy00ZDU5LThiODgtYjEzYmNlZmUyYTg0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.8/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "83%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "79/100"
+     }
+    ],
+    "Metascore": "79",
+    "imdbRating": "6.8",
+    "imdbVotes": "105,916",
+    "imdbID": "tt10618286",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Da 5 Bloods|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:37.364Z",
+   "data": {
+    "Title": "Da 5 Bloods",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "12 Jun 2020",
+    "Runtime": "154 min",
+    "Genre": "Adventure, Drama, War",
+    "Director": "Spike Lee",
+    "Writer": "Danny Bilson, Paul De Meo, Kevin Willmott",
+    "Actors": "Delroy Lindo, Jonathan Majors, Clarke Peters",
+    "Plot": "Four black veterans battle the forces of man and nature when they return to Vietnam seeking the remains of their fallen squad leader and the gold fortune he helped them hide.",
+    "Language": "English, Finnish, French, Vietnamese",
+    "Country": "United States",
+    "Awards": "Nominated for 1 Oscar. 38 wins & 185 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNjIwN2IxODEtNDhhMi00NDEwLWIwODEtYjIzZDVhZjg0Y2MyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "92%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "82/100"
+     }
+    ],
+    "Metascore": "82",
+    "imdbRating": "6.5",
+    "imdbVotes": "58,011",
+    "imdbID": "tt9777644",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "I'm Thinking of Ending Things|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:37.923Z",
+   "data": {
+    "Title": "I'm Thinking of Ending Things",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "04 Sep 2020",
+    "Runtime": "134 min",
+    "Genre": "Drama, Thriller",
+    "Director": "Charlie Kaufman",
+    "Writer": "Charlie Kaufman, Iain Reid",
+    "Actors": "Jesse Plemons, Jessie Buckley, Toni Collette",
+    "Plot": "Full of misgivings, a young woman travels with her new boyfriend to his parents' secluded farm. Upon arriving, she comes to question everything she thought she knew about him, and herself.",
+    "Language": "English, Spanish",
+    "Country": "United States",
+    "Awards": "13 wins & 102 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYTgxNWU0MGMtMDI1Ny00NDIwLTllYzYtZDkyOTVmYmFhZGM0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "82%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "78/100"
+     }
+    ],
+    "Metascore": "78",
+    "imdbRating": "6.5",
+    "imdbVotes": "112,438",
+    "imdbID": "tt7939766",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Hustle|2022|movie": {
+   "fetchedAt": "2026-10-15T20:34:38.481Z",
+   "data": {
+    "Title": "Hustle",
+    "Year": "2022",
+    "Rated": "R",
+    "Released": "08 Jun 2022",
+    "Runtime": "117 min",
+    "Genre": "Comedy, Drama, Sport",
+    "Director": "Jeremiah Zagar",
+    "Writer": "Taylor Materne, Will Fetters",
+    "Actors": "Adam Sandler, Queen Latifah, Juancho Hernangomez",
+    "Plot": "A basketball scout discovers a phenomenal street ball player while in Spain and sees the prospect as his opportunity to get back into the NBA.",
+    "Language": "English, Serbian, Spanish",
+    "Country": "United States",
+    "Awards": "1 win & 9 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMzA4ODRlMjktMDEyNS00NTg5LWEwYTAtNTExODI1ZDE2ZmYwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.3/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "94%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "68/100"
+     }
+    ],
+    "Metascore": "68",
+    "imdbRating": "7.3",
+    "imdbVotes": "167,669",
+    "imdbID": "tt8009428",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Guillermo del Toro's Pinocchio|2022|movie": {
+   "fetchedAt": "2026-10-15T20:34:39.041Z",
+   "data": {
+    "Title": "Guillermo del Toro's Pinocchio",
+    "Year": "2022",
+    "Rated": "PG",
+    "Released": "09 Dec 2022",
+    "Runtime": "117 min",
+    "Genre": "Animation, Adventure, Drama",
+    "Director": "Guillermo del Toro, Mark Gustafson",
+    "Writer": "Guillermo del Toro, Patrick McHale, Carlo Collodi",
+    "Actors": "Ewan McGregor, David Bradley, Gregory Mann",
+    "Plot": "A father's wish magically brings a wooden boy to life in Italy, giving him a chance to care for the child.",
+    "Language": "English, Italian",
+    "Country": "United States, Mexico, France, United Kingdom",
+    "Awards": "Won 1 Oscar. 80 wins & 135 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BN2I3NDQzZmQtODJmOS00M2QyLWIxZTItYTA1ZTYzOWJlM2ZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "27%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "79/100"
+     }
+    ],
+    "Metascore": "79",
+    "imdbRating": "7.6",
+    "imdbVotes": "167,410",
+    "imdbID": "tt1488589",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Nimona|2023|movie": {
+   "fetchedAt": "2026-10-15T20:34:39.600Z",
+   "data": {
+    "Title": "Nimona",
+    "Year": "2023",
+    "Rated": "PG",
+    "Released": "30 Jun 2023",
+    "Runtime": "101 min",
+    "Genre": "Animation, Action, Adventure",
+    "Director": "Nick Bruno, Troy Quane",
+    "Writer": "Robert L. Baird, Lloyd Taylor, Pamela Ribon",
+    "Actors": "Chloë Grace Moretz, Riz Ahmed, Eugene Lee Yang",
+    "Plot": "When a knight in a futuristic medieval world is framed for a crime he didn't commit, the only one who can help him prove his innocence is Nimona -- a mischievous teen who happens to be a shapeshifting creature he's sworn to destroy.",
+    "Language": "English",
+    "Country": "United States, United Kingdom, France",
+    "Awards": "Nominated for 1 Oscar. 5 wins & 44 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjIyMmY0MWYtZGRkMC00MjhhLTgwNGUtYWVjZmQ4YjhjZWRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "92%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "75/100"
+     }
+    ],
+    "Metascore": "75",
+    "imdbRating": "7.5",
+    "imdbVotes": "63,688",
+    "imdbID": "tt19500164",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Leave the World Behind|2023|movie": {
+   "fetchedAt": "2026-10-15T20:34:40.160Z",
+   "data": {
+    "Title": "Leave the World Behind",
+    "Year": "2023",
+    "Rated": "R",
+    "Released": "08 Dec 2023",
+    "Runtime": "138 min",
+    "Genre": "Drama, Mystery, Thriller",
+    "Director": "Sam Esmail",
+    "Writer": "Rumaan Alam, Sam Esmail",
+    "Actors": "Julia Roberts, Mahershala Ali, Ethan Hawke",
+    "Plot": "A family's getaway to a luxurious rental home takes an ominous turn when a cyberattack knocks out their devices, and two strangers appear at their door.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "3 wins & 16 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZjI0YzhjZjAtMzg3ZS00NTFhLWFkYjctMjE5ZGExNTk1MmJkXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.4/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "73%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "68/100"
+     }
+    ],
+    "Metascore": "68",
+    "imdbRating": "6.4",
+    "imdbVotes": "248,187",
+    "imdbID": "tt12747748",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Rebel Moon - Part One: A Child of Fire|2023|movie": {
+   "fetchedAt": "2026-10-15T20:34:40.722Z",
+   "data": {
+    "Title": "Rebel Moon - Part One: A Child of Fire",
+    "Year": "2023",
+    "Rated": "PG-13",
+    "Released": "21 Dec 2023",
+    "Runtime": "133 min",
+    "Genre": "Action, Adventure, Drama",
+    "Director": "Zack Snyder",
+    "Writer": "Zack Snyder, Kurt Johnstad, Shay Hatten",
+    "Actors": "Sofia Boutella, Djimon Hounsou, Ed Skrein",
+    "Plot": "When a peaceful settlement on the edge of a distant moon finds itself threatened by a tyrannical ruling force, a stranger living among its villagers becomes their best hope for survival.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "2 wins & 4 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYTRmOTk2ZDYtY2Q3Mi00MGYwLWFjNDQtYTliODc3NzM1ZjBlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "5.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "22%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "31/100"
+     }
+    ],
+    "Metascore": "31",
+    "imdbRating": "5.6",
+    "imdbVotes": "142,713",
+    "imdbID": "tt14998742",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Maestro|2023|movie": {
+   "fetchedAt": "2026-10-15T20:34:41.281Z",
+   "data": {
+    "Title": "Maestro",
+    "Year": "2023",
+    "Rated": "R",
+    "Released": "20 Dec 2023",
+    "Runtime": "129 min",
+    "Genre": "Biography, Drama, History",
+    "Director": "Bradley Cooper",
+    "Writer": "Bradley Cooper, Josh Singer",
+    "Actors": "Carey Mulligan, Bradley Cooper, Matt Bomer",
+    "Plot": "This love story chronicles the lifelong relationship of conductor-composer Leonard Bernstein and actress Felicia Montealegre Cohn Bernstein.",
+    "Language": "English",
+    "Country": "United States, Canada",
+    "Awards": "Nominated for 7 Oscars. 29 wins & 180 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BY2M1MWUyYzctMzk1Zi00M2RkLTkwY2YtMzE4MDhiZGQwZmU5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "77/100"
+     }
+    ],
+    "Metascore": "77",
+    "imdbRating": "6.5",
+    "imdbVotes": "70,222",
+    "imdbID": "tt5535276",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Society of the Snow|2023|movie": {
+   "fetchedAt": "2026-10-15T20:34:41.842Z",
+   "data": {
+    "Response": "False",
+    "Error": "Movie not found!"
+   }
+  },
+  "Atlas|2024|movie": {
+   "fetchedAt": "2026-10-15T20:34:42.401Z",
+   "data": {
+    "Title": "Atlas",
+    "Year": "2024",
+    "Rated": "PG-13",
+    "Released": "24 May 2024",
+    "Runtime": "118 min",
+    "Genre": "Action, Adventure, Drama",
+    "Director": "Brad Peyton",
+    "Writer": "Leo Sardarian, Aron Eli Coleite",
+    "Actors": "Jennifer Lopez, Simu Liu, Sterling K. Brown",
+    "Plot": "In a bleak-sounding future, an A.I. soldier has determined that the only way to end war is to end humanity.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "2 wins & 4 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNDUwNTFkNzYtMGM5NS00NTc4LWEwMDUtMmE5MzgyMjcwOWM4XkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "5.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "17%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "37/100"
+     }
+    ],
+    "Metascore": "37",
+    "imdbRating": "5.7",
+    "imdbVotes": "61,048",
+    "imdbID": "tt14856980",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Carry-On|2024|movie": {
+   "fetchedAt": "2026-10-15T20:34:42.964Z",
+   "data": {
+    "Title": "Carry-On",
+    "Year": "2024",
+    "Rated": "PG-13",
+    "Released": "13 Dec 2024",
+    "Runtime": "119 min",
+    "Genre": "Action, Crime, Thriller",
+    "Director": "Jaume Collet-Serra",
+    "Writer": "T.J. Fixman",
+    "Actors": "Taron Egerton, Jason Bateman, Sofia Carson",
+    "Plot": "A mysterious traveler blackmails a young TSA agent into letting a dangerous package slip through security and onto a Christmas Eve flight.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "7 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNTNkMjQzNmQtNzE4ZC00NDlmLTkyYjAtZDZkYTQ5NjBmYThlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "87%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "69/100"
+     }
+    ],
+    "Metascore": "69",
+    "imdbRating": "6.5",
+    "imdbVotes": "199,562",
+    "imdbID": "tt21382296",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Platform|2019|movie": {
+   "fetchedAt": "2026-10-15T20:34:43.522Z",
+   "data": {
+    "Title": "The Platform Master",
+    "Year": "2019",
+    "Rated": "N/A",
+    "Released": "31 Dec 2019",
+    "Runtime": "101 min",
+    "Genre": "Documentary, Biography, Comedy",
+    "Director": "Jeffrey Eugene Hoch",
+    "Writer": "N/A",
+    "Actors": "Nick Smith",
+    "Plot": "Three filmmakers set out across the country to meet Internet celebrity and video game savant Ulillillia. When they arrived, his hometown was hit by the worst flood in it's history. The resulting film is an insightful look into the...",
+    "Language": "English",
+    "Country": "United States, Canada",
+    "Awards": "N/A",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BM2I0ODdjZDktNzgzZC00ZGJiLTk0ZWUtMGExMzA2M2QzNjVhXkEyXkFqcGc@._V1_SX300.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.3/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "6.3",
+    "imdbVotes": "32",
+    "imdbID": "tt2382011",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Spenser Confidential|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:44.081Z",
+   "data": {
+    "Title": "Spenser Confidential",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "06 Mar 2020",
+    "Runtime": "111 min",
+    "Genre": "Action, Comedy, Crime",
+    "Director": "Peter Berg",
+    "Writer": "Sean O&apos;Keefe, Brian Helgeland, Robert B. Parker",
+    "Actors": "Mark Wahlberg, Winston Duke, Alan Arkin",
+    "Plot": "When two Boston police officers are murdered, ex-cop Spenser teams up with his no-nonsense roommate Hawk to take down criminals.",
+    "Language": "English, Hindi",
+    "Country": "United States",
+    "Awards": "2 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMDFiNmViNGUtMWI2NC00OTI0LTg5NjMtZGYwOTlkM2JlZGRmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.2/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "35%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "49/100"
+     }
+    ],
+    "Metascore": "49",
+    "imdbRating": "6.2",
+    "imdbVotes": "107,874",
+    "imdbID": "tt8629748",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "The Midnight Sky|2020|movie": {
+   "fetchedAt": "2026-10-15T20:34:44.640Z",
+   "data": {
+    "Title": "The Midnight Sky",
+    "Year": "2020",
+    "Rated": "PG-13",
+    "Released": "23 Dec 2020",
+    "Runtime": "118 min",
+    "Genre": "Adventure, Drama, Sci-Fi",
+    "Director": "George Clooney",
+    "Writer": "Lily Brooks-Dalton, Mark L. Smith",
+    "Actors": "George Clooney, Felicity Jones, David Oyelowo",
+    "Plot": "This post-apocalyptic tale follows Augustine, a lonely scientist in the Arctic, as he races to stop Sully and her fellow astronauts from returning home to a mysterious global catastrophe.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 1 Oscar. 5 wins & 46 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTE2NzJiM2UtZGRiMy00M2Q2LWFmZTAtYmI0MzVmZThkYTFhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "5.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "50%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "58/100"
+     }
+    ],
+    "Metascore": "58",
+    "imdbRating": "5.7",
+    "imdbVotes": "95,573",
+    "imdbID": "tt10539608",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Moxie|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:45.195Z",
+   "data": {
+    "Title": "Moxie",
+    "Year": "2021",
+    "Rated": "PG-13",
+    "Released": "03 Mar 2021",
+    "Runtime": "111 min",
+    "Genre": "Comedy, Drama",
+    "Director": "Amy Poehler",
+    "Writer": "Jennifer Mathieu, Tamara Chestna, Dylan Meyer",
+    "Actors": "Hadley Robinson, Lauren Tsai, Alycia Pascual-Pena",
+    "Plot": "Inspired by her mom's rebellious past and a confident new friend, a shy 16-year-old publishes an anonymous zine calling out sexism at her school.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "N/A",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZTQ0NzIzYmEtZWQyYS00NGQ3LTlkNTctNWIxODIwZTkyOTI0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.7/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "70%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "54/100"
+     }
+    ],
+    "Metascore": "54",
+    "imdbRating": "6.7",
+    "imdbVotes": "31,076",
+    "imdbID": "tt6432466",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Fear Street: 1994|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:45.755Z",
+   "data": {
+    "Title": "Fear Street 1994 (2021)",
+    "Year": "2021",
+    "Rated": "N/A",
+    "Released": "26 Jul 2021",
+    "Runtime": "N/A",
+    "Genre": "Comedy",
+    "Director": "N/A",
+    "Writer": "N/A",
+    "Actors": "Hans Lam Barboza, Kenney Dorcely, Jay Karales",
+    "Plot": "N/A",
+    "Language": "N/A",
+    "Country": "N/A",
+    "Awards": "N/A",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BM2FjYTE1ODctYjE1Yi00MzNmLThmMTEtNjkwOWZjMmY3NjE5XkEyXkFqcGc@._V1_SX300.jpg",
+    "Ratings": [],
+    "Metascore": "N/A",
+    "imdbRating": "N/A",
+    "imdbVotes": "N/A",
+    "imdbID": "tt16418372",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Malcolm & Marie|2021|movie": {
+   "fetchedAt": "2026-10-15T20:34:46.316Z",
+   "data": {
+    "Title": "Malcolm & Marie",
+    "Year": "2021",
+    "Rated": "R",
+    "Released": "05 Feb 2021",
+    "Runtime": "106 min",
+    "Genre": "Drama, Romance",
+    "Director": "Sam Levinson",
+    "Writer": "Sam Levinson",
+    "Actors": "John David Washington, Zendaya",
+    "Plot": "A director and his girlfriend's relationship is tested after they return home from his movie premiere and face each other's turmoil during one long night.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "4 wins & 9 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZTc5ZDZjMzMtMDk4MC00N2NlLTg2MjAtOGI5OTcxNzZhMGNlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "57%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "53/100"
+     }
+    ],
+    "Metascore": "53",
+    "imdbRating": "6.6",
+    "imdbVotes": "44,369",
+    "imdbID": "tt12676326",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Rustin|2023|movie": {
+   "fetchedAt": "2026-10-15T20:34:46.874Z",
+   "data": {
+    "Title": "Rustin",
+    "Year": "2023",
+    "Rated": "PG-13",
+    "Released": "17 Nov 2023",
+    "Runtime": "106 min",
+    "Genre": "Biography, Drama, History",
+    "Director": "George C. Wolfe",
+    "Writer": "Julian Breece, Dustin Lance Black",
+    "Actors": "Colman Domingo, Chris Rock, Glynn Turman",
+    "Plot": "Activist Bayard Rustin faces racism and homophobia as he helps change the course of Civil Rights history by orchestrating the 1963 March on Washington.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 1 Oscar. 14 wins & 66 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNmU0YTliNzItZmM0MS00YTg4LTg3NzMtN2U3OTAwZGIwNGM1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "6.5/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "83%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "68/100"
+     }
+    ],
+    "Metascore": "68",
+    "imdbRating": "6.5",
+    "imdbVotes": "14,959",
+    "imdbID": "tt14160834",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Lift|2024|movie": {
+   "fetchedAt": "2026-10-15T20:34:47.430Z",
+   "data": {
+    "Title": "Lift",
+    "Year": "2024",
+    "Rated": "PG-13",
+    "Released": "12 Jan 2024",
+    "Runtime": "107 min",
+    "Genre": "Action, Comedy, Crime",
+    "Director": "F. Gary Gray",
+    "Writer": "Daniel Kunka",
+    "Actors": "Kevin Hart, Gugu Mbatha-Raw, Sam Worthington",
+    "Plot": "A female master thief and her ex-boyfriend who works for the FBI team up to steal $100M worth of gold bullion being transported on a 777 passenger flight from London to Zurich.",
+    "Language": "English, Italian",
+    "Country": "United States, United Kingdom",
+    "Awards": "N/A",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOWRkYmNiNDUtYTY0OC00YTZlLTlmMTYtMTJhMTU4OTBkMDY5XkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "5.6/10"
+     },
+     {
+      "Source": "Rotten Tomatoes",
+      "Value": "30%"
+     },
+     {
+      "Source": "Metacritic",
+      "Value": "40/100"
+     }
+    ],
+    "Metascore": "40",
+    "imdbRating": "5.6",
+    "imdbVotes": "53,838",
+    "imdbID": "tt14371878",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+   }
+  },
+  "Stranger Things|2016|series": {
+   "fetchedAt": "2026-10-15T20:34:47.988Z",
+   "data": {
+    "Title": "Stranger Things",
+    "Year": "2016–2025",
+    "Rated": "TV-MA",
+    "Released": "15 Jul 2016",
+    "Runtime": "51 min",
+    "Genre": "Drama, Fantasy, Horror",
+    "Director": "N/A",
+    "Writer": "Matt Duffer, Ross Duffer",
+    "Actors": "Millie Bobby Brown, Finn Wolfhard, Winona Ryder",
+    "Plot": "In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploits. As they search for answers, the children unravel a series of extraordinary mysteries.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 13 Primetime Emmys. 125 wins & 345 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjEzMDAxOTUyMV5BMl5BanBnXkFtZTgwNzAxMzYzOTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.6",
+    "imdbVotes": "1,740,231",
+    "imdbID": "tt4574334",
+    "Type": "series",
+    "totalSeasons": "5",
+    "Response": "True"
+   }
+  },
+  "The Crown|2016|series": {
+   "fetchedAt": "2026-10-15T20:34:48.554Z",
+   "data": {
+    "Title": "The Crown",
+    "Year": "2016–2023",
+    "Rated": "TV-MA",
+    "Released": "04 Nov 2016",
+    "Runtime": "58 min",
+    "Genre": "Biography, Drama, History",
+    "Director": "N/A",
+    "Writer": "Peter Morgan",
+    "Actors": "Claire Foy, Olivia Colman, Imelda Staunton",
+    "Plot": "Follows the political rivalries and romances of Queen Elizabeth II's reign and the events that shaped Britain for the second half of the 20th century.",
+    "Language": "English",
+    "Country": "United Kingdom, United States",
+    "Awards": "Won 24 Primetime Emmys. 158 wins & 432 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BODcyODZlZDMtZGE0Ni00NjBhLWJlYTAtZDdlNWY3MzkwMGVhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.6",
+    "imdbVotes": "285,454",
+    "imdbID": "tt4786824",
+    "Type": "series",
+    "totalSeasons": "6",
+    "Response": "True"
+   }
+  },
+  "Squid Game|2021|series": {
+   "fetchedAt": "2026-10-15T20:34:49.112Z",
+   "data": {
+    "Title": "Squid Game",
+    "Year": "2021–2025",
+    "Rated": "TV-MA",
+    "Released": "17 Sep 2021",
+    "Runtime": "N/A",
+    "Genre": "Action, Crime, Drama",
+    "Director": "N/A",
+    "Writer": "Hwang Dong-hyuk",
+    "Actors": "Lee Jung-jae, Wi Ha-joon, Jeon Young-soo",
+    "Plot": "Hundreds of cash-strapped players accept a strange invitation to compete in children's games. A tempting prize awaits, but with deadly high stakes.",
+    "Language": "Korean, English, Urdu",
+    "Country": "South Korea",
+    "Awards": "Won 6 Primetime Emmys. 58 wins & 90 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMDcxYjg1OTctYmUxZi00ZjhjLWIwNTMtNmI2M2Y4OTU1YWU2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.9/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.9",
+    "imdbVotes": "779,176",
+    "imdbID": "tt10919420",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "Wednesday|2022|series": {
+   "fetchedAt": "2026-10-15T20:34:49.670Z",
+   "data": {
+    "Title": "Wednesday",
+    "Year": "2022–",
+    "Rated": "TV-14",
+    "Released": "23 Nov 2022",
+    "Runtime": "45 min",
+    "Genre": "Comedy, Crime, Fantasy",
+    "Director": "N/A",
+    "Writer": "Alfred Gough, Miles Millar",
+    "Actors": "Jenna Ortega, Emma Myers, Hunter Doohan",
+    "Plot": "Follows Wednesday Addams' years as a student, when she attempts to master her emerging psychic ability, thwart a killing spree, and solve the mystery that embroiled her parents.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 4 Primetime Emmys. 28 wins & 90 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BY2E1NDI5OWEtODJmYi00Nzg2LWI4MjUtODFiMTU2YWViOTU3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.0/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.0",
+    "imdbVotes": "508,308",
+    "imdbID": "tt13443470",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "Bridgerton|2020|series": {
+   "fetchedAt": "2026-10-15T20:34:50.231Z",
+   "data": {
+    "Title": "Bridgerton",
+    "Year": "2020–",
+    "Rated": "TV-MA",
+    "Released": "25 Dec 2020",
+    "Runtime": "60 min",
+    "Genre": "Drama, Romance",
+    "Director": "N/A",
+    "Writer": "Chris Van Dusen",
+    "Actors": "Nicola Coughlan, Claudia Jessie, Adjoa Andoh",
+    "Plot": "The eight close-knit siblings of the Bridgerton family look for love and happiness in London high society.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 7 Primetime Emmys. 29 wins & 118 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNmY4MDAyNjgtZTBkYi00MTY5LWIwOTctZjY1MGQ0MDM5NTU3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.5",
+    "imdbVotes": "233,823",
+    "imdbID": "tt8740790",
+    "Type": "series",
+    "totalSeasons": "5",
+    "Response": "True"
+   }
+  },
+  "The Witcher|2019|series": {
+   "fetchedAt": "2026-10-15T20:34:50.789Z",
+   "data": {
+    "Title": "The Witcher",
+    "Year": "2019–",
+    "Rated": "TV-MA",
+    "Released": "20 Dec 2019",
+    "Runtime": "60 min",
+    "Genre": "Action, Adventure, Drama",
+    "Director": "Tomek Baginski",
+    "Writer": "Lauren Schmidt Hissrich",
+    "Actors": "Freya Allan, Anya Chalotra, Eamon Farren",
+    "Plot": "Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts.",
+    "Language": "English",
+    "Country": "Poland, Hungary, United States, United Kingdom",
+    "Awards": "Nominated for 4 Primetime Emmys. 9 wins & 41 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOTQzMzNmMzUtODgwNS00YTdhLTg5N2MtOWU1YTc4YWY3NjRlXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.8/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.8",
+    "imdbVotes": "626,107",
+    "imdbID": "tt5180504",
+    "Type": "series",
+    "totalSeasons": "5",
+    "Response": "True"
+   }
+  },
+  "Ozark|2017|series": {
+   "fetchedAt": "2026-10-15T20:34:51.349Z",
+   "data": {
+    "Title": "Ozark",
+    "Year": "2017–2022",
+    "Rated": "TV-MA",
+    "Released": "21 Jul 2017",
+    "Runtime": "60 min",
+    "Genre": "Crime, Drama, Thriller",
+    "Director": "N/A",
+    "Writer": "Bill Dubuque, Mark Williams",
+    "Actors": "Jason Bateman, Laura Linney, Sofia Hublitz",
+    "Plot": "A financial advisor drags his family from Chicago to the Missouri Ozarks, where he must launder money to appease a drug boss.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 4 Primetime Emmys. 25 wins & 176 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZDk1ZTdjOWItNTJmYS00MGIzLThmY2ItZWNiOGY5MzJlNTA5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.4/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.4",
+    "imdbVotes": "400,563",
+    "imdbID": "tt5071412",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "Narcos|2015|series": {
+   "fetchedAt": "2026-10-15T20:34:51.908Z",
+   "data": {
+    "Title": "Narcos",
+    "Year": "2015–2017",
+    "Rated": "TV-MA",
+    "Released": "28 Aug 2015",
+    "Runtime": "49 min",
+    "Genre": "Biography, Crime, Drama",
+    "Director": "N/A",
+    "Writer": "Carlo Bernard, Chris Brancato, Doug Miro",
+    "Actors": "Pedro Pascal, Wagner Moura, Boyd Holbrook",
+    "Plot": "A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar, as well as the many other drug kingpins who plagued the country through the years.",
+    "Language": "English, Spanish",
+    "Country": "United States, Colombia",
+    "Awards": "Nominated for 3 Primetime Emmys. 9 wins & 22 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzQwOTcwMzIwN15BMl5BanBnXkFtZTgwMjYxMTA0NjE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.7/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.7",
+    "imdbVotes": "537,587",
+    "imdbID": "tt2707408",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "Mindhunter|2017|series": {
+   "fetchedAt": "2026-10-15T20:34:52.468Z",
+   "data": {
+    "Title": "Mindhunter",
+    "Year": "2017–2019",
+    "Rated": "TV-MA",
+    "Released": "13 Oct 2017",
+    "Runtime": "60 min",
+    "Genre": "Crime, Drama, Mystery",
+    "Director": "N/A",
+    "Writer": "Joe Penhall",
+    "Actors": "Jonathan Groff, Holt McCallany, Anna Torv",
+    "Plot": "In the late 1970s, two FBI agents broaden the realm of criminal science by investigating the psychology behind murder and end up getting too close to real-life monsters.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 2 Primetime Emmys. 5 wins & 34 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYTk4NDA4MGMtNjliOC00MjExLWI1YzctOTc4NWIxM2I1YjM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.6",
+    "imdbVotes": "407,457",
+    "imdbID": "tt5290382",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  },
+  "Black Mirror|2011|series": {
+   "fetchedAt": "2026-10-15T20:34:53.031Z",
+   "data": {
+    "Title": "Black Mirror",
+    "Year": "2011–",
+    "Rated": "TV-MA",
+    "Released": "04 Dec 2011",
+    "Runtime": "60 min",
+    "Genre": "Crime, Drama, Mystery",
+    "Director": "N/A",
+    "Writer": "Charlie Brooker",
+    "Actors": "Anjana Vasan, Cristin Milioti, Jesse Plemons",
+    "Plot": "Featuring stand-alone dramas -- sharp, suspenseful, satirical tales that explore techno-paranoia -- \"Black Mirror\" is a contemporary reworking of \"The Twilight Zone\" with stories that tap into the collective unease about the moder...",
+    "Language": "English",
+    "Country": "United Kingdom",
+    "Awards": "Won 6 Primetime Emmys. 49 wins & 186 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BODcxMWI2NDMtYTc3NC00OTZjLWFmNmUtM2NmY2I1ODkxYzczXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.7/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.7",
+    "imdbVotes": "750,977",
+    "imdbID": "tt2085059",
+    "Type": "series",
+    "totalSeasons": "7",
+    "Response": "True"
+   }
+  },
+  "The Queen's Gambit|2020|series": {
+   "fetchedAt": "2026-10-15T20:34:53.590Z",
+   "data": {
+    "Title": "The Queen's Gambit",
+    "Year": "2020",
+    "Rated": "TV-MA",
+    "Released": "23 Oct 2020",
+    "Runtime": "395 min",
+    "Genre": "Drama",
+    "Director": "N/A",
+    "Writer": "Scott Frank, Allan Scott",
+    "Actors": "Anya Taylor-Joy, Chloe Pirrie, Bill Camp",
+    "Plot": "Orphaned at the tender age of nine, prodigious introvert Beth Harmon discovers and masters the game of chess in 1960s USA. But child stardom comes at a price.",
+    "Language": "English, French, Spanish, Russian",
+    "Country": "United States",
+    "Awards": "Won 11 Primetime Emmys. 55 wins & 44 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.5",
+    "imdbVotes": "680,749",
+    "imdbID": "tt10048342",
+    "Type": "series",
+    "totalSeasons": "1",
+    "Response": "True"
+   }
+  },
+  "Dark|2017|series": {
+   "fetchedAt": "2026-10-15T20:34:54.205Z",
+   "data": {
+    "Title": "Dark",
+    "Year": "2017–2020",
+    "Rated": "TV-MA",
+    "Released": "01 Dec 2017",
+    "Runtime": "60 min",
+    "Genre": "Crime, Drama, Mystery",
+    "Director": "N/A",
+    "Writer": "Baran bo Odar, Jantje Friese",
+    "Actors": "Louis Hofmann, Karoline Eichhorn, Lisa Vicari",
+    "Plot": "A family saga with a supernatural twist, set in a German town where the disappearance of two young children exposes the relationships among four families.",
+    "Language": "German, English, German Sign Language",
+    "Country": "Germany, United States",
+    "Awards": "8 wins & 23 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTUzNjQ2MTY5NV5BMl5BanBnXkFtZTgwOTAzNTQxNDM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.7/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.7",
+    "imdbVotes": "564,441",
+    "imdbID": "tt5753856",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "Money Heist|2017|series": {
+   "fetchedAt": "2026-10-15T20:34:54.766Z",
+   "data": {
+    "Title": "Money Heist",
+    "Year": "2017–2021",
+    "Rated": "TV-MA",
+    "Released": "02 May 2017",
+    "Runtime": "70 min",
+    "Genre": "Action, Crime, Drama",
+    "Director": "N/A",
+    "Writer": "Álex Pina",
+    "Actors": "Úrsula Corberó, Álvaro Morte, Itziar Ituño",
+    "Plot": "An unusual group of robbers attempts to carry out the most perfect robbery in Spanish history: stealing 2.4 billion euros from the Royal Mint of Spain.",
+    "Language": "Spanish, Russian, Serbian, English",
+    "Country": "Spain",
+    "Awards": "38 wins & 48 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BODdiNWI5ZjgtY2RhZi00ODlmLTkyNDEtMzIyMTEyZDE2ZjNjXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.2/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.2",
+    "imdbVotes": "621,045",
+    "imdbID": "tt6468322",
+    "Type": "series",
+    "totalSeasons": "5",
+    "Response": "True"
+   }
+  },
+  "Lupin|2021|series": {
+   "fetchedAt": "2026-10-15T20:34:55.326Z",
+   "data": {
+    "Title": "Lupin",
+    "Year": "2021–",
+    "Rated": "TV-MA",
+    "Released": "08 Jan 2021",
+    "Runtime": "231 min",
+    "Genre": "Action, Crime, Drama",
+    "Director": "N/A",
+    "Writer": "George Kay",
+    "Actors": "Omar Sy, Ludivine Sagnier, Soufiane Guerrab",
+    "Plot": "Inspired by the adventures of Arsène Lupin, gentleman thief Assane Diop sets out to avenge his father for an injustice inflicted by a wealthy family.",
+    "Language": "French",
+    "Country": "France, United States",
+    "Awards": "Nominated for 1 BAFTA Award. 5 wins & 22 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMzk4MTc0NWUtZjk3Mi00ODkzLTlkYjItOWRhMTc5MmRiNjI0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.5",
+    "imdbVotes": "162,224",
+    "imdbID": "tt2531336",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "Sex Education|2019|series": {
+   "fetchedAt": "2026-10-15T20:34:55.887Z",
+   "data": {
+    "Title": "Sex Education",
+    "Year": "2019–2023",
+    "Rated": "TV-MA",
+    "Released": "11 Jan 2019",
+    "Runtime": "45 min",
+    "Genre": "Comedy, Drama, Romance",
+    "Director": "N/A",
+    "Writer": "Laurie Nunn",
+    "Actors": "Asa Butterfield, Gillian Anderson, Ncuti Gatwa",
+    "Plot": "A teenage boy with a sex-therapist mother teams up with a high-school classmate to set up an underground sex-therapy clinic at school.",
+    "Language": "English",
+    "Country": "United Kingdom",
+    "Awards": "Won 1 BAFTA Award. 20 wins & 63 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BOTE0MjQ1NDU3OV5BMl5BanBnXkFtZTgwNTI4MTgwNzM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.2/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.2",
+    "imdbVotes": "404,883",
+    "imdbID": "tt7767422",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "Cobra Kai|2018|series": {
+   "fetchedAt": "2026-10-15T20:34:56.465Z",
+   "data": {
+    "Title": "Cobra Kai",
+    "Year": "2018–2025",
+    "Rated": "TV-14",
+    "Released": "02 May 2018",
+    "Runtime": "30 min",
+    "Genre": "Action, Comedy, Drama",
+    "Director": "N/A",
+    "Writer": "Josh Heald, Jon Hurwitz, Hayden Schlossberg",
+    "Actors": "Ralph Macchio, William Zabka, Courtney Henggeler",
+    "Plot": "Decades after their 1984 All Valley Karate Tournament bout, a middle-aged Daniel LaRusso and Johnny Lawrence find themselves martial-arts rivals again.",
+    "Language": "English, Spanish",
+    "Country": "United States",
+    "Awards": "Nominated for 11 Primetime Emmys. 8 wins & 74 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYjA3NDkwNzktNjJkYi00ODNhLWFhYzQtYzk5NjU4MDM0OWZmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.4/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.4",
+    "imdbVotes": "247,296",
+    "imdbID": "tt7221388",
+    "Type": "series",
+    "totalSeasons": "6",
+    "Response": "True"
+   }
+  },
+  "You|2018|series": {
+   "fetchedAt": "2026-10-15T20:34:57.072Z",
+   "data": {
+    "Title": "You",
+    "Year": "2018–2025",
+    "Rated": "TV-MA",
+    "Released": "09 Sep 2018",
+    "Runtime": "45 min",
+    "Genre": "Crime, Drama, Romance",
+    "Director": "N/A",
+    "Writer": "Greg Berlanti, Sera Gamble",
+    "Actors": "Penn Badgley, Victoria Pedretti, Charlotte Ritchie",
+    "Plot": "A charming and intense young man inserts himself into the lives of women who fascinate him.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "4 wins & 11 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMjM0MDA2NDEzNF5BMl5BanBnXkFtZTgwODYzNjg4NTM@._V1_QL75_UX380_CR0,4,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.6",
+    "imdbVotes": "376,827",
+    "imdbID": "tt7335184",
+    "Type": "series",
+    "totalSeasons": "5",
+    "Response": "True"
+   }
+  },
+  "13 Reasons Why|2017|series": {
+   "fetchedAt": "2026-10-15T20:34:57.629Z",
+   "data": {
+    "Title": "13 Reasons Why",
+    "Year": "2017–2020",
+    "Rated": "TV-MA",
+    "Released": "31 Mar 2017",
+    "Runtime": "60 min",
+    "Genre": "Drama, Mystery, Thriller",
+    "Director": "N/A",
+    "Writer": "Brian Yorkey",
+    "Actors": "Dylan Minnette, Katherine Langford, Christian Navarro",
+    "Plot": "Follows teenager Clay Jensen, in his quest to uncover the story behind his classmate and crush, Hannah, and her decision to end her life.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "5 wins & 15 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNThjYzQ3ZjYtM2I0ZC00OGNjLTlmNGItYjE3ZWI5MWIyMWYyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.4/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.4",
+    "imdbVotes": "343,833",
+    "imdbID": "tt1837492",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "The Umbrella Academy|2019|series": {
+   "fetchedAt": "2026-10-15T20:34:58.189Z",
+   "data": {
+    "Title": "The Umbrella Academy",
+    "Year": "2019–2024",
+    "Rated": "TV-14",
+    "Released": "15 Feb 2019",
+    "Runtime": "2 min",
+    "Genre": "Action, Adventure, Comedy",
+    "Director": "N/A",
+    "Writer": "Jeremy Slater, Steve Blackman",
+    "Actors": "Elliot Page, Tom Hopper, David Castañeda",
+    "Plot": "A family of former child heroes, now grown apart, must reunite to continue to protect the world.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 8 Primetime Emmys. 13 wins & 63 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYjZiZmIzYWUtYTBlOC00YmJmLTg5YWMtNTYwY2FkYjQxNDg1XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.8/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.8",
+    "imdbVotes": "318,689",
+    "imdbID": "tt1312171",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "BoJack Horseman|2014|series": {
+   "fetchedAt": "2026-10-15T20:34:58.752Z",
+   "data": {
+    "Title": "BoJack Horseman",
+    "Year": "2014–2020",
+    "Rated": "TV-MA",
+    "Released": "22 Aug 2014",
+    "Runtime": "25 min",
+    "Genre": "Animation, Comedy, Drama",
+    "Director": "N/A",
+    "Writer": "Raphael Bob-Waksberg",
+    "Actors": "Will Arnett, Amy Sedaris, Alison Brie",
+    "Plot": "BoJack Horseman was the star of the hit television show \"Horsin' Around\" in the '80s and '90s, but now he's washed up, living in Hollywood, complaining about everything, and wearing colorful sweaters.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 3 Primetime Emmys. 35 wins & 43 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZmMwMDlkNTEtMmQzZS00ODQ0LWJlZmItOTgwYWMwZGM4MzFiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.8/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.8",
+    "imdbVotes": "239,831",
+    "imdbID": "tt3398228",
+    "Type": "series",
+    "totalSeasons": "6",
+    "Response": "True"
+   }
+  },
+  "Arcane|2021|series": {
+   "fetchedAt": "2026-10-15T20:34:59.311Z",
+   "data": {
+    "Title": "Arcane",
+    "Year": "2021–2024",
+    "Rated": "TV-14",
+    "Released": "06 Nov 2021",
+    "Runtime": "N/A",
+    "Genre": "Animation, Action, Adventure",
+    "Director": "N/A",
+    "Writer": "N/A",
+    "Actors": "Kevin Alejandro, Hailee Steinfeld, Ella Purnell",
+    "Plot": "Amid the stark discord of twin cities Piltover and Zaun, two sisters fight on rival sides of a war between magic technologies and clashing convictions.",
+    "Language": "English, French",
+    "Country": "United States, France",
+    "Awards": "Won 8 Primetime Emmys. 41 wins & 13 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYjA2NzhlMDItNWRmZC00MzRjLWE3ZjAtZjBlZDAwOWY2ODdjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "9.0/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "9.0",
+    "imdbVotes": "458,667",
+    "imdbID": "tt11126994",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  },
+  "Beef|2023|series": {
+   "fetchedAt": "2026-10-15T20:34:59.878Z",
+   "data": {
+    "Title": "Beef",
+    "Year": "2023–",
+    "Rated": "TV-MA",
+    "Released": "06 Apr 2023",
+    "Runtime": "N/A",
+    "Genre": "Comedy, Drama",
+    "Director": "N/A",
+    "Writer": "Lee Sung Jin",
+    "Actors": "Steven Yeun, Ali Wong, Joseph Lee",
+    "Plot": "Minor conflicts spiral into consuming feuds between individuals, exposing pride, resentment, and hidden pain.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 11 Primetime Emmys. 50 wins & 73 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMGNlNDkyYzItNTg5Yy00NGFiLWJhYTctODE5NjNkYjk4ZDUwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.0/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.0",
+    "imdbVotes": "181,252",
+    "imdbID": "tt14403178",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  },
+  "Baby Reindeer|2024|series": {
+   "fetchedAt": "2026-10-15T20:35:00.440Z",
+   "data": {
+    "Title": "Baby Reindeer",
+    "Year": "2024",
+    "Rated": "TV-MA",
+    "Released": "11 Apr 2024",
+    "Runtime": "N/A",
+    "Genre": "Biography, Comedy, Drama",
+    "Director": "N/A",
+    "Writer": "Richard Gadd",
+    "Actors": "Richard Gadd, Jessica Gunning, Nava Mau",
+    "Plot": "The story follows Donny's warped relationship with a female stalker and the impact it has on him as he is ultimately forced to face a deep, dark buried trauma.",
+    "Language": "English",
+    "Country": "United Kingdom, United States",
+    "Awards": "Won 6 Primetime Emmys. 41 wins & 67 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzlmY2E1OTUtMjEzZi00Y2YxLWI5NmMtZmZhOWZkMjIzMDJiXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.7/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.7",
+    "imdbVotes": "197,460",
+    "imdbID": "tt13649112",
+    "Type": "series",
+    "totalSeasons": "1",
+    "Response": "True"
+   }
+  },
+  "Adolescence|2025|series": {
+   "fetchedAt": "2026-10-15T20:35:00.997Z",
+   "data": {
+    "Title": "Adolescence",
+    "Year": "2025",
+    "Rated": "TV-MA",
+    "Released": "13 Mar 2025",
+    "Runtime": "N/A",
+    "Genre": "Crime, Drama, Thriller",
+    "Director": "N/A",
+    "Writer": "Stephen Graham, Jack Thorne, Philip Barantini",
+    "Actors": "Stephen Graham, Owen Cooper, Ashley Walters",
+    "Plot": "When a 13-year-old is accused of the murder of a classmate, his family, therapist and the detective in charge are all left asking what really happened.",
+    "Language": "English",
+    "Country": "United Kingdom",
+    "Awards": "Won 8 Primetime Emmys. 67 wins & 69 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNGY1YjBiNzMtYWZhNC00OWViLWE0MzItNjc4YzczOGNiM2I0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.1/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.1",
+    "imdbVotes": "318,380",
+    "imdbID": "tt31806037",
+    "Type": "series",
+    "totalSeasons": "1",
+    "Response": "True"
+   }
+  },
+  "The Sandman|2022|series": {
+   "fetchedAt": "2026-10-15T20:35:01.559Z",
+   "data": {
+    "Title": "The Sandman",
+    "Year": "2022–2025",
+    "Rated": "TV-MA",
+    "Released": "05 Aug 2022",
+    "Runtime": "1 min",
+    "Genre": "Drama, Fantasy, Horror",
+    "Director": "N/A",
+    "Writer": "Neil Gaiman, David S. Goyer, Allan Heinberg",
+    "Actors": "Tom Sturridge, Vivienne Acheampong, Patton Oswalt",
+    "Plot": "Upon escaping after decades of imprisonment by a mortal wizard, Dream, the personification of dreams, sets about to reclaim his lost equipment.",
+    "Language": "English",
+    "Country": "United Kingdom, United States",
+    "Awards": "Nominated for 1 BAFTA Award. 12 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNjk0M2ZhZTQtZjQ0NC00ODA2LWFkN2ItMTA0ZTc0MjJjODg0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.6",
+    "imdbVotes": "212,595",
+    "imdbID": "tt1751634",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  },
+  "One Piece|2023|series": {
+   "fetchedAt": "2026-10-15T20:35:02.120Z",
+   "data": {
+    "Title": "One Piece",
+    "Year": "2023–",
+    "Rated": "TV-14",
+    "Released": "31 Aug 2023",
+    "Runtime": "N/A",
+    "Genre": "Action, Adventure, Comedy",
+    "Director": "N/A",
+    "Writer": "Steven Maeda, Matt Owens",
+    "Actors": "Iñaki Godoy, Emily Rudd, Mackenyu",
+    "Plot": "With his straw hat and ragtag crew, young pirate Monkey D. Luffy goes on an epic voyage for treasure.",
+    "Language": "English",
+    "Country": "United Kingdom, United States, South Africa, Japan",
+    "Awards": "4 wins & 17 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNDk5MDFlYjYtZjQ5ZS00ZjhkLWJkYmMtYzhmZjkyOWExY2M3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.3/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.3",
+    "imdbVotes": "211,535",
+    "imdbID": "tt11737520",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "Avatar: The Last Airbender|2024|series": {
+   "fetchedAt": "2026-10-15T20:35:02.680Z",
+   "data": {
+    "Title": "Avatar: The Last Airbender",
+    "Year": "2024–",
+    "Rated": "TV-PG",
+    "Released": "22 Feb 2024",
+    "Runtime": "N/A",
+    "Genre": "Action, Adventure, Comedy",
+    "Director": "N/A",
+    "Writer": "Albert Kim, Michael Dante DiMartino, Bryan Konietzko",
+    "Actors": "Gordon Cormier, Kiawentiio, Ian Ousley",
+    "Plot": "A young boy known as the Avatar must master the four elemental powers to save the world, and fight against an enemy bent on stopping him.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 2 Primetime Emmys. 9 wins & 19 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BY2Y5OTM0MDAtOWZkNS00MWIyLWIxMzItYzY3ODljMTY3ODNlXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.1/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.1",
+    "imdbVotes": "93,955",
+    "imdbID": "tt9018736",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "3 Body Problem|2024|series": {
+   "fetchedAt": "2026-10-15T20:35:03.241Z",
+   "data": {
+    "Title": "3 Body Problem",
+    "Year": "2024–",
+    "Rated": "TV-MA",
+    "Released": "21 Mar 2024",
+    "Runtime": "N/A",
+    "Genre": "Adventure, Drama, Fantasy",
+    "Director": "N/A",
+    "Writer": "David Benioff, D.B. Weiss, Alexander Woo",
+    "Actors": "Jovan Adepo, Liam Cunningham, Eiza González",
+    "Plot": "A fateful decision made in 1960s China reverberates in the present, where a group of scientists partner with a detective to confront an existential planetary threat.",
+    "Language": "English",
+    "Country": "United Kingdom, United States, China",
+    "Awards": "Nominated for 6 Primetime Emmys. 2 wins & 40 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMDdkYWZiZWYtMzA0Yi00NzNlLThkODktY2Q3N2NjN2ExZmMwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.5",
+    "imdbVotes": "185,889",
+    "imdbID": "tt13016388",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  },
+  "Love, Death & Robots|2019|series": {
+   "fetchedAt": "2026-10-15T20:35:03.800Z",
+   "data": {
+    "Title": "Love, Death & Robots",
+    "Year": "2019–",
+    "Rated": "TV-MA",
+    "Released": "15 Mar 2019",
+    "Runtime": "15 min",
+    "Genre": "Animation, Short, Action",
+    "Director": "N/A",
+    "Writer": "Tim Miller",
+    "Actors": "Fred Tatasciore, Scott Whyte, Emily O&apos;Brien",
+    "Plot": "A collection of animated short stories that span various genres including science fiction, fantasy, horror and comedy.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 17 Primetime Emmys. 36 wins & 28 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZDY3OTZiYzktN2U5My00MzRhLWJiZjItZjNlZmM3OGViZmFiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.4/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.4",
+    "imdbVotes": "232,665",
+    "imdbID": "tt9561862",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "Ginny & Georgia|2021|series": {
+   "fetchedAt": "2026-10-15T20:35:04.356Z",
+   "data": {
+    "Title": "Ginny & Georgia",
+    "Year": "2021–",
+    "Rated": "TV-14",
+    "Released": "24 Feb 2021",
+    "Runtime": "N/A",
+    "Genre": "Comedy, Drama",
+    "Director": "N/A",
+    "Writer": "Sarah Lampert",
+    "Actors": "Brianne Howey, Antonia Gentry, Diesel La Torraca",
+    "Plot": "Angsty 15-year-old Ginny Miller often feels more mature than her 30-year-old mother, the irresistible and dynamic Georgia Miller.",
+    "Language": "English",
+    "Country": "United States, Canada",
+    "Awards": "Nominated for 1 Primetime Emmy. 6 wins & 10 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNGY4NjYzYTYtMDhjYy00MmQ2LTkwNDktNzUxMGNkMDI5MmZhXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.5",
+    "imdbVotes": "111,268",
+    "imdbID": "tt10813940",
+    "Type": "series",
+    "totalSeasons": "4",
+    "Response": "True"
+   }
+  },
+  "Heartstopper|2022|series": {
+   "fetchedAt": "2026-10-15T20:35:04.916Z",
+   "data": {
+    "Title": "Heartstopper",
+    "Year": "2022–2024",
+    "Rated": "TV-14",
+    "Released": "22 Apr 2022",
+    "Runtime": "N/A",
+    "Genre": "Drama, Romance",
+    "Director": "N/A",
+    "Writer": "Alice Oseman",
+    "Actors": "Kit Connor, Joe Locke, William Gao",
+    "Plot": "Charlie, a high-strung, openly gay overthinker, and Nick, a cheerful, soft-hearted rugby player, one day are made to sit together in class. Their friendship becomes something more for Charlie, but he does not believe he has a chance.",
+    "Language": "English",
+    "Country": "United Kingdom",
+    "Awards": "Nominated for 3 BAFTA Awards. 25 wins & 38 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZjUxNjc3YjYtNzg2Yy00OWEwLTljOGItNmE4MzgwMzQzNGRmXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.5",
+    "imdbVotes": "95,865",
+    "imdbID": "tt10638036",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "Orange Is the New Black|2013|series": {
+   "fetchedAt": "2026-10-15T20:35:05.479Z",
+   "data": {
+    "Title": "Orange Is the New Black",
+    "Year": "2013–2019",
+    "Rated": "TV-MA",
+    "Released": "11 Jul 2013",
+    "Runtime": "59 min",
+    "Genre": "Comedy, Crime, Drama",
+    "Director": "N/A",
+    "Writer": "Jenji Kohan",
+    "Actors": "Taylor Schilling, Danielle Brooks, Taryn Manning",
+    "Plot": "Convicted of a decade-old crime of transporting drug money, ordinarily law-abiding Piper Chapman is sentenced to 18 months behind bars and quickly discovers the realities of life-changing prison time.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 4 Primetime Emmys. 59 wins & 163 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNjRjMTAyYjUtZDk0Mi00OGQ5LWJjNzMtMzBhNDMwMmI5NzVjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.0/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.0",
+    "imdbVotes": "338,912",
+    "imdbID": "tt2372162",
+    "Type": "series",
+    "totalSeasons": "7",
+    "Response": "True"
+   }
+  },
+  "House of Cards|2013|series": {
+   "fetchedAt": "2026-10-15T20:35:06.042Z",
+   "data": {
+    "Title": "House of Cards",
+    "Year": "2013–2018",
+    "Rated": "TV-MA",
+    "Released": "01 Feb 2013",
+    "Runtime": "51 min",
+    "Genre": "Drama, Thriller",
+    "Director": "N/A",
+    "Writer": "Beau Willimon",
+    "Actors": "Kevin Spacey, Michel Gill, Robin Wright",
+    "Plot": "A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 7 Primetime Emmys. 35 wins & 220 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTQ4MDczNDYwNV5BMl5BanBnXkFtZTcwNjMwMDk5OA@@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.6",
+    "imdbVotes": "564,142",
+    "imdbID": "tt1856010",
+    "Type": "series",
+    "totalSeasons": "6",
+    "Response": "True"
+   }
+  },
+  "Daredevil|2015|series": {
+   "fetchedAt": "2026-10-15T20:35:06.607Z",
+   "data": {
+    "Title": "Daredevil",
+    "Year": "2015–2018",
+    "Rated": "TV-MA",
+    "Released": "10 Apr 2015",
+    "Runtime": "54 min",
+    "Genre": "Action, Crime, Drama",
+    "Director": "N/A",
+    "Writer": "Drew Goddard",
+    "Actors": "Charlie Cox, Vincent D&apos;Onofrio, Deborah Ann Woll",
+    "Plot": "A blind lawyer by day, vigilante by night. Matt Murdock fights the crime of New York as Daredevil.",
+    "Language": "English, Spanish, Mandarin, Japanese, Russian",
+    "Country": "United States",
+    "Awards": "Nominated for 5 Primetime Emmys. 10 wins & 43 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BODcwOTg2MDE3NF5BMl5BanBnXkFtZTgwNTUyNTY1NjM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.6/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.6",
+    "imdbVotes": "543,598",
+    "imdbID": "tt3322312",
+    "Type": "series",
+    "totalSeasons": "3",
+    "Response": "True"
+   }
+  },
+  "The Haunting of Hill House|2018|series": {
+   "fetchedAt": "2026-10-15T20:35:07.169Z",
+   "data": {
+    "Title": "The Haunting of Hill House",
+    "Year": "2018",
+    "Rated": "TV-MA",
+    "Released": "12 Oct 2018",
+    "Runtime": "572 min",
+    "Genre": "Drama, Horror, Mystery",
+    "Director": "N/A",
+    "Writer": "Mike Flanagan",
+    "Actors": "Michiel Huisman, Carla Gugino, Henry Thomas",
+    "Plot": "Flashing between past and present, a fractured family confronts haunting memories of their old home and the terrifying events that drove them from it.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "9 wins & 36 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTU4NzA4MDEwNF5BMl5BanBnXkFtZTgwMTQxODYzNjM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.5",
+    "imdbVotes": "337,691",
+    "imdbID": "tt6763664",
+    "Type": "series",
+    "totalSeasons": "1",
+    "Response": "True"
+   }
+  },
+  "Monster: The Jeffrey Dahmer Story|2022|series": {
+   "fetchedAt": "2026-10-15T20:35:07.730Z",
+   "data": {
+    "Response": "False",
+    "Error": "Series not found!"
+   }
+  },
+  "Tiger King|2020|series": {
+   "fetchedAt": "2026-10-15T20:35:08.290Z",
+   "data": {
+    "Title": "Tiger King",
+    "Year": "2020–2021",
+    "Rated": "TV-MA",
+    "Released": "20 Mar 2020",
+    "Runtime": "358 min",
+    "Genre": "Documentary, Biography, Crime",
+    "Director": "N/A",
+    "Writer": "N/A",
+    "Actors": "Joe Exotic, Carole Baskin, Jeff Lowe",
+    "Plot": "A rivalry between big cat eccentrics takes a dark turn when Joe Exotic, a controversial animal park boss, is caught in a murder-for-hire plot.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Nominated for 6 Primetime Emmys. 2 wins & 14 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BYzVjMzM0MDMtMjFlZS00NTE1LTg1NDAtNDkwNzFiNzk2MWFhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "7.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "7.5",
+    "imdbVotes": "91,536",
+    "imdbID": "tt11823076",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  },
+  "Making a Murderer|2015|series": {
+   "fetchedAt": "2026-10-15T20:35:08.850Z",
+   "data": {
+    "Title": "Making a Murderer",
+    "Year": "2015–2018",
+    "Rated": "TV-14",
+    "Released": "18 Dec 2015",
+    "Runtime": "60 min",
+    "Genre": "Documentary, Crime",
+    "Director": "N/A",
+    "Writer": "N/A",
+    "Actors": "Steven Avery, Dolores Avery, Allan Avery",
+    "Plot": "Filmed over a 10-year period, Steven Avery, a DNA exoneree who, while in the midst of exposing corruption in local law enforcement, finds himself the prime suspect in a grisly new crime.",
+    "Language": "English",
+    "Country": "United States",
+    "Awards": "Won 4 Primetime Emmys. 15 wins & 14 nominations total",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTg4Mjc1NjE4Ml5BMl5BanBnXkFtZTgwMjk2NjA1NjM@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "Ratings": [
+     {
+      "Source": "Internet Movie Database",
+      "Value": "8.5/10"
+     }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.5",
+    "imdbVotes": "109,222",
+    "imdbID": "tt5189670",
+    "Type": "series",
+    "totalSeasons": "2",
+    "Response": "True"
+   }
+  }
+ }
+}
