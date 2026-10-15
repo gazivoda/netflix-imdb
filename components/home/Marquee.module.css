@@ -1,47 +1,64 @@
-/* ── MARQUEE ── */
+/* ── MARQUEE: ticker tape of ticket-stub chips ── */
 .marquee {
-  margin-top: clamp(48px, 7vw, 80px);
-  padding: 18px 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  margin-top: clamp(32px, 5vw, 56px);
+  padding: 18px 0 22px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
   background: var(--bg-2);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 .marqueeTrack {
   display: flex;
   width: max-content;
-  gap: 14px;
+  gap: 22px;
+  /* Trailing gap keeps the two halves equal so -50% loops seamlessly. */
+  padding-right: 22px;
   animation: scrollX 46s linear infinite;
 }
 .marquee:hover .marqueeTrack { animation-play-state: paused; }
 @keyframes scrollX {
   to { transform: translateX(-50%); }
 }
-/* --chip-fs sizes the ScoreChip components inside each pill. */
+/* --chip-fs sizes the ScoreChip components inside each stub. */
 .marqueeItem {
-  --chip-fs: 12.5px;
+  --chip-fs: 13px;
+  display: inline-flex;
+  align-items: stretch;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard-sm);
+  white-space: nowrap;
+}
+.marqueeTitle {
+  display: flex;
+  align-items: center;
+  padding: 10px 18px 8px;
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: 28px;
+  line-height: 0.86;
+  color: var(--ink);
+}
+/* Perforated stub holding the two scores. */
+.marqueeScores {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  background: var(--surface);
-  white-space: nowrap;
-  font-size: 13.5px;
+  gap: 8px;
+  padding: 8px 14px;
+  border-left: 3px dashed var(--ink);
+  background: var(--paper);
 }
-.marqueeTitle { font-weight: 600; color: var(--text); }
 /* Static fallback: show one wrapped copy of the strip instead of a frozen, clipped one. */
 @media (prefers-reduced-motion: reduce) {
-  .marqueeTrack { animation: none; width: auto; flex-wrap: wrap; justify-content: center; padding: 0 clamp(20px, 5vw, 48px); }
+  .marqueeTrack { animation: none; width: auto; flex-wrap: wrap; justify-content: center; padding: 0 clamp(20px, 5vw, 48px); row-gap: 18px; }
   .marqueeDup { display: none; }
-  .marquee { -webkit-mask-image: none; mask-image: none; }
 }
 .marqueeCaption {
-  margin-top: 10px;
+  margin-top: 12px;
   text-align: center;
-  font-size: 12px;
   color: var(--faint);
+  font-size: 12px;
 }

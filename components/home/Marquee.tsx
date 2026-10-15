@@ -10,13 +10,15 @@ export default function Marquee() {
           {[...MARQUEE, ...MARQUEE].map((m, i) => (
             <span key={`${m.title}-${i}`} className={`${styles.marqueeItem}${i >= MARQUEE.length ? ` ${styles.marqueeDup}` : ''}`}>
               <span className={styles.marqueeTitle}>{m.title}</span>
-              <ImdbChip value={m.imdb} />
-              <RtChip value={m.rt} />
+              <span className={styles.marqueeScores}>
+                <ImdbChip value={m.imdb} />
+                <RtChip value={m.rt} />
+              </span>
             </span>
           ))}
         </div>
       </section>
-      <p className={styles.marqueeCaption}>Illustrative scores, for demonstration only.</p>
+      <p className={`${styles.marqueeCaption} ds-label`}>Illustrative scores, for demonstration only.</p>
     </>
   );
 }
