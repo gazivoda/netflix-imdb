@@ -34,3 +34,5 @@ next-env.d.ts
 
 # Claude Code agent worktrees
 .claude/worktrees/
+
+node_modules
