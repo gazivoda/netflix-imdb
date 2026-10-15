@@ -5,6 +5,8 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { createWorker } from 'tesseract.js'
 import { extractMovieTitles } from '@/lib/extract-titles'
+import { ImdbChip, RtChip } from '@/components/ScoreChip'
+import s from './camera.module.css'
 
 interface DetectedContent {
   id: string
@@ -232,195 +234,184 @@ export default function CameraVision() {
   }, [isStreaming, ocrReady, videoLoaded, processVideoFrame, lastProcessedTime, isProcessing])
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <Link
-              href="/"
-              className="text-blue-400 hover:text-blue-300 mb-2 inline-block"
+    <main id="main" tabIndex={-1} className={s.main}>
+      {/* Header */}
+      <div className={s.head}>
+        <div className={s.headText}>
+          <Link
+            href="/"
+            className={s.back}
+          >
+            ← Back to Home
+          </Link>
+          <h1 className={`ds-display ${s.title}`}>Camera Vision <em className="ds-serif">Demo</em></h1>
+          <p className={s.sub}>
+            Real-time OCR text detection and movie title recognition
+            {isProcessing && <span className={s.processing}><span className={`${s.dot} ${s.dotLive}`} aria-hidden />Processing...</span>}
+          </p>
+        </div>
+
+        <div className={s.actions}>
+          {!isStreaming ? (
+            <button
+              onClick={startCamera}
+              className={`ds-btn ds-btn-signal ${s.btn}`}
             >
-              ← Back to Home
-            </Link>
-            <h1 className="text-3xl font-bold">Camera Vision Demo</h1>
-            <p className="text-gray-400">
-              Real-time OCR text detection and movie title recognition
-              {isProcessing && <span className="ml-2 text-yellow-400">⟳ Processing...</span>}
+              Start Camera
+            </button>
+          ) : (
+            <button
+              onClick={stopCamera}
+              className={`ds-btn ${s.btn} ${s.btnInk}`}
+            >
+              Stop Camera
+            </button>
+          )}
+
+          <button
+            onClick={() => setShowOverlays(!showOverlays)}
+            className={`ds-btn ${s.btn} ${showOverlays ? '' : s.btnTeal}`}
+          >
+            {showOverlays ? 'Hide Overlays' : 'Show Overlays'}
+          </button>
+        </div>
+      </div>
+
+      {/* Camera View */}
+      <div className={s.stage}>
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className={s.video}
+          onLoadedData={() => {
+            console.log('Video loaded and ready')
+            setVideoLoaded(true)
+          }}
+        />
+
+        <canvas
+          ref={canvasRef}
+          className={s.canvas}
+          style={{ display: 'none' }} // Hidden, used for processing only
+        />
+
+        {/* Rating Overlays */}
+        {showOverlays && detectedContent.map((content) => (
+          <div
+            key={content.id}
+            className={s.overlay}
+            style={{
+              left: `${content.x}%`,
+              top: `${content.y}%`,
+            }}
+          >
+            <div className={s.overlayTitle}>{content.title}</div>
+            <div className={`ds-label ${s.overlayMeta}`}>
+              Confidence: {content.confidence.toFixed(1)}%
+            </div>
+            {content.rating != null ? (
+              <div className={s.scoreRow}>
+                <ImdbChip value={content.rating.toFixed(1)} />
+                {content.voteCount && (
+                  <div className={s.votes}>
+                    ({content.voteCount.toLocaleString()} votes)
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={s.pending}>Loading rating...</div>
+            )}
+            {content.rtRating != null && (
+              <div className={s.scoreRow}>
+                <RtChip value={`${content.rtRating}%`} />
+              </div>
+            )}
+          </div>
+        ))}
+
+        {!isStreaming && (
+          <div className={s.idle}>
+            <div className={s.idleInner}>
+              <div className={s.idleMark} aria-hidden />
+              <div className={`ds-display ${s.idleTitle}`}>Camera not active</div>
+              <p className={s.idleHint}>
+                Click "Start Camera" to begin OCR text detection
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Info Panel */}
+      <div className={`ds-card ${s.panel}`}>
+        <h3 className={`ds-display ${s.panelTitle}`}>Real-Time OCR Processing</h3>
+        <div className={s.features}>
+          <div className={s.feature}>
+            <h4 className={s.featureHead}>Text Detection</h4>
+            <p className={s.featureBody}>
+              Uses Tesseract.js OCR to detect and read text from your camera feed.
+              Processes video frames every 3 seconds for optimal performance.
             </p>
           </div>
 
-          <div className="flex gap-4">
-            {!isStreaming ? (
-              <button
-                onClick={startCamera}
-                className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Start Camera
-              </button>
-            ) : (
-              <button
-                onClick={stopCamera}
-                className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-medium transition-colors"
-              >
-                Stop Camera
-              </button>
-            )}
+          <div className={s.feature}>
+            <h4 className={s.featureHead}>Title Recognition</h4>
+            <p className={s.featureBody}>
+              Identifies potential movie/TV show titles using pattern matching.
+              Filters out UI elements and focuses on capitalized title patterns.
+            </p>
+          </div>
 
-            <button
-              onClick={() => setShowOverlays(!showOverlays)}
-              className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-                showOverlays
-                  ? 'bg-purple-600 hover:bg-purple-700'
-                  : 'bg-gray-600 hover:bg-gray-700'
-              }`}
-            >
-              {showOverlays ? 'Hide Overlays' : 'Show Overlays'}
-            </button>
+          <div className={s.feature}>
+            <h4 className={s.featureHead}>Live Ratings</h4>
+            <p className={s.featureBody}>
+              Automatically fetches IMDB ratings for detected titles.
+              Shows confidence scores and vote counts for transparency.
+            </p>
+          </div>
+
+          <div className={s.feature}>
+            <h4 className={s.featureHead}>Point & Scan</h4>
+            <p className={s.featureBody}>
+              Point your camera at Netflix (or any streaming service) and watch
+              ratings appear in real-time as titles are detected.
+            </p>
           </div>
         </div>
 
-        {/* Camera View */}
-        <div className="relative bg-black rounded-lg overflow-hidden mb-8" style={{ height: '480px' }}>
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            className="w-full h-full object-cover"
-            onLoadedData={() => {
-              console.log('Video loaded and ready')
-              setVideoLoaded(true)
-            }}
-          />
-
-          <canvas
-            ref={canvasRef}
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            style={{ display: 'none' }} // Hidden, used for processing only
-          />
-
-          {/* Rating Overlays */}
-          {showOverlays && detectedContent.map((content) => (
-            <div
-              key={content.id}
-              className="absolute bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-purple-500 shadow-lg"
-              style={{
-                left: `${content.x}%`,
-                top: `${content.y}%`,
-                minWidth: '180px',
-              }}
-            >
-              <div className="text-sm font-medium text-white mb-1">{content.title}</div>
-              <div className="text-xs text-gray-400 mb-2">
-                Confidence: {content.confidence.toFixed(1)}%
-              </div>
-              {content.rating != null ? (
-                <div className="flex items-center gap-2">
-                  <div className="text-yellow-400 text-lg">⭐</div>
-                  <div className="text-white font-bold">{content.rating.toFixed(1)}</div>
-                  {content.voteCount && (
-                    <div className="text-gray-400 text-xs">
-                      ({content.voteCount.toLocaleString()} votes)
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-gray-400 text-sm">Loading rating...</div>
-              )}
-              {content.rtRating != null && (
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="text-red-500 text-lg">🍅</div>
-                  <div className="text-white font-bold">{content.rtRating}%</div>
-                </div>
-              )}
-            </div>
-          ))}
-
-          {!isStreaming && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-6xl mb-4">📹</div>
-                <div className="text-xl text-gray-400">Camera not active</div>
-                <div className="text-sm text-gray-500 mt-2">
-                  Click "Start Camera" to begin OCR text detection
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Info Panel */}
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4">Real-Time OCR Processing</h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-medium text-blue-400 mb-2">🔍 Text Detection</h4>
-              <p className="text-gray-300 text-sm">
-                Uses Tesseract.js OCR to detect and read text from your camera feed.
-                Processes video frames every 3 seconds for optimal performance.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-purple-400 mb-2">🎬 Title Recognition</h4>
-              <p className="text-gray-300 text-sm">
-                Identifies potential movie/TV show titles using pattern matching.
-                Filters out UI elements and focuses on capitalized title patterns.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-green-400 mb-2">⚡ Live Ratings</h4>
-              <p className="text-gray-300 text-sm">
-                Automatically fetches IMDB ratings for detected titles.
-                Shows confidence scores and vote counts for transparency.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-medium text-orange-400 mb-2">📱 Point & Scan</h4>
-              <p className="text-gray-300 text-sm">
-                Point your camera at Netflix (or any streaming service) and watch
-                ratings appear in real-time as titles are detected.
-              </p>
-            </div>
-          </div>
-
-          {/* Testing Instructions */}
-          <div className="mt-6 border-t border-gray-700 pt-4">
-            <h4 className="font-medium text-yellow-400 mb-2">🧪 How to Test OCR</h4>
-            <div className="text-sm text-gray-300 space-y-2">
-              <p><strong>1.</strong> Point your camera at a computer screen or printed text</p>
-              <p><strong>2.</strong> Make sure text is clear, well-lit, and in focus</p>
-              <p><strong>3.</strong> Hold steady for 3-5 seconds while OCR processes</p>
-              <p><strong>4.</strong> Check browser console (F12) for detected text output</p>
-              <p><strong>5.</strong> Try with movie posters, Netflix interface, or title cards</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Debug Info */}
-        <div className="mt-6 bg-gray-800 rounded-lg p-4">
-          <h4 className="font-medium text-yellow-400 mb-2">Debug Information</h4>
-          <div className="text-sm text-gray-400 space-y-1">
-            <div>Status: {isStreaming ? '🟢 Camera Active' : '🔴 Camera Inactive'}</div>
-            <div>OCR Worker: {ocrReady ? '✅ Ready' : '⏳ Loading...'}</div>
-            <div>Video Loaded: {videoLoaded ? '✅ Ready' : '⏳ Loading...'}</div>
-            <div>Processing: {isProcessing ? '⟳ Active' : '⏸️ Idle'}</div>
-            <div>Detected Titles: {detectedContent.length}</div>
-            <div>OCR Failures: {ocrFailureCount}</div>
-            <div>Last Process: {lastProcessedTime ? new Date(lastProcessedTime).toLocaleTimeString() : 'Never'}</div>
-          </div>
-        </div>
-
-        {/* Status */}
-        <div className="mt-6 text-center text-gray-400">
-          <div className="text-sm">
-            Point your camera at a screen showing Netflix or movie titles to see real-time OCR detection in action!
+        {/* Testing Instructions */}
+        <div className={s.test}>
+          <h4 className={s.testHead}>How to Test OCR</h4>
+          <div className={s.testBody}>
+            <p><strong>1.</strong> Point your camera at a computer screen or printed text</p>
+            <p><strong>2.</strong> Make sure text is clear, well-lit, and in focus</p>
+            <p><strong>3.</strong> Hold steady for 3-5 seconds while OCR processes</p>
+            <p><strong>4.</strong> Check browser console (F12) for detected text output</p>
+            <p><strong>5.</strong> Try with movie posters, Netflix interface, or title cards</p>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Debug Info */}
+      <div className={`ds-card ${s.debug}`}>
+        <h4 className={s.debugHead}>Debug Information</h4>
+        <div className={s.debugRows}>
+          <div><span className={`${s.dot} ${isStreaming ? s.dotLive : ''}`} aria-hidden />Status: {isStreaming ? 'Camera Active' : 'Camera Inactive'}</div>
+          <div><span className={`${s.dot} ${ocrReady ? s.dotReady : ''}`} aria-hidden />OCR Worker: {ocrReady ? 'Ready' : 'Loading...'}</div>
+          <div><span className={`${s.dot} ${videoLoaded ? s.dotReady : ''}`} aria-hidden />Video Loaded: {videoLoaded ? 'Ready' : 'Loading...'}</div>
+          <div><span className={`${s.dot} ${isProcessing ? s.dotLive : ''}`} aria-hidden />Processing: {isProcessing ? 'Active' : 'Idle'}</div>
+          <div className={s.noDot}>Detected Titles: {detectedContent.length}</div>
+          <div className={s.noDot}>OCR Failures: {ocrFailureCount}</div>
+          <div className={s.noDot}>Last Process: {lastProcessedTime ? new Date(lastProcessedTime).toLocaleTimeString() : 'Never'}</div>
+        </div>
+      </div>
+
+      {/* Status */}
+      <p className={s.foot}>
+        Point your camera at a screen showing Netflix or movie titles to see real-time OCR detection in action!
+      </p>
+    </main>
   )
 }
