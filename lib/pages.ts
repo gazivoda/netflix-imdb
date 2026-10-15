@@ -86,12 +86,18 @@ export const PAGES: SitePage[] = [
     title: 'How to Find What to Watch on Netflix',
     description:
       'A 60-second routine for choosing what to watch on Netflix: read IMDb and Rotten Tomatoes together, spot split scores, and know when ratings mislead.',
+    path: '/compare/alternatives',
+    title: 'Ratings on Netflix: Reelgood, JustWatch & More',
+    description:
+      'Netflix Ratings vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
     priority: 0.8,
     group: 'guide',
     label: 'Find what to watch',
+    group: 'compare',
+    label: 'Rating alternatives',
     ogType: 'article',
   },
   {
