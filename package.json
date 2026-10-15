@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest"
+    "test": "jest",
+    "seo:indexnow": "node scripts/ping-indexnow.mjs",
+    "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run"
   },
   "dependencies": {
     "@tensorflow-models/coco-ssd": "^2.2.3",
