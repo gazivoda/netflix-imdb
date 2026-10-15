@@ -49,6 +49,7 @@ const seriesNoRt = raw.excluded.filter((e) => e.type === 'series' && /Rotten Tom
 const filmsExcluded = raw.excluded.filter((e) => e.type === 'movie');
 const seriesTotal = seriesExcluded + titles.filter((t) => t.type === 'series').length;
 
+const maxGap = Math.max(...rows.map((r) => Math.abs(r.gap)), 1);
 const topCritics = rows.slice(0, 5);
 const topAudience = [...rows].reverse().slice(0, 5);
 const nameList = (rs: typeof rows) => rs.map((r) => `${r.title} (${signed(r.gap)})`).join(', ');
@@ -128,19 +129,19 @@ export default function Page() {
       schema={[datasetNode]}
     >
       <div className={s.stats}>
-        <div className={s.stat}>
+        <div className={`${s.stat} ${s.statInk}`}>
           <span className={s.statValue}>{stats.meanAbsGap}<span className={s.statUnit}>pts</span></span>
           <span className={s.statLabel}>Mean absolute gap (median {stats.medianAbsGap})</span>
         </div>
-        <div className={s.stat}>
+        <div className={`${s.stat} ${s.statGold}`}>
           <span className={s.statValue}>{pct(stats.shareBigGap)}</span>
           <span className={s.statLabel}>Films {stats.bigGapThreshold}+ points apart ({bigCount} of {stats.n})</span>
         </div>
-        <div className={s.stat}>
+        <div className={`${s.stat} ${s.statSignal}`}>
           <span className={s.statValue}>{stats.criticsHigherCount}:{stats.audienceHigherCount}</span>
           <span className={s.statLabel}>Critics higher : audience higher</span>
         </div>
-        <div className={s.stat}>
+        <div className={`${s.stat} ${s.statCard}`}>
           <span className={s.statValue}>{stats.pearson}</span>
           <span className={s.statLabel}>Pearson correlation (r)</span>
         </div>
@@ -225,7 +226,7 @@ export default function Page() {
           reviews; IMDb is an average vote. Scaling IMDb &times; 10 makes them comparable on paper,
           not equivalent.
         </li>
-        <li>
+        <li className={s.slip}>
           <strong>OMDb can lag or err.</strong> On {fmtDate(flagged[0].checkedOn)} OMDb gave{' '}
           {flagged[0].title} a Rotten Tomatoes score of {flagged[0].omdbRtPercent}%, while{' '}
           <a href={flagged[0].checkedUrl} target="_blank" rel="noopener noreferrer">
@@ -245,15 +246,20 @@ export default function Page() {
         All {stats.n} films, sorted from the biggest &ldquo;critics higher&rdquo; gap to the
         biggest &ldquo;audience higher&rdquo; gap. Scores as returned by OMDb on {fetchedDate}.
       </p>
-      <div className={g.tableWrap}>
-        <table className={`${g.table} ${s.dataTable}`} aria-label={`IMDb and Rotten Tomatoes scores for ${stats.n} Netflix Original films`}>
+      <div
+        className={s.ledger}
+        role="region"
+        tabIndex={0}
+        aria-label={`IMDb and Rotten Tomatoes scores for ${stats.n} Netflix Original films`}
+      >
+        <table className={s.dataTable} aria-label={`IMDb and Rotten Tomatoes scores for ${stats.n} Netflix Original films`}>
           <thead>
             <tr>
               <th scope="col">Film</th>
-              <th scope="col" className={s.num}><span className={g.thImdb}>IMDb</span></th>
+              <th scope="col" className={s.num}><span className={s.thImdb}>IMDb</span></th>
               <th scope="col" className={s.num}>IMDb &times; 10</th>
-              <th scope="col" className={s.num}><span className={g.thRt}>RT %</span></th>
-              <th scope="col" className={s.num}>Gap</th>
+              <th scope="col" className={s.num}><span className={s.thRt}>RT %</span></th>
+              <th scope="col">Gap</th>
             </tr>
           </thead>
           <tbody>
@@ -261,14 +267,22 @@ export default function Page() {
               const isFlagged = flagged.some((f) => f.title === r.title);
               return (
                 <tr key={r.title}>
-                  <th scope="row" style={{ width: 'auto' }}>
+                  <th scope="row">
                     {r.title} <span className={s.year}>({r.year})</span>
                     {isFlagged && <span title="OMDb value differs from rottentomatoes.com; see limitations"> *</span>}
                   </th>
                   <td className={s.num}>{r.imdb.toFixed(1)}</td>
                   <td className={s.num}>{r.imdbScaled}</td>
                   <td className={s.num}>{r.rt}</td>
-                  <td className={`${s.num} ${r.gap > 0 ? s.pos : s.neg}`}>{signed(r.gap)}</td>
+                  <td className={s.gapCell}>
+                    <span className={s.gapVal}>{signed(r.gap)}</span>
+                    <span className={s.bar} aria-hidden>
+                      <span
+                        className={r.gap > 0 ? s.barPos : s.barNeg}
+                        style={{ width: `${(Math.abs(r.gap) / maxGap) * 50}%` }}
+                      />
+                    </span>
+                  </td>
                 </tr>
               );
             })}
@@ -288,7 +302,7 @@ export default function Page() {
         {fetchedDate}.
       </p>
       <p>
-        <a className={s.download} href={DATA_PATH} download>
+        <a className={`ds-btn ${s.download}`} href={DATA_PATH} download>
           Download imdb-rt-gap.json
         </a>
       </p>
