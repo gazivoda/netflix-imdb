@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "jest",
     "seo:indexnow": "node scripts/ping-indexnow.mjs",
-    "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run"
+    "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run",
+    "seo:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@tensorflow-models/coco-ssd": "^2.2.3",
