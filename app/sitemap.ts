@@ -1,22 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { SITE_URL } from '../lib/content';
+import { PAGES } from '../lib/pages';
+import { absoluteUrl } from '../lib/seo';
 
+// lastModified comes from each page's real edit date in the registry. A
+// build-time `new Date()` on every URL is a lie crawlers learn to ignore.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-  return [
-    { url: `${SITE_URL}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
-    {
-      url: `${SITE_URL}/compare/imdb-vs-rotten-tomatoes`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/camera-vision`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
-  ];
+  return PAGES.map((p) => ({
+    url: absoluteUrl(p.path),
+    lastModified: new Date(`${p.updated}T00:00:00Z`),
+    changeFrequency: p.changeFrequency,
+    priority: p.priority,
+  }));
 }

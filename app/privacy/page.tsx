@@ -1,6 +1,6 @@
-export const metadata = {
-  title: 'Privacy Policy — Netflix IMDB Ratings',
-};
+import { pageMetadata } from '../../lib/seo';
+
+export const metadata = pageMetadata('/privacy');
 
 export default function PrivacyPage() {
   return (
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
       <section style={{ marginBottom: 40 }}>
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>What this extension does</h2>
         <p style={{ color: '#bbb' }}>
-          Netflix IMDB Ratings is a Chrome extension that reads the title of each Netflix show or
+          Netflix Ratings is a Chrome extension that reads the title of each Netflix show or
           movie visible on your screen and fetches its IMDB rating from the OMDb public API. The
           rating is then displayed as a small badge on the title card.
         </p>

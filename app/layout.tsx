@@ -2,6 +2,8 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Hanken_Grotesk } from 'next/font/google';
 import { SITE_URL, REPO_URL, FAQS, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED } from '../lib/content';
+import { HOME_TITLE, HOME_DESCRIPTION } from '../lib/pages';
+import { TITLE_SUFFIX, jsonLdString } from '../lib/seo';
 
 const display = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -17,15 +19,14 @@ const body = Hanken_Grotesk({
   display: 'swap',
 });
 
-const TITLE = 'Netflix Ratings — IMDb & Rotten Tomatoes scores on every Netflix card';
-const DESCRIPTION =
-  'A free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings directly on Netflix title cards as you browse. No account, no tab-switching — just scroll and decide.';
+const TITLE = HOME_TITLE;
+const DESCRIPTION = HOME_DESCRIPTION;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: TITLE,
-    template: '%s · Netflix Ratings',
+    template: `%s${TITLE_SUFFIX}`,
   },
   description: DESCRIPTION,
   applicationName: 'Netflix Ratings',
@@ -40,7 +41,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Igor Gazivoda', url: REPO_URL }],
   creator: 'Igor Gazivoda',
-  alternates: { canonical: '/' },
   category: 'technology',
   openGraph: {
     type: 'website',
@@ -147,7 +147,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
         />
       </head>
       <body>{children}</body>

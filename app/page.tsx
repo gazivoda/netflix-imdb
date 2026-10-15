@@ -1,5 +1,8 @@
 import styles from './page.module.css';
+import { pageMetadata } from '../lib/seo';
 import { FEATURES, STATS, TESTIMONIALS, FAQS, MARQUEE, REPO_URL, AUTHOR_NAME, LAST_UPDATED, LAST_UPDATED_LABEL } from '../lib/content';
+
+export const metadata = pageMetadata('/');
 
 const CARDS = [
   { label: 'Stranger Things', color: '#241a2e', imdb: '8.7', rt: '86%' },

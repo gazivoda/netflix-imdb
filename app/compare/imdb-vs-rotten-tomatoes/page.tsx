@@ -1,24 +1,11 @@
-import type { Metadata } from 'next';
 import styles from './compare.module.css';
-import { SITE_URL, REPO_URL, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED, LAST_UPDATED_LABEL } from '../../../lib/content';
+import JsonLd from '../../../components/JsonLd';
+import { REPO_URL, AUTHOR_NAME, LAST_UPDATED, LAST_UPDATED_LABEL } from '../../../lib/content';
+import { pageMetadata, article, breadcrumbList, faqPage, graph } from '../../../lib/seo';
 
-const TITLE = 'IMDb vs Rotten Tomatoes: What the Difference Means for What You Watch';
-const DESCRIPTION =
-  'IMDb is an audience score out of 10; Rotten Tomatoes is the percentage of critics who liked a film. Here is how the two rating systems differ, why they disagree, and when to trust each one.';
 const PATH = '/compare/imdb-vs-rotten-tomatoes';
 
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  alternates: { canonical: PATH },
-  openGraph: {
-    type: 'article',
-    url: `${SITE_URL}${PATH}`,
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
-};
+export const metadata = pageMetadata(PATH);
 
 const ROWS = [
   {
@@ -76,43 +63,19 @@ const FAQS = [
   },
 ];
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-        { '@type': 'ListItem', position: 2, name: 'IMDb vs Rotten Tomatoes', item: `${SITE_URL}${PATH}` },
-      ],
-    },
-    {
-      '@type': 'Article',
-      headline: TITLE,
-      description: DESCRIPTION,
-      mainEntityOfPage: `${SITE_URL}${PATH}`,
-      datePublished: PUBLISHED_DATE,
-      dateModified: LAST_UPDATED,
-      author: { '@type': 'Person', name: AUTHOR_NAME, url: REPO_URL },
-      publisher: { '@type': 'Organization', name: 'Netflix Ratings', url: SITE_URL },
-      inLanguage: 'en',
-      about: ['IMDb', 'Rotten Tomatoes', 'movie ratings', 'Netflix'],
-    },
-    {
-      '@type': 'FAQPage',
-      mainEntity: FAQS.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-    },
-  ],
-};
+const jsonLd = graph(
+  breadcrumbList([
+    { name: 'Home', path: '/' },
+    { name: 'IMDb vs Rotten Tomatoes', path: PATH },
+  ]),
+  article(PATH),
+  faqPage(FAQS),
+);
 
 export default function ComparePage() {
   return (
     <div className={styles.page}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={jsonLd} />
 
       <nav className={styles.nav}>
         <a className={styles.navLogo} href="/">
