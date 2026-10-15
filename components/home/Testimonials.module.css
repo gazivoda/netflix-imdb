@@ -45,7 +45,7 @@
   width: 14px;
   height: 14px;
   border: 3px solid currentColor;
-  border-radius: 50%;
+  border-radius: 50%; /* ds-allow: radius */
 }
 .quoteCard:nth-child(even) {
   background: var(--teal);

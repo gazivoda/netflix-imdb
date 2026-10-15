@@ -84,7 +84,7 @@
   width: 27px;
   height: 27px;
   border: 3px solid var(--ink);
-  border-radius: 50%; /* a flat circle, the one allowed curve */
+  border-radius: 50%; /* ds-allow: radius */ /* a flat circle, the one allowed curve */
   background: var(--paper); /* same as the page ground, so it reads as a bite */
 }
 .notchL { left: -15px; }

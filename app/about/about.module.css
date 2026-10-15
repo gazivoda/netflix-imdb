@@ -48,7 +48,7 @@
   height: 24px;
   background: var(--paper);
   border: 3px solid var(--ink);
-  border-radius: 50%;
+  border-radius: 50%; /* ds-allow: radius */
 }
 .creditsStub::before { top: -15px; clip-path: inset(50% 0 0 0); }
 .creditsStub::after { bottom: -15px; clip-path: inset(0 0 50% 0); }
