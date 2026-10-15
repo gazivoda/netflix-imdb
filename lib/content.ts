@@ -16,32 +16,32 @@ export const LAST_UPDATED_LABEL = 'October 15, 2026';
 
 export const FEATURES = [
   {
-    icon: '★',
+    icon: '01',
     title: 'Live IMDb scores',
     desc: 'Every title card shows its current IMDb rating, pulled straight from the database. No guessing, no leaving Netflix.',
   },
   {
-    icon: '🍅',
+    icon: '02',
     title: 'Rotten Tomatoes too',
     desc: 'Critic scores sit right beside the IMDb number, so you get both the crowd and the critics before you commit.',
   },
   {
-    icon: '⚡',
+    icon: '03',
     title: 'Loads in parallel',
     desc: 'Every visible card fetches its rating at once. Scroll, and the next batch fires automatically — no waiting card by card.',
   },
   {
-    icon: '🔒',
+    icon: '04',
     title: 'Private by default',
     desc: 'No account, no login, no tracking. The extension only talks to the ratings source — your watch history stays yours.',
   },
   {
-    icon: '🎴',
+    icon: '05',
     title: 'Fits right in',
     desc: 'A subtle badge in the corner of each card. It matches the Netflix UI without covering artwork or breaking your flow.',
   },
   {
-    icon: '🔄',
+    icon: '06',
     title: 'Always current',
     desc: 'Ratings refresh as you browse — new rows, search results, “More Like This.” Everything stays covered.',
   },
@@ -60,28 +60,28 @@ export const TESTIMONIALS = [
       'I used to keep IMDb open in a second tab the whole time I browsed Netflix. Now the score is just… there. I can’t go back.',
     name: 'Maya R.',
     role: 'Designer & serial binger',
-    rating: '⭐ 9.2',
+    rating: 'IMDb 9.2',
   },
   {
     quote:
       'The Rotten Tomatoes number next to IMDb is the killer feature. Saves my movie nights from a lot of regret.',
     name: 'Devin O.',
     role: 'Film club organizer',
-    rating: '🍅 94%',
+    rating: 'RT 94%',
   },
   {
     quote:
       'Installed it in under a minute and it just works. No account, no popups asking me to upgrade. Refreshing.',
     name: 'Priya S.',
     role: 'Software engineer',
-    rating: '⭐ 8.8',
+    rating: 'IMDb 8.8',
   },
   {
     quote:
       'It’s the first thing I install on a new laptop now. Browsing Netflix without ratings feels broken.',
     name: 'Tomás L.',
     role: 'Documentary nerd',
-    rating: '🍅 88%',
+    rating: 'RT 88%',
   },
 ];
 
