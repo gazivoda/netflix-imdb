@@ -4,6 +4,7 @@
 // does not use it. It is cheap to generate, so we keep it accurate and small.
 
 import { SITE_URL, REPO_URL, AUTHOR_NAME, FAQS } from './content';
+import { absoluteUrl } from './seo';
 import { PAGES, type SitePage } from './pages';
 
 const SITE_NAME = 'Netflix Ratings';
@@ -27,7 +28,7 @@ interface Section {
   pages: SitePage[];
 }
 
-const url = (path: string): string => `${SITE_URL}${path}`;
+const url = (path: string): string => absoluteUrl(path);
 
 // Registry group -> llms.txt section. "Optional" is the spec's name for pages
 // a reader may skip when short on context.
@@ -38,7 +39,7 @@ export function sectionsFor(pages: SitePage[] = PAGES): Section[] {
     { heading: 'Docs', pages: pages.filter((p) => p.path === '/') },
     { heading: 'Guides', pages: by((p) => p.group === 'guide') },
     { heading: 'Comparisons', pages: by((p) => p.group === 'compare') },
-    { heading: 'Project', pages: by((p) => !p.group) },
+    { heading: 'Project', pages: by((p) => !p.group || p.group === 'about') },
     { heading: 'Optional', pages: by((p) => p.group === 'legal') },
   ].filter((s) => s.pages.length > 0);
 }

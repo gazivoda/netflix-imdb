@@ -50,7 +50,7 @@ export const FEATURES = [
 export const STATS = [
   { value: '2', label: 'rating sources on every card', sub: 'IMDb + Rotten Tomatoes' },
   { value: '0', label: 'accounts or sign-ups', sub: 'no login, ever' },
-  { value: '<1s', label: 'to score a full screen', sub: 'fetched in parallel' },
+  { value: '2', label: 'sites it can access', sub: 'netflix.com + omdbapi.com' },
   { value: '100%', label: 'free & open source', sub: 'audit it on GitHub' },
 ];
 

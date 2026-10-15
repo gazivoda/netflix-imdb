@@ -69,7 +69,7 @@ export default function Page() {
               scroll and decide.
             </p>
             <div className={`${styles.heroCta} ${styles.reveal} ${styles.d3}`}>
-              <a href={REPO_URL} className={styles.btnPrimary} target="_blank" rel="noopener noreferrer">
+              <a href="/install" className={styles.btnPrimary}>
                 Install free <span aria-hidden>→</span>
               </a>
               <a href="#how" className={styles.btnSecondary}>
@@ -78,7 +78,7 @@ export default function Page() {
             </div>
             <ul className={`${styles.heroNote} ${styles.reveal} ${styles.d4}`}>
               <li>IMDb + Rotten Tomatoes</li>
-              <li>Works on every plan</li>
+              <li>Chrome, Edge &amp; Brave</li>
               <li>No account needed</li>
             </ul>
           </div>
@@ -335,7 +335,7 @@ export default function Page() {
         <section className={styles.finalCta} aria-labelledby="cta-title">
           <h2 id="cta-title" className={styles.finalTitle}>Stop opening that second tab.</h2>
           <p className={styles.finalSub}>Add IMDb and Rotten Tomatoes to Netflix in under a minute — free, forever.</p>
-          <a href={REPO_URL} className={styles.btnPrimary} target="_blank" rel="noopener noreferrer">
+          <a href="/install" className={styles.btnPrimary}>
             Install free <span aria-hidden>→</span>
           </a>
         </section>

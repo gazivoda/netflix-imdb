@@ -5,12 +5,13 @@ import type { Metadata } from 'next';
 import { SITE_URL, REPO_URL, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED } from './content';
 import { getPage, HOME_DESCRIPTION, type SitePage } from './pages';
 import manifest from '../extension/manifest.json';
-import { OG_SIZE, OG_ALT } from './og';
+import { OG_SIZE, OG_ALT, OG_VERSION } from './og';
 
 export const SITE_NAME = 'Netflix Ratings';
 export const TITLE_SUFFIX = ' · Netflix Ratings';
 
-export const absoluteUrl = (path: string): string => `${SITE_URL}${path}`;
+// Root has no trailing slash so sitemap, canonical and JSON-LD agree with what Next emits.
+export const absoluteUrl = (path: string): string => (path === '/' ? SITE_URL : `${SITE_URL}${path}`);
 
 /** Title as it will actually render in the SERP, suffix included. */
 export const renderedTitle = (page: SitePage): string =>
@@ -35,13 +36,13 @@ export function pageMetadata(path: string): Metadata {
       description: page.description,
       locale: 'en_US',
       // Explicit: a page-level openGraph object replaces the file-convention image.
-      images: [{ url: '/opengraph-image', ...OG_SIZE, alt: OG_ALT }],
+      images: [{ url: `/opengraph-image?v=${OG_VERSION}`, ...OG_SIZE, alt: OG_ALT }],
     },
     twitter: {
       card: 'summary_large_image',
       title: renderedTitle(page),
       description: page.description,
-      images: [{ url: '/twitter-image', ...OG_SIZE, alt: OG_ALT }],
+      images: [{ url: `/twitter-image?v=${OG_VERSION}`, ...OG_SIZE, alt: OG_ALT }],
     },
   };
 }
@@ -119,7 +120,7 @@ export const jsonLdString = (data: JsonLdNode): string =>
   JSON.stringify(data).replace(/</g, '\\u003c');
 
 /** Stable `@id` for a per-page node, e.g. nodeId('/install', 'webpage'). */
-export const nodeId = (path: string, fragment: string): string => `${absoluteUrl(path)}#${fragment}`;
+export const nodeId = (path: string, fragment: string): string => `${SITE_URL}${path}#${fragment}`;
 
 export const websiteRef = { '@id': `${SITE_URL}/#website` };
 export const appRef = { '@id': `${SITE_URL}/#app` };

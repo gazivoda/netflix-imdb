@@ -33,7 +33,7 @@ Source of truth for scope: docs/seo/IMPLEMENTATION-ROADMAP.md, SITE-STRUCTURE.md
 - `lib/content.ts` TESTIMONIALS are fabricated names/quotes; marquee scores "illustrative". Trust/FTC/E-E-A-T risk; schema must never mark them up as Review.
 
 ## Progress
-iteration: 3 / 20 (foundation: GuideLayout/SiteHeader/SiteFooter/guide.module.css, /install page, compare migrated, FAQPage schema moved off root layout to home only)
+iteration: 20 / 20 for wave 1 (all 20 agents merged 2026-10-15; verified tsc, jest 234, build, seo:validate 11 pages OK, seo:links OK). Earlier: 3 / 20 (foundation: GuideLayout/SiteHeader/SiteFooter/guide.module.css, /install page, compare migrated, FAQPage schema moved off root layout to home only)
 MODE CHANGE (user: 'launch 20 agents to work on all this'): iterations 4-20 are replaced by 20 parallel worktree agents (see AGENT-BRIEF.md); main thread merges branches, resolves conflicts, runs full verification, commits + pushes.
 USER UPDATE (iteration 2): user now AUTHORIZES commit + push to main after every iteration (explicit). Also asked to use /seo /geo skills. Google guidance (seo-geo skill): llms.txt is not a Google lever; add Claude-SearchBot to robots.
 
@@ -53,3 +53,9 @@ Spec: docs/DESIGN.md (owner-supplied; repo did NOT already contain it — homepa
 Sequenced AFTER wave 1 merges (both waves edit page.module.css / guide.module.css / layout.tsx; running together = conflicts).
 Plan: (0) main thread merges wave 1, then lands design foundation (tokens in globals/guide css, next/font Archivo wdth axis + Instrument Serif + JetBrains Mono) and splits the homepage into per-section components with their own CSS modules so 20 agents can own disjoint files; (1) launch 20 slice agents; (2) merge, verify (tsc/jest/build/seo:validate), screenshot QA, commit+push.
 Conflicts to resolve with the user: spec says 'no emoji' (🍅 used in badges/marquee), TESTIMONIALS are fabricated (still flagged).
+
+## Wave 1 result (merged)
+11 pages (install, 3 how-tos, research data study, compare x2, about, camera-vision, privacy, home), robots/llms generated, security headers, JSON-LD graph w/ resolving @ids, 404/manifest/icons, CI + seo:validate + seo:links, README, CWS listing, launch kit, perf (tailwind scoped to camera-vision), baseline audit 63/100 (docs/seo/AUDIT-BASELINE-2026-10-15.md).
+Merge-time fixes: registry rebuilt after union-merge mangled it; llms 'about' group; OG image ?v= cache-bust; root URL has no trailing slash everywhere; home install CTAs -> /install; '<1s' stat replaced with verifiable '2 sites'; jest ignores .claude/; stale .next cache caused a spurious WasmHash build error (rm -rf .next).
+OPEN for user: testimonials fabricated (critical per audit); add MIT LICENSE?; OMDb key hardcoded + 1000/day shared limit (launch blocker); privacy page date/RT; CWS store name; icon.png 307B placeholder; OMDb RT data can be wrong (Pinocchio 27% vs 96%); /camera-vision Tailwind v3/v4 mix broken pre-existing.
+Wave 2 (design) still queued.

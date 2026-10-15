@@ -1,5 +1,9 @@
 import { ImageResponse } from 'next/og';
 
+// Bump when the card design changes: Next serves these routes with a 1-year
+// immutable cache, so a new query string is the only way to refresh shared previews.
+export const OG_VERSION = '2';
+
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_ALT =
   'Netflix Ratings: IMDb and Rotten Tomatoes scores shown on Netflix title cards';
