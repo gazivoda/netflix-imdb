@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import g from '../../../components/guide.module.css';
+import s from './alternatives.module.css';
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import { REPO_URL } from '../../../lib/content';
 import { absoluteUrl, pageMetadata } from '../../../lib/seo';
@@ -19,6 +19,9 @@ const SRC = {
   rateflix: 'https://chromewebstore.google.com/detail/ebldhbkjcdliijniaheecfjojdhjlaji',
   overlay: 'https://www.chromeboard.com/extension/netflix-imdb-overlay-cnhpjpnmjlgcpkdngmdoembbdgiobodc',
 };
+
+/** Cells that say "Not stated." get the muted mono style. */
+const cellClass = (v: ReactNode) => (v === 'Not stated.' ? s.na : undefined);
 
 const ext = (href: string, text: string) => (
   <a href={href} target="_blank" rel="noopener noreferrer">{text}</a>
@@ -157,17 +160,17 @@ export default function AlternativesPage() {
         </>
       }
     >
-      <p className={g.note}>
-        <strong>Last verified: 2026-10-15.</strong> Every claim about another product comes from
+      <p className={s.note}>
+        <strong className={s.stamp}>Last verified: 2026-10-15.</strong> Every claim about another product comes from
         the page linked beside it, read on that date. Where a page said nothing, the table says
         &quot;not stated&quot;. reelgood.com and imdb.com refused my automated requests, so Reelgood is
         described from its App Store listing and IMDb from its help page. Things change; check the
         source before you decide.
       </p>
 
-      <h2 className={g.h2}>How do the options compare?</h2>
-      <div className={g.tableWrap}>
-        <table className={g.table}>
+      <h2 className={`ds-display ${s.h2}`}>How do the options <em className="ds-serif">compare</em>?</h2>
+      <div className={s.tableWrap} role="region" aria-label="Comparison table, scrolls sideways on small screens" tabIndex={0}>
+        <table className={s.table}>
           <thead>
             <tr>
               <th scope="col">Option</th>
@@ -179,22 +182,22 @@ export default function AlternativesPage() {
             </tr>
           </thead>
           <tbody>
-            {ROWS.map((r) => (
-              <tr key={r.name}>
+            {ROWS.map((r, i) => (
+              <tr key={r.name} className={i === 0 ? s.mine : undefined}>
                 <th scope="row">{r.name}</th>
-                <td>{r.what}</td>
-                <td>{r.where}</td>
-                <td>{r.tab}</td>
-                <td>{r.cost}</td>
-                <td>{r.oss}</td>
+                <td className={cellClass(r.what)}>{r.what}</td>
+                <td className={cellClass(r.where)}>{r.where}</td>
+                <td className={cellClass(r.tab)}>{r.tab}</td>
+                <td className={cellClass(r.cost)}>{r.cost}</td>
+                <td className={cellClass(r.oss)}>{r.oss}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <h2 className={g.h2}>When is Netflix Ratings the right choice?</h2>
-      <p className={g.p}>
+      <h2 className={`ds-display ${s.h2}`}>When is Netflix Ratings the <em className="ds-serif">right choice</em>?</h2>
+      <p className={s.p}>
         When you mostly browse Netflix and want the audience score (IMDb, out of 10) and the critic
         score (Rotten Tomatoes, a percentage) on every card without opening anything else. It has no
         account and no key to enter, and its source is public so you can read what it does. Not sure
@@ -202,8 +205,8 @@ export default function AlternativesPage() {
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.
       </p>
 
-      <h2 className={g.h2}>When is another option better?</h2>
-      <ul className={g.list}>
+      <h2 className={`ds-display ${s.h2}`}>When is <em className="ds-serif">another option</em> better?</h2>
+      <ul className={s.slips}>
         <li>
           <strong>You want to know where something is streaming.</strong> JustWatch and Reelgood are
           built for that across services. Netflix Ratings only works on netflix.com.
@@ -223,20 +226,20 @@ export default function AlternativesPage() {
         </li>
       </ul>
 
-      <p className={g.p}>
+      <p className={s.p}>
         A note on the other extensions: {ext(SRC.rateflix, 'RateFlix')} showed 17 users and{' '}
         {ext(SRC.overlay, 'Netflix IMDb Overlay')} 105 users on the day I checked, so both are
         young and small. That says nothing about quality, but there is little track record either
         way.
       </p>
 
-      <aside className={g.callout}>
-        <h2 className={g.calloutTitle}>Try it on your own Netflix</h2>
+      <aside className={`ds-card ${s.callout}`}>
+        <h2 className={`ds-display ${s.calloutTitle}`}>Try it on your own Netflix</h2>
         <p>
           Netflix Ratings is free and installs in about a minute. It is independent and not
           affiliated with Netflix, IMDb or Rotten Tomatoes.
         </p>
-        <a href="/install" className={g.btnPrimary}>
+        <a href="/install" className="ds-btn ds-btn-signal">
           How to install <span aria-hidden>→</span>
         </a>
       </aside>
