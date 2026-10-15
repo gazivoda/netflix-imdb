@@ -64,6 +64,19 @@ export const PAGES: SitePage[] = [
     ogType: 'article',
   },
   {
+    path: '/how-to/find-what-to-watch-on-netflix',
+    title: 'How to Find What to Watch on Netflix',
+    description:
+      'A 60-second routine for choosing what to watch on Netflix: read IMDb and Rotten Tomatoes together, spot split scores, and know when ratings mislead.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    group: 'guide',
+    label: 'Find what to watch',
+    ogType: 'article',
+  },
+  {
     path: '/camera-vision',
     title: 'Camera Vision Demo: Read Titles by Camera',
     description:
