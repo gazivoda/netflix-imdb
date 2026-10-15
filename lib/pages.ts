@@ -64,6 +64,19 @@ export const PAGES: SitePage[] = [
     ogType: 'article',
   },
   {
+    path: '/compare/alternatives',
+    title: 'Ratings on Netflix: Reelgood, JustWatch & More',
+    description:
+      'Netflix Ratings vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    group: 'compare',
+    label: 'Rating alternatives',
+    ogType: 'article',
+  },
+  {
     path: '/camera-vision',
     title: 'Camera Vision Demo: Read Titles by Camera',
     description:
