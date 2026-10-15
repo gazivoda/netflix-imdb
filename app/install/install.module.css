@@ -1,0 +1,184 @@
+/* Install page specifics. Shared article/FAQ styles live in components/guide.module.css. */
+
+/* ── Steps as oversized ticket stubs ── */
+.steps {
+  list-style: none;
+  margin: 8px 0 32px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.stub {
+  display: grid;
+  grid-template-columns: clamp(92px, 24vw, 200px) minmax(0, 1fr);
+  background: var(--card);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+.stubNum {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  font-size: clamp(112px, 26vw, 220px);
+  line-height: 0.8;
+  letter-spacing: 0;
+  border-right: 3px dashed var(--ink); /* perforation */
+  background: var(--gold);
+  color: var(--ink);
+  user-select: none;
+}
+.stub:nth-child(2) .stubNum { background: var(--signal); color: #fff; }
+.stub:nth-child(3) .stubNum { background: var(--teal); color: var(--paper); }
+.stub:nth-child(4) .stubNum { background: var(--card); color: var(--ink); }
+.stub:nth-child(5) .stubNum { background: var(--ink); color: var(--gold); }
+
+.stubBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(16px, 3vw, 28px);
+  min-width: 0;
+}
+.tag {
+  align-self: flex-start;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 8px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.stubName {
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(26px, 4.4vw, 40px);
+  line-height: 0.92;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.stubText {
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+/* ── Download: big hard-shadow signal button ── */
+.cta {
+  margin: 0 0 40px;
+}
+.download {
+  width: 100%;
+  min-height: 72px;
+  padding: 20px 28px;
+  font-size: clamp(16px, 4.2vw, 22px);
+  letter-spacing: 0.06em;
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.download:hover { box-shadow: 3px 3px 0 var(--ink); transform: translate(5px, 5px); }
+.download:active { box-shadow: 0 0 0 var(--ink); transform: translate(8px, 8px); }
+@media (min-width: 600px) {
+  .download { width: auto; min-width: 420px; }
+}
+
+/* ── Code: ink slabs, paper mono text, one click selects the whole snippet ── */
+.slip code,
+.check code {
+  display: inline-block;
+  max-width: 100%;
+  padding: 3px 9px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.86em;
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: baseline;
+  user-select: all;
+  -webkit-user-select: all;
+}
+/* The long clone command is a chunkier slab that wraps on narrow screens. */
+.slip code:first-of-type {
+  padding: 6px 12px;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+/* ── Git note as a gold slip ── */
+.slip {
+  margin: 8px 0 24px;
+  padding: 18px 22px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  font-size: 16.5px;
+  line-height: 1.6;
+}
+.slip strong {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (min-width: 700px) {
+  .slip { transform: rotate(-0.6deg); }
+}
+
+/* ── Troubleshooting as a hard-bordered checklist ── */
+.check {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+.check li {
+  position: relative;
+  padding: 18px 20px 18px 68px;
+  min-height: 44px;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.check li + li { border-top: 3px solid var(--ink); }
+.check li::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 28px;
+  height: 28px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+}
+.check a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--signal);
+}
+.check a:hover { background: var(--gold); }
+
+@media (max-width: 420px) {
+  .stub { grid-template-columns: 76px minmax(0, 1fr); }
+  .stubNum { font-size: 104px; }
+}

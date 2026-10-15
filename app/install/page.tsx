@@ -1,5 +1,6 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
 import g from '../../components/guide.module.css';
+import s from './install.module.css';
 import { REPO_URL } from '../../lib/content';
 import { howTo, pageMetadata } from '../../lib/seo';
 
@@ -85,22 +86,30 @@ export default function InstallPage() {
       ]}
     >
       <h2 className={g.h2}>How do I install Netflix Ratings?</h2>
-      <ol className={g.steps}>
-        {STEPS.map((s) => (
-          <li key={s.name}>
-            <strong>{s.name}</strong>
-            {s.text}
+      <ol className={s.steps}>
+        {STEPS.map((step, i) => (
+          <li key={step.name} className={s.stub}>
+            <span className={s.stubNum} aria-hidden>
+              {i + 1}
+            </span>
+            <div className={s.stubBody}>
+              <span className={s.tag} aria-hidden>
+                Step {String(i + 1).padStart(2, '0')}
+              </span>
+              <strong className={s.stubName}>{step.name}</strong>
+              <span className={s.stubText}>{step.text}</span>
+            </div>
           </li>
         ))}
       </ol>
 
-      <p className={g.p}>
-        <a href={ZIP_URL} className={g.btnPrimary}>
+      <p className={s.cta}>
+        <a href={ZIP_URL} className={`ds-btn ds-btn-signal ${s.download}`}>
           Download extension.zip <span aria-hidden>→</span>
         </a>
       </p>
 
-      <aside className={g.note}>
+      <aside className={s.slip}>
         <strong>Prefer git?</strong> Run <code>git clone {REPO_URL}.git</code>, then choose the{' '}
         <code>extension</code> folder in step 4. Pull and reload the extension whenever you want
         the latest version.
@@ -115,7 +124,7 @@ export default function InstallPage() {
       </p>
 
       <h2 className={g.h2}>If the badges do not appear</h2>
-      <ul className={g.list}>
+      <ul className={s.check}>
         <li>Reload the Netflix tab after installing, so the extension can attach to the page.</li>
         <li>
           Confirm the extension is switched on at <code>chrome://extensions</code> and that you
