@@ -1,67 +1,103 @@
-/* ── NAV ── */
+/* ── NAV: ticket-stub masthead ── */
 .nav {
   position: sticky;
   top: 0;
   z-index: 100;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0 clamp(20px, 5vw, 48px);
-  height: 66px;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(14px) saturate(140%);
-  border-bottom: 1px solid var(--border);
+  column-gap: 20px;
+  row-gap: 0;
+  padding: 0 clamp(16px, 5vw, 48px);
+  min-height: 64px;
+  background: var(--paper);
+  border-bottom: 3px solid var(--ink);
+}
+
+/* The nav is sticky, so anchored sections (#faq, #how) would land under it.
+   Pad the scroll port instead of touching each section's module. */
+:global(html):has(.nav) {
+  scroll-padding-top: 76px;
 }
 
 .navLogo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-family: var(--display);
-  font-size: 18px;
+  min-height: 44px;
+  font-family: var(--mono);
   font-weight: 700;
-  letter-spacing: -0.4px;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
 .navLogoIcon {
   width: 28px;
   height: 28px;
-  background: var(--red);
-  color: #fff;
-  border-radius: 8px;
   display: grid;
   place-items: center;
-  font-size: 15px;
+  background: var(--signal);
+  color: #fff;
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-size: 14px;
+  line-height: 1;
 }
 
 .navLinks {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: clamp(12px, 2vw, 22px);
+  justify-content: flex-end;
+  column-gap: clamp(14px, 2.2vw, 28px);
 }
 
 .navLink {
-  color: var(--muted);
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--mono);
   font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
-  transition: color 0.15s;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.12s;
 }
-.navLink:hover { color: var(--text); }
+.navLink:hover { border-bottom-color: var(--ink); }
 
-.navInstall {
-  background: var(--red);
-  color: #fff;
-  border-radius: 8px;
-  padding: 9px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s, transform 0.12s;
+/* Compact variant of .ds-btn-signal: same hard-shadow press, sized for the masthead. */
+.nav .navInstall {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 12.5px;
+  border-width: 2px;
+  box-shadow: 3px 3px 0 var(--ink);
 }
-.navInstall:hover { background: var(--red-dark); transform: translateY(-1px); }
+.nav .navInstall:hover {
+  background: var(--red-dark);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.nav .navInstall:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
 
-@media (max-width: 560px) {
-  .navLinks .navLink { display: none; }
+/* No JS: the link row simply wraps under the logo. */
+@media (max-width: 640px) {
+  .nav { padding: 4px 12px 8px; }
+  :global(html):has(.nav) { scroll-padding-top: 116px; }
+  .navLogo { min-height: 40px; }
+  .navLinks {
+    flex-basis: 100%;
+    justify-content: space-between;
+    column-gap: 10px;
+  }
+  .navLink { font-size: 11px; letter-spacing: 0.03em; }
+  .nav .navInstall { padding: 8px 10px; font-size: 11px; letter-spacing: 0.03em; }
 }

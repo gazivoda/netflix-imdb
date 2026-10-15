@@ -1,44 +1,99 @@
-/* ── FOOTER ── */
+/* ── FOOTER: ink band, paper text, perforated divider ── */
 .footer {
-  border-top: 1px solid var(--border);
-  padding: 30px clamp(20px, 5vw, 48px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  color: var(--faint);
-  font-size: 13px;
+  background: var(--ink);
+  color: var(--paper);
+  border-top: 3px solid var(--ink);
+  padding: clamp(36px, 6vw, 64px) clamp(16px, 5vw, 48px) 32px;
 }
-.footerLeft { display: flex; align-items: center; gap: 8px; }
-/* Logo mark, same look as the nav's (HomeNav.module.css .navLogoIcon). */
+
+.footerTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 32px 48px;
+}
+
+.footerLogo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* Same block as the masthead logo; the paper border keeps it visible on ink. */
 .footerLogoIcon {
   width: 28px;
   height: 28px;
-  background: var(--red);
-  color: #fff;
-  border-radius: 8px;
   display: grid;
   place-items: center;
-  font-size: 15px;
+  background: var(--signal);
+  color: #fff;
+  border: 2px solid var(--paper);
+  font-size: 14px;
+  line-height: 1;
 }
-.footerRight { display: flex; flex-wrap: wrap; gap: 22px; }
-.footerRight a {
-  color: var(--faint);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.footerRight a:hover { color: var(--text); }
-.footerMeta {
-  flex-basis: 100%;
-  margin: 0;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-  color: var(--faint);
-  font-size: 12px;
-}
-.footerMeta a { color: var(--faint); text-decoration: underline; }
-.footerMeta a:hover { color: var(--text); }
 
-@media (max-width: 560px) {
-  .footer { flex-direction: column; text-align: center; }
+.footerCols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px clamp(28px, 5vw, 64px);
+}
+.footerCol { min-width: 150px; }
+.footerColTitle {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.footerList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footerList a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+.footerList a:hover { border-bottom-color: var(--paper); }
+
+/* Perforated ticket tear-line. */
+.footerPerf {
+  height: 0;
+  margin: 32px 0 20px;
+  border: 0;
+  border-top: 3px dashed var(--paper);
+  opacity: 0.55;
+}
+
+.footerMeta {
+  margin: 0;
+  max-width: 78ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--paper);
+}
+.footerMeta a { text-decoration: underline; text-underline-offset: 3px; }
+.footerMeta a:hover { color: var(--gold); }
+
+/* Dark band: flip the global ink focus ring to paper so it stays visible. */
+.footer :focus-visible { outline-color: var(--paper); }
+
+@media (max-width: 640px) {
+  .footerCols { gap: 24px 32px; }
+  .footerCol { min-width: calc(50% - 16px); flex: 1 1 calc(50% - 16px); }
 }
