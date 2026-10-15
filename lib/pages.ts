@@ -16,7 +16,7 @@ export interface SitePage {
   changeFrequency: ChangeFrequency;
   priority: number;
   /** Which footer/nav group links to this page; omit to keep it out of nav. */
-  group?: 'guide' | 'compare' | 'legal';
+  group?: 'guide' | 'compare' | 'legal' | 'about';
   /** Short anchor text for nav/footer links. */
   label?: string;
   /** OpenGraph type. */
@@ -62,6 +62,19 @@ export const PAGES: SitePage[] = [
     group: 'compare',
     label: 'IMDb vs Rotten Tomatoes',
     ogType: 'article',
+  },
+  {
+    path: '/about',
+    title: 'About Netflix Ratings and Its Maker',
+    description:
+      'Netflix Ratings is a free open-source extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker.',
+    published: '2026-10-15',
+    updated: '2026-10-15',
+    changeFrequency: 'yearly',
+    priority: 0.6,
+    group: 'about',
+    label: 'About',
+    ogType: 'website',
   },
   {
     path: '/camera-vision',

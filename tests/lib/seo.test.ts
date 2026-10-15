@@ -126,6 +126,28 @@ describe('JSON-LD builders', () => {
   });
 });
 
+describe('/about page', () => {
+  const about = PAGES.find((p) => p.path === '/about');
+
+  it('is registered in the about group at priority 0.6', () => {
+    expect(about).toBeDefined();
+    expect(about!.group).toBe('about');
+    expect(about!.priority).toBe(0.6);
+  });
+
+  it('is linked from the footer via the about group', () => {
+    const src = readFileSync(join(__dirname, '../../components/SiteFooter.tsx'), 'utf8');
+    expect(src).toContain("pagesInGroup('about')");
+  });
+
+  it('declares AboutPage schema that references (not redefines) the shared author', () => {
+    const src = readFileSync(join(__dirname, '../../app/about/page.tsx'), 'utf8');
+    expect(src).toContain("'AboutPage'");
+    expect(src).toContain('authorRef');
+    expect(src).not.toContain("'Person'");
+  });
+});
+
 describe('layout JSON-LD', () => {
   it('does not put FAQPage in the root layout (it would leak onto every page)', () => {
     const src = readFileSync(join(__dirname, '../../app/layout.tsx'), 'utf8');
