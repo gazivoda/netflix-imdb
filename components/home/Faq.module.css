@@ -1,44 +1,94 @@
-/* ── FAQ ── */
+/* ── FAQ: stacked ticket rows ── */
 .faqSection {
   background: var(--bg-2);
-  border-top: 1px solid var(--border);
-  padding: clamp(72px, 9vw, 104px) clamp(20px, 5vw, 48px);
+  border-top: 3px solid var(--ink);
+  padding: clamp(72px, 9vw, 112px) clamp(20px, 5vw, 48px);
 }
-.faqInner { max-width: 800px; margin: 0 auto; }
-.faqList { display: flex; flex-direction: column; gap: 10px; }
+.faqInner { max-width: 900px; margin: 0 auto; }
+.faqList {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid var(--ink);
+  background: var(--card);
+  box-shadow: var(--shadow-hard);
+  counter-reset: faq;
+}
 .faqItem {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0 22px;
-  transition: border-color 0.2s;
+  counter-increment: faq;
+  border-top: 3px solid var(--ink);
 }
-.faqItem[open] { border-color: var(--border-strong); }
+.faqItem:first-child { border-top: 0; }
+.faqItem[open] { background: var(--gold); }
 .faqQ {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
+  min-height: 64px;
+  padding: 14px clamp(14px, 3vw, 24px);
   cursor: pointer;
   list-style: none;
-  padding: 19px 0;
-  font-family: var(--display);
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--body);
+  font-size: clamp(16px, 2.2vw, 19px);
+  font-weight: 700;
+  line-height: 1.3;
 }
 .faqQ::-webkit-details-marker { display: none; }
-.faqChevron {
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--red);
-  transition: transform 0.25s;
+.faqQ::marker { content: ''; }
+/* mono ticket number, separated from the question by a perforation-style rule */
+.faqQ::before {
+  content: counter(faq, decimal-leading-zero);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  padding-right: 16px;
+  border-right: 2px dashed var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
-.faqItem[open] .faqChevron { transform: rotate(45deg); }
+.faqQ:hover { background: var(--surface-2); }
+.faqItem[open] .faqQ:hover { background: var(--gold); }
+.faqQ:focus-visible { outline-offset: -6px; }
+
+/* + / - drawn in CSS: two bars, the vertical one collapses when open */
+.faqChevron {
+  position: relative;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--ink);
+  background: var(--card);
+  font-size: 0; /* hide the text glyph; the bars below are the indicator */
+}
+.faqChevron::before,
+.faqChevron::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s;
+}
+.faqChevron::before { width: 12px; height: 3px; }
+.faqChevron::after { width: 3px; height: 12px; }
+.faqItem[open] .faqChevron { background: var(--ink); }
+.faqItem[open] .faqChevron::before,
+.faqItem[open] .faqChevron::after { background: var(--card); }
+.faqItem[open] .faqChevron::after { transform: translate(-50%, -50%) scaleY(0); }
+
 .faqA {
-  font-size: 14.5px;
-  line-height: 1.65;
-  color: var(--muted);
-  padding: 0 0 20px;
-  max-width: 64ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+  padding: 4px clamp(14px, 3vw, 24px) 24px;
+  max-width: 68ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faqChevron::before,
+  .faqChevron::after { transition: none; }
 }

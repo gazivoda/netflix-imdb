@@ -1,20 +1,64 @@
-/* ── FINAL CTA ── */
+/* ── FINAL CTA: full-bleed signal block ── */
 .finalCta {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: clamp(72px, 10vw, 120px) clamp(20px, 5vw, 48px);
+  background: var(--signal);
+  color: #fff;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  padding: clamp(72px, 11vw, 140px) clamp(20px, 5vw, 48px);
   text-align: center;
 }
 .finalTitle {
+  max-width: 1200px;
+  margin: 0 auto 24px;
   font-family: var(--display);
-  font-size: clamp(28px, 4.5vw, 46px);
-  font-weight: 800;
-  letter-spacing: -1.4px;
-  margin-bottom: 14px;
+  font-size: clamp(64px, 14vw, 200px);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.84;
   text-wrap: balance;
+  overflow-wrap: break-word;
 }
 .finalSub {
-  font-size: clamp(15px, 1.4vw, 18px);
-  color: var(--muted);
-  margin-bottom: 32px;
+  max-width: 44ch;
+  margin: 0 auto 40px;
+  font-size: clamp(18px, 1.8vw, 22px);
+  line-height: 1.5;
+  color: #fff;
+}
+/* paper button, ink border, hard ink shadow */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 16px 32px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: 6px 6px 0 var(--ink);
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-decoration: none;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+}
+.btn:hover {
+  background: var(--gold);
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.btn:active {
+  transform: translate(6px, 6px);
+  box-shadow: 0 0 0 var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover,
+  .btn:active { transform: none; }
 }
