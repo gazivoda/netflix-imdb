@@ -1,13 +1,12 @@
 import styles from './Story.module.css';
-import shared from './shared.module.css';
 
 export default function Story() {
   return (
     <section className={styles.story} aria-labelledby="story-title">
       <div className={styles.storyHead}>
-        <p className={shared.sectionLabel}>Why it matters</p>
+        <p className={styles.storyLabel}>Why it matters</p>
         <h2 id="story-title" className={styles.storyTitle}>
-          Why put IMDb and Rotten Tomatoes scores on Netflix title cards?
+          Why put IMDb and Rotten Tomatoes <em>scores</em> on Netflix title cards?
         </h2>
       </div>
       <div className={styles.storyBody}>
