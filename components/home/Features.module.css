@@ -1,42 +1,122 @@
-/* ── FEATURES ── */
+/* ── FEATURES: ticket-stub cards on the paper ground ── */
 .features {
   max-width: 1200px;
   margin: 0 auto;
   padding: clamp(72px, 9vw, 104px) clamp(20px, 5vw, 48px);
 }
+.label {
+  color: var(--red-text);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.title {
+  font-size: clamp(48px, 8vw, 96px);
+  margin-bottom: clamp(36px, 5vw, 60px);
+  text-wrap: balance;
+}
+.title em {
+  /* Serif italic runs optically small next to 62% Archivo; nudge it up. */
+  font-size: 1.04em;
+}
+
 .featureGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  /* Gap is wider than the 6px shadow so stubs never touch the next card. */
+  gap: 32px 28px;
+  /* Room for the hard shadow inside the section's side padding. */
+  padding-right: 6px;
+  padding-bottom: 6px;
 }
+
 .featureCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* clips the notch circles to the card edge */
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 .featureCard:hover {
-  border-color: var(--border-strong);
-  background: var(--surface-2);
-  transform: translateY(-3px);
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--ink);
+}
+
+/* ── stub (top part of the ticket) ── */
+.stub {
+  padding: 22px 24px 24px;
 }
 .featureIcon {
-  font-size: 26px;
-  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  height: 56px;
+  padding: 0 14px;
+  border: 3px solid var(--ink);
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+}
+/* Rotate the stub colour so a row reads as a strip of different tickets. */
+.featureCard:nth-child(3n + 2) .featureIcon {
+  background: var(--signal);
+  color: #fff;
+}
+.featureCard:nth-child(3n) .featureIcon {
+  background: var(--teal);
+  color: var(--paper);
+}
+
+/* ── perforation ── */
+.perf {
+  position: relative;
+  height: 0;
+  border-top: 3px dashed var(--ink);
+}
+.notch {
+  position: absolute;
+  top: -15px; /* centres the 27px circle on the 3px rule */
+  width: 27px;
+  height: 27px;
+  border: 3px solid var(--ink);
+  border-radius: 50%; /* a flat circle, the one allowed curve */
+  background: var(--paper); /* same as the page ground, so it reads as a bite */
+}
+.notchL { left: -15px; }
+.notchR { right: -15px; }
+
+/* ── body (the tear-off half) ── */
+.body {
+  padding: 24px 24px 28px;
 }
 .featureTitle {
   font-family: var(--display);
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  line-height: 0.9;
+  font-size: clamp(30px, 3vw, 38px);
+  margin-bottom: 12px;
 }
 .featureDesc {
-  font-size: 14.5px;
+  font-size: 17px;
+  line-height: 1.55;
   color: var(--muted);
-  line-height: 1.6;
 }
 
 @media (max-width: 940px) {
-  .featureGrid { grid-template-columns: 1fr; }
+  .featureGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 620px) {
+  .featureGrid { grid-template-columns: 1fr; gap: 28px; }
+  .stub { padding: 18px 20px 20px; }
+  .body { padding: 20px 20px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .featureCard:hover { transform: none; box-shadow: var(--shadow-hard); }
 }
