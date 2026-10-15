@@ -59,3 +59,8 @@ Conflicts to resolve with the user: spec says 'no emoji' (🍅 used in badges/ma
 Merge-time fixes: registry rebuilt after union-merge mangled it; llms 'about' group; OG image ?v= cache-bust; root URL has no trailing slash everywhere; home install CTAs -> /install; '<1s' stat replaced with verifiable '2 sites'; jest ignores .claude/; stale .next cache caused a spurious WasmHash build error (rm -rf .next).
 OPEN for user: testimonials fabricated (critical per audit); add MIT LICENSE?; OMDb key hardcoded + 1000/day shared limit (launch blocker); privacy page date/RT; CWS store name; icon.png 307B placeholder; OMDb RT data can be wrong (Pinocchio 27% vs 96%); /camera-vision Tailwind v3/v4 mix broken pre-existing.
 Wave 2 (design) still queued.
+
+## Wave 2 result (design, merged 2026-10-16)
+20 agents + 2 foundation agents; merged d5e318c: paper & ink redesign sitewide, OG/icons with embedded OFL fonts (lib/fonts), design guard tests (73 -> 0 violations), emoji-free content. Verified: tsc, jest 395, build, seo:validate (11 pages), seo:links, desktop visual pass (home, install, compare, research, alternatives).
+NOT verified: real 390px viewport (Chrome window cannot resize here; agents used 360-390px iframes: no horizontal overflow), live camera on /camera-vision, FAQ at mobile width.
+OPEN for owner: testimonials invented (lib/content.ts), LICENSE, OMDb key hardcoded (1000/day shared), privacy text/date, CWS store name + icon.png placeholder, extension badge still uses emoji (extension/content.js), 'N' app icon vs Netflix N lookalike check, tailwind.config.js/postcss plugin removable.
