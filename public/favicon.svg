@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Netflix Ratings">
-  <rect width="64" height="64" rx="14" fill="#0c0a0b"/>
-  <path d="M32 12l6 12.2 13.5 2-9.8 9.5 2.3 13.4L32 42.3 19.7 49.1 22 35.7l-9.8-9.5 13.5-2z" fill="#F5C518"/>
+  <rect x="9" y="9" width="52" height="52" fill="#111111"/>
+  <rect x="3" y="3" width="52" height="52" fill="#e5241b" stroke="#111111" stroke-width="3"/>
+  <path d="M20 45V13h9l10 18V13h8v32h-9L28 27v18z" transform="translate(-1.5 2)" fill="#111111"/>
+  <path d="M20 45V13h9l10 18V13h8v32h-9L28 27v18z" transform="translate(-4 -1)" fill="#f6f1e5"/>
 </svg>

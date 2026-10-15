@@ -18,12 +18,12 @@ jest.mock('next/og', () => ({
 describe('web manifest', () => {
   const m = manifest();
 
-  it('uses the brand name, home description and dark theme colors', () => {
+  it('uses the brand name, home description and paper theme colors', () => {
     expect(m.name).toBe('Netflix Ratings');
     expect(m.short_name).toBeTruthy();
     expect(m.description).toBe(HOME_DESCRIPTION);
-    expect(m.theme_color).toBe('#0c0a0b');
-    expect(m.background_color).toBe('#0c0a0b');
+    expect(m.theme_color).toBe('#ece6d8');
+    expect(m.background_color).toBe('#ece6d8');
     expect(m.start_url).toBe('/');
   });
 
