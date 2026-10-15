@@ -64,8 +64,10 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon', type: 'image/png', sizes: '512x512' },
     ],
-    apple: '/icon.svg',
+    // iOS ignores SVG touch icons; /apple-icon is the generated 180px PNG.
+    apple: [{ url: '/apple-icon', type: 'image/png', sizes: '180x180' }],
   },
 };
 
