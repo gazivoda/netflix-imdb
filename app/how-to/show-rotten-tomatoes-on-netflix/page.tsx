@@ -1,5 +1,6 @@
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
+import h from '../how-to.module.css';
 import { howTo, pageMetadata } from '../../../lib/seo';
 
 const PATH = '/how-to/show-rotten-tomatoes-on-netflix';
@@ -81,14 +82,16 @@ export default function ShowRottenTomatoesOnNetflixPage() {
       ]}
     >
       <h2 className={g.h2}>How do I see Rotten Tomatoes scores on Netflix?</h2>
-      <ol className={g.steps}>
-        {STEPS.map((s) => (
-          <li key={s.name}>
-            <strong>{s.name}</strong>
-            {s.text}
-          </li>
-        ))}
-      </ol>
+      <div className={h.stubs}>
+        <ol className={g.steps}>
+          {STEPS.map((s) => (
+            <li key={s.name}>
+              <strong>{s.name}</strong>
+              {s.text}
+            </li>
+          ))}
+        </ol>
+      </div>
       <p className={g.p}>
         <a href="/install" className={g.btnPrimary}>
           Install Netflix Ratings <span aria-hidden>→</span>
@@ -100,15 +103,25 @@ export default function ShowRottenTomatoesOnNetflixPage() {
       </p>
 
       <h2 className={g.h2}>What does the Rotten Tomatoes percentage on Netflix mean?</h2>
-      <p className={g.p}>
-        The number is the Tomatometer. Rotten Tomatoes defines it on its{' '}
-        <a href={RT_ABOUT_URL} target="_blank" rel="noopener noreferrer">
-          About page
-        </a>{' '}
-        as &ldquo;the percentage of professional critic reviews that are positive,&rdquo; and
-        says it is built from reviews by Tomatometer-approved critics and publications. A title
-        with at least 60% positive reviews is labelled Fresh; below that it is Rotten.
-      </p>
+      <div className={`${h.ticket} ${h.signal}`}>
+        <div className={h.stub} aria-hidden="true">
+          <span className={h.stubLabel}>Tomatometer</span>
+          <span className={h.score}>60%</span>
+          <span className={h.split}>
+            <span className={h.rotten}>Rotten</span>
+            <span className={h.fresh}>Fresh</span>
+          </span>
+        </div>
+        <p className={`${g.p} ${h.ticketBody}`}>
+          The number is the Tomatometer. Rotten Tomatoes defines it on its{' '}
+          <a href={RT_ABOUT_URL} target="_blank" rel="noopener noreferrer">
+            About page
+          </a>{' '}
+          as &ldquo;the percentage of professional critic reviews that are positive,&rdquo; and
+          says it is built from reviews by Tomatometer-approved critics and publications. A title
+          with at least 60% positive reviews is labelled Fresh; below that it is Rotten.
+        </p>
+      </div>
       <p className={g.p}>
         The key point is that it is a share, not an average. Imagine ten critics who each call a
         film &ldquo;decent&rdquo; and give it a lukewarm 6 out of 10. All ten reviews are
