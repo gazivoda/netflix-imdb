@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Netflix Ratings",
   "version": "1.0.0",
-  "description": "Displays IMDb ratings as badges on Netflix title cards while you browse. Ratings are fetched from OMDb in parallel — no tab-switching required.",
+  "description": "Shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Free, open source, no account needed.",
   "permissions": [],
   "host_permissions": [
     "https://www.netflix.com/*",
