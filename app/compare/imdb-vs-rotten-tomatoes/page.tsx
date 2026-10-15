@@ -1,7 +1,6 @@
 import styles from './compare.module.css';
 import g from '../../../components/guide.module.css';
 import GuideLayout from '../../../components/GuideLayout';
-import { REPO_URL } from '../../../lib/content';
 import { pageMetadata } from '../../../lib/seo';
 
 const PATH = '/compare/imdb-vs-rotten-tomatoes';
@@ -17,12 +16,12 @@ const ROWS = [
   {
     aspect: 'Who votes',
     imdb: 'The general public — anyone with an IMDb account.',
-    rt: 'Professional film and TV critics (plus a separate Audience Score).',
+    rt: 'Professional film and TV critics (audiences get a separate score, the Popcornmeter).',
   },
   {
     aspect: 'Scale',
-    imdb: '0.0 to 10.0, weighted to limit vote brigading.',
-    rt: '0% to 100%, a pass/fail tally — not an average of how good reviews were.',
+    imdb: '1 to 10, shown as a weighted average. IMDb does not disclose the exact weighting.',
+    rt: '0% to 100%, a positive-or-not tally — not an average of how good reviews were. 60% or more is Fresh.',
   },
   {
     aspect: 'What a high score means',
@@ -44,23 +43,31 @@ const ROWS = [
 const FAQS = [
   {
     q: 'What is the difference between IMDb and Rotten Tomatoes?',
-    a: 'IMDb shows an average user rating on a 1–10 scale, reflecting what the general public thinks. Rotten Tomatoes shows the Tomatometer — the percentage of professional critics who gave a positive review. IMDb measures how much people liked something; Rotten Tomatoes measures how many critics approved of it.',
+    a: 'IMDb shows a weighted average of user ratings on a 1–10 scale, reflecting what registered members think. Rotten Tomatoes shows the Tomatometer, the percentage of professional critic reviews that are positive. IMDb measures how much people liked something; Rotten Tomatoes measures how many critics approved of it.',
   },
   {
     q: 'Is a high Rotten Tomatoes score the same as a high IMDb score?',
-    a: 'No. A 90% Tomatometer means 90% of critics gave a positive review, but it does not say how positive. A film can score 95% on Rotten Tomatoes yet only 7.0 on IMDb if critics liked it but audiences found it forgettable. The two numbers answer different questions, which is why seeing both is more useful than either alone.',
+    a: 'No. A 90% Tomatometer means 90% of counted critic reviews were positive, but it does not say how positive. A film can score 95% on Rotten Tomatoes yet only 7.0 on IMDb if critics liked it but audiences found it forgettable. The two numbers answer different questions, which is why seeing both is more useful than either alone.',
+  },
+  {
+    q: 'How does IMDb calculate its rating?',
+    a: 'IMDb takes the ratings submitted by registered users and shows a weighted average rather than a plain mean. According to IMDb, not all ratings have the same impact, and the weighting can change if unusual voting activity is detected. IMDb does not disclose the exact method, and a TV series rating is not built from its episode ratings.',
+  },
+  {
+    q: 'How does Rotten Tomatoes calculate the Tomatometer?',
+    a: 'Rotten Tomatoes defines the Tomatometer as the percentage of professional critic reviews that are positive. A title with at least 60% positive reviews is Fresh, and one below 60% is Rotten. Certified Fresh needs 75% or higher with at least five Top Critics reviews. The separate audience score, the Popcornmeter, counts star ratings of 3.5 or higher as positive.',
   },
   {
     q: 'Which rating is more reliable, IMDb or Rotten Tomatoes?',
-    a: 'Neither is universally better. Rotten Tomatoes is a strong guide to critical quality and craft, especially for new releases. IMDb is a better signal of broad, lasting audience enjoyment and is harder to manipulate for older titles. For the most reliable read, compare both: agreement is a strong signal, and disagreement tells you whether a title leans crowd-pleaser or critics-darling.',
+    a: 'Neither is universally better. Rotten Tomatoes is a good guide to critical opinion, especially for new releases. IMDb is a better signal of broad audience enjoyment once ratings have settled. For the most reliable read, compare both: agreement is a strong signal, and disagreement shows whether a title leans crowd-pleaser or critics’ darling.',
   },
   {
     q: 'Why do IMDb and Rotten Tomatoes scores disagree?',
-    a: 'They disagree because they measure different things and poll different people. Critics reward originality, direction, and writing; general audiences reward entertainment and emotional payoff. Big gaps often appear with crowd-pleasing blockbusters (high IMDb, lower Rotten Tomatoes) and arthouse or critically acclaimed films (high Rotten Tomatoes, lower IMDb).',
+    a: 'They disagree because they measure different things and poll different people. One is an average of audience ratings out of 10, the other is the share of critics who gave a positive review. Critics tend to reward originality, direction and writing; general audiences often reward entertainment and emotional payoff, so big gaps are common.',
   },
   {
     q: 'Can I see both scores while browsing Netflix?',
-    a: 'Yes. The free Netflix Ratings Chrome extension overlays both the IMDb rating and the Rotten Tomatoes score directly on every Netflix title card, so you can compare the audience and critic view without leaving Netflix or opening another tab.',
+    a: 'Yes, on a computer. The free Netflix Ratings extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title, so a few titles show one score or none.',
   },
 ];
 
@@ -98,12 +105,14 @@ export default function ComparePage() {
         </div>
       </div>
 
-      <h2 className={g.h2}>How the two systems differ</h2>
+      <p className={g.note}>Example numbers for illustration, not live scores.</p>
+
+      <h2 className={g.h2}>How do IMDb and Rotten Tomatoes differ?</h2>
       <p className={g.p}>
-        The single most important thing to know: a Rotten Tomatoes percentage is a head-count, not
-        a quality average. A 100% score means every counted critic gave a thumbs-up — it does{' '}
-        <em>not</em> mean the film is a masterpiece. IMDb, by contrast, averages how highly people
-        actually rated it. That difference explains nearly every disagreement between the two.
+        A Rotten Tomatoes percentage is a head-count, not a quality average: 100% means every
+        counted critic review was positive, not that the film is a masterpiece. IMDb instead
+        averages how highly members rated a title out of 10. That difference explains nearly every
+        disagreement between the two.
       </p>
 
       <div className={g.tableWrap}>
@@ -127,7 +136,12 @@ export default function ComparePage() {
         </table>
       </div>
 
-      <h2 className={g.h2}>When to trust each one</h2>
+      <h2 className={g.h2}>When should you trust each one?</h2>
+      <p className={g.p}>
+        Trust IMDb when you want to know whether regular viewers enjoyed a title, especially an
+        older one whose ratings have settled. Trust Rotten Tomatoes when you want the critical
+        read on a new release, or want to avoid something critics broadly panned.
+      </p>
       <div className={styles.whenGrid}>
         <div className={styles.whenCard}>
           <h3 className={styles.whenTitle}><span aria-hidden>★</span> Lean on IMDb when…</h3>
@@ -147,11 +161,11 @@ export default function ComparePage() {
         </div>
       </div>
 
-      <h2 className={g.h2}>The real trick: read them together</h2>
+      <h2 className={g.h2}>Why read both scores together?</h2>
       <p className={g.p}>
-        Each score on its own is a partial picture. Together they tell a story. When IMDb and
-        Rotten Tomatoes <strong>agree and both are high</strong>, that&apos;s a safe bet. When they
-        <strong> split</strong>, the direction tells you what kind of film it is:
+        Each score alone is a partial picture. When IMDb and Rotten Tomatoes{' '}
+        <strong>agree and both are high</strong>, that&apos;s a safe bet. When they{' '}
+        <strong>split</strong>, the direction tells you what kind of film it is:
       </p>
       <ul className={g.list}>
         <li><strong>High IMDb, lower RT</strong> — a crowd-pleaser critics were cool on. Great for a fun night in.</li>
@@ -159,14 +173,42 @@ export default function ComparePage() {
         <li><strong>Both low</strong> — usually safe to skip.</li>
       </ul>
 
+      <h2 className={g.h2}>How are the scores calculated?</h2>
+      <p className={g.p}>
+        IMDb publishes a weighted average of ratings from registered users and keeps the exact
+        weighting private. Rotten Tomatoes publishes the Tomatometer as the percentage of
+        professional critic reviews that are positive. Both companies describe their methods on
+        their own help pages, summarized and linked below.
+      </p>
+      <ul className={g.list}>
+        <li>
+          <strong>IMDb:</strong> uses all ratings from registered users to produce one weighted
+          average. Ratings do not all count equally, and the weighting can change if unusual
+          activity is detected. IMDb says it does not disclose the exact method. Source:{' '}
+          <a href="https://help.imdb.com/article/imdb/track-movies-tv/ratings-faq/G67Y87TFYYP6TWAV" target="_blank" rel="noopener noreferrer">IMDb Help, Ratings FAQ</a>.
+        </li>
+        <li>
+          <strong>Rotten Tomatoes:</strong> the Tomatometer is the percentage of professional
+          critic reviews that are positive. Titles at 60% or above are Fresh, below 60% are Rotten,
+          and Certified Fresh needs 75% or higher with at least five Top Critics reviews. Source:{' '}
+          <a href="https://www.rottentomatoes.com/about" target="_blank" rel="noopener noreferrer">Rotten Tomatoes, About</a>.
+        </li>
+      </ul>
+      <p className={g.note}>
+        Both pages were last checked on October 15, 2026. Either company can change its method or
+        thresholds, so check the linked pages for the current rules. Netflix Ratings is not
+        affiliated with IMDb or Rotten Tomatoes.
+      </p>
+
       <aside className={g.callout}>
-        <h2 className={g.calloutTitle}>See both scores on every Netflix card</h2>
+        <h2 className={g.calloutTitle}>How can you see both scores on Netflix?</h2>
         <p>
-          Instead of checking two sites, the free <strong>Netflix Ratings</strong> extension puts
-          the IMDb rating and the Rotten Tomatoes score right on each Netflix title card as you
-          browse. Compare audience and critics at a glance — then press play.
+          The free <strong>Netflix Ratings</strong> extension puts the IMDb rating and the Rotten
+          Tomatoes score on Netflix title cards as you browse in Chrome, Edge or Brave, so you can
+          compare audience and critics at a glance. It is not on the Chrome Web Store yet; installing
+          from GitHub takes about a minute.
         </p>
-        <a href={REPO_URL} className={g.btnPrimary} target="_blank" rel="noopener noreferrer">
+        <a href="/install" className={g.btnPrimary}>
           Install free <span aria-hidden>→</span>
         </a>
       </aside>

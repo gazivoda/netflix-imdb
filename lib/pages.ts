@@ -32,7 +32,7 @@ export const PAGES: SitePage[] = [
     path: '/',
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
-    updated: '2026-06-17',
+    updated: '2026-10-15',
     changeFrequency: 'weekly',
     priority: 1,
     ogType: 'website',
@@ -56,7 +56,7 @@ export const PAGES: SitePage[] = [
     title: 'IMDb vs Rotten Tomatoes: Which Rating to Trust',
     description:
       'IMDb is an audience score out of 10; Rotten Tomatoes is the share of critics who liked it. How the two differ, why they disagree, and when to trust each.',
-    updated: '2026-06-17',
+    updated: '2026-10-15',
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'compare',
