@@ -1,3 +1,4 @@
+import './tailwind.css';
 import { pageMetadata } from '../../lib/seo';
 
 // page.tsx is a client component and cannot export metadata, so it lives here.
