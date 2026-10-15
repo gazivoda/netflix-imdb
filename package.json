@@ -9,7 +9,8 @@
     "test": "jest",
     "seo:indexnow": "node scripts/ping-indexnow.mjs",
     "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run",
-    "seo:links": "node scripts/check-links.mjs"
+    "seo:links": "node scripts/check-links.mjs",
+    "seo:validate": "node scripts/validate-seo.mjs"
   },
   "dependencies": {
     "@tensorflow-models/coco-ssd": "^2.2.3",
