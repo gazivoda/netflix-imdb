@@ -2,6 +2,7 @@
   'use strict';
 
   const RATED_ATTR = 'data-imdb-rated';
+  const MODAL_ATTR = 'data-imdb-modal-title';
   let debounceTimer = null;
   let isScanning = false;
 
@@ -38,6 +39,13 @@
         resolve({ rating: null, rtRating: null });
       }
     });
+  }
+
+  function formatRating(rating, rtRating) {
+    const parts = [];
+    if (rating !== null) parts.push(`⭐ ${rating}`);
+    if (rtRating !== null) parts.push(`🍅 ${rtRating}%`);
+    return parts.join('   ');
   }
 
   function extractTitle(ariaLabel) {
@@ -86,11 +94,9 @@
       await Promise.allSettled(
         entries.map(async ({ title, el }) => {
           const { rating, rtRating } = await fetchRating(title);
-          const parts = [];
-          if (rating !== null) parts.push(`⭐ ${rating}`);
-          if (rtRating !== null) parts.push(`🍅 ${rtRating}%`);
-          if (parts.length) {
-            el.setAttribute('data-imdb-rating', parts.join('   '));
+          const label = formatRating(rating, rtRating);
+          if (label) {
+            el.setAttribute('data-imdb-rating', label);
           } else {
             el.removeAttribute('data-imdb-rating');
           }
@@ -101,12 +107,36 @@
     }
   }
 
+  // Netflix's hover pop-up (mini modal) and detail modal replace the card, so the card badge
+  // disappears under them. Badge the modal's artwork as well; the title is the boxart alt text.
+  async function rateModals() {
+    const players = document.querySelectorAll('.previewModal--player_container');
+    await Promise.allSettled(
+      Array.from(players).map(async (el) => {
+        const alt = el.querySelector('img.previewModal--boxart')?.getAttribute('alt');
+        if (!alt) return;
+        const title = extractTitle(alt);
+        if (el.getAttribute(MODAL_ATTR) === title) return;
+        el.setAttribute(MODAL_ATTR, title);
+        const { rating, rtRating } = await fetchRating(title);
+        if (el.getAttribute(MODAL_ATTR) !== title) return; // modal now shows another title
+        const label = formatRating(rating, rtRating);
+        if (label) el.setAttribute('data-imdb-rating', label);
+        else el.removeAttribute('data-imdb-rating');
+      })
+    );
+  }
+
   function debouncedScan() {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(scanAndRate, 300);
+    debounceTimer = setTimeout(() => {
+      rateModals();
+      scanAndRate();
+    }, 300);
   }
 
   scanAndRate();
+  rateModals();
 
   new MutationObserver(debouncedScan).observe(document.body, {
     childList: true,
