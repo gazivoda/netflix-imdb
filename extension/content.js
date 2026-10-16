@@ -13,11 +13,12 @@
   function getPort() {
     if (port) return port;
     port = chrome.runtime.connect({ name: 'ratings' });
-    port.onMessage.addListener(({ id, rating, rtRating }) => {
+    port.onMessage.addListener(({ type, id, rating, rtRating, limited }) => {
+      if (type === 'RETRY') return retryDeferred();
       const resolve = pending.get(id);
       if (resolve) {
         pending.delete(id);
-        resolve({ rating, rtRating });
+        resolve({ rating, rtRating, limited });
       }
     });
     port.onDisconnect.addListener(() => {
@@ -39,6 +40,47 @@
         resolve({ rating: null, rtRating: null });
       }
     });
+  }
+
+  // OMDb's daily quota ran out: remember which cards were skipped (not "unrated") and re-check
+  // them when the background worker says the quota is back, or every few minutes.
+  const deferred = new Set();
+  let retryTimer = null;
+
+  function showNotice() {
+    if (document.getElementById('nr-limit-notice')) return;
+    const box = document.createElement('div');
+    box.id = 'nr-limit-notice';
+    const text = document.createElement('span');
+    text.textContent = 'Ratings paused: shared OMDb daily limit reached.';
+    const open = document.createElement('button');
+    open.type = 'button';
+    open.textContent = 'Add your free key';
+    open.addEventListener('click', () => chrome.runtime.sendMessage({ type: 'OPEN_OPTIONS' }));
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Dismiss');
+    close.textContent = '\u00d7';
+    close.addEventListener('click', () => box.remove());
+    box.append(text, open, close);
+    document.body.appendChild(box);
+  }
+
+  function defer(el, isModal) {
+    deferred.add({ el, isModal });
+    showNotice();
+    clearTimeout(retryTimer);
+    retryTimer = setTimeout(retryDeferred, 5 * 60 * 1000);
+  }
+
+  function retryDeferred() {
+    clearTimeout(retryTimer);
+    document.getElementById('nr-limit-notice')?.remove();
+    deferred.forEach(({ el, isModal }) => {
+      el.removeAttribute(isModal ? MODAL_ATTR : RATED_ATTR);
+    });
+    deferred.clear();
+    debouncedScan();
   }
 
   function formatRating(rating, rtRating) {
@@ -93,7 +135,11 @@
 
       await Promise.allSettled(
         entries.map(async ({ title, el }) => {
-          const { rating, rtRating } = await fetchRating(title);
+          const { rating, rtRating, limited } = await fetchRating(title);
+          if (limited) {
+            el.removeAttribute('data-imdb-rating');
+            return defer(el, false);
+          }
           const label = formatRating(rating, rtRating);
           if (label) {
             el.setAttribute('data-imdb-rating', label);
@@ -118,8 +164,9 @@
         const title = extractTitle(alt);
         if (el.getAttribute(MODAL_ATTR) === title) return;
         el.setAttribute(MODAL_ATTR, title);
-        const { rating, rtRating } = await fetchRating(title);
+        const { rating, rtRating, limited } = await fetchRating(title);
         if (el.getAttribute(MODAL_ATTR) !== title) return; // modal now shows another title
+        if (limited) return defer(el, true);
         const label = formatRating(rating, rtRating);
         if (label) el.setAttribute('data-imdb-rating', label);
         else el.removeAttribute('data-imdb-rating');

@@ -157,6 +157,7 @@ function showLimited(on) {
 // ---- public entry point ----------------------------------------------------------------------
 
 const EMPTY = { rating: null, rtRating: null };
+const LIMITED = { rating: null, rtRating: null, limited: true };
 
 async function getRatings(title) {
   if (memory.has(title)) return memory.get(title);
@@ -171,25 +172,38 @@ async function getRatings(title) {
     }
   }
 
-  if (Date.now() < limitedUntil) return EMPTY;
+  if (Date.now() < limitedUntil) return LIMITED;
 
   try {
     const result = await lookup(title);
     memory.set(title, result);
     writeStored(title, result);
-    if (limitedUntil) {
-      limitedUntil = 0;
-      showLimited(false);
-    }
+    if (limitedUntil) clearLimit();
     return result;
   } catch (err) {
     if (err instanceof LimitError) {
       // Do not cache: the title is retried once the quota (or key) is back.
       limitedUntil = Date.now() + LIMIT_PAUSE;
       showLimited(true);
+      return LIMITED;
     }
     return EMPTY;
   }
+}
+
+// Quota is back (pause expired and a lookup worked, or the user saved a key): tell every open
+// Netflix tab to re-check the cards it skipped.
+const ports = new Set();
+function clearLimit() {
+  limitedUntil = 0;
+  showLimited(false);
+  ports.forEach((p) => {
+    try {
+      p.postMessage({ type: 'RETRY' });
+    } catch {
+      ports.delete(p);
+    }
+  });
 }
 
 function getRatingsOnce(title) {
@@ -203,12 +217,14 @@ function getRatingsOnce(title) {
 
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name !== 'ratings') return;
+  ports.add(port);
+  port.onDisconnect.addListener(() => ports.delete(port));
 
   port.onMessage.addListener(({ type, title, id }) => {
     if (type !== 'FETCH_RATING') return;
-    getRatingsOnce(title).then(({ rating, rtRating }) => {
+    getRatingsOnce(title).then(({ rating, rtRating, limited }) => {
       try {
-        port.postMessage({ id, rating, rtRating });
+        port.postMessage({ id, rating, rtRating, limited: Boolean(limited) });
       } catch {
         // port disconnected before response — discard
       }
@@ -218,6 +234,10 @@ chrome.runtime.onConnect.addListener((port) => {
 
 // Options page: read / validate / save / clear the user's own OMDb key.
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg?.type === 'OPEN_OPTIONS') {
+    chrome.runtime.openOptionsPage();
+    return;
+  }
   if (msg?.type === 'GET_KEY') {
     getKey().then(() => sendResponse({ custom: Boolean(keyCache) }));
     return true;
@@ -239,8 +259,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       }
       await idb('meta', 'readwrite', (s) => (key ? s.put({ key: 'omdbKey', value: key }) : s.delete('omdbKey')));
       keyCache = key;
-      limitedUntil = 0;
-      showLimited(false);
+      clearLimit();
       sendResponse({ ok: true, custom: Boolean(key) });
     })();
     return true;
