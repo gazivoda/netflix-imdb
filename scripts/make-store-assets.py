@@ -28,7 +28,6 @@ def icon(size):
 
 for n, name in [(16, 'icon-16.png'), (32, 'icon-32.png'), (48, 'icon-48.png'), (128, 'icon.png')]:
     icon(n).save(os.path.join(ROOT, 'extension', name), optimize=True)
-icon(512).save(os.path.join(ROOT, 'docs/store/icon-512.png'))
 
 # 440x280 small promo tile
 W, H = 440, 280

@@ -138,7 +138,7 @@ Caution: the privacy page was last dated May 4, 2025 and describes IMDb ratings 
 ## 10. Status 2026-10-16 (submission-ready package)
 
 - [x] Name changed in manifest; `extension.zip` rebuilt (8 files, ~17 KB).
-- [x] Real icons (16/32/48/128, star on gold ticket, deliberately not an "N") via `scripts/make-store-assets.py`; 512px copy in `docs/store/icon-512.png`.
+- [x] Real icons (16/32/48/128, star on gold ticket, deliberately not an "N") via `scripts/make-store-assets.py`; 128x128 store icon copy in `docs/store/icon-128.png` (the dashboard requires exactly 128x128).
 - [x] Small promo tile 440x280: `docs/store/promo-tile-440x280.png`.
 - [x] Privacy policy now covers Rotten Tomatoes and is dated October 16, 2026.
 - [ ] Screenshots (must be real, you capture) and developer account + one-time registration fee (you).
