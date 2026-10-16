@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ratings for Netflix: IMDb & Rotten Tomatoes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Free, open source, no account needed.",
   "permissions": [],
   "host_permissions": [

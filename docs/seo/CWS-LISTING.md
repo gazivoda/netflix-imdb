@@ -2,7 +2,7 @@
 
 Prepared 2026-10-15 from the extension source (`extension/manifest.json`, `content.js`, `background.js`). Everything below matches what the code does. Verify field names and category list in the live Developer Dashboard before submitting, since Google changes them.
 
-Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/package-extension.sh`). Version in manifest: 1.0.0.
+Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/package-extension.sh`). Version in manifest: 1.0.1.
 
 ## 1. Name (trademark-safe suggestion)
 

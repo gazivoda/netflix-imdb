@@ -54,7 +54,14 @@
     ).filter((a) => {
       if (!a.querySelector('img')) return false;
       const href = a.getAttribute('href') || '';
-      return href.includes('/watch/') || href.includes('/title/');
+      // Netflix now links cards as /browse?jbv=<id> (data-uia="standard-card" etc.);
+      // older layouts used /watch/ and /title/.
+      return (
+        href.includes('/watch/') ||
+        href.includes('/title/') ||
+        href.includes('jbv=') ||
+        /-card$/.test(a.getAttribute('data-uia') || '')
+      );
     });
   }
 
