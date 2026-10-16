@@ -1,6 +1,5 @@
 'use client'
 
-import '../globals.css'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { createWorker } from 'tesseract.js'
@@ -367,7 +366,7 @@ export default function CameraVision() {
           <div className={s.feature}>
             <h4 className={s.featureHead}>Live Ratings</h4>
             <p className={s.featureBody}>
-              Automatically fetches IMDB ratings for detected titles.
+              Automatically fetches IMDb ratings for detected titles.
               Shows confidence scores and vote counts for transparency.
             </p>
           </div>

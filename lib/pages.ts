@@ -108,6 +108,7 @@ export const PAGES: SitePage[] = [
     title: 'IMDb vs Rotten Tomatoes: Which Rating to Trust',
     description:
       'IMDb is an audience score out of 10; Rotten Tomatoes is the share of critics who liked it. How the two differ, why they disagree, and when to trust each.',
+    published: '2026-06-16',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
     priority: 0.9,
@@ -146,6 +147,7 @@ export const PAGES: SitePage[] = [
     title: 'Camera Vision Demo: Read Titles by Camera',
     description:
       'Experimental demo that reads movie and show titles from your camera with on-device OCR, then looks up their IMDb and Rotten Tomatoes scores.',
+    published: '2026-05-07',
     updated: '2026-06-17',
     changeFrequency: 'monthly',
     priority: 0.5,
