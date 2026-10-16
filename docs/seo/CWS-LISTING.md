@@ -2,7 +2,7 @@
 
 Prepared 2026-10-15 from the extension source (`extension/manifest.json`, `content.js`, `background.js`). Everything below matches what the code does. Verify field names and category list in the live Developer Dashboard before submitting, since Google changes them.
 
-Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/package-extension.sh`). Version in manifest: 1.0.2.
+Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/package-extension.sh`). Version in manifest: 1.1.0.
 
 ## 1. Name (trademark-safe suggestion)
 
@@ -34,10 +34,10 @@ WHAT YOU GET
 - The IMDb rating (out of 10) and the Rotten Tomatoes critic score (a percentage) side by side
 - Ratings for new rows, search results and "More Like This" suggestions as they load
 - Whichever score exists if a title has only one of the two; no badge if it has neither
-- No account, no sign-in, no API key to enter
+- No account, no sign-in, and no API key required (an optional personal OMDb key removes the shared daily limit)
 
 HOW IT WORKS
-The extension reads the title from each card's accessible label on netflix.com. A background service worker looks each title up on the OMDb API, then the badge is drawn on the card. Results are cached in memory for the session, so each title is looked up once.
+The extension reads the title from each card's accessible label on netflix.com (and from the hover pop-up artwork). A background service worker looks each title up on the OMDb API, then the badge is drawn. Results are remembered on your device for a week, so each title is looked up about once a week. The shared lookup limit is 1,000 a day; if it runs out, click the toolbar icon to add your own free OMDb key.
 
 PRIVACY
 - Only two site permissions: www.netflix.com (to show badges) and www.omdbapi.com (to fetch ratings)
@@ -98,7 +98,7 @@ The manifest has an empty `permissions` array and two host permissions.
 - **Host permission `https://www.netflix.com/*`:** "Required to run the content script that reads the accessible label (title name) of each title card on Netflix and to draw the rating badge on that card. The extension does nothing on any other site."
 - **Host permission `https://www.omdbapi.com/*`:** "Required for the background service worker to request the IMDb rating and Rotten Tomatoes score for a title from the OMDb API. Only the title name is sent."
 - **Remote code:** **No, I am not using remote code.** All JavaScript is bundled in the package. The extension only fetches JSON data from OMDb and never evaluates it as code.
-- No other permissions (tabs, storage, history, cookies, activeTab, scripting) are requested, so none need justification.
+- No other permissions (tabs, storage, history, cookies, activeTab, scripting) are requested, so none need justification. Ratings and the optional OMDb key are stored in the extension's own IndexedDB, which needs no permission.
 
 ## 8. Data usage disclosures (Privacy practices tab)
 
@@ -109,11 +109,11 @@ Answer these from the code. Review each against your own judgement before certif
 | Personally identifiable information | **No** | Not collected |
 | Health information | **No** | Not collected |
 | Financial and payment information | **No** | Not collected |
-| Authentication information | **No** | Extension never reads cookies, tokens or credentials |
 | Personal communications | **No** | Not collected |
 | Location | **No** | Not collected |
 | Web history | **No** | Does not read browsing history or URLs |
 | User activity (clicks, keystrokes, mouse) | **No** | Only observes DOM changes to find new cards |
+| Authentication information | **Yes (optional)** | Only if the user adds their own OMDb API key on the settings page: stored locally, sent only to omdbapi.com. Tick this to be safe, with that explanation. |
 | Website content | **Yes, transmitted, not stored by the developer** | The title name of each Netflix card (text of its aria-label) is sent to OMDb to fetch its rating. This is the only data that leaves the browser. |
 
 Certifications to tick (all true per the source):
@@ -127,7 +127,7 @@ Caution: the privacy page was last dated May 4, 2025 and describes IMDb ratings 
 
 ## 9. Pre-submission checklist
 
-- [ ] OMDb API key in `extension/background.js` is hardcoded (see report). Decide before publishing: a shared key in a public store package can be scraped and rate-limited or revoked.
+- [x] Shared-key quota: v1.1.0 adds a persistent local cache and an options page for a personal OMDb key (the shared key was already exhausted during testing on 2026-10-16).
 - [ ] Final store name chosen and, if changed, `manifest.json` `name` updated and `extension.zip` rebuilt.
 - [ ] 5 screenshots captured at 1280x800, small promo tile 440x280 made.
 - [ ] Icon reviewed (128x128).

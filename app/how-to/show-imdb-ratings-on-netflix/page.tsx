@@ -113,7 +113,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
         Netflix Ratings reads the title from each card, then a background worker looks it up in{' '}
         <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDb</a>, an
         open movie database that carries IMDb ratings and Rotten Tomatoes scores. Lookups run in
-        parallel and repeat titles are served from an in-memory cache, so scrolling stays fast. The
+        parallel and repeat titles are served from a local cache, so scrolling stays fast. The
         only thing sent is the title text. See the <a href="/privacy">privacy policy</a> for the
         full detail.
       </p>

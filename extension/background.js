@@ -1,7 +1,72 @@
 'use strict';
 
-const OMDB_API_KEY = '901841e0';
-const cache = new Map();
+// Shared fallback key. The free OMDb tier allows 1,000 requests/day per key, so every user of
+// this key shares that budget. Users can paste their own free key on the options page.
+const BUNDLED_OMDB_KEY = '901841e0';
+
+const DAY = 24 * 60 * 60 * 1000;
+const TTL_FOUND = 7 * DAY; // a title with at least one score
+const TTL_MISSING = DAY; // OMDb had nothing yet; try again tomorrow
+const LIMIT_PAUSE = 30 * 60 * 1000; // after "Request limit reached", stop calling OMDb for a while
+
+const memory = new Map(); // title -> { rating, rtRating }
+const inflight = new Map(); // title -> Promise, so a card and its hover pop-up share one lookup
+let limitedUntil = 0;
+let keyCache; // undefined = not loaded yet
+
+// ---- persistence (IndexedDB, extension-private; needs no extra permission) ----------------
+
+let dbPromise;
+function db() {
+  dbPromise ||= new Promise((resolve, reject) => {
+    const req = indexedDB.open('ratings-cache', 1);
+    req.onupgradeneeded = () => {
+      req.result.createObjectStore('ratings', { keyPath: 'title' });
+      req.result.createObjectStore('meta', { keyPath: 'key' });
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return dbPromise;
+}
+
+async function idb(storeName, mode, run) {
+  try {
+    const d = await db();
+    return await new Promise((resolve) => {
+      const tx = d.transaction(storeName, mode);
+      const req = run(tx.objectStore(storeName));
+      tx.oncomplete = () => resolve(req?.result);
+      tx.onerror = tx.onabort = () => resolve(undefined);
+    });
+  } catch {
+    return undefined; // private mode / storage blocked: fall back to memory only
+  }
+}
+
+const readStored = (title) => idb('ratings', 'readonly', (s) => s.get(title));
+const writeStored = (title, { rating, rtRating }) =>
+  idb('ratings', 'readwrite', (s) => s.put({ title, rating, rtRating, ts: Date.now() }));
+
+async function getKey() {
+  if (keyCache === undefined) {
+    const row = await idb('meta', 'readonly', (s) => s.get('omdbKey'));
+    keyCache = row?.value || '';
+  }
+  return keyCache || BUNDLED_OMDB_KEY;
+}
+
+// ---- OMDb ----------------------------------------------------------------------------------
+
+class LimitError extends Error {}
+
+async function omdb(params) {
+  const key = await getKey();
+  const res = await fetch(`https://www.omdbapi.com/?${params}&apikey=${encodeURIComponent(key)}`);
+  const data = res.ok ? await res.json() : null;
+  if (/limit/i.test(data?.Error || '')) throw new LimitError();
+  return data;
+}
 
 function parseRatings(data) {
   const rating =
@@ -18,7 +83,7 @@ function parseRatings(data) {
 function normalizeTitle(t) {
   return t
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/&/g, ' and ')
     .replace(/[^a-z0-9 ]+/g, ' ')
@@ -26,8 +91,6 @@ function normalizeTitle(t) {
     .trim()
     .replace(/^the /, '');
 }
-
-const isRateLimited = (data) => /limit/i.test(data?.Error || '');
 
 // Best exact-title (normalised) match from an OMDb ?s= search, newest first.
 function pickExact(searchData, title) {
@@ -40,85 +103,110 @@ function pickExact(searchData, title) {
   );
 }
 
-async function getRatings(title) {
-  if (cache.has(title)) return cache.get(title);
+async function lookup(title) {
+  // Step 1: direct lookup — 1 API call for the common case.
+  const data = await omdb(`t=${encodeURIComponent(title)}`);
+  const { rating, rtRating } = parseRatings(data);
+
+  // Not found by exact name (typographic apostrophes, "&" vs "and", ...): try one search
+  // and accept only a title that matches after normalisation.
+  if (data?.Response !== 'True') {
+    const sData = await omdb(`s=${encodeURIComponent(title.replace(/[‘’]/g, "'"))}`);
+    const hit = pickExact(sData, title);
+    if (!hit) return { rating: null, rtRating: null };
+    const iData = await omdb(`i=${hit.imdbID}`);
+    return iData?.Response === 'True' ? parseRatings(iData) : { rating: null, rtRating: null };
+  }
+
+  // Found with RT data → done (1 call total).
+  if (rtRating !== null) return { rating, rtRating };
+
+  // Found but no RT score: ?t= may have picked the wrong entry when multiple titles share the
+  // same name. Search for a newer exact-title match that does have RT data.
+  let result = { rating, rtRating };
+  const searchData = await omdb(`s=${encodeURIComponent(title)}`);
+  const best = pickExact(searchData, title);
+  if (best && best.imdbID !== data?.imdbID) {
+    const betterData = await omdb(`i=${best.imdbID}`);
+    if (betterData?.Response === 'True') {
+      // Only switch entries when the newer one actually has a Rotten Tomatoes score;
+      // otherwise keep the first match's IMDb rating instead of replacing it with "N/A".
+      const better = parseRatings(betterData);
+      if (better.rtRating !== null) result = better;
+    }
+  }
+  return result;
+}
+
+// ---- quota notice on the toolbar icon --------------------------------------------------------
+
+function showLimited(on) {
   try {
-    // Step 1: direct lookup — 1 API call for the common case.
-    const res = await fetch(
-      `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
-    );
-    const data = res.ok ? await res.json() : null;
-    const { rating, rtRating } = parseRatings(data);
-
-    // Quota exhausted: answer "no rating" for now but do not cache it, so the title is retried later.
-    if (isRateLimited(data)) return { rating: null, rtRating: null };
-
-    // Not found by exact name (typographic apostrophes, "&" vs "and", ...): try one search
-    // and accept only a title that matches after normalisation.
-    if (data?.Response !== 'True') {
-      const sRes = await fetch(
-        `https://www.omdbapi.com/?s=${encodeURIComponent(title.replace(/[\u2018\u2019]/g, "'"))}&apikey=${OMDB_API_KEY}`
-      );
-      const sData = sRes.ok ? await sRes.json() : null;
-      if (isRateLimited(sData)) return { rating: null, rtRating: null };
-      const hit = pickExact(sData, title);
-      let found = { rating: null, rtRating: null };
-      if (hit) {
-        const iRes = await fetch(`https://www.omdbapi.com/?i=${hit.imdbID}&apikey=${OMDB_API_KEY}`);
-        const iData = iRes.ok ? await iRes.json() : null;
-        if (iData?.Response === 'True') found = parseRatings(iData);
-      }
-      cache.set(title, found);
-      return found;
-    }
-
-    // Found with RT data → return immediately (1 call total).
-    if (rtRating !== null) {
-      const result = { rating, rtRating };
-      cache.set(title, result);
-      return result;
-    }
-
-    // Found but no RT score: ?t= may have picked the wrong entry when multiple
-    // titles share the same name. Search for a newer exact-title match with RT data.
-    const searchRes = await fetch(
-      `https://www.omdbapi.com/?s=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`
-    );
-    const searchData = searchRes.ok ? await searchRes.json() : null;
-
-    let result = { rating, rtRating };
-
-    if (searchData?.Response === 'True' && searchData.Search?.length) {
-      const best = pickExact(searchData, title);
-      const directImdbId = data?.imdbID;
-
-      if (best && best.imdbID !== directImdbId) {
-        const betterRes = await fetch(
-          `https://www.omdbapi.com/?i=${best.imdbID}&apikey=${OMDB_API_KEY}`
-        );
-        const betterData = betterRes.ok ? await betterRes.json() : null;
-        if (betterData?.Response === 'True') {
-          // Only switch entries when the newer one actually has a Rotten Tomatoes score;
-          // otherwise keep the first match's IMDb rating instead of replacing it with "N/A".
-          const better = parseRatings(betterData);
-          if (better.rtRating !== null) result = better;
-        }
-      }
-    }
-
-    cache.set(title, result);
-    return result;
+    chrome.action.setBadgeText({ text: on ? '!' : '' });
+    chrome.action.setBadgeBackgroundColor({ color: '#e5241b' });
+    chrome.action.setTitle({
+      title: on
+        ? 'Daily OMDb limit reached. Click to add your own free API key.'
+        : 'Ratings for Netflix',
+    });
   } catch {
-    return { rating: null, rtRating: null };
+    // action API unavailable: ignore
   }
 }
+
+// ---- public entry point ----------------------------------------------------------------------
+
+const EMPTY = { rating: null, rtRating: null };
+
+async function getRatings(title) {
+  if (memory.has(title)) return memory.get(title);
+
+  const stored = await readStored(title);
+  if (stored) {
+    const hasScore = stored.rating !== null || stored.rtRating !== null;
+    if (Date.now() - stored.ts < (hasScore ? TTL_FOUND : TTL_MISSING)) {
+      const result = { rating: stored.rating, rtRating: stored.rtRating };
+      memory.set(title, result);
+      return result;
+    }
+  }
+
+  if (Date.now() < limitedUntil) return EMPTY;
+
+  try {
+    const result = await lookup(title);
+    memory.set(title, result);
+    writeStored(title, result);
+    if (limitedUntil) {
+      limitedUntil = 0;
+      showLimited(false);
+    }
+    return result;
+  } catch (err) {
+    if (err instanceof LimitError) {
+      // Do not cache: the title is retried once the quota (or key) is back.
+      limitedUntil = Date.now() + LIMIT_PAUSE;
+      showLimited(true);
+    }
+    return EMPTY;
+  }
+}
+
+function getRatingsOnce(title) {
+  if (!inflight.has(title)) {
+    inflight.set(title, getRatings(title).finally(() => inflight.delete(title)));
+  }
+  return inflight.get(title);
+}
+
+// ---- messaging --------------------------------------------------------------------------------
 
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name !== 'ratings') return;
 
   port.onMessage.addListener(({ type, title, id }) => {
     if (type !== 'FETCH_RATING') return;
-    getRatings(title).then(({ rating, rtRating }) => {
+    getRatingsOnce(title).then(({ rating, rtRating }) => {
       try {
         port.postMessage({ id, rating, rtRating });
       } catch {
@@ -127,3 +215,37 @@ chrome.runtime.onConnect.addListener((port) => {
     });
   });
 });
+
+// Options page: read / validate / save / clear the user's own OMDb key.
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg?.type === 'GET_KEY') {
+    getKey().then(() => sendResponse({ custom: Boolean(keyCache) }));
+    return true;
+  }
+  if (msg?.type === 'SET_KEY') {
+    (async () => {
+      const key = String(msg.key || '').trim();
+      if (key) {
+        if (!/^[A-Za-z0-9]{4,16}$/.test(key)) return sendResponse({ ok: false, error: 'That does not look like an OMDb key.' });
+        try {
+          const res = await fetch(`https://www.omdbapi.com/?t=Inception&apikey=${encodeURIComponent(key)}`);
+          const data = await res.json();
+          if (data?.Response !== 'True') {
+            return sendResponse({ ok: false, error: data?.Error || 'OMDb rejected that key.' });
+          }
+        } catch {
+          return sendResponse({ ok: false, error: 'Could not reach OMDb. Check your connection.' });
+        }
+      }
+      await idb('meta', 'readwrite', (s) => (key ? s.put({ key: 'omdbKey', value: key }) : s.delete('omdbKey')));
+      keyCache = key;
+      limitedUntil = 0;
+      showLimited(false);
+      sendResponse({ ok: true, custom: Boolean(key) });
+    })();
+    return true;
+  }
+});
+
+// No popup: clicking the toolbar icon opens the settings (where the OMDb key can be added).
+chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());

@@ -11,7 +11,7 @@ Website: [netflix-ratings.app](https://netflix-ratings.app) · [Install guide](h
 - Shows the IMDb rating (shown as `⭐ <score>`) and the Rotten Tomatoes score (shown as `🍅 <percent>%`) in a badge on each Netflix title card.
 - Rates new rows, search results and "More Like This" suggestions automatically as Netflix loads them.
 - Shows whichever score is available if a title has only one of the two, and no badge if it has neither.
-- Needs no account, no sign-in and no API key from you.
+- Needs no account, no sign-in and no API key from you (an optional personal OMDb key lifts the shared daily limit).
 - Works on Chromium browsers (Chrome, Edge, Brave). It is a Manifest V3 extension and has not been tested in Firefox or Safari.
 
 ## Install
@@ -31,13 +31,13 @@ To update, replace the folder contents with the latest download and click the re
 The extension has two parts, both in [`extension/`](extension):
 
 1. **Content script** ([`content.js`](extension/content.js), [`content.css`](extension/content.css)) runs on `https://www.netflix.com/*`. It finds title-card links that carry an `aria-label` and an image, cleans the label into a title (stripping suffixes such as "Season 2", ": More Info" and country codes like "(U.S.)"), and watches the page with a `MutationObserver` so new cards are picked up as you scroll. The badge is drawn with CSS from a data attribute on the card link.
-2. **Background service worker** ([`background.js`](extension/background.js)) receives title requests from the content script over a port, looks the title up on the [OMDb API](https://www.omdbapi.com), and returns the IMDb rating and Rotten Tomatoes score. If the first lookup returns no Rotten Tomatoes score, it runs one title search and re-checks the newest exact-title match, which helps when several titles share a name. Results are cached in memory for the life of the service worker, so each title is looked up once per session.
+2. **Background service worker** ([`background.js`](extension/background.js)) receives title requests from the content script over a port, looks the title up on the [OMDb API](https://www.omdbapi.com), and returns the IMDb rating and Rotten Tomatoes score. If the first lookup returns no Rotten Tomatoes score, it runs one title search and re-checks the newest exact-title match, which helps when several titles share a name. Results are cached in the extension's own IndexedDB (7 days; 1 day when OMDb has no score yet), so each title is looked up about once a week. The shared default key is limited to 1,000 lookups a day; when it runs out the toolbar icon shows a red "!" and the [options page](extension/options.html) lets you add your own free key. The Netflix hover pop-up and detail modal get a badge too.
 
 ## Privacy
 
 - Requests only two host permissions: `https://www.netflix.com/*` (to read title cards and show badges) and `https://www.omdbapi.com/*` (to look up ratings). The manifest declares no other permissions, so it does not request tabs, history or storage access.
 - The only data that leaves your browser is the title name of each card, sent to OMDb to fetch its rating.
-- No account, no analytics, no telemetry, and no backend server. The in-memory cache is never written to disk.
+- No account, no analytics, no telemetry, and no backend server. Looked-up ratings are cached locally in the extension's own IndexedDB for up to 7 days (1 day when OMDb has no score yet); nothing is synced or sent anywhere. An optional OMDb key you add on the settings page is stored the same way.
 
 Full details: [netflix-ratings.app/privacy](https://netflix-ratings.app/privacy).
 

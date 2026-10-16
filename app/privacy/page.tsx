@@ -55,9 +55,12 @@ export default function PrivacyPage() {
         <section className={s.slip}>
           <h2 className={`ds-display ${s.h2}`}>Local caching</h2>
           <p>
-            Ratings fetched during a browser session are cached in memory (inside the extension&apos;s
-            background service worker) to avoid duplicate API calls. This cache is cleared automatically
-            when the service worker is terminated and is never written to disk or synced anywhere.
+            Ratings already looked up (title name, IMDb score and Rotten Tomatoes score) are remembered
+            for up to a week in the extension&apos;s own private browser database, so the same title is not
+            requested from OMDb again. This data stays on your device, is never synced or sent
+            anywhere, and is removed when you uninstall the extension. If you choose to add your own
+            free OMDb API key on the settings page, that key is stored the same way and is sent only to
+            omdbapi.com with each lookup.
           </p>
         </section>
 
@@ -90,7 +93,7 @@ export default function PrivacyPage() {
           </ul>
           <p>
             No other permissions are requested. The extension does not request access to tabs,
-            browsing history, storage, or any other browser APIs.
+            browsing history, or cookies.
           </p>
         </section>
 

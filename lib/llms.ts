@@ -16,7 +16,7 @@ const SUMMARY =
 const KEY_FACTS = [
   'Shows the IMDb rating (out of 10) and the Rotten Tomatoes percentage in a badge at the top-right of each title card on www.netflix.com.',
   'Ratings are fetched from OMDb by the extension background worker.',
-  'Manifest V3 extension, version 1.0.2. Permissions are limited to netflix.com and omdbapi.com.',
+  'Manifest V3 extension, version 1.1.0. Permissions are limited to netflix.com and omdbapi.com.',
   'Free and open source. No account or login.',
   'Not on the Chrome Web Store yet: install by downloading from GitHub and using "Load unpacked" in chrome://extensions.',
   'Works in Chromium browsers (Chrome, Edge, Brave). Not tested in Firefox or Safari.',

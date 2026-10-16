@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ratings for Netflix: settings</title>
+  <style>
+    :root { --paper: #ece6d8; --card: #f6f1e5; --ink: #111; --signal: #e5241b; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px 16px; background: var(--paper); color: var(--ink); font: 17px/1.5 Arial, Helvetica, sans-serif; }
+    main { max-width: 620px; margin: 0 auto; background: var(--card); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); padding: 28px; }
+    h1 { margin: 0 0 8px; font: 900 38px/0.95 "Arial Narrow", Arial, sans-serif; text-transform: uppercase; letter-spacing: -0.5px; }
+    p { margin: 0 0 14px; }
+    label { display: block; font: 700 12px/1 "Courier New", monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    input { width: 100%; padding: 10px; border: 3px solid var(--ink); background: #fff8; font: 16px "Courier New", monospace; border-radius: 0; }
+    button { margin-top: 12px; padding: 10px 18px; border: 3px solid var(--ink); background: var(--signal); color: #fff; font: 700 14px Arial, sans-serif; text-transform: uppercase; cursor: pointer; box-shadow: 4px 4px 0 var(--ink); border-radius: 0; }
+    button.alt { background: var(--card); color: var(--ink); margin-left: 8px; }
+    button:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+    #status { margin-top: 14px; font-weight: 700; min-height: 1.5em; }
+    #status.err { color: var(--signal); }
+    a { color: var(--ink); }
+    small { display: block; margin-top: 18px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>OMDb key</h1>
+    <p>Ratings come from the free OMDb database. By default the extension shares one key, which is limited to 1,000 lookups a day across everyone using it. If badges stop appearing, add your own free key for a private 1,000 a day.</p>
+    <p><a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener noreferrer">Get a free key</a> (pick the free tier, activate it from the email), then paste it here.</p>
+    <label for="key">Your OMDb API key</label>
+    <input id="key" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. a1b2c3d4">
+    <button id="save" type="button">Save key</button><button id="clear" class="alt" type="button">Use shared key</button>
+    <div id="status" role="status" aria-live="polite"></div>
+    <small>The key is stored only in this browser and sent only to omdbapi.com with each lookup. Already-fetched ratings are remembered locally, which keeps your daily usage low.</small>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

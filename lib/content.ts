@@ -128,7 +128,7 @@ export const FAQS = [
   },
   {
     q: 'Does it slow Netflix down?',
-    a: 'It is designed not to. The extension only adds a small text badge to title cards, waits 300 milliseconds after the page changes before scanning, fetches ratings in a background worker in parallel, and caches repeat lookups in memory. It does not touch video playback. We have not published benchmark numbers.',
+    a: 'It is designed not to. The extension only adds a small text badge to title cards, waits 300 milliseconds after the page changes before scanning, fetches ratings in a background worker in parallel, and caches repeat lookups locally. It does not touch video playback. We have not published benchmark numbers.',
   },
   {
     q: 'Is Netflix Ratings affiliated with Netflix?',
