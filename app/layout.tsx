@@ -13,6 +13,9 @@ const archivo = Archivo({
   axes: ['wdth'],
   variable: '--font-archivo',
   display: 'swap',
+  // The generated fallback is plain Arial, which has no width axis: 62%-wide display type would
+  // re-wrap on swap (CLS). Skip it so the stack in globals.css falls through to Arial Narrow.
+  adjustFontFallback: false,
 });
 
 const serif = Instrument_Serif({

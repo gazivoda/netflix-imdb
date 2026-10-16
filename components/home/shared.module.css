@@ -3,7 +3,7 @@
 
 /* ── reveal-on-load animation (Hero) ── */
 .reveal {
-  opacity: 0;
+  /* transform only: text must paint immediately (opacity:0 delayed first paint by ~0.8s) */
   transform: translateY(16px);
   animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -13,7 +13,7 @@
 .d4 { animation-delay: 0.30s; }
 
 @keyframes rise {
-  to { opacity: 1; transform: none; }
+  to { transform: none; }
 }
 
 /* ── section label: mono caps with a small signal square ── */
