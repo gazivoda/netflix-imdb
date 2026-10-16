@@ -14,7 +14,7 @@ The store listing name is read from `manifest.json` `name` (max 75 characters). 
 | Ratings Badges for Netflix | Shorter, lowest rejection risk, loses the IMDb / Rotten Tomatoes keywords in the title |
 | Netflix Ratings (current) | Matches the website and repo brand, highest trademark-rejection risk because "Netflix" leads the name |
 
-Decision for the user: changing the manifest `name` is not done here. If the store name differs from the site brand "Netflix Ratings", keep the on-page and repo wording "Netflix Ratings" and add the not-affiliated line (below) to the listing.
+**Applied 2026-10-16:** manifest `name` is now "Ratings for Netflix: IMDb & Rotten Tomatoes". (Earlier note, now superseded: changing the manifest `name` was not done.) If the store name differs from the site brand "Netflix Ratings", keep the on-page and repo wording "Netflix Ratings" and add the not-affiliated line (below) to the listing.
 
 ## 2. Short description (manifest `description`, 114 / 132 characters)
 
@@ -134,3 +134,12 @@ Caution: the privacy page was last dated May 4, 2025 and describes IMDb ratings 
 - [ ] Privacy policy updated for Rotten Tomatoes and dated.
 - [ ] Chrome Web Store developer account registered (one-time registration fee applies).
 - [ ] After approval, add the store link to the README, `/install` page and `public/llms.txt`.
+
+## 10. Status 2026-10-16 (submission-ready package)
+
+- [x] Name changed in manifest; `extension.zip` rebuilt (8 files, ~17 KB).
+- [x] Real icons (16/32/48/128, star on gold ticket, deliberately not an "N") via `scripts/make-store-assets.py`; 512px copy in `docs/store/icon-512.png`.
+- [x] Small promo tile 440x280: `docs/store/promo-tile-440x280.png`.
+- [x] Privacy policy now covers Rotten Tomatoes and is dated October 16, 2026.
+- [ ] Screenshots (must be real, you capture) and developer account + one-time registration fee (you).
+- [ ] OMDb shared key decision (see section 9).

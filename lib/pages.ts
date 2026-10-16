@@ -160,7 +160,7 @@ export const PAGES: SitePage[] = [
     title: 'Privacy Policy',
     description:
       'What the Netflix Ratings extension sends (only title names, to OMDb), what it never collects, and the browser permissions it asks for. No account, no tracking.',
-    updated: '2026-06-17',
+    updated: '2026-10-16',
     changeFrequency: 'yearly',
     priority: 0.3,
     group: 'legal',

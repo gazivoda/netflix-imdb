@@ -12,15 +12,15 @@ export default function PrivacyPage() {
       <main id="main" tabIndex={-1} className={s.main}>
         <h1 className={`ds-display ${s.h1}`}>Privacy Policy</h1>
         <p className={`ds-label ${s.updated}`}>
-          Last updated: May 4, 2025
+          Last updated: October 16, 2026
         </p>
 
         <section className={s.slip}>
           <h2 className={`ds-display ${s.h2}`}>What this extension does</h2>
           <p>
             Netflix Ratings is a Chrome extension that reads the title of each Netflix show or
-            movie visible on your screen and fetches its IMDB rating from the OMDb public API. The
-            rating is then displayed as a small badge on the title card.
+            movie visible on your screen and fetches its IMDb and Rotten Tomatoes ratings from the OMDb public API. The
+            ratings are then displayed as a small badge on the title card.
           </p>
         </section>
 
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">
               OMDb API
             </a>{' '}
-            solely to retrieve the IMDB rating. No other information is included in these requests.
+            solely to retrieve its IMDb and Rotten Tomatoes ratings. No other information is included in these requests.
           </p>
           <p>
             Title names are extracted from the <code>aria-label</code> attributes
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
             <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">
               OMDb API
             </a>{' '}
-            to retrieve IMDB ratings. Please refer to OMDb&apos;s own privacy policy for information on
+            to retrieve IMDb and Rotten Tomatoes ratings. Please refer to OMDb&apos;s own privacy policy for information on
             how they handle API requests.
           </p>
         </section>
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
               reads title card labels and displays rating badges on the Netflix interface.
             </li>
             <li>
-              <strong>https://www.omdbapi.com/*</strong> — required to fetch IMDB ratings from the
+              <strong>https://www.omdbapi.com/*</strong> — required to fetch IMDb and Rotten Tomatoes ratings from the
               OMDb API from the background service worker.
             </li>
           </ul>

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Netflix Ratings",
+  "name": "Ratings for Netflix: IMDb & Rotten Tomatoes",
   "version": "1.0.0",
   "description": "Shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Free, open source, no account needed.",
   "permissions": [],
@@ -13,14 +13,20 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.netflix.com/*"],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "matches": [
+        "https://www.netflix.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "run_at": "document_idle"
     }
   ],
   "action": {
-    "default_title": "Netflix Ratings"
+    "default_title": "Ratings for Netflix"
   },
   "icons": {
     "16": "icon-16.png",
