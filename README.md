@@ -78,3 +78,11 @@ Netflix Ratings is an independent project. It is not affiliated with, endorsed b
 
 - Ratings data comes from the [OMDb API](https://www.omdbapi.com).
 - Created by [Igor Gazivoda](https://github.com/gazivoda).
+
+## Ratings cache (website API)
+
+`POST /api/ratings` (used by the camera demo) keeps looked-up ratings in a small JSON file so the same title is not fetched from OMDb twice. A rating is reused for 7 days; a title OMDb does not know is retried after 1 day; failed lookups (network error, daily limit reached) are never stored, and a stale rating is served if OMDb is down.
+
+- **Location:** `RATINGS_DB_PATH` (default `.data/ratings.json`, git-ignored). On a server, point it at a persistent volume, otherwise the cache is lost on every redeploy.
+- **Single process only:** the file is read once and written atomically by one Node process. Do not run several workers against the same file.
+- The Chrome extension does not use this cache; it queries OMDb directly and caches in its own IndexedDB.

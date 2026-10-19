@@ -1,4 +1,4 @@
-import { searchTitle } from '../../lib/omdb'
+import { lookupTitle, searchTitle } from '../../lib/omdb'
 
 const mockFetch = jest.fn()
 global.fetch = mockFetch as typeof fetch
@@ -161,5 +161,116 @@ describe('searchTitle', () => {
     const result = await searchTitle('Some Show')
     expect(result?.year).toBe(0)
     expect(Number.isNaN(result?.year)).toBe(false)
+  })
+})
+
+describe('lookupTitle', () => {
+  beforeEach(() => mockFetch.mockReset())
+
+  const inception = {
+    Response: 'True',
+    imdbID: 'tt1375666',
+    Title: 'Inception',
+    Year: '2010',
+    Type: 'movie',
+    imdbRating: '8.8',
+    imdbVotes: '2,500,000',
+    Ratings: [{ Source: 'Rotten Tomatoes', Value: '87%' }],
+  }
+
+  it('returns found with the parsed title', async () => {
+    mockFetch.mockResolvedValue({ ok: true, json: async () => inception })
+    const result = await lookupTitle('Inception')
+    expect(result).toEqual({
+      status: 'found',
+      title: {
+        imdbId: 'tt1375666',
+        title: 'Inception',
+        year: 2010,
+        type: 'movie',
+        rating: 8.8,
+        voteCount: 2500000,
+        rtRating: 87,
+      },
+    })
+  })
+
+  it('returns not_found for "Movie not found!"', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ Response: 'False', Error: 'Movie not found!' }),
+    })
+    expect(await lookupTitle('nonexistent title')).toEqual({ status: 'not_found' })
+  })
+
+  it('returns error when fetch throws', async () => {
+    mockFetch.mockRejectedValue(new Error('network error'))
+    expect(await lookupTitle('Inception')).toEqual({ status: 'error' })
+  })
+
+  it('returns error when the response is not ok', async () => {
+    mockFetch.mockResolvedValue({ ok: false })
+    expect(await lookupTitle('Inception')).toEqual({ status: 'error' })
+  })
+
+  it('returns error when the body is not valid JSON', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => {
+        throw new SyntaxError('bad json')
+      },
+    })
+    expect(await lookupTitle('Inception')).toEqual({ status: 'error' })
+  })
+
+  it('returns error on "Request limit reached!"', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ Response: 'False', Error: 'Request limit reached!' }),
+    })
+    expect(await lookupTitle('Inception')).toEqual({ status: 'error' })
+  })
+
+  it('returns error on "Invalid API key!"', async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ Response: 'False', Error: 'Invalid API key!' }),
+    })
+    expect(await lookupTitle('Inception')).toEqual({ status: 'error' })
+  })
+
+  it('still returns found when the follow-up search fails', async () => {
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ...inception, Ratings: [] }),
+      })
+      .mockRejectedValueOnce(new Error('network error'))
+
+    const result = await lookupTitle('Inception')
+    expect(result.status).toBe('found')
+    expect(result.status === 'found' && result.title.imdbId).toBe('tt1375666')
+  })
+
+  it('still returns found when the follow-up detail call hits the rate limit', async () => {
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ...inception, Ratings: [] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          Response: 'True',
+          Search: [{ Title: 'Inception', Year: '2025', imdbID: 'tt0000001' }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ Response: 'False', Error: 'Request limit reached!' }),
+      })
+
+    const result = await lookupTitle('Inception')
+    expect(result.status === 'found' && result.title.imdbId).toBe('tt1375666')
   })
 })

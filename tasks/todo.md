@@ -64,3 +64,31 @@ Wave 2 (design) still queued.
 20 agents + 2 foundation agents; merged d5e318c: paper & ink redesign sitewide, OG/icons with embedded OFL fonts (lib/fonts), design guard tests (73 -> 0 violations), emoji-free content. Verified: tsc, jest 395, build, seo:validate (11 pages), seo:links, desktop visual pass (home, install, compare, research, alternatives).
 NOT verified: real 390px viewport (Chrome window cannot resize here; agents used 360-390px iframes: no horizontal overflow), live camera on /camera-vision, FAQ at mobile width.
 OPEN for owner: testimonials invented (lib/content.ts), LICENSE, OMDb key hardcoded (1000/day shared), privacy text/date, CWS store name + icon.png placeholder, extension badge still uses emoji (extension/content.js), 'N' app icon vs Netflix N lookalike check, tailwind.config.js/postcss plugin removable.
+
+---
+
+# Ratings cache: JSON document store with 7-day freshness (started 2026-10-19)
+
+Goal: never call OMDb for a title we already hold a fresh (<7 days) rating for. Primitive document store is fine (user: "doesn't need to be very fast for the beginning").
+
+## Findings that shape the design
+- The only server-side OMDb caller is `searchTitle()` in `lib/omdb.ts`, reached through `POST /api/ratings` (used by `/camera-vision`). It has NO cache today.
+- The Chrome extension (`extension/background.js`) calls OMDb directly from each user's browser with its own per-browser IndexedDB cache (7d found / 1d missing). A server DB does NOT reduce its calls unless the extension is routed through the server (decision pending, see "Phase 2").
+- `fetchDetail()` returns `null` for both "not found" and "network/rate-limit error". A cache must tell these apart or it will cache outages as "not found".
+- Deploy target (Qualify env on the Hetzner server) is not described anywhere in the repo. A file store only survives deploys if its path is on a persistent volume, so the path is configurable via `RATINGS_DB_PATH`.
+
+## Phase 1: server-side store (in scope)
+- [x] T1 `lib/ratings-store.ts`: JSON-file document store. Doc = `{ key, query, result: OmdbTitle | null, updatedAt }`. Key = lowercased, trimmed, whitespace-collapsed title. In-memory Map loaded lazily, atomic write (tmp file + rename), debounced flush, path from `RATINGS_DB_PATH` (default `.data/ratings.json`, gitignored). Corrupt/missing file starts empty, never throws.
+- [x] T2 Freshness policy in one place: found = 7 days, not-found = 1 day (matches extension). `getFresh(key, now)` returns doc or undefined.
+- [x] T3 `lib/omdb.ts`: distinguish `not_found` from `error` (network, non-OK, `Response:"False"` with an `Error` such as "Request limit reached!"). Only `found`/`not_found` are cacheable. Keep the current `searchTitle` signature working for existing callers/tests.
+- [x] T4 `lib/cached-omdb.ts` (or inside route): `getRating(title)` = store hit if fresh, else OMDb then store write. De-dupe concurrent identical lookups (in-flight Map). On OMDb error serve a stale doc if present rather than failing.
+- [x] T5 Wire `POST /api/ratings` to `getRating`; response shape unchanged. Optional `cached`/`updatedAt` fields only if no test or consumer breaks.
+- [x] T6 Tests (jest, temp dir per test): hit skips fetch; entry older than 7d refetches; not-found 1d; error is not cached; stale served on error; concurrent identical titles = 1 fetch; corrupt file recovery; key normalization; persistence across store re-instantiation.
+- [x] T7 Ops docs: `.gitignore` the data dir, document `RATINGS_DB_PATH` + persistent-volume requirement for Qualify/Hetzner in README (no secrets), single-process caveat (file store is not safe for multiple Node workers).
+- [x] T8 Verify: `npx tsc --noEmit`, `npx jest`, `npx next build`; manual: call `/api/ratings` twice, second call makes zero OMDb requests (log/counter).
+
+## Phase 2: extension through the server (needs user decision, NOT started)
+- [ ] T9 Add a public `GET/POST` ratings endpoint with CORS for the extension, rate limit, and have `background.js` try it before OMDb. Implications: new host permission, privacy page + README ("no backend server") + CWS privacy disclosure must change, server holds the one OMDb key.
+
+## Review (2026-10-19)
+Phase 1 done and verified: `tsc` clean, `jest` 24 suites / 428 passed, `next build` OK. Not yet exercised against the real OMDb API or on Qualify (needs the OMDb key and a persistent `RATINGS_DB_PATH`). Scoreless titles use the 1-day TTL like the extension. Uncommitted, awaiting user approval. T9 (extension through server) deferred by user decision.

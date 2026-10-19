@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { searchTitle } from '@/lib/omdb'
+import { getRating } from '@/lib/cached-omdb'
 
 export async function POST(req: NextRequest) {
   let body: unknown
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   }
 
   const settled = await Promise.allSettled(
-    titles.map((query) => searchTitle(query))
+    titles.map((query) => getRating(query))
   )
 
   const response = settled.map((result, i) => {

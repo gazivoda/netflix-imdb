@@ -10,8 +10,14 @@ export interface OmdbTitle {
   rtRating: number | null
 }
 
+export type LookupResult =
+  | { status: 'found'; title: OmdbTitle }
+  | { status: 'not_found' }
+  | { status: 'error' }
+
 type OmdbDetailResponse = {
   Response: string
+  Error?: string
   imdbID?: string
   Title?: string
   Year?: string
@@ -26,8 +32,7 @@ type OmdbSearchResponse = {
   Search?: { Title: string; Year: string; imdbID: string }[]
 }
 
-function parseDetail(data: OmdbDetailResponse): OmdbTitle | null {
-  if (data.Response !== 'True' || !data.imdbID) return null
+function parseDetail(data: OmdbDetailResponse): OmdbTitle {
 
   const rating =
     data.imdbRating && data.imdbRating !== 'N/A'
@@ -44,7 +49,7 @@ function parseDetail(data: OmdbDetailResponse): OmdbTitle | null {
   const rtRating = rtParsed !== null && !Number.isNaN(rtParsed) ? rtParsed : null
 
   return {
-    imdbId: data.imdbID,
+    imdbId: data.imdbID ?? '',
     title: data.Title ?? '',
     year: data.Year && data.Year !== 'N/A' ? parseInt(data.Year, 10) : 0,
     type: data.Type ?? '',
@@ -54,41 +59,55 @@ function parseDetail(data: OmdbDetailResponse): OmdbTitle | null {
   }
 }
 
-async function fetchDetail(url: string): Promise<OmdbTitle | null> {
+// OMDb answers 200 with Response:"False" both for "no such title" and for
+// failures such as "Request limit reached!" or "Invalid API key!". Only the
+// former is a stable answer; anything unrecognised is treated as a failure.
+function classifyDetail(data: OmdbDetailResponse): LookupResult {
+  if (data.Response === 'True') {
+    return data.imdbID
+      ? { status: 'found', title: parseDetail(data) }
+      : { status: 'error' }
+  }
+  if (!data.Error || /not found/i.test(data.Error)) return { status: 'not_found' }
+  return { status: 'error' }
+}
+
+async function fetchDetail(url: string): Promise<LookupResult> {
   let res: Response
   try {
     res = await fetch(url)
   } catch {
-    return null
+    return { status: 'error' }
   }
-  if (!res.ok) return null
+  if (!res.ok) return { status: 'error' }
   let data: OmdbDetailResponse
   try {
     data = await res.json()
   } catch {
-    return null
+    return { status: 'error' }
   }
-  return parseDetail(data)
+  return classifyDetail(data)
 }
 
-export async function searchTitle(
+export async function lookupTitle(
   query: string,
   apiKey = process.env.OMDB_API_KEY ?? ''
-): Promise<OmdbTitle | null> {
+): Promise<LookupResult> {
   // Step 1: direct lookup — 1 API call for the common case.
-  const direct = await fetchDetail(`${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`)
+  const result = await fetchDetail(`${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`)
 
-  // Found with RT data, or not found at all → return immediately (1 call total).
-  if (direct === null || direct.rtRating !== null) return direct
+  // Found with RT data, or not found / failed → return immediately (1 call total).
+  if (result.status !== 'found' || result.title.rtRating !== null) return result
+  const direct = result.title
 
   // Found but no RT score: the ?t= endpoint may have picked the wrong entry when
   // multiple titles share the same name (e.g. Cover-Up 1991 vs Cover-Up 2025).
   // Search for a newer exact-title match that has RT data.
   try {
     const searchRes = await fetch(`${OMDB_API_BASE}/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
-    if (!searchRes.ok) return direct
+    if (!searchRes.ok) return result
     const searchData: OmdbSearchResponse = await searchRes.json()
-    if (searchData.Response !== 'True' || !searchData.Search?.length) return direct
+    if (searchData.Response !== 'True' || !searchData.Search?.length) return result
 
     const normalized = query.toLowerCase().trim()
     const exact = searchData.Search
@@ -96,12 +115,20 @@ export async function searchTitle(
       .sort((a, b) => (parseInt(b.Year) || 0) - (parseInt(a.Year) || 0))
 
     const best = exact[0]
-    if (!best || best.imdbID === direct.imdbId) return direct
+    if (!best || best.imdbID === direct.imdbId) return result
 
     // A different (newer) candidate exists — fetch its full details.
     const better = await fetchDetail(`${OMDB_API_BASE}/?i=${best.imdbID}&apikey=${apiKey}`)
-    return better ?? direct
+    return better.status === 'found' ? better : result
   } catch {
-    return direct
+    return result
   }
+}
+
+export async function searchTitle(
+  query: string,
+  apiKey = process.env.OMDB_API_KEY ?? ''
+): Promise<OmdbTitle | null> {
+  const result = await lookupTitle(query, apiKey)
+  return result.status === 'found' ? result.title : null
 }

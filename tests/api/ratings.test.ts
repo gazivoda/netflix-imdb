@@ -1,5 +1,9 @@
 import { POST } from '../../app/api/ratings/route'
 import { NextRequest } from 'next/server'
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import { getRatingsStore, resetRatingsStoreForTests } from '../../lib/ratings-store'
 
 const mockFetch = jest.fn()
 global.fetch = mockFetch as typeof fetch
@@ -30,7 +34,22 @@ function omdbResponse(overrides = {}) {
 }
 
 describe('POST /api/ratings', () => {
-  beforeEach(() => mockFetch.mockReset())
+  let dbDir: string
+
+  beforeEach(() => {
+    mockFetch.mockReset()
+    // Each test gets its own empty ratings store so cached titles never leak between tests.
+    dbDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ratings-route-'))
+    process.env.RATINGS_DB_PATH = path.join(dbDir, 'ratings.json')
+    resetRatingsStoreForTests()
+  })
+
+  afterEach(async () => {
+    await getRatingsStore().flush()
+    resetRatingsStoreForTests()
+    delete process.env.RATINGS_DB_PATH
+    fs.rmSync(dbDir, { recursive: true, force: true })
+  })
 
   it('returns 400 when titles is missing', async () => {
     const res = await POST(makeRequest({}))
@@ -161,5 +180,16 @@ describe('POST /api/ratings', () => {
     expect(body[1].found).toBe(true)
     expect(body[1].title).toBe('Breaking Bad')
     expect(body[1].rtRating).toBe(96)
+  })
+
+  it('answers a repeated request from the store without calling OMDb', async () => {
+    mockFetch.mockResolvedValue(omdbResponse())
+
+    const first = await (await POST(makeRequest({ titles: ['Inception'] }))).json()
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+
+    const second = await (await POST(makeRequest({ titles: ['inception'] }))).json()
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(second[0]).toMatchObject({ found: true, imdbId: first[0].imdbId, rating: 8.8, rtRating: 87 })
   })
 })
