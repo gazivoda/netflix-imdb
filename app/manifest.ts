@@ -3,8 +3,8 @@ import { HOME_DESCRIPTION } from '../lib/pages';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Netflix Ratings',
-    short_name: 'Netflix Ratings',
+    name: 'Rating Watch',
+    short_name: 'Rating Watch',
     description: HOME_DESCRIPTION,
     start_url: '/',
     scope: '/',

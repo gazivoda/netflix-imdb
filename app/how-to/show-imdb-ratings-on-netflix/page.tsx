@@ -11,7 +11,7 @@ export const metadata = pageMetadata(PATH);
 const FAQS: Faq[] = [
   {
     q: 'Does Netflix show IMDb ratings?',
-    a: 'No. Netflix does not display IMDb ratings anywhere in its app or website. It shows its own signals instead, such as a percentage match score and its thumbs-up ratings. To see IMDb scores on Netflix, you need a browser extension like Netflix Ratings or a lookup on the IMDb site.',
+    a: 'No. Netflix does not display IMDb ratings anywhere in its app or website. It shows its own signals instead, such as a percentage match score and its thumbs-up ratings. To see IMDb scores on Netflix, you need a browser extension like Rating Watch or a lookup on the IMDb site.',
   },
   {
     q: 'What does the IMDb number on the badge mean?',
@@ -19,11 +19,11 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Why is there no rating on some Netflix titles?',
-    a: 'Netflix Ratings looks each title up in the OMDb database. If OMDb has no IMDb rating for it, for example a very new release or a title listed under a different name, the card shows no IMDb score. When neither score is found, no badge appears at all.',
+    a: 'Rating Watch looks each title up in the OMDb database. If OMDb has no IMDb rating for it, for example a very new release or a title listed under a different name, the card shows no IMDb score. When neither score is found, no badge appears at all.',
   },
   {
     q: 'Does this work on the Netflix mobile app or a TV?',
-    a: 'No. Netflix Ratings is a Chromium browser extension, so it works on netflix.com in desktop Chrome, Edge and Brave. It cannot add badges to the Netflix app on phones, tablets, smart TVs or streaming sticks. It has not been tested in Firefox or Safari.',
+    a: 'No. Rating Watch is a Chromium browser extension, so it works on netflix.com in desktop Chrome, Edge and Brave. It cannot add badges to the Netflix app on phones, tablets, smart TVs or streaming sticks. It has not been tested in Firefox or Safari.',
   },
   {
     q: 'Is it free, and what does it send?',
@@ -39,7 +39,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
       lede={
         <>
           <strong>
-            To show IMDb ratings on Netflix, install the free Netflix Ratings browser extension,
+            To show IMDb ratings on Netflix, install the free Rating Watch browser extension,
             open netflix.com and read the badge in the top-right corner of each title card.
           </strong>{' '}
           The number beside the star is the IMDb rating out of 10. It works in Chrome, Edge and
@@ -51,7 +51,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
         howTo({
           name: 'How to show IMDb ratings on Netflix',
           description:
-            'Show IMDb ratings on Netflix title cards in a Chromium browser using the free, open-source Netflix Ratings extension.',
+            'Show IMDb ratings on Netflix title cards in a Chromium browser using the free, open-source Rating Watch extension.',
           totalTime: 'PT3M',
           steps: STEPS,
         }),
@@ -70,7 +70,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
       </div>
       <p className={g.p}>
         <a href="/install" className={g.btnPrimary}>
-          Install Netflix Ratings <span aria-hidden>→</span>
+          Install Rating Watch <span aria-hidden>→</span>
         </a>
       </p>
       <p className={g.p}>
@@ -110,7 +110,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
 
       <h2 className={g.h2}>Where do the ratings come from?</h2>
       <p className={g.p}>
-        Netflix Ratings reads the title from each card, then a background worker looks it up in{' '}
+        Rating Watch reads the title from each card, then a background worker looks it up in{' '}
         <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDb</a>, an
         open movie database that carries IMDb ratings and Rotten Tomatoes scores. Lookups run in
         parallel and repeat titles are served from a local cache, so scrolling stays fast. The
@@ -147,7 +147,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
           in the Netflix mobile or TV apps, and it has not been tested in Firefox or Safari.
         </li>
         <li>
-          <strong>Independent project.</strong> Netflix Ratings is not affiliated with, endorsed
+          <strong>Independent project.</strong> Rating Watch is not affiliated with, endorsed
           by or sponsored by Netflix, IMDb or Rotten Tomatoes. Those names belong to their owners.
         </li>
       </ul>

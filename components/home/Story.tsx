@@ -18,7 +18,7 @@ export default function Story() {
           back, and repeat. Every single time.
         </p>
         <p>
-          Netflix Ratings removes that loop entirely. By placing the <strong>IMDb</strong> user
+          Rating Watch removes that loop entirely. By placing the <strong>IMDb</strong> user
           score and the <strong>Rotten Tomatoes</strong> critic score directly on each title
           card, the decision happens where you already are. You glance, you compare the audience
           and the critics in the same look, and you press play with confidence — or scroll on

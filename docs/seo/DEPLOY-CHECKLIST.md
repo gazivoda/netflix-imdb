@@ -1,6 +1,6 @@
 # Post-deploy SEO checklist
 
-Run after every production deploy of `https://netflix-ratings.app`. Each step names the command or URL and the expected result. Commands assume the repo root; `S=https://netflix-ratings.app`.
+Run after every production deploy of `https://rating.watch`. Each step names the command or URL and the expected result. Commands assume the repo root; `S=https://rating.watch`.
 
 ## 1. Confirm live == repo
 
@@ -16,7 +16,7 @@ Run after every production deploy of `https://netflix-ratings.app`. Each step na
 
 ## 2. Crawl-control routes
 
-- [ ] `curl -s $S/robots.txt` lists `Allow: /` for `*` and the AI crawlers (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, ...) and ends with `Sitemap: https://netflix-ratings.app/sitemap.xml`.
+- [ ] `curl -s $S/robots.txt` lists `Allow: /` for `*` and the AI crawlers (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, ...) and ends with `Sitemap: https://rating.watch/sitemap.xml`.
 - [ ] `curl -sI $S/sitemap.xml` returns `200` with an XML content type.
 - [ ] `curl -s $S/llms.txt` returns the plain-text file from `public/llms.txt`, and each page it links to returns `200`.
 - [ ] IndexNow key file is public and exact: `curl -s $S/682b64e6a0f625f3b476439b6c6f1d81.txt` returns exactly `682b64e6a0f625f3b476439b6c6f1d81`.
@@ -25,9 +25,9 @@ Run after every production deploy of `https://netflix-ratings.app`. Each step na
 
 Redirects are not defined in this repo (no `vercel.json`, empty `next.config.js`); they come from the hosting/DNS config, so verify live.
 
-- [ ] `curl -sI http://netflix-ratings.app/` returns a `301`/`308` to `https://netflix-ratings.app/`.
-- [ ] `curl -sI https://www.netflix-ratings.app/` returns a `301`/`308` to `https://netflix-ratings.app/` (or the `www` host does not resolve). It must not serve a duplicate `200`.
-- [ ] `curl -sI http://www.netflix-ratings.app/` ends on `https://netflix-ratings.app/` within one or two hops.
+- [ ] `curl -sI http://rating.watch/` returns a `301`/`308` to `https://rating.watch/`.
+- [ ] `curl -sI https://www.rating.watch/` returns a `301`/`308` to `https://rating.watch/` (or the `www` host does not resolve). It must not serve a duplicate `200`.
+- [ ] `curl -sI http://www.rating.watch/` ends on `https://rating.watch/` within one or two hops.
 
 ## 4. IndexNow (Bing, Yandex, Seznam, Naver; Google does not use it)
 
@@ -38,11 +38,11 @@ Redirects are not defined in this repo (no `vercel.json`, empty `next.config.js`
 ## 5. Search console submissions
 
 - [ ] Google Search Console: Sitemaps, submit `sitemap.xml`; status should read "Success" and the discovered-page count should match the sitemap. For a new or heavily changed page, URL Inspection, then "Request indexing".
-- [ ] Bing Webmaster Tools: Sitemaps, submit `https://netflix-ratings.app/sitemap.xml`. Optionally import the property from Google Search Console.
+- [ ] Bing Webmaster Tools: Sitemaps, submit `https://rating.watch/sitemap.xml`. Optionally import the property from Google Search Console.
 
 ## 6. Structured data
 
-- [ ] Google Rich Results Test on `https://netflix-ratings.app/install`: expect `HowTo`, `FAQPage` and `BreadcrumbList` detected with no errors (the `Article` node is also in the graph). Warnings on optional fields are acceptable. Google no longer shows HowTo rich results, so a valid parse is the goal, not a SERP feature.
+- [ ] Google Rich Results Test on `https://rating.watch/install`: expect `HowTo`, `FAQPage` and `BreadcrumbList` detected with no errors (the `Article` node is also in the graph). Warnings on optional fields are acceptable. Google no longer shows HowTo rich results, so a valid parse is the goal, not a SERP feature.
 - [ ] Rich Results Test on `/` and `/compare/imdb-vs-rotten-tomatoes`: each reports exactly one `FAQPage` (the root layout must not emit one; `tests/lib/seo.test.ts` enforces this) and no errors. Compare detected types against `/install` to spot a page missing its schema.
 - [ ] Schema.org validator (validator.schema.org) on the same URLs: no errors, and the `@id` references (`/#org`, `/#author`) resolve to nodes in the same graph.
 - [ ] Spot check the raw HTML: `curl -s $S/install | grep -c 'application/ld+json'` is at least `1`.
@@ -55,4 +55,4 @@ Redirects are not defined in this repo (no `vercel.json`, empty `next.config.js`
 
 ## 8. Wrap-up
 
-- [ ] Search `site:netflix-ratings.app` in Google and Bing a day or two later; new pages should start appearing. If not, re-run step 5 for those URLs.
+- [ ] Search `site:rating.watch` in Google and Bing a day or two later; new pages should start appearing. If not, re-run step 5 for those URLs.

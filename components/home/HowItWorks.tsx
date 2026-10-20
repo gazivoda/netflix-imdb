@@ -15,7 +15,7 @@ export default function HowItWorks() {
           How does Netflix <em className="ds-serif">Ratings</em> work?
         </h2>
         <p className={styles.howLead}>
-          Netflix Ratings reads the title cards on netflix.com, looks up each title&apos;s IMDb
+          Rating Watch reads the title cards on netflix.com, looks up each title&apos;s IMDb
           rating and Rotten Tomatoes score through the OMDb API, and draws a small badge in the
           top-right corner of the card. Setup takes three steps.
         </p>

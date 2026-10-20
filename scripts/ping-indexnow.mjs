@@ -13,7 +13,7 @@
 //   --dry-run       print what would be sent and exit; never POSTs to IndexNow
 //                   (without --local the live sitemap is still fetched, read-only)
 //
-// Site origin comes from NEXT_PUBLIC_SITE_URL (default https://netflix-ratings.app).
+// Site origin comes from NEXT_PUBLIC_SITE_URL (default https://rating.watch).
 // The key below must match the verification file served at
 //   <host>/682b64e6a0f625f3b476439b6c6f1d81.txt
 // (lives in /public, so Next serves it at the site root).
@@ -22,7 +22,7 @@ import { readFile } from 'node:fs/promises';
 import { sitemapUrls } from './lib/sitemap-urls.mjs';
 
 const KEY = '682b64e6a0f625f3b476439b6c6f1d81';
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://netflix-ratings.app').replace(/\/$/, '');
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rating.watch').replace(/\/$/, '');
 const DEFAULT_LOCAL_SITEMAP = '.next/server/app/sitemap.xml.body';
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
 const BATCH = 10000; // IndexNow's per-request URL limit

@@ -23,7 +23,7 @@ export interface SitePage {
   ogType?: 'website' | 'article';
 }
 
-export const HOME_TITLE = 'Netflix Ratings: IMDb & Rotten Tomatoes on Netflix Cards';
+export const HOME_TITLE = 'Rating Watch: IMDb & Rotten Tomatoes on Netflix Cards';
 export const HOME_DESCRIPTION =
   'Free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. No account, no tab-switching.';
 
@@ -40,9 +40,9 @@ export const PAGES: SitePage[] = [
   },
   {
     path: '/install',
-    title: 'Install Netflix Ratings on Chrome, Edge, Brave',
+    title: 'Install Rating Watch on Chrome, Edge, Brave',
     description:
-      'Install the free Netflix Ratings extension in about a minute: download from GitHub, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
+      'Install the free Rating Watch extension in about a minute: download from GitHub, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
@@ -55,7 +55,7 @@ export const PAGES: SitePage[] = [
     path: '/how-to/show-imdb-ratings-on-netflix',
     title: 'How to Show IMDb Ratings on Netflix (Free)',
     description:
-      'Show IMDb ratings on Netflix cards with the free Netflix Ratings extension: install, open Netflix, read the top-right badge. What the score means, and limits.',
+      'Show IMDb ratings on Netflix cards with the free Rating Watch extension: install, open Netflix, read the top-right badge. What the score means, and limits.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
@@ -68,7 +68,7 @@ export const PAGES: SitePage[] = [
     path: '/how-to/show-rotten-tomatoes-on-netflix',
     title: 'Show Rotten Tomatoes Scores on Netflix',
     description:
-      'Netflix has no Rotten Tomatoes scores. Install the free Netflix Ratings extension to see the Tomatometer on every title card, and what the percentage means.',
+      'Netflix has no Rotten Tomatoes scores. Install the free Rating Watch extension to see the Tomatometer on every title card, and what the percentage means.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
@@ -120,7 +120,7 @@ export const PAGES: SitePage[] = [
     path: '/compare/alternatives',
     title: 'Ratings on Netflix: Reelgood, JustWatch & More',
     description:
-      'Netflix Ratings vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026.',
+      'Rating Watch vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
@@ -131,9 +131,9 @@ export const PAGES: SitePage[] = [
   },
   {
     path: '/about',
-    title: 'About Netflix Ratings and Its Maker',
+    title: 'About Rating Watch and Its Maker',
     description:
-      'Netflix Ratings is a free open-source extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker.',
+      'Rating Watch is a free open-source extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'yearly',
@@ -156,10 +156,21 @@ export const PAGES: SitePage[] = [
     ogType: 'website',
   },
   {
+    path: '/camera-vision/ar',
+    title: 'AR Ratings: Netflix Scores Over the TV Screen',
+    description:
+      'Experimental AR demo: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores drawn over each tile, with on-device recognition.',
+    published: '2026-10-20',
+    updated: '2026-10-20',
+    changeFrequency: 'monthly',
+    priority: 0.4,
+    ogType: 'website',
+  },
+  {
     path: '/privacy',
     title: 'Privacy Policy',
     description:
-      'What the Netflix Ratings extension sends (only title names, to OMDb), what it never collects, and the browser permissions it asks for. No account, no tracking.',
+      'What the Rating Watch extension sends (only title names, to OMDb), what it never collects, and the browser permissions it asks for. No account, no tracking.',
     updated: '2026-10-16',
     changeFrequency: 'yearly',
     priority: 0.3,

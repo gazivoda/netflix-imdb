@@ -2,8 +2,8 @@
 // so the HowTo steps can be unit-tested.
 export const STEPS = [
   {
-    name: 'Install the Netflix Ratings extension',
-    text: 'Download Netflix Ratings from GitHub and load it as an unpacked extension in Chrome, Edge or Brave. The install takes about a minute and needs no account or API key.',
+    name: 'Install the Rating Watch extension',
+    text: 'Download Rating Watch from GitHub and load it as an unpacked extension in Chrome, Edge or Brave. The install takes about a minute and needs no account or API key.',
   },
   {
     name: 'Open Netflix in your browser',

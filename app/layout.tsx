@@ -43,8 +43,9 @@ export const metadata: Metadata = {
     template: `%s${TITLE_SUFFIX}`,
   },
   description: DESCRIPTION,
-  applicationName: 'Netflix Ratings',
+  applicationName: 'Rating Watch',
   keywords: [
+    'Rating Watch',
     'Netflix IMDb',
     'Netflix Rotten Tomatoes',
     'Netflix ratings extension',
@@ -59,7 +60,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: SITE_URL,
-    siteName: 'Netflix Ratings',
+    siteName: 'Rating Watch',
     title: TITLE,
     description: DESCRIPTION,
     locale: 'en_US',

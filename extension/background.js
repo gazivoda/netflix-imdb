@@ -147,7 +147,7 @@ function showLimited(on) {
     chrome.action.setTitle({
       title: on
         ? 'Daily OMDb limit reached. Click to add your own free API key.'
-        : 'Ratings for Netflix',
+        : 'Rating Watch',
     });
   } catch {
     // action API unavailable: ignore

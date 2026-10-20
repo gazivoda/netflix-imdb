@@ -5,7 +5,7 @@ export default function HomeNav() {
     <nav className={styles.nav} aria-label="Primary">
       <a className={styles.navLogo} href="/">
         <span className={styles.navLogoIcon} aria-hidden>★</span>
-        <span>Netflix Ratings</span>
+        <span>Rating Watch</span>
       </a>
       <div className={styles.navLinks}>
         <a href="/compare/imdb-vs-rotten-tomatoes" className={styles.navLink}>

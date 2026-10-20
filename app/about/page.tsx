@@ -11,19 +11,19 @@ const CONTACT_EMAIL = 'gazivodai61@gmail.com'; // already public on /privacy
 
 const FAQS: Faq[] = [
   {
-    q: 'Who makes Netflix Ratings?',
-    a: `Netflix Ratings is made by ${AUTHOR_NAME}, an independent developer who publishes the project on GitHub under the username gazivoda. It is a personal open-source project, not a company product, and it is not affiliated with Netflix, IMDb or Rotten Tomatoes.`,
+    q: 'Who makes Rating Watch?',
+    a: `Rating Watch is made by ${AUTHOR_NAME}, an independent developer who publishes the project on GitHub under the username gazivoda. It is a personal open-source project, not a company product, and it is not affiliated with Netflix, IMDb or Rotten Tomatoes.`,
   },
   {
     q: 'Where do the ratings come from?',
-    a: 'Every score comes from the OMDb API (omdbapi.com), a third-party movie database. The extension sends only a title name, receives the IMDb rating and Rotten Tomatoes score OMDb holds for it, and shows them on the card. Netflix Ratings does not calculate, adjust or invent any scores.',
+    a: 'Every score comes from the OMDb API (omdbapi.com), a third-party movie database. The extension sends only a title name, receives the IMDb rating and Rotten Tomatoes score OMDb holds for it, and shows them on the card. Rating Watch does not calculate, adjust or invent any scores.',
   },
   {
     q: 'What if a rating is wrong or missing?',
     a: 'Scores are third-party data, shown exactly as OMDb returns them, so an error usually originates there or at the rating source. If you spot a wrong match or a missing badge, open an issue on the GitHub repository with the title and what you saw, and it can be investigated.',
   },
   {
-    q: 'Is Netflix Ratings affiliated with Netflix, IMDb or Rotten Tomatoes?',
+    q: 'Is Rating Watch affiliated with Netflix, IMDb or Rotten Tomatoes?',
     a: 'No. It is an independent project and is not affiliated with, endorsed by or sponsored by Netflix, IMDb or Rotten Tomatoes. Those names and logos belong to their respective owners and are used only to describe which scores the extension displays.',
   },
   {
@@ -37,7 +37,7 @@ const aboutPage = {
   '@type': ['AboutPage', 'ProfilePage'],
   '@id': `${absoluteUrl(PATH)}#webpage`,
   url: absoluteUrl(PATH),
-  name: 'About Netflix Ratings',
+  name: 'About Rating Watch',
   datePublished: '2026-10-15',
   dateModified: '2026-10-15',
   inLanguage: 'en',
@@ -50,11 +50,11 @@ export default function AboutPage() {
   return (
     <GuideLayout
       path={PATH}
-      h1="About Netflix Ratings"
+      h1="About Rating Watch"
       lede={
         <>
           <strong>
-            Netflix Ratings is a free, open-source browser extension made by {AUTHOR_NAME} that
+            Rating Watch is a free, open-source browser extension made by {AUTHOR_NAME} that
             shows IMDb and Rotten Tomatoes scores on Netflix title cards.
           </strong>{' '}
           This page explains who is behind it, why it exists, where the scores come from and how
@@ -91,9 +91,9 @@ export default function AboutPage() {
         </dl>
       </section>
 
-      <h2 className={s.h2}>Who makes Netflix Ratings?</h2>
+      <h2 className={s.h2}>Who makes Rating Watch?</h2>
       <p className={s.p}>
-        Netflix Ratings is built and maintained by {AUTHOR_NAME}, an independent developer. The
+        Rating Watch is built and maintained by {AUTHOR_NAME}, an independent developer. The
         code, the issue tracker and the release history all live on GitHub, so you can check the
         work directly: see the{' '}
         <a href={AUTHOR_PROFILE_URL} target="_blank" rel="noopener noreferrer">
@@ -109,7 +109,7 @@ export default function AboutPage() {
       <h2 className={s.h2}>Why does it exist?</h2>
       <p className={s.p}>
         Choosing what to watch on Netflix usually means leaving Netflix to look the title up on
-        IMDb or Rotten Tomatoes. Netflix Ratings removes that step by putting both scores in a
+        IMDb or Rotten Tomatoes. Rating Watch removes that step by putting both scores in a
         small badge in the top-right corner of every title card, so the rating is there while you
         browse. It is deliberately small in scope: it does one job, needs no account, and asks for
         access to only two sites.
@@ -128,14 +128,14 @@ export default function AboutPage() {
         <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">OMDb</a>, a
         third-party movie database. The extension&apos;s background worker sends a title to OMDb,
         reads back the IMDb rating (out of 10) and the Rotten Tomatoes score (a percentage), and
-        displays them. Netflix Ratings runs no rating system of its own. If you are unsure how the
+        displays them. Rating Watch runs no rating system of its own. If you are unsure how the
         two numbers differ, read{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes: which rating to trust</a>.
       </p>
 
       <h2 className={s.h2}>How is accuracy handled?</h2>
       <aside className={s.note}>
-        <strong>Scores are third-party data, shown as received.</strong> Netflix Ratings does not
+        <strong>Scores are third-party data, shown as received.</strong> Rating Watch does not
         edit, round up or curate them. If a score looks wrong, it is usually wrong, outdated or
         missing at the source.
       </aside>
@@ -151,7 +151,7 @@ export default function AboutPage() {
 
       <h2 className={s.h2}>Is it independent of Netflix?</h2>
       <p className={s.p}>
-        Yes. Netflix Ratings is not affiliated with, endorsed by or sponsored by Netflix, IMDb or
+        Yes. Rating Watch is not affiliated with, endorsed by or sponsored by Netflix, IMDb or
         Rotten Tomatoes. Those names and any related marks belong to their owners and are used only
         to describe what the extension shows. It does not collect your viewing history; the{' '}
         <a href="/privacy">privacy policy</a> lists exactly what is sent.

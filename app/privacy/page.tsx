@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         <section className={s.slip}>
           <h2 className={`ds-display ${s.h2}`}>What this extension does</h2>
           <p>
-            Netflix Ratings is a Chrome extension that reads the title of each Netflix show or
+            Rating Watch is a Chrome extension that reads the title of each Netflix show or
             movie visible on your screen and fetches its IMDb and Rotten Tomatoes ratings from the OMDb public API. The
             ratings are then displayed as a small badge on the title card.
           </p>

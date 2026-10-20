@@ -39,7 +39,7 @@ export default function Hero() {
 
       <div className={styles.heroCopy}>
         <p className={`${styles.heroSubtitle} ${shared.reveal} ${shared.d2}`}>
-          Netflix Ratings is a free, open-source Chrome extension that shows the{' '}
+          Rating Watch is a free, open-source Chrome extension that shows the{' '}
           <strong>IMDb</strong> rating and the <strong>Rotten Tomatoes</strong> score on every
           Netflix title card as you browse. No account, no second tab, no searching — just
           scroll and decide.

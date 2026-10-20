@@ -7,7 +7,7 @@ export default function SiteHeader() {
       <nav className={c.nav} aria-label="Primary">
         <a className={c.navLogo} href="/">
           <span className={c.navLogoIcon} aria-hidden>★</span>
-          Netflix Ratings
+          Rating Watch
         </a>
         <div className={c.navRight}>
           <a href="/compare/imdb-vs-rotten-tomatoes" className={c.navLink}>IMDb vs Rotten Tomatoes</a>

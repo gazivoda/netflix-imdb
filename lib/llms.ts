@@ -7,10 +7,10 @@ import { SITE_URL, REPO_URL, AUTHOR_NAME, FAQS } from './content';
 import { absoluteUrl } from './seo';
 import { PAGES, type SitePage } from './pages';
 
-const SITE_NAME = 'Netflix Ratings';
+const SITE_NAME = 'Rating Watch';
 
 const SUMMARY =
-  'Netflix Ratings is a free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
+  'Rating Watch is a free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
 
 // Verified against extension/ (manifest.json, content.js, background.js).
 const KEY_FACTS = [

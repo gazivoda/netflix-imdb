@@ -18,7 +18,7 @@ export default function BeforeAfter() {
         </div>
         <div className={styles.baVs} aria-hidden>VS</div>
         <div className={styles.baCol}>
-          <span className={`${styles.baTag} ${styles.baTagOn}`}>With Netflix Ratings</span>
+          <span className={`${styles.baTag} ${styles.baTagOn}`}>With Rating Watch</span>
           <div className={styles.baCard} aria-hidden>
             <div className={styles.baArt}>
               Stranger Things

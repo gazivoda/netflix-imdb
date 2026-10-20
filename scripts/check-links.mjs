@@ -21,7 +21,7 @@ const argValue = (flag) => {
   return i === -1 ? undefined : args[i + 1];
 };
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://netflix-ratings.app').replace(/\/$/, '');
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rating.watch').replace(/\/$/, '');
 const baseUrl = argValue('--url')?.replace(/\/$/, '');
 const maxDepth = Number(argValue('--max-depth') ?? 2);
 const registry = PAGES.map((p) => p.path);

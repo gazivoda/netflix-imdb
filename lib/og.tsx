@@ -8,7 +8,7 @@ export const OG_VERSION = '3';
 
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_ALT =
-  'Netflix Ratings: IMDb and Rotten Tomatoes scores shown on Netflix title cards';
+  'Rating Watch: IMDb and Rotten Tomatoes scores shown on Netflix title cards';
 
 // Brand tokens from docs/DESIGN.md. next/og cannot read CSS variables.
 const PAPER = '#ece6d8';
@@ -116,7 +116,7 @@ export async function renderOgImage() {
                   ...mono,
                 }}
               >
-                Netflix Ratings
+                Rating Watch
               </div>
               <div style={{ ...mono, fontSize: 18, display: 'flex' }}>Free Chrome extension</div>
             </div>

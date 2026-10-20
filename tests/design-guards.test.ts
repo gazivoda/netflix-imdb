@@ -344,7 +344,7 @@ describe('design guards: scanner self-test (fixtures)', () => {
     expect(e('content: "\\1F345";')).toBe(1);
     expect(e('<p>✔️</p>')).toBe(1);
     expect(e('<p>\u{1F1E9}\u{1F1EA}</p>')).toBe(1);
-    expect(e('<p>© 2026 Netflix Ratings™ → ↗ — – ✓ ✔ ★ • …</p>')).toBe(0);
+    expect(e('<p>© 2026 Rating Watch™ → ↗ — – ✓ ✔ ★ • …</p>')).toBe(0);
   });
 });
 

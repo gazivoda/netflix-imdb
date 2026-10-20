@@ -1,10 +1,10 @@
-# Netflix Ratings
+# Rating Watch
 
-**Netflix Ratings is a free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards.**
+**Rating Watch is a free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards.**
 
 It adds a small badge to the top-right corner of every title card on netflix.com, so you can see the IMDb score (out of 10) and the Rotten Tomatoes critic score (a percentage) without opening another tab. No account, no API key, no tracking.
 
-Website: [netflix-ratings.app](https://netflix-ratings.app) · [Install guide](https://netflix-ratings.app/install) · [Privacy policy](https://netflix-ratings.app/privacy) · [IMDb vs Rotten Tomatoes](https://netflix-ratings.app/compare/imdb-vs-rotten-tomatoes)
+Website: [rating.watch](https://rating.watch) · [Install guide](https://rating.watch/install) · [Privacy policy](https://rating.watch/privacy) · [IMDb vs Rotten Tomatoes](https://rating.watch/compare/imdb-vs-rotten-tomatoes)
 
 ## What it does
 
@@ -16,7 +16,7 @@ Website: [netflix-ratings.app](https://netflix-ratings.app) · [Install guide](h
 
 ## Install
 
-Netflix Ratings is not on the Chrome Web Store yet, so it installs as an unpacked extension. This takes about a minute and is the same procedure as the [install guide](https://netflix-ratings.app/install).
+Rating Watch is not on the Chrome Web Store yet, so it installs as an unpacked extension. This takes about a minute and is the same procedure as the [install guide](https://rating.watch/install).
 
 1. **Download the extension.** Download [`extension.zip`](https://github.com/gazivoda/netflix-imdb/raw/main/extension.zip) from this repository, or clone the repository and use its `extension` folder.
 2. **Unzip it to a folder you will keep.** Chrome loads the extension from that folder, so moving or deleting it later disables the extension.
@@ -39,14 +39,14 @@ The extension has two parts, both in [`extension/`](extension):
 - The only data that leaves your browser is the title name of each card, sent to OMDb to fetch its rating.
 - No account, no analytics, no telemetry, and no backend server. Looked-up ratings are cached locally in the extension's own IndexedDB for up to 7 days (1 day when OMDb has no score yet); nothing is synced or sent anywhere. An optional OMDb key you add on the settings page is stored the same way.
 
-Full details: [netflix-ratings.app/privacy](https://netflix-ratings.app/privacy).
+Full details: [rating.watch/privacy](https://rating.watch/privacy).
 
 ## Repo layout
 
 | Path | What it is |
 | --- | --- |
 | [`extension/`](extension) | The Chrome extension itself (Manifest V3): manifest, content script, background worker, icons |
-| [`app/`](app) | The [netflix-ratings.app](https://netflix-ratings.app) website (Next.js App Router): home, `/install`, `/compare`, `/privacy`, plus an experimental camera demo and a ratings API route |
+| [`app/`](app) | The [rating.watch](https://rating.watch) website (Next.js App Router): home, `/install`, `/compare`, `/privacy`, plus an experimental camera demo and a ratings API route |
 | [`lib/`](lib) | Shared site code: page registry, SEO/JSON-LD helpers, OMDb client, content constants |
 | [`components/`](components) | Shared React components for the site |
 | [`tests/`](tests) | Jest tests for the OMDb client, title extraction, ratings API and SEO helpers |
@@ -72,7 +72,7 @@ bash scripts/package-extension.sh
 
 ## Not affiliated
 
-Netflix Ratings is an independent project. It is not affiliated with, endorsed by or sponsored by Netflix, Inc., IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners and are used here only to describe what the extension does.
+Rating Watch is an independent project. It is not affiliated with, endorsed by or sponsored by Netflix, Inc., IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners and are used here only to describe what the extension does.
 
 ## Credits
 

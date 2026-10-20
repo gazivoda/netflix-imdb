@@ -2,7 +2,7 @@
 // JSON-LD structured data (FAQPage, SoftwareApplication) never drift apart.
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://netflix-ratings.app';
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://rating.watch';
 
 export const REPO_URL = 'https://github.com/gazivoda/netflix-imdb';
 
@@ -103,16 +103,16 @@ export const MARQUEE = [
 
 export const FAQS = [
   {
-    q: 'What is Netflix Ratings?',
-    a: 'Netflix Ratings is a free, open-source Chrome extension that shows the IMDb rating and the Rotten Tomatoes score in a small badge on each Netflix title card as you browse. You see both scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave.',
+    q: 'What is Rating Watch?',
+    a: 'Rating Watch is a free, open-source Chrome extension that shows the IMDb rating and the Rotten Tomatoes score in a small badge on each Netflix title card as you browse. You see both scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave.',
   },
   {
-    q: 'Is Netflix Ratings free?',
-    a: 'Yes. Netflix Ratings is completely free and open source. There is no paid tier, no subscription and no account to create. The full source code is on GitHub, so you can read exactly what the extension does before you install it.',
+    q: 'Is Rating Watch free?',
+    a: 'Yes. Rating Watch is completely free and open source. There is no paid tier, no subscription and no account to create. The full source code is on GitHub, so you can read exactly what the extension does before you install it.',
   },
   {
     q: 'Where do the ratings come from?',
-    a: 'Ratings come from OMDb, the Open Movie Database. The extension looks up each Netflix title by name through the OMDb API and reads the IMDb rating and Rotten Tomatoes score OMDb returns. The scores are not calculated or edited by Netflix Ratings, so they match what OMDb has on file for that title.',
+    a: 'Ratings come from OMDb, the Open Movie Database. The extension looks up each Netflix title by name through the OMDb API and reads the IMDb rating and Rotten Tomatoes score OMDb returns. The scores are not calculated or edited by Rating Watch, so they match what OMDb has on file for that title.',
   },
   {
     q: 'How is the Rotten Tomatoes score defined?',
@@ -124,22 +124,22 @@ export const FAQS = [
   },
   {
     q: 'Does it work on the Netflix mobile app or TV?',
-    a: 'No. Netflix Ratings is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there.',
+    a: 'No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there.',
   },
   {
     q: 'Does it slow Netflix down?',
     a: 'It is designed not to. The extension only adds a small text badge to title cards, waits 300 milliseconds after the page changes before scanning, fetches ratings in a background worker in parallel, and caches repeat lookups locally. It does not touch video playback. We have not published benchmark numbers.',
   },
   {
-    q: 'Is Netflix Ratings affiliated with Netflix?',
-    a: 'No. Netflix Ratings is an independent project by Igor Gazivoda and is not affiliated with, endorsed by or sponsored by Netflix, IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners. The extension only reads the title cards that your own browser already displays.',
+    q: 'Is Rating Watch affiliated with Netflix?',
+    a: 'No. Rating Watch is an independent project by Igor Gazivoda and is not affiliated with, endorsed by or sponsored by Netflix, IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners. The extension only reads the title cards that your own browser already displays.',
   },
   {
     q: 'Does the extension collect my data?',
     a: 'No. The extension needs no account or login and does not track your viewing history. The only data it sends is the movie or show title, to OMDb, so it can look up the scores. Its permissions are limited to netflix.com and omdbapi.com. Nothing about you is stored or shared by the extension.',
   },
   {
-    q: 'How do I install Netflix Ratings?',
+    q: 'How do I install Rating Watch?',
     a: 'It is not on the Chrome Web Store yet, so you install it from GitHub. Download the repository, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the extension folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
   },
 ];

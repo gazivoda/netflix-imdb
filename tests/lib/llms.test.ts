@@ -8,7 +8,7 @@ describe('llms.txt', () => {
 
   it('starts with an H1 and a blockquote summary', () => {
     const [h1, blank, quote] = txt.split('\n');
-    expect(h1).toBe('# Netflix Ratings');
+    expect(h1).toBe('# Rating Watch');
     expect(blank).toBe('');
     expect(quote.startsWith('> ')).toBe(true);
   });

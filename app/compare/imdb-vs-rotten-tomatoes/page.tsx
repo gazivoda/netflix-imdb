@@ -68,7 +68,7 @@ const FAQS = [
   },
   {
     q: 'Can I see both scores while browsing Netflix?',
-    a: 'Yes, on a computer. The free Netflix Ratings extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title, so a few titles show one score or none.',
+    a: 'Yes, on a computer. The free Rating Watch extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title, so a few titles show one score or none.',
   },
 ];
 
@@ -197,14 +197,14 @@ export default function ComparePage() {
       </ul>
       <p className={g.note}>
         Both pages were last checked on October 15, 2026. Either company can change its method or
-        thresholds, so check the linked pages for the current rules. Netflix Ratings is not
+        thresholds, so check the linked pages for the current rules. Rating Watch is not
         affiliated with IMDb or Rotten Tomatoes.
       </p>
 
       <aside className={g.callout}>
         <h2 className={g.calloutTitle}>How can you see both scores on Netflix?</h2>
         <p>
-          The free <strong>Netflix Ratings</strong> extension puts the IMDb rating and the Rotten
+          The free <strong>Rating Watch</strong> extension puts the IMDb rating and the Rotten
           Tomatoes score on Netflix title cards as you browse in Chrome, Edge or Brave, so you can
           compare audience and critics at a glance. It is not on the Chrome Web Store yet; installing
           from GitHub takes about a minute.

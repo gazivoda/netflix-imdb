@@ -16,7 +16,7 @@ export default function HomeFooter() {
       <div className={styles.footerTop}>
         <div className={styles.footerLogo}>
           <span className={styles.footerLogoIcon} aria-hidden>★</span>
-          <span>Netflix Ratings</span>
+          <span>Rating Watch</span>
         </div>
         <nav className={styles.footerCols} aria-label="Footer">
           {columns.map((col) => (

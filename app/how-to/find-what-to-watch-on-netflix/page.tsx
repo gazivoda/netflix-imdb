@@ -87,7 +87,7 @@ const TABLE: { seen: string; tone?: 'go' | 'skip'; marks: { imdb?: string; rt?: 
 const FAQS: Faq[] = [
   {
     q: 'How do I choose what to watch on Netflix quickly?',
-    a: 'Compare the IMDb rating and the Rotten Tomatoes percentage together. If both are high, it is a safe pick; if both are low, skip it; if they split, choose by mood. The Netflix Ratings extension puts both numbers on every title card, so you can decide while browsing instead of opening other sites.',
+    a: 'Compare the IMDb rating and the Rotten Tomatoes percentage together. If both are high, it is a safe pick; if both are low, skip it; if they split, choose by mood. The Rating Watch extension puts both numbers on every title card, so you can decide while browsing instead of opening other sites.',
   },
   {
     q: 'What IMDb and Rotten Tomatoes scores count as good?',
@@ -102,7 +102,7 @@ const FAQS: Faq[] = [
     a: 'Read the direction of the gap. A higher IMDb score with lower Rotten Tomatoes usually means a crowd-pleaser that critics found less impressive; a higher Rotten Tomatoes score with lower IMDb usually means a critics’ favorite that audiences found less satisfying. Then pick based on whether you want easy fun or something more demanding.',
   },
   {
-    q: 'Does Netflix Ratings show how many people voted?',
+    q: 'Does Rating Watch show how many people voted?',
     a: 'No. The badge shows only the IMDb rating out of 10 and the Rotten Tomatoes percentage. To see vote counts, open the title on IMDb. For borderline or brand-new titles, that extra step is worth taking before you commit to a long series.',
   },
 ];
@@ -164,7 +164,7 @@ export default function FindWhatToWatchPage() {
       <h2 className={g.h2}>How do I choose what to watch on Netflix in 60 seconds?</h2>
       <p className={g.p}>
         This routine assumes you have{' '}
-        <a href="/install">installed the Netflix Ratings extension</a>, which adds a badge to the
+        <a href="/install">installed the Rating Watch extension</a>, which adds a badge to the
         top-right corner of each title card showing the IMDb rating and the Rotten Tomatoes
         percentage. Without it, you would be opening two other sites for every title.
       </p>
@@ -248,7 +248,7 @@ export default function FindWhatToWatchPage() {
       </p>
 
       <aside className={g.note}>
-        <strong>Where the numbers come from.</strong> Netflix Ratings looks titles up in the OMDb
+        <strong>Where the numbers come from.</strong> Rating Watch looks titles up in the OMDb
         database. If OMDb has no score for a title, the card shows only the score it could find,
         or no badge. The extension is not affiliated with Netflix, IMDb or Rotten Tomatoes.
       </aside>

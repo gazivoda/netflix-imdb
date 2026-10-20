@@ -205,7 +205,7 @@ export default function Page() {
           {raw.script}
         </a>
         . The same OMDb database powers the{' '}
-        <a href="/install">Netflix Ratings extension</a>, so these are the numbers it shows on
+        <a href="/install">Rating Watch extension</a>, so these are the numbers it shows on
         Netflix cards.
       </p>
 
@@ -298,7 +298,7 @@ export default function Page() {
       <p className={g.p}>
         The raw data is one JSON file: every included film with its IMDb ID, scores and vote
         count, the excluded titles with reasons, the selection rule, the fetch date and the
-        computed summary. Cite it as {AUTHOR_NAME}, &ldquo;{raw.name}&rdquo;, Netflix Ratings,{' '}
+        computed summary. Cite it as {AUTHOR_NAME}, &ldquo;{raw.name}&rdquo;, Rating Watch,{' '}
         {fetchedDate}.
       </p>
       <p>
@@ -307,7 +307,7 @@ export default function Page() {
         </a>
       </p>
       <p className={g.p}>
-        Want both scores while you browse? <a href="/install">Install Netflix Ratings</a>, a free,
+        Want both scores while you browse? <a href="/install">Install Rating Watch</a>, a free,
         open-source extension that shows IMDb and Rotten Tomatoes on every Netflix title card. It
         is not affiliated with Netflix, IMDb or Rotten Tomatoes.
       </p>

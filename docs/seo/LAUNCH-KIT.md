@@ -1,4 +1,4 @@
-# Launch Kit: Netflix Ratings
+# Launch Kit: Rating Watch
 
 _Prepared 2026-10-15. Ready-to-use, honest launch copy for the off-site levers called out in `GEO-PLATFORM-OPTIMIZATION.md` (Product Hunt, AlternativeTo, Reddit, Hacker News, YouTube, GitHub). Entity work (Wikidata, awesome-lists, CWS, LinkedIn) is in `OFFSITE-ENTITY.md`._
 
@@ -19,9 +19,9 @@ These are problems in the product as it stands today. Each one changes how the d
 | 3 | **Homepage testimonials in `lib/content.ts` (`TESTIMONIALS`: "Maya R.", "Devin O.", "Priya S.", "Tomás L."...) look like placeholders**, and the stats are illustrative per the GEO report. | A launch audience will read your homepage. Invented or unverified testimonials are the fastest way to lose trust, and they conflict with our own rules (see section 8). Product Hunt and HN comments also get screenshotted. | Confirm each testimonial is a real, consented quote. If they are placeholders, remove them before any launch. Never reuse them in any listing, post or comment. |
 | 4 | **The extension is not on the Chrome Web Store.** Install is "Load unpacked" from GitHub. | Show HN requires that people can try the project easily; Product Hunt and AlternativeTo listings look weak without a store link; most "awesome" lists want a store link. Dev-mode install loses most casual users. | Submit to the Chrome Web Store first (see `OFFSITE-ENTITY.md`, section 4). If review is still pending on launch day, the drafts below own the friction honestly instead of hiding it. |
 
-Also **tell the truth about competition.** `COMPETITOR-ANALYSIS.md` implies the direct-competitor field is weak. A search on 2026-10-15 found several existing extensions that do this job, including FlixMonkey (open source, GPLv3, also supports Rotten Tomatoes via OMDb, fades low-rated titles), Sift: IMDB ratings, NFRatings, and "IMDb Ratings on Netflix" (about 5K users per a third-party store mirror). So **no draft claims "first", "only" or "best".** Netflix Ratings is a small, simple, focused option: both scores at a glance in one badge, no account.
+Also **tell the truth about competition.** `COMPETITOR-ANALYSIS.md` implies the direct-competitor field is weak. A search on 2026-10-15 found several existing extensions that do this job, including FlixMonkey (open source, GPLv3, also supports Rotten Tomatoes via OMDb, fades low-rated titles), Sift: IMDB ratings, NFRatings, and "IMDb Ratings on Netflix" (about 5K users per a third-party store mirror). So **no draft claims "first", "only" or "best".** Rating Watch is a small, simple, focused option: both scores at a glance in one badge, no account.
 
-Also required wording on every listing: _"Netflix Ratings is an independent project and is not affiliated with, endorsed by or sponsored by Netflix, IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners."_
+Also required wording on every listing: _"Rating Watch is an independent project and is not affiliated with, endorsed by or sponsored by Netflix, IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners."_
 
 Facts you may state (all verified against the repo): shows IMDb rating (x/10) and Rotten Tomatoes % in a badge on Netflix title cards at `www.netflix.com`; ratings come from OMDb via the background worker; Manifest V3; permissions limited to `netflix.com` and `omdbapi.com`; no account; works on Chromium browsers (Chrome, Edge, Brave), untested in Firefox/Safari; only the title text from the card is sent to OMDb; repository `https://github.com/gazivoda/netflix-imdb`. Known limitation you should be ready to state: lookups are by title text only (no year), so a few remakes or same-name titles can show the wrong score. The code tries a second search to prefer an exact-title newer match, but it is not perfect.
 
@@ -34,7 +34,7 @@ Facts you may state (all verified against the repo): shows IMDb rating (x/10) an
 **Rules we follow (from those pages):** tagline max 60 characters; description max 500; up to 3 topics; thumbnail required (square, recommended 240x240, under 3 MB); at least 2 gallery images (recommended 1270x760) before the post page shows them; product URL must be a direct link (no UTM or shortened links); video must be a public YouTube link; **you may not ask people directly to upvote**, only to visit, try and comment; company accounts are prohibited, so launch from your personal account; hunting your own product is fine. Launch time suggestion: 12:01 am Pacific (schedule up to a month ahead), though the page says no timing guarantees a result.
 
 ### Name
-`Netflix Ratings`
+`Rating Watch`
 
 ### Tagline candidates (character counts checked with `wc -m`)
 | Tagline | Chars |
@@ -45,7 +45,7 @@ Facts you may state (all verified against the repo): shows IMDb rating (x/10) an
 
 ### Description (max 500 chars; this draft is 366)
 ```
-Netflix Ratings is a free Chrome extension that puts the IMDb rating (x/10) and Rotten Tomatoes score (%) in a small badge on Netflix title cards, so you can decide without opening another tab. No account. Works on Chrome, Edge and Brave. Ratings come from OMDb; only the title text is sent. Independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
+Rating Watch is a free Chrome extension that puts the IMDb rating (x/10) and Rotten Tomatoes score (%) in a small badge on Netflix title cards, so you can decide without opening another tab. No account. Works on Chrome, Edge and Brave. Ratings come from OMDb; only the title text is sent. Independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
 ```
 `[CHECK]` Re-count with `printf '%s' "<text>" | wc -m` after any edit (limit 500).
 
@@ -55,7 +55,7 @@ Netflix Ratings is a free Chrome extension that puts the IMDb rating (x/10) and 
 ### Maker first comment (post at submission; PH says to ask for feedback, not upvotes)
 Write this in your own words before posting; the draft is a starting point.
 ```
-Hi, I'm Igor, the solo developer behind Netflix Ratings.
+Hi, I'm Igor, the solo developer behind Rating Watch.
 
 I kept opening IMDb in a second tab while browsing Netflix, so I built a small extension that shows the IMDb rating and the Rotten Tomatoes score in a badge on each title card.
 
@@ -87,11 +87,11 @@ Reply to every comment, thank people for bug reports, fix and say so. Do **not**
 `[CHECK]` The **License** field needs your real license (blocker 1). Do not guess one.
 
 ### Listing copy
-- **Name:** Netflix Ratings
+- **Name:** Rating Watch
 - **Short description (one line):** Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards.
 - **Full description:**
 ```
-Netflix Ratings is a free browser extension for Chromium browsers (Chrome, Edge, Brave) that adds a small badge to title cards on netflix.com showing the IMDb rating (out of 10) and the Rotten Tomatoes score (%). It is meant for people who open IMDb in a second tab to check a show before watching.
+Rating Watch is a free browser extension for Chromium browsers (Chrome, Edge, Brave) that adds a small badge to title cards on netflix.com showing the IMDb rating (out of 10) and the Rotten Tomatoes score (%). It is meant for people who open IMDb in a second tab to check a show before watching.
 
 - Both audience (IMDb) and critic (Rotten Tomatoes) scores in one badge
 - No account or sign-in
@@ -104,7 +104,7 @@ Independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
 ```
 - **Platforms:** Chrome, Microsoft Edge, Brave (Chromium browsers only; do not tick Firefox or Safari since they are untested)
 - **License:** `[YOU]` your chosen license once `LICENSE` exists; "Free" pricing
-- **Website:** `https://netflix-ratings.app/` (add GitHub as the source link)
+- **Website:** `https://rating.watch/` (add GitHub as the source link)
 - **Tags:** `netflix`, `imdb`, `rotten-tomatoes`, `ratings`, `streaming` (use the tags the form offers)
 
 ### Alternatives to list on **your** page (all found in a 2026-10-15 search; open each before submitting and keep only ones that still exist)
@@ -169,7 +169,7 @@ A big general-audience subreddit is the most likely to prohibit app promotion, a
 ```
 Disclosure: I made one of these, so take my answer with a grain of salt.
 
-There are a few browser extensions that add IMDb/Rotten Tomatoes scores to Netflix cards. FlixMonkey and Sift are open source and have been around a while; I built a smaller one called Netflix Ratings that shows both scores in one badge on each card (Chromium browsers only, untested in Firefox/Safari, and it can mismatch some same-name titles).
+There are a few browser extensions that add IMDb/Rotten Tomatoes scores to Netflix cards. FlixMonkey and Sift are open source and have been around a while; I built a smaller one called Rating Watch that shows both scores in one badge on each card (Chromium browsers only, untested in Firefox/Safari, and it can mismatch some same-name titles).
 
 If you'd rather not install anything, searching "<title> imdb" or opening the title on IMDb/Rotten Tomatoes works, and critic vs audience scores often disagree for a reason, so it's worth looking at both.
 
@@ -184,7 +184,7 @@ Disclosure: I'm the author of one of the options, so here's an honest rundown ra
 - FlixMonkey: open source (GPLv3), Chrome/Firefox/userscript, IMDb by default, optional Metacritic and Rotten Tomatoes via an OMDb key, can fade low-rated titles. Most featured of the ones I found.
 - Sift: IMDB ratings: open source, Chrome/Firefox/Edge, IMDb scores across several streaming sites.
 - NFRatings: IMDb + RT with threshold filters, needs your own OMDb key.
-- Netflix Ratings (mine): both IMDb and RT in one badge, no key or account, Chromium only (Firefox/Safari untested), much less polished than the others, matching is by title so remakes can be wrong. https://github.com/gazivoda/netflix-imdb
+- Rating Watch (mine): both IMDb and RT in one badge, no key or account, Chromium only (Firefox/Safari untested), much less polished than the others, matching is by title so remakes can be wrong. https://github.com/gazivoda/netflix-imdb
 
 I'd check each repo's last commit before installing, since Netflix changes its markup often and these tend to break.
 ```
@@ -196,7 +196,7 @@ I'd check each repo's last commit before installing, since Netflix changes its m
 
 **Honest fit check:** Show HN needs it to be "easy to try". Today that means Load unpacked, which is friction. Best timing is after Chrome Web Store approval and after blocker 2 is fixed. Expect questions about the hard-coded API key.
 
-**Title (no hype, no caps):** `Show HN: Netflix Ratings, a Chrome extension adding IMDb and RT scores to Netflix cards`
+**Title (no hype, no caps):** `Show HN: Rating Watch, a Chrome extension adding IMDb and RT scores to Netflix cards`
 **URL:** `https://github.com/gazivoda/netflix-imdb` (HN prefers the original source; a repo is better than a landing page).
 
 **First-comment skeleton (write in your own words):**
@@ -218,7 +218,7 @@ YouTube chapters require: first timestamp `00:00`, at least three timestamps in 
 ### Script and shot list
 | Time | On screen (real footage) | Voice-over (read or caption) |
 |---|---|---|
-| 00:00 to 00:10 | Netflix browse page before: cards with no ratings. Then the extension loads and badges appear on the cards. | "Netflix doesn't show ratings on its cards. This is Netflix Ratings, a browser extension that adds the IMDb score and Rotten Tomatoes score to each card." |
+| 00:00 to 00:10 | Netflix browse page before: cards with no ratings. Then the extension loads and badges appear on the cards. | "Netflix doesn't show ratings on its cards. This is Rating Watch, a browser extension that adds the IMDb score and Rotten Tomatoes score to each card." |
 | 00:10 to 00:20 | Scroll a row; badges appear as new cards load. Pause on one card so the numbers are readable. | "IMDb shows out of 10, Rotten Tomatoes as a percentage. They appear as you scroll, with no extra tab." |
 | 00:20 to 00:30 | `chrome://extensions` (Developer mode, Load unpacked) or the Chrome Web Store page if live, then the GitHub repo page. | "It's free, has no account, and works on Chromium browsers. Source and install steps are on GitHub. It's an independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes." |
 
@@ -230,12 +230,12 @@ Do not narrate a claim you haven't confirmed on camera. Do not show the same tit
 ### Description template
 Fill in the bracketed parts. Put the chapters at the end of the description so they parse as timestamps.
 ```
-Netflix Ratings is a free Chrome extension that shows the IMDb rating and Rotten Tomatoes score on Netflix title cards, so you don't need to open another tab. Works on Chrome, Edge and Brave. No account.
+Rating Watch is a free Chrome extension that shows the IMDb rating and Rotten Tomatoes score on Netflix title cards, so you don't need to open another tab. Works on Chrome, Edge and Brave. No account.
 
-Website: https://netflix-ratings.app/
-Install guide: https://netflix-ratings.app/install
+Website: https://rating.watch/
+Install guide: https://rating.watch/install
 Source code: https://github.com/gazivoda/netflix-imdb
-IMDb vs Rotten Tomatoes explained: https://netflix-ratings.app/compare/imdb-vs-rotten-tomatoes
+IMDb vs Rotten Tomatoes explained: https://rating.watch/compare/imdb-vs-rotten-tomatoes
 
 I'm the developer (Igor Gazivoda). Ratings are looked up through OMDb; only the title text is sent. Independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
 
@@ -249,7 +249,7 @@ Upload the exact voice-over as a caption file (`.srt`) so the transcript is accu
 ```
 1
 00:00:00,000 --> 00:00:10,000
-Netflix doesn't show ratings on its cards. This is Netflix Ratings, a browser extension that adds the IMDb score and Rotten Tomatoes score to each card.
+Netflix doesn't show ratings on its cards. This is Rating Watch, a browser extension that adds the IMDb score and Rotten Tomatoes score to each card.
 
 2
 00:00:10,000 --> 00:00:20,000
@@ -270,10 +270,10 @@ It's free, has no account, and works on Chromium browsers. Source and install st
 `[YOU]` in repo **Settings** and the "About" gear on the repo home page.
 
 ### Description (one line, plain)
-`Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards. Free, no account. Site: https://netflix-ratings.app`
+`Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards. Free, no account. Site: https://rating.watch`
 
 ### Website field
-`https://netflix-ratings.app`
+`https://rating.watch`
 
 ### Topics (GitHub allows up to 20; lowercase letters, numbers and hyphens, max 50 characters each; source: GitHub Docs, fetched 2026-10-15)
 `netflix`, `imdb`, `rotten-tomatoes`, `chrome-extension`, `browser-extension`, `manifest-v3`, `ratings`, `movies`, `tv-shows`, `streaming`, `omdb`, `javascript`
@@ -335,7 +335,7 @@ Time estimates are your active hands-on time, not waiting for reviews. `[YOU]` t
 
 ## 7. Success measures (honest)
 - GitHub referrals and stars; issues filed by real users; Chrome Web Store installs when available.
-- Branded searches for "Netflix Ratings" in Search Console; Bing Webmaster Tools query data.
+- Branded searches for "Rating Watch" in Search Console; Bing Webmaster Tools query data.
 - Re-run the AI-visibility check (see `GEO-PLATFORM-OPTIMIZATION.md`, item 18) 4 to 6 weeks after launches; entity signals take time and nothing here guarantees a citation.
 
 ---

@@ -6,15 +6,15 @@ Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/packag
 
 ## 1. Name (trademark-safe suggestion)
 
-The store listing name is read from `manifest.json` `name` (max 75 characters). The current name, "Netflix Ratings", puts a third-party trademark first. Chrome Web Store review (Impersonation / Intellectual Property policy) tends to accept descriptive "for Netflix" wording and tends to reject names that read like an official Netflix product.
+The store listing name is read from `manifest.json` `name` (max 75 characters). The current name, "Rating Watch", puts a third-party trademark first. Chrome Web Store review (Impersonation / Intellectual Property policy) tends to accept descriptive "for Netflix" wording and tends to reject names that read like an official Netflix product.
 
 | Option | Why |
 | --- | --- |
-| **Ratings for Netflix: IMDb & Rotten Tomatoes** (recommended) | Trademarks appear only to describe compatibility ("for Netflix"), the primary keyword stays in the name, 44 characters |
+| **Rating Watch: IMDb & Rotten Tomatoes for Netflix** (recommended) | Trademarks appear only to describe compatibility ("for Netflix"), the primary keyword stays in the name, 44 characters |
 | Ratings Badges for Netflix | Shorter, lowest rejection risk, loses the IMDb / Rotten Tomatoes keywords in the title |
-| Netflix Ratings (current) | Matches the website and repo brand, highest trademark-rejection risk because "Netflix" leads the name |
+| Rating Watch (current) | Matches the website and repo brand, highest trademark-rejection risk because "Netflix" leads the name |
 
-**Applied 2026-10-16:** manifest `name` is now "Ratings for Netflix: IMDb & Rotten Tomatoes". (Earlier note, now superseded: changing the manifest `name` was not done.) If the store name differs from the site brand "Netflix Ratings", keep the on-page and repo wording "Netflix Ratings" and add the not-affiliated line (below) to the listing.
+**Applied 2026-10-16:** manifest `name` is now "Rating Watch: IMDb & Rotten Tomatoes for Netflix". (Earlier note, now superseded: changing the manifest `name` was not done.) If the store name differs from the site brand "Rating Watch", keep the on-page and repo wording "Rating Watch" and add the not-affiliated line (below) to the listing.
 
 ## 2. Short description (manifest `description`, 114 / 132 characters)
 
@@ -27,7 +27,7 @@ This text is already set in `extension/manifest.json`. The store uses it as the 
 ## 3. Detailed description
 
 ```
-Ratings for Netflix shows IMDb and Rotten Tomatoes ratings directly on Netflix title cards, so you can decide what to watch without opening another tab.
+Rating Watch shows IMDb and Rotten Tomatoes ratings directly on Netflix title cards, so you can decide what to watch without opening another tab.
 
 WHAT YOU GET
 - A small badge in the top-right corner of every title card on netflix.com
@@ -44,11 +44,11 @@ PRIVACY
 - The only data that leaves your browser is the title name of each card, sent to OMDb to get its rating
 - No analytics, no telemetry, no tracking, no backend server
 - Does not read your Netflix account, watch history, cookies or session
-- Privacy policy: https://netflix-ratings.app/privacy
+- Privacy policy: https://rating.watch/privacy
 
 FREE AND OPEN SOURCE
 The full source code is on GitHub: https://github.com/gazivoda/netflix-imdb
-Website and install help: https://netflix-ratings.app
+Website and install help: https://rating.watch
 
 TIPS
 - Reload any open Netflix tab after installing
@@ -59,15 +59,15 @@ NOT AFFILIATED
 This extension is an independent project. It is not affiliated with, endorsed by or sponsored by Netflix, Inc., IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners. Ratings data is provided by the OMDb API (omdbapi.com).
 ```
 
-Replace the first line's name if you keep "Netflix Ratings" as the store name.
+Replace the first line's name if you keep "Rating Watch" as the store name.
 
 ## 4. Category and language
 
 - Category: **Entertainment** if offered in the dashboard; otherwise **Fun** (current dashboard category for media and viewing helpers) or **Tools**. Pick the closest available.
 - Language: English.
-- Official URL / website: https://netflix-ratings.app
+- Official URL / website: https://rating.watch
 - Support URL: https://github.com/gazivoda/netflix-imdb/issues
-- Privacy policy URL: https://netflix-ratings.app/privacy
+- Privacy policy URL: https://rating.watch/privacy
 
 ## 5. Screenshot shot-list (you capture these)
 
@@ -77,7 +77,7 @@ Dashboard accepts up to 5 screenshots, **1280x800** (preferred) or 640x400, PNG 
 2. **Close-up of badges.** Zoom the browser to about 150-200% on one row so the badge format (`⭐ score` and `🍅 percent`) is legible, then capture. Caption: "Both scores at a glance".
 3. **Search results.** Search a genre or a title name and capture the results grid with badges. Caption: "Works in search results too".
 4. **More Like This / title detail.** Open a title's detail modal and capture the "More Like This" cards with badges. Caption: "Rates suggestions as they load".
-5. **Install or permissions view.** Either the `chrome://extensions` card for the extension with the two host permissions visible in Details, or the netflix-ratings.app/install page. Caption: "Open source, two permissions, no account".
+5. **Install or permissions view.** Either the `chrome://extensions` card for the extension with the two host permissions visible in Details, or the rating.watch/install page. Caption: "Open source, two permissions, no account".
 
 Also needed by the dashboard:
 - Store icon 128x128 (`extension/icon.png` is 128x128, but the file is only 307 bytes, so it is likely a plain placeholder; consider a proper icon before submitting).
@@ -88,7 +88,7 @@ Also needed by the dashboard:
 ## 6. Single-purpose statement
 
 ```
-Netflix Ratings has one purpose: to display IMDb and Rotten Tomatoes ratings as badges on Netflix title cards at www.netflix.com.
+Rating Watch has one purpose: to display IMDb and Rotten Tomatoes ratings as badges on Netflix title cards at www.netflix.com.
 ```
 
 ## 7. Permission justifications (Privacy practices tab)
@@ -121,7 +121,7 @@ Certifications to tick (all true per the source):
 - I do not use or transfer user data for purposes unrelated to the item's single purpose.
 - I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
-Privacy policy URL: https://netflix-ratings.app/privacy
+Privacy policy URL: https://rating.watch/privacy
 
 Caution: the privacy page was last dated May 4, 2025 and describes IMDb ratings only. Update it to mention Rotten Tomatoes and refresh the date before submitting, so the policy matches the listing.
 

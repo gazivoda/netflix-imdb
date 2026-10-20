@@ -44,7 +44,7 @@ export default function SiteFooter({ updated }: { updated?: { iso: string; label
               {' · '}Updated <time dateTime={updated.iso}>{updated.label}</time>
             </>
           )}
-          {'. '}Netflix Ratings is an independent open-source project. It is not affiliated with or
+          {'. '}Rating Watch is an independent open-source project. It is not affiliated with or
           endorsed by Netflix, IMDb or Rotten Tomatoes; those names belong to their owners.
         </p>
       </div>

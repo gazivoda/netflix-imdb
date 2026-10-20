@@ -7,8 +7,8 @@ import { getPage, HOME_DESCRIPTION, type SitePage } from './pages';
 import manifest from '../extension/manifest.json';
 import { OG_SIZE, OG_ALT, OG_VERSION } from './og';
 
-export const SITE_NAME = 'Netflix Ratings';
-export const TITLE_SUFFIX = ' · Netflix Ratings';
+export const SITE_NAME = 'Rating Watch';
+export const TITLE_SUFFIX = ' · Rating Watch';
 
 // Root has no trailing slash so sitemap, canonical and JSON-LD agree with what Next emits.
 export const absoluteUrl = (path: string): string => (path === '/' ? SITE_URL : `${SITE_URL}${path}`);
@@ -175,7 +175,7 @@ export function siteGraph(): JsonLdNode {
       name: SITE_NAME,
       url: SITE_URL,
       description:
-        'Maker of Netflix Ratings, a free open-source browser extension that adds IMDb and Rotten Tomatoes scores to Netflix.',
+        'Maker of Rating Watch, a free open-source browser extension that adds IMDb and Rotten Tomatoes scores to Netflix.',
       founder: authorRef,
       sameAs: [REPO_URL],
     },

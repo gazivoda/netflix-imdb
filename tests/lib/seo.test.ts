@@ -54,7 +54,7 @@ describe('pageMetadata', () => {
   it.each(PAGES.map((p) => [p.path] as const))('%s sets its own canonical, OG and Twitter', (path) => {
     const m = pageMetadata(path);
     expect(m.alternates?.canonical).toBe(path);
-    expect(m.openGraph).toMatchObject({ url: absoluteUrl(path), siteName: 'Netflix Ratings' });
+    expect(m.openGraph).toMatchObject({ url: absoluteUrl(path), siteName: 'Rating Watch' });
     expect(m.twitter).toMatchObject({ card: 'summary_large_image' });
     expect((m.openGraph as any).images[0]).toMatchObject({ url: expect.stringMatching(/^\/opengraph-image\?v=\w+$/), width: 1200, height: 630 });
     expect((m.twitter as any).images[0].url).toMatch(/^\/twitter-image\?v=\w+$/);

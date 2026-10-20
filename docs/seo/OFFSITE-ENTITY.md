@@ -1,4 +1,4 @@
-# Off-site Entity Kit: Netflix Ratings
+# Off-site Entity Kit: Rating Watch
 
 _Prepared 2026-10-15. Companion to `LAUNCH-KIT.md` and `GEO-PLATFORM-OPTIMIZATION.md`. Covers the entity signals AI engines and knowledge graphs read: Wikidata, curated "awesome" lists, the Chrome Web Store listing and LinkedIn. Every step needs **you (Igor)**; none can be done by an agent. Tags: `[YOU]` your account or decision, `[ASSET]` something to create first, `[CHECK]` verify live._
 
@@ -18,28 +18,28 @@ _Prepared 2026-10-15. Companion to `LAUNCH-KIT.md` and `GEO-PLATFORM-OPTIMIZATIO
 
 ## 2. Wikidata item draft (create later, per sequencing rule)
 
-**Search first.** On 2026-10-15 a Wikidata search for "Netflix Ratings" returned no existing item, so nothing to merge. `[CHECK]` search again right before creating (also try "Netflix IMDb Ratings").
+**Search first.** On 2026-10-15 a Wikidata search for "Rating Watch" returned no existing item, so nothing to merge. `[CHECK]` search again right before creating (also try "Netflix IMDb Ratings").
 
 **Create at:** `wikidata.org` > Create a new Item. `[YOU]` requires a Wikidata account.
 
 | Field | Value |
 |---|---|
-| Label (en) | `Netflix Ratings` |
+| Label (en) | `Rating Watch` |
 | Description (en) | `browser extension that displays IMDb and Rotten Tomatoes ratings on Netflix` |
-| Aliases (en) | `Netflix Ratings extension` |
+| Aliases (en) | `Rating Watch extension` |
 
 **Statements** (property IDs verified against the Wikidata API on 2026-10-15; only those marked are included):
 
 | Property | Value | Verified | Notes |
 |---|---|---|---|
 | instance of (P31) | **browser extension (Q874411)** | yes, Q874411 = "browser extension" | |
-| official website (P856) | `https://netflix-ratings.app/` | P856 yes | Add a reference URL = the site itself only as a last resort; prefer independent references |
+| official website (P856) | `https://rating.watch/` | P856 yes | Add a reference URL = the site itself only as a last resort; prefer independent references |
 | source code repository URL (P1324) | `https://github.com/gazivoda/netflix-imdb` | P1324 yes | |
 | software version identifier (P348) | `1.0.0` | P348 yes | From `extension/manifest.json`. Add qualifier "publication date (P577)" only with the date you actually released v1.0.0 |
 | inception (P571) | `2026` (year precision only) | P571 yes | The repo's first commit is 2026-05-01 and was an empty README, so this is not a release date. Use only a year unless you are sure of the date |
 | platform (P400) | **Google Chrome (Q777)** | P400 yes, Q777 = "Google Chrome" | Add other Chromium browsers only after you have checked their items exist and you have tested them |
 | copyright license (P275) | `[YOU]` your license | P275 yes | **Do not add until a `LICENSE` file exists.** If you choose MIT, the item is Q334661 ("MIT License"); confirm before use |
-| official name (P1448) | `Netflix Ratings` (en) | P1448 yes | Matches the manifest name |
+| official name (P1448) | `Rating Watch` (en) | P1448 yes | Matches the manifest name |
 
 Left out on purpose:
 - **developer (P178):** its value must be an item; creating a Wikidata item for yourself is itself a notability and conflict-of-interest problem. Skip unless an item for you already exists for independent reasons.
@@ -73,16 +73,16 @@ Rules from its `CONTRIBUTING.md` (fetched 2026-10-15): search previous suggestio
 ## Entertainment & Streaming
 *Make the most of your streaming services*
 
-* **Netflix Ratings** - Shows IMDb and Rotten Tomatoes ratings on Netflix title cards.
+* **Rating Watch** - Shows IMDb and Rotten Tomatoes ratings on Netflix title cards.
   * Website: [github.com/gazivoda/netflix-imdb](https://github.com/gazivoda/netflix-imdb)
   * Chrome Web Store: [Chrome Web Store](https://chromewebstore.google.com/detail/EXTENSION_ID)
 ```
 Remove the Chrome Web Store line until the listing is live (replace `EXTENSION_ID` with the real one after approval).
 
-**PR title:** `Add Netflix Ratings (new Entertainment & Streaming category)`
+**PR title:** `Add Rating Watch (new Entertainment & Streaming category)`
 **PR description:**
 ```
-Adds Netflix Ratings, a Chrome extension (Manifest V3) that shows IMDb and Rotten Tomatoes ratings on Netflix title cards. Disclosure: I'm the author.
+Adds Rating Watch, a Chrome extension (Manifest V3) that shows IMDb and Rotten Tomatoes ratings on Netflix title cards. Disclosure: I'm the author.
 
 The list has no streaming/entertainment section, so this proposes a new one. I have opened the repository link above; Chrome Web Store link added only once the listing is live. Happy to move it to Fun if you prefer.
 ```
@@ -99,13 +99,13 @@ The GEO report and `COMPETITOR-ANALYSIS.md` both rank this as the biggest missin
 **Official policy hub:** `developer.chrome.com/docs/webstore/program-policies`. The index page confirms sections on Privacy Policy, Impersonation & Intellectual Property, and a "be useful" requirement that extensions provide basic functionality; the detail pages were not retrievable in this pass, so `[CHECK]` them (and the current one-time developer registration fee shown in the developer dashboard) before you pay or submit.
 
 Risks to plan for:
-- **Trademark/impersonation review.** The name contains "Netflix". Policies cover impersonation and unfair use of others' work, so a reviewer could object. Mitigation: the not-affiliated sentence in the description, no Netflix/IMDb/RT logos or screenshots of their branding as your icon, and the descriptive form "Netflix Ratings" rather than anything suggesting official status. Outcome cannot be predicted; if rejected, the fallback is a rename plus keeping the site/brand consistent, which is a bigger cost, so read the policy pages first.
+- **Trademark/impersonation review.** The name contains "Netflix". Policies cover impersonation and unfair use of others' work, so a reviewer could object. Mitigation: the not-affiliated sentence in the description, no Netflix/IMDb/RT logos or screenshots of their branding as your icon, and the descriptive form "Rating Watch" rather than anything suggesting official status. Outcome cannot be predicted; if rejected, the fallback is a rename plus keeping the site/brand consistent, which is a bigger cost, so read the policy pages first.
 - **Hard-coded API key and quota** (blocker 2). Fix before submitting; reviewers and users will hit the limit.
-- **Privacy disclosures.** The extension sends only the title text to `omdbapi.com`. Fill the store's data-use form accurately and link `https://netflix-ratings.app/privacy`.
+- **Privacy disclosures.** The extension sends only the title text to `omdbapi.com`. Fill the store's data-use form accurately and link `https://rating.watch/privacy`.
 - **Permissions justification.** `host_permissions` for `netflix.com` and `omdbapi.com` only; no `permissions` entries. State that plainly.
 
 **Listing copy** (reuse the PH/AlternativeTo wording; keep the not-affiliated sentence):
-- Name: `Netflix Ratings`
+- Name: `Rating Watch`
 - Summary (store limit applies, `[CHECK]` the form): `Shows IMDb and Rotten Tomatoes ratings on Netflix title cards.`
 - Detailed description: reuse the AlternativeTo full description from `LAUNCH-KIT.md`, section 2.
 - Screenshots: real captures only. Icon: `extension/icon.png`.
@@ -117,7 +117,7 @@ Risks to plan for:
 
 `COMPETITOR-ANALYSIS.md` and the GEO report both name LinkedIn as a Bing Copilot and ChatGPT signal. This is a one-person open-source project, so the honest options are:
 
-1. **Your personal profile (do this):** add "Netflix Ratings" as a project/experience entry with the site link and a one-sentence description (same wording as above, plus not-affiliated line). `[YOU]` 15 min.
+1. **Your personal profile (do this):** add "Rating Watch" as a project/experience entry with the site link and a one-sentence description (same wording as above, plus not-affiliated line). `[YOU]` 15 min.
 2. **A LinkedIn company page for the project** (optional): only if you will keep it current; a sparse, dead page scores low (per the brand-mentions rubric 30 to 49). Skip if you won't post.
 3. **One post at launch** (when the Product Hunt/Show HN is live): a plain account of what you built and what you learned, link to the repo, no request for likes. `[YOU]` 20 min. Do not ask people to like or share.
 4. **Author consistency:** the site byline says "Igor Gazivoda" with the GitHub link. Use the same name and the same photo/URL on LinkedIn, GitHub, YouTube and the site. After the profile exists, add its URL to the author `Person` `sameAs` on the site (today only GitHub). `[YOU]` or follow-up code task. **Do not invent profile handles for other networks; only list accounts that exist.**

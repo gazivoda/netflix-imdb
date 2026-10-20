@@ -40,7 +40,7 @@ interface Row {
 
 const ROWS: Row[] = [
   {
-    name: 'Netflix Ratings',
+    name: 'Rating Watch',
     url: absoluteUrl('/'),
     what: 'Chrome extension that adds IMDb and Rotten Tomatoes scores to Netflix.',
     where: 'A badge on each title card on netflix.com.',
@@ -107,7 +107,7 @@ const ROWS: Row[] = [
 const FAQS: Faq[] = [
   {
     q: 'What is the easiest way to see IMDb and Rotten Tomatoes ratings on Netflix?',
-    a: 'Use a browser extension that puts the scores on the Netflix title cards, so you do not leave the page. Netflix Ratings does this for Chrome, Edge and Brave: it adds IMDb and Rotten Tomatoes badges to cards on netflix.com, needs no account and asks for no API key. Sites like IMDb require a separate tab per title.',
+    a: 'Use a browser extension that puts the scores on the Netflix title cards, so you do not leave the page. Rating Watch does this for Chrome, Edge and Brave: it adds IMDb and Rotten Tomatoes badges to cards on netflix.com, needs no account and asks for no API key. Sites like IMDb require a separate tab per title.',
   },
   {
     q: 'Is Reelgood or JustWatch better than a ratings extension?',
@@ -118,12 +118,12 @@ const FAQS: Faq[] = [
     a: 'Yes. On 2026-10-15 I found RateFlix, which lists IMDb and Rotten Tomatoes ratings on Netflix titles, and Netflix IMDb Overlay, which shows IMDb ratings only and needs your own free OMDb API key. Both listings were thin on details such as source code, so check reviews and permissions before installing any of them.',
   },
   {
-    q: 'Is Netflix Ratings on the Chrome Web Store?',
+    q: 'Is Rating Watch on the Chrome Web Store?',
     a: 'Not yet. It installs as an unpacked extension from GitHub, which takes about a minute in Chrome, Edge or Brave. If you want one-click installation from the store today, a store-listed alternative such as RateFlix is easier, though I have not verified its source code or how it fetches ratings.',
   },
   {
-    q: 'Are these services affiliated with Netflix Ratings?',
-    a: 'No. Netflix Ratings is an independent project and is not affiliated with Netflix, IMDb, Rotten Tomatoes, JustWatch, Reelgood, RateFlix or any other product named here. All names belong to their owners and are used only to identify the products being compared.',
+    q: 'Are these services affiliated with Rating Watch?',
+    a: 'No. Rating Watch is an independent project and is not affiliated with Netflix, IMDb, Rotten Tomatoes, JustWatch, Reelgood, RateFlix or any other product named here. All names belong to their owners and are used only to identify the products being compared.',
   },
 ];
 
@@ -155,7 +155,7 @@ export default function AlternativesPage() {
             look titles up on IMDb or Rotten Tomatoes, or install an extension that puts the scores
             on the cards.
           </strong>{' '}
-          Netflix Ratings is one of those extensions, so this page compares it fairly, including
+          Rating Watch is one of those extensions, so this page compares it fairly, including
           where another option is the better pick.
         </>
       }
@@ -196,7 +196,7 @@ export default function AlternativesPage() {
         </table>
       </div>
 
-      <h2 className={`ds-display ${s.h2}`}>When is Netflix Ratings the <em className="ds-serif">right choice</em>?</h2>
+      <h2 className={`ds-display ${s.h2}`}>When is Rating Watch the <em className="ds-serif">right choice</em>?</h2>
       <p className={s.p}>
         When you mostly browse Netflix and want the audience score (IMDb, out of 10) and the critic
         score (Rotten Tomatoes, a percentage) on every card without opening anything else. It has no
@@ -209,7 +209,7 @@ export default function AlternativesPage() {
       <ul className={s.slips}>
         <li>
           <strong>You want to know where something is streaming.</strong> JustWatch and Reelgood are
-          built for that across services. Netflix Ratings only works on netflix.com.
+          built for that across services. Rating Watch only works on netflix.com.
         </li>
         <li>
           <strong>You want more than a number.</strong> IMDb and Rotten Tomatoes have the full
@@ -217,11 +217,11 @@ export default function AlternativesPage() {
         </li>
         <li>
           <strong>You want a store install today.</strong> RateFlix is{' '}
-          {ext(SRC.rateflix, 'listed on the Chrome Web Store')}, while Netflix Ratings still needs
+          {ext(SRC.rateflix, 'listed on the Chrome Web Store')}, while Rating Watch still needs
           the <a href="/install">Load unpacked steps</a>.
         </li>
         <li>
-          <strong>You use another browser.</strong> Netflix Ratings targets Chromium browsers and is
+          <strong>You use another browser.</strong> Rating Watch targets Chromium browsers and is
           untested in Firefox and Safari.
         </li>
       </ul>
@@ -236,7 +236,7 @@ export default function AlternativesPage() {
       <aside className={`ds-card ${s.callout}`}>
         <h2 className={`ds-display ${s.calloutTitle}`}>Try it on your own Netflix</h2>
         <p>
-          Netflix Ratings is free and installs in about a minute. It is independent and not
+          Rating Watch is free and installs in about a minute. It is independent and not
           affiliated with Netflix, IMDb or Rotten Tomatoes.
         </p>
         <a href="/install" className="ds-btn ds-btn-signal">

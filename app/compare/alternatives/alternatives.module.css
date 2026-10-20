@@ -141,7 +141,7 @@
   color: var(--faint);
 }
 
-/* Netflix Ratings: flat gold block with a hard shadow underneath. */
+/* Rating Watch: flat gold block with a hard shadow underneath. */
 .table tbody tr.mine > * {
   background: var(--gold);
   color: var(--ink);

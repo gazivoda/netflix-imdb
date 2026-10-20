@@ -29,7 +29,7 @@ export default function NotFound() {
           </header>
 
           <p className={s.lede}>
-            That page does not exist. The link may be old or mistyped. Netflix Ratings is a free
+            That page does not exist. The link may be old or mistyped. Rating Watch is a free
             extension that shows IMDb and Rotten Tomatoes scores on Netflix title cards. Here is
             where to go next.
           </p>

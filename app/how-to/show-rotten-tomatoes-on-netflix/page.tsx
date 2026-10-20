@@ -10,8 +10,8 @@ const RT_ABOUT_URL = 'https://www.rottentomatoes.com/about';
 
 const STEPS = [
   {
-    name: 'Install the Netflix Ratings extension',
-    text: 'Download Netflix Ratings from GitHub and load it as an unpacked extension in Chrome, Edge or Brave. It takes about a minute and needs no account.',
+    name: 'Install the Rating Watch extension',
+    text: 'Download Rating Watch from GitHub and load it as an unpacked extension in Chrome, Edge or Brave. It takes about a minute and needs no account.',
   },
   {
     name: 'Open Netflix in the same browser',
@@ -34,7 +34,7 @@ const STEPS = [
 const FAQS: Faq[] = [
   {
     q: 'Does Netflix show Rotten Tomatoes scores by itself?',
-    a: 'No. Netflix shows its own match percentage, maturity rating and thumbs-up votes, but not Rotten Tomatoes scores. To see them on title cards while you browse, you need a browser extension such as the free, open-source Netflix Ratings, which adds a small badge to each card as you scroll.',
+    a: 'No. Netflix shows its own match percentage, maturity rating and thumbs-up votes, but not Rotten Tomatoes scores. To see them on title cards while you browse, you need a browser extension such as the free, open-source Rating Watch, which adds a small badge to each card as you scroll.',
   },
   {
     q: 'Which Rotten Tomatoes score does the extension show?',
@@ -46,11 +46,11 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Can I show Rotten Tomatoes scores on Netflix on my phone or TV?',
-    a: 'Not with this extension. Netflix Ratings is a Chromium desktop browser extension, so it works on www.netflix.com in Chrome, Edge and Brave. It has not been tested in Firefox or Safari, and it cannot add badges to the Netflix app on phones, tablets or smart TVs.',
+    a: 'Not with this extension. Rating Watch is a Chromium desktop browser extension, so it works on www.netflix.com in Chrome, Edge and Brave. It has not been tested in Firefox or Safari, and it cannot add badges to the Netflix app on phones, tablets or smart TVs.',
   },
   {
     q: 'Does it cost anything or need a Rotten Tomatoes account?',
-    a: 'No. Netflix Ratings is free and open source, with no sign-up and no API key to enter. It requests access only to netflix.com and omdbapi.com. No Rotten Tomatoes login is needed, and the only thing the extension sends out is the title names it looks up on OMDb.',
+    a: 'No. Rating Watch is free and open source, with no sign-up and no API key to enter. It requests access only to netflix.com and omdbapi.com. No Rotten Tomatoes login is needed, and the only thing the extension sends out is the title names it looks up on OMDb.',
   },
 ];
 
@@ -62,7 +62,7 @@ export default function ShowRottenTomatoesOnNetflixPage() {
       lede={
         <>
           <strong>
-            Netflix does not show Rotten Tomatoes scores, but the free Netflix Ratings browser
+            Netflix does not show Rotten Tomatoes scores, but the free Rating Watch browser
             extension adds them: install it, open netflix.com, and a tomato percentage appears in
             the top-right corner of every title card.
           </strong>{' '}
@@ -75,7 +75,7 @@ export default function ShowRottenTomatoesOnNetflixPage() {
         howTo({
           name: 'How to show Rotten Tomatoes scores on Netflix',
           description:
-            'Use the free Netflix Ratings Chrome extension to display the Rotten Tomatoes Tomatometer on Netflix title cards.',
+            'Use the free Rating Watch Chrome extension to display the Rotten Tomatoes Tomatometer on Netflix title cards.',
           totalTime: 'PT3M',
           steps: STEPS,
         }),
@@ -94,7 +94,7 @@ export default function ShowRottenTomatoesOnNetflixPage() {
       </div>
       <p className={g.p}>
         <a href="/install" className={g.btnPrimary}>
-          Install Netflix Ratings <span aria-hidden>→</span>
+          Install Rating Watch <span aria-hidden>→</span>
         </a>
       </p>
       <p className={g.p}>
@@ -137,7 +137,7 @@ export default function ShowRottenTomatoesOnNetflixPage() {
 
       <h2 className={g.h2}>Where do the scores come from, and why are some missing?</h2>
       <p className={g.p}>
-        Netflix Ratings does not scrape Rotten Tomatoes. Its background worker looks each title up
+        Rating Watch does not scrape Rotten Tomatoes. Its background worker looks each title up
         on OMDb, a movie-data API, and reads the Rotten Tomatoes value OMDb returns. That keeps the
         extension light and limits its permissions to netflix.com and omdbapi.com, but it also
         means the extension can only show what OMDb holds.

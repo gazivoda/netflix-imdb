@@ -12,7 +12,7 @@ const ZIP_URL = `${REPO_URL}/raw/main/extension.zip`;
 const STEPS = [
   {
     name: 'Download the extension',
-    text: 'Download extension.zip from the Netflix Ratings GitHub repository, or clone the repository and use its extension folder.',
+    text: 'Download extension.zip from the Rating Watch GitHub repository, or clone the repository and use its extension folder.',
   },
   {
     name: 'Unzip it to a folder you will keep',
@@ -24,7 +24,7 @@ const STEPS = [
   },
   {
     name: 'Click Load unpacked and choose the folder',
-    text: 'Click Load unpacked and select the folder that contains manifest.json. Netflix Ratings now appears in your extensions list.',
+    text: 'Click Load unpacked and select the folder that contains manifest.json. Rating Watch now appears in your extensions list.',
   },
   {
     name: 'Open Netflix',
@@ -34,7 +34,7 @@ const STEPS = [
 
 const FAQS: Faq[] = [
   {
-    q: 'Is Netflix Ratings on the Chrome Web Store?',
+    q: 'Is Rating Watch on the Chrome Web Store?',
     a: 'Not yet. For now it installs as an unpacked extension from GitHub, which takes about a minute and works in Chrome, Edge, Brave and other Chromium browsers. Chrome may show a reminder about developer-mode extensions when it starts; that is normal for unpacked extensions.',
   },
   {
@@ -55,7 +55,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Does it work in Firefox or Safari?',
-    a: 'Netflix Ratings is built as a Manifest V3 Chromium extension. It has not been tested in Firefox or Safari, so Chrome, Edge and Brave are the supported browsers.',
+    a: 'Rating Watch is built as a Manifest V3 Chromium extension. It has not been tested in Firefox or Safari, so Chrome, Edge and Brave are the supported browsers.',
   },
 ];
 
@@ -63,11 +63,11 @@ export default function InstallPage() {
   return (
     <GuideLayout
       path={PATH}
-      h1="How to install Netflix Ratings"
+      h1="How to install Rating Watch"
       lede={
         <>
           <strong>
-            Netflix Ratings installs in about a minute: download it from GitHub, unzip it, turn on
+            Rating Watch installs in about a minute: download it from GitHub, unzip it, turn on
             Developer mode at chrome://extensions, click Load unpacked and pick the folder.
           </strong>{' '}
           It is not on the Chrome Web Store yet, so this is the install method for Chrome, Edge and
@@ -77,15 +77,15 @@ export default function InstallPage() {
       faqs={FAQS}
       schema={[
         howTo({
-          name: 'How to install the Netflix Ratings Chrome extension',
+          name: 'How to install the Rating Watch Chrome extension',
           description:
-            'Install the open-source Netflix Ratings extension as an unpacked extension in Chrome, Edge or Brave.',
+            'Install the open-source Rating Watch extension as an unpacked extension in Chrome, Edge or Brave.',
           totalTime: 'PT2M',
           steps: STEPS,
         }),
       ]}
     >
-      <h2 className={g.h2}>How do I install Netflix Ratings?</h2>
+      <h2 className={g.h2}>How do I install Rating Watch?</h2>
       <ol className={s.steps}>
         {STEPS.map((step, i) => (
           <li key={step.name} className={s.stub}>
