@@ -1,0 +1,387 @@
+/* Paper & ink styling for /camera-vision/ar. Mirrors camera.module.css; tokens and ds-* helpers come from globals.css. */
+
+.main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 32px) clamp(48px, 7vw, 88px);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.headText { min-width: 0; flex: 1 1 420px; }
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  border-bottom: 3px solid var(--ink);
+}
+.back:hover { background: var(--gold); }
+
+.title {
+  margin: 0 0 14px;
+  font-size: clamp(52px, 10vw, 112px);
+}
+.title em { font-size: 1.04em; }
+
+.sub {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 5px; /* room for the button's hard shadow */
+}
+.btn { min-height: 48px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: 5px 5px 0 var(--ink); }
+.actions .btnInk { background: var(--ink); color: #fff; }
+.actions .btnTeal { background: var(--teal); color: var(--paper); }
+
+.dot {
+  display: inline-block;
+  flex: none;
+  width: 11px;
+  height: 11px;
+  margin-right: 8px;
+  vertical-align: -1px;
+  background: var(--card);
+  border: 2px solid var(--ink);
+}
+.dotLive { background: var(--signal); }
+
+.processing {
+  display: inline-block;
+  margin-left: 12px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+/* camera view */
+.stage {
+  position: relative;
+  height: clamp(320px, 64vh, 680px);
+  margin-bottom: 24px;
+  overflow: hidden;
+  background: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+  box-shadow: var(--shadow-hard);
+}
+.video { width: 100%; height: 100%; object-fit: cover; }
+
+/* The 16:9 guide. Its own box-shadow dims everything outside it (clipped by .stage). Children are in guide-relative px. */
+.guide {
+  position: absolute;
+  pointer-events: none;
+  border: 2px dashed var(--paper);
+  box-shadow: 0 0 0 9999px rgba(12, 10, 11, 0.38);
+}
+.guide[data-live] { border-color: var(--gold); animation: guidePulse 2.4s ease-in-out infinite; }
+@keyframes guidePulse {
+  50% { border-color: var(--paper); }
+}
+.guideLabel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: 100%;
+  padding: 4px 8px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.guide[data-live] .guideLabel { display: none; }
+
+/* chips sit at the top-left of each tracked card; they never take pointer events */
+.chips {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 3px;
+  padding: 3px;
+  overflow: hidden; /* never spill onto the neighbouring card; maxHeight is the card's own height */
+  pointer-events: none;
+  will-change: transform;
+  /* The tracker already low-pass filters the box; a short ease only bridges the ~110 ms between analysis frames. */
+  transition: transform 0.11s ease-out, opacity 0.2s linear;
+}
+.chips[data-stale] { opacity: 0.5; }
+/* narrow cards (phone portrait): stack the chips instead of wrapping them into the row below */
+.chips[data-compact] { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; gap: 2px; padding: 2px; }
+/* beat the global .ds-chip-* sizing (single class) with a descendant selector */
+.chips > span:not(.pill) {
+  --chip-bw: 2px;
+  padding: 0.28em 0.45em;
+  font-size: var(--chip-fs, 12px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.pill {
+  padding: 0.28em 0.45em;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: var(--chip-fs, 12px);
+  line-height: 1.2;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pill[data-tone='loading'] { opacity: 0.8; }
+.pill[data-tone='error'] { color: #fff; background: var(--signal); }
+.pill[data-tone='na'] { color: var(--muted); border-style: dashed; }
+
+/* unrecognised card: dashed outline, the only tappable thing over the video */
+.unknown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: auto;
+  cursor: pointer;
+  color: var(--paper);
+  background: rgba(12, 10, 11, 0.12);
+  border: 2px dashed var(--paper);
+  border-radius: 0;
+  transition: left 0.11s ease-out, top 0.11s ease-out, width 0.11s ease-out, height 0.11s ease-out;
+}
+.unknown[data-status='reading'] { border-color: var(--gold); }
+.unknown[data-status='no-text'], .unknown[data-status='not-in-catalogue'], .unknown[data-status='lookup-failed'] { border-color: var(--signal); }
+.unknown[data-status='learned'] { border-style: solid; border-color: var(--teal); }
+.unknownStatus {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 2px 5px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: rgba(12, 10, 11, 0.82);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.unknown[data-status='reading'] .unknownStatus { color: var(--ink); background: var(--gold); }
+.unknown[data-status='no-text'] .unknownStatus,
+.unknown[data-status='not-in-catalogue'] .unknownStatus,
+.unknown[data-status='lookup-failed'] .unknownStatus { color: #fff; background: var(--signal); }
+.unknown[data-status='learned'] .unknownStatus { color: var(--paper); background: var(--teal); }
+.unknown:hover, .unknown:focus-visible { background: rgba(242, 194, 48, 0.28); border-color: var(--gold); outline: none; }
+.unknownHint {
+  align-self: center;
+  margin-bottom: 4px;
+  padding: 2px 6px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--gold);
+}
+
+.hud {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: grid;
+  gap: 2px;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  background: rgba(12, 10, 11, 0.78);
+  pointer-events: none;
+}
+
+/* enrol panel floats over the bottom of the stage */
+.enrol {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow-hard-sm);
+}
+.thumb {
+  flex: none;
+  width: 96px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+}
+.enrolField { display: block; flex: 1 1 200px; min-width: 0; }
+.enrolLabel { display: block; margin-bottom: 6px; color: var(--muted); }
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 16px; /* 16px keeps iOS from zooming on focus */
+  color: var(--ink);
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: 0;
+}
+.input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.enrolActions { display: flex; gap: 12px; padding-bottom: 5px; }
+
+.idle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--paper);
+}
+.idleInner { text-align: center; }
+.idleMark {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  border: 3px solid var(--paper);
+}
+.idleMark::after {
+  content: '';
+  position: absolute;
+  inset: 18px;
+  background: var(--signal);
+  border: 2px solid var(--paper);
+}
+.idleTitle {
+  margin: 0 0 8px;
+  font-size: clamp(36px, 7vw, 56px);
+}
+.idleHint { margin: 0 auto; max-width: 44ch; font-size: 16px; line-height: 1.5; }
+
+/* guidance under the camera: only shown when there is something actionable to say */
+.hint {
+  margin: -8px 0 16px;
+  padding: 10px 14px;
+  font-size: 15px;
+  line-height: 1.45;
+  background: var(--gold);
+  border: 3px solid var(--ink);
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 5px; /* room for the button's hard shadow */
+}
+
+.debugList {
+  margin: 0 0 24px;
+  padding: 12px 14px;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  background: var(--card);
+  border: 3px solid var(--ink);
+}
+.debugList li { padding: 2px 0; }
+.debugList code { padding: 0 3px; background: var(--paper); }
+
+.error, .note {
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  border: 3px solid var(--ink);
+}
+.error { color: #fff; background: var(--signal); }
+.note { background: var(--card); }
+
+.panel {
+  padding: clamp(20px, 3.5vw, 36px);
+  margin-bottom: 32px;
+}
+.indexRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.indexRow > div { flex: 1 1 360px; min-width: 0; }
+.panelTitle {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 4.5vw, 48px);
+}
+.panelBody { margin: 0; max-width: 62ch; font-size: 16px; line-height: 1.55; color: var(--muted); }
+.panelBody strong { font-family: var(--mono); color: var(--ink); }
+
+.foot {
+  margin: 0;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+@media (max-width: 520px) {
+  .actions, .tools { gap: 12px; width: 100%; }
+  .actions > .btn, .tools > .btn { flex: 1 1 calc(50% - 6px); min-width: 0; padding-inline: 12px; }
+  .sub { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide[data-live] { animation: none; }
+  .chips, .unknown { transition: none; }
+}

@@ -1,4 +1,4 @@
-import { extractMovieTitles } from '../../lib/extract-titles'
+import { extractMovieTitles, wordsFromBlocks } from '../../lib/extract-titles'
 
 type MockWord = {
   text: string
@@ -87,5 +87,23 @@ describe('extractMovieTitles', () => {
     const result = extractMovieTitles([word('Inception', 90, 300, 600)] as any, 3)
     expect(result[0].x).toBe(200)
     expect(result[0].y).toBe(100)
+  })
+})
+
+// Regression: tesseract.js v7 dropped the flat `data.words`; words only exist nested in `data.blocks`.
+describe('wordsFromBlocks', () => {
+  it('returns an empty array for null or missing blocks', () => {
+    expect(wordsFromBlocks(null)).toEqual([])
+    expect(wordsFromBlocks(undefined)).toEqual([])
+  })
+
+  it('flattens blocks > paragraphs > lines > words in reading order', () => {
+    const blocks = [
+      { paragraphs: [{ lines: [{ words: [word('Stranger', 90), word('Things', 90)] }] }] },
+      { paragraphs: [{ lines: [{ words: [word('Wednesday', 90)] }, { words: [word('Squid', 90), word('Game', 90)] }] }] },
+    ]
+    expect(wordsFromBlocks(blocks as any).map(w => w.text)).toEqual([
+      'Stranger', 'Things', 'Wednesday', 'Squid', 'Game',
+    ])
   })
 })

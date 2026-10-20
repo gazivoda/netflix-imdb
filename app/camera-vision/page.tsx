@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { createWorker } from 'tesseract.js'
-import { extractMovieTitles } from '@/lib/extract-titles'
+import { extractMovieTitles, wordsFromBlocks } from '@/lib/extract-titles'
+import { binarizeForOcr } from '@/lib/ocr-preprocess'
 import { ImdbChip, RtChip } from '@/components/ScoreChip'
 import s from './camera.module.css'
 
@@ -20,26 +21,19 @@ interface DetectedContent {
   rtRating?: number | null
 }
 
-function preprocessFrame(source: HTMLVideoElement): HTMLCanvasElement {
-  const scale = 3
+const OCR_SCALE = 3
+const OCR_INTERVAL_MS = 3000
+
+function preprocessFrame(source: HTMLVideoElement): HTMLCanvasElement | null {
   const canvas = document.createElement('canvas')
-  canvas.width = source.videoWidth * scale
-  canvas.height = source.videoHeight * scale
+  canvas.width = source.videoWidth * OCR_SCALE
+  canvas.height = source.videoHeight * OCR_SCALE
 
   const ctx = canvas.getContext('2d')!
-  ctx.filter = 'grayscale(1) contrast(2) brightness(1.1)'
   ctx.drawImage(source, 0, 0, canvas.width, canvas.height)
-  ctx.filter = 'none'
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  const data = imageData.data
-  for (let i = 0; i < data.length; i += 4) {
-    const luminance = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
-    const value = luminance >= 128 ? 255 : 0
-    data[i] = value
-    data[i + 1] = value
-    data[i + 2] = value
-  }
+  if (!binarizeForOcr(imageData.data)) return null
   ctx.putImageData(imageData, 0, 0)
 
   return canvas
@@ -55,6 +49,7 @@ export default function CameraVision() {
   const [lastProcessedTime, setLastProcessedTime] = useState(0)
   const ocrWorkerRef = useRef<any>(null)
   const ocrFailureCountRef = useRef(0)
+  const lastRunRef = useRef(0)
   const [ocrReady, setOcrReady] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [ocrFailureCount, setOcrFailureCount] = useState(0)
@@ -144,25 +139,26 @@ export default function CameraVision() {
 
     if (!ctx || video.videoWidth === 0 || video.videoHeight === 0) return
 
+    // Throttle on a ref: the rAF loop holds stale state between renders and would re-enter back-to-back.
+    if (Date.now() - lastRunRef.current < OCR_INTERVAL_MS) return
+    lastRunRef.current = Date.now()
+
     setIsProcessing(true)
 
     try {
       const preprocessed = preprocessFrame(video)
-
-      // Validate the preprocessed frame has content
-      const checkCtx = preprocessed.getContext('2d')!
-      const checkData = checkCtx.getImageData(0, 0, 1, 1)
-      if (checkData.data[0] === 0 && checkData.data[1] === 0 && checkData.data[2] === 0) {
-        console.warn('Canvas appears empty, skipping OCR')
+      if (!preprocessed) {
+        console.warn('Frame has no contrast, skipping OCR')
         return
       }
 
-      const { data: { words } } = await ocrWorkerRef.current.recognize(preprocessed)
+      const { data } = await ocrWorkerRef.current.recognize(preprocessed, {}, { blocks: true })
+      const words = wordsFromBlocks(data.blocks)
 
       setOcrFailureCount(0)
       ocrFailureCountRef.current = 0
 
-      const detectedTitles = extractMovieTitles(words, 3)
+      const detectedTitles = extractMovieTitles(words, OCR_SCALE)
       console.log('Extracted titles:', detectedTitles)
 
       const newContent: DetectedContent[] = detectedTitles.map((title, index) => ({
@@ -217,7 +213,7 @@ export default function CameraVision() {
 
     const processFrame = async () => {
       const timeSinceLastProcess = Date.now() - lastProcessedTime
-      if (timeSinceLastProcess > 3000 && !isProcessing) { // Process every 3 seconds
+      if (timeSinceLastProcess > OCR_INTERVAL_MS && !isProcessing) { // Process every 3 seconds
         await processVideoFrame()
       }
       animationFrame = requestAnimationFrame(processFrame)
@@ -251,6 +247,9 @@ export default function CameraVision() {
         </div>
 
         <div className={s.actions}>
+          <Link href="/camera-vision/ar" className={`ds-btn ${s.btn}`}>
+            Try AR mode
+          </Link>
           {!isStreaming ? (
             <button
               onClick={startCamera}

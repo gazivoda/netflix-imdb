@@ -4,6 +4,16 @@ type TesseractWord = {
   bbox: { x0: number; y0: number; x1: number; y1: number }
 }
 
+// tesseract.js v7 returns words nested as blocks > paragraphs > lines > words
+// (and only when `blocks` output is requested); it no longer exposes a flat `words`.
+type TesseractBlocks = {
+  paragraphs: { lines: { words: TesseractWord[] }[] }[]
+}[] | null
+
+export function wordsFromBlocks(blocks: TesseractBlocks | undefined): TesseractWord[] {
+  return (blocks ?? []).flatMap(b => b.paragraphs.flatMap(p => p.lines.flatMap(l => l.words)))
+}
+
 export interface DetectedTitle {
   title: string
   confidence: number

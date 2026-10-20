@@ -39,3 +39,6 @@ node_modules
 
 # Ratings cache (JSON document store)
 /.data/
+
+# Benchmark dataset (posters + rendered scenes), regenerate with scripts/ar-bench
+.cache/
