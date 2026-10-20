@@ -13,6 +13,7 @@ Run after every production deploy of `https://rating.watch`. Each step names the
   Expected: no output. Any diff means the deploy is stale or built from a different commit.
 - [ ] Every page in the registry is live: `for p in / /install /compare/imdb-vs-rotten-tomatoes /camera-vision /privacy; do curl -s -o /dev/null -w "%{http_code} $p\n" $S$p; done` (all `200`; update the list if `lib/pages.ts` changed).
 - [ ] Canonical on each page is the page's own URL, not the home page: `curl -s $S/install | grep -o '<link rel="canonical"[^>]*>'`.
+- [ ] The install download is live and current (`bash scripts/package-extension.sh` refreshes it before you build): `curl -s $S/downloads/rating-watch-extension.zip | cmp - extension.zip && echo same`. Expected: `same`. A diff means the deploy ships an older extension than `extension/manifest.json`.
 
 ## 2. Crawl-control routes
 

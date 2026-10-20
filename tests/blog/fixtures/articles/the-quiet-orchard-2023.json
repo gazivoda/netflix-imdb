@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "slug": "the-quiet-orchard-2023",
+  "imdbId": "tt9000012",
+  "status": "review",
+  "published": null,
+  "contentUpdated": "2026-10-17",
+  "h1": "Do critics and audiences see The Quiet Orchard the same way?",
+  "description": "{{title}} has IMDb {{imdb}} and {{rt}} on Rotten Tomatoes, two scores that closely agree. Read how the numbers line up and what the film runs to.",
+  "summary": "{{title}} shows an IMDb score of {{imdb}} from {{votesShort}} votes and {{rt}} on Rotten Tomatoes, so critics and audiences closely agree, within {{gapAbs}} points on a shared scale. That puts it {{gapRank}} of {{setSize}} when films are ordered by the size of the difference, as of {{asOf}}.",
+  "sections": [
+    {
+      "id": "who-it-suits",
+      "heading": "Who is The Quiet Orchard a safe pick for?",
+      "paragraphs": [
+        "If you want a drama where critics and viewers are unlikely to pull you in opposite directions, this is a safe pick on the numbers: both groups landed in the same place, and {{runtime}} is short enough for a single evening.",
+        "If you are looking for a film that argues with itself in its reception, other titles in the set are better places to look. Either way the scores describe other people, not you.",
+        "Agreement also makes the score easy to share: if you recommend this film to a friend, either figure supports you, and it is hard to point to a rival score that says otherwise. That convenience is real, but it still says nothing about whether your friend will enjoy it."
+      ]
+    },
+    {
+      "id": "why-split",
+      "heading": "What explains how closely these two scores line up?",
+      "paragraphs": [
+        "The two scores land almost together. On a shared scale the IMDb figure becomes {{imdbX10}} and Rotten Tomatoes shows {{rt}}, a difference of {{gapAbs}} points, so critics and audiences closely agree. In this set the film ranks {{gapRank}} when films are ordered from most different to least different.",
+        "A third number points the same way. The Metascore of {{metascore}} sits close to both, which suggests the two critic aggregators and the audience pool are reading the film in a similar light. With {{votes}} IMDb votes behind the audience score, this agreement is not a small-sample coincidence.",
+        "Genre helps frame the result. Across the {{genreCount}} {{genre}} films here the median difference is {{genreMedianGap}}, and {{title}} sits at {{gap}}, so in this set it behaves like a typical entry rather than an outlier. That is a statement about these films only.",
+        "When scores agree, the measurement difference matters less. IMDb averages user ratings and Rotten Tomatoes counts the share of positive reviews, as [our comparison of the two](/compare/imdb-vs-rotten-tomatoes) explains, yet here both methods arrive in the same place."
+      ]
+    },
+    {
+      "id": "the-film",
+      "heading": "What do we know about the film itself?",
+      "paragraphs": [
+        "The premise involves a coastal lamp keeper and a map nobody expected to find. {{director}} directs, with Bruno Leclerc, Ada Whitlock and Sven Moreau billed in the leading roles, across {{runtime}}. Netflix Top 10 data records {{weeksInTop10}} weeks on the global chart, a peak rank of {{peakRank}} and {{hours}} hours viewed, which is {{popularityRank}} by viewing in this set.",
+        "OMDb lists a PG rating and no awards line. All other facts on this page come from the same OMDb record and from the published Netflix data. We keep the plot to one line on purpose, because the OMDb record is our only source and we do not retell scenes."
+      ]
+    },
+    {
+      "id": "more",
+      "heading": "Does close agreement tell us the film is good?",
+      "paragraphs": [
+        "No, and that is worth saying plainly. Close agreement tells us the two groups reached similar numbers, nothing more. Two sets of lukewarm opinions agree just as neatly as two sets of enthusiastic ones, which is why we show the actual scores alongside the comparison and let you decide what a number such as {{rt}} means for you."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Do critics and audiences agree on The Quiet Orchard?",
+      "a": "Yes. Rotten Tomatoes shows {{rt}} and IMDb shows {{imdb}}, which is {{imdbX10}} on the same scale, a difference of {{gapAbs}} points. The Metascore of {{metascore}} is nearby, so the three scores tell a consistent story as of {{asOf}}."
+    },
+    {
+      "q": "Where does The Quiet Orchard rank among the Netflix films?",
+      "a": "By Netflix hours viewed it ranks {{popularityRank}} of the {{setSize}} films in this set, with {{hours}} hours counted. Ordered by the size of the score difference it ranks {{gapRank}}, which says the film is popular on Netflix without being unusual in how the two score groups treat it."
+    },
+    {
+      "q": "How long is The Quiet Orchard and who directed it?",
+      "a": "OMDb gives the running time as {{runtime}}, and the director is {{director}}. The billed leads are Bruno Leclerc, Ada Whitlock and Sven Moreau. These details come straight from the OMDb record and have not been added to from other sources."
+    }
+  ],
+  "sources": [],
+  "review": {
+    "writer": "Fixture Writer",
+    "writtenOn": "2026-10-16",
+    "factChecker": null,
+    "factCheckedOn": null,
+    "cuts": [],
+    "rtCheck": null
+  }
+}

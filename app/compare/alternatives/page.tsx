@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import s from './alternatives.module.css';
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
-import { REPO_URL } from '../../../lib/content';
 import { absoluteUrl, pageMetadata } from '../../../lib/seo';
 
 const PATH = '/compare/alternatives';
@@ -35,7 +34,6 @@ interface Row {
   where: ReactNode;
   tab: ReactNode;
   cost: ReactNode;
-  oss: ReactNode;
 }
 
 const ROWS: Row[] = [
@@ -46,7 +44,6 @@ const ROWS: Row[] = [
     where: 'A badge on each title card on netflix.com.',
     tab: 'No.',
     cost: 'Free, no account. Installs as an unpacked extension (not on the Chrome Web Store yet).',
-    oss: <>Yes, <a href={REPO_URL} target="_blank" rel="noopener noreferrer">on GitHub</a>.</>,
   },
   {
     name: 'JustWatch',
@@ -55,7 +52,6 @@ const ROWS: Row[] = [
     where: <>On JustWatch itself. It mentions {ext(SRC.justwatchTv, 'filtering by IMDb rating')}; I found no Rotten Tomatoes mention on the pages I read.</>,
     tab: 'Yes, it is its own site and apps.',
     cost: 'Has a Sign In link; price is not stated on the pages I read.',
-    oss: 'Not stated.',
   },
   {
     name: 'Reelgood',
@@ -64,7 +60,6 @@ const ROWS: Row[] = [
     where: <>In the Reelgood app and site. Its App Store listing says &quot;IMDb scores and Reelgood scores guide you&quot;; Rotten Tomatoes is not mentioned there.</>,
     tab: 'Yes, it is its own app and site.',
     cost: 'Listed as Free on the App Store, which also lists an email address among data linked to you.',
-    oss: 'Not stated.',
   },
   {
     name: 'IMDb',
@@ -73,7 +68,6 @@ const ROWS: Row[] = [
     where: 'On each title page at imdb.com.',
     tab: 'Yes, you look the title up.',
     cost: 'Rating a title needs a registered account; I could not load the IMDb homepage to check anything else.',
-    oss: 'Not stated.',
   },
   {
     name: 'Rotten Tomatoes',
@@ -82,7 +76,6 @@ const ROWS: Row[] = [
     where: <>On rottentomatoes.com. Its {ext(SRC.rt, 'home page')} also has sections for titles on Netflix and other services.</>,
     tab: 'Yes, you look the title up.',
     cost: 'Free movies are promoted with "No log in required"; it has a Login/signup link.',
-    oss: 'Not stated.',
   },
   {
     name: 'RateFlix',
@@ -91,7 +84,6 @@ const ROWS: Row[] = [
     where: 'On Netflix titles (the listing does not say where exactly).',
     tab: 'No.',
     cost: 'Chrome Web Store listing shows no price; it says no personal data is collected.',
-    oss: 'Not stated.',
   },
   {
     name: 'Netflix IMDb Overlay',
@@ -100,7 +92,6 @@ const ROWS: Row[] = [
     where: 'On Netflix thumbnails; IMDb only.',
     tab: 'No.',
     cost: 'You must first get your own free OMDb API key. Price of the extension itself is not stated.',
-    oss: 'Not stated.',
   },
 ];
 
@@ -119,7 +110,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Is Rating Watch on the Chrome Web Store?',
-    a: 'Not yet. It installs as an unpacked extension from GitHub, which takes about a minute in Chrome, Edge or Brave. If you want one-click installation from the store today, a store-listed alternative such as RateFlix is easier, though I have not verified its source code or how it fetches ratings.',
+    a: 'Not yet. It installs as an unpacked extension from a zip you download from this site, which takes about a minute in Chrome, Edge or Brave. If you want one-click installation from the store today, a store-listed alternative such as RateFlix is easier, though I have not verified its source code or how it fetches ratings.',
   },
   {
     q: 'Are these services affiliated with Rating Watch?',
@@ -178,7 +169,6 @@ export default function AlternativesPage() {
               <th scope="col">Where you see ratings</th>
               <th scope="col">Needs another tab?</th>
               <th scope="col">Account / price</th>
-              <th scope="col">Open source</th>
             </tr>
           </thead>
           <tbody>
@@ -189,7 +179,6 @@ export default function AlternativesPage() {
                 <td className={cellClass(r.where)}>{r.where}</td>
                 <td className={cellClass(r.tab)}>{r.tab}</td>
                 <td className={cellClass(r.cost)}>{r.cost}</td>
-                <td className={cellClass(r.oss)}>{r.oss}</td>
               </tr>
             ))}
           </tbody>
@@ -200,7 +189,9 @@ export default function AlternativesPage() {
       <p className={s.p}>
         When you mostly browse Netflix and want the audience score (IMDb, out of 10) and the critic
         score (Rotten Tomatoes, a percentage) on every card without opening anything else. It has no
-        account and no key to enter, and its source is public so you can read what it does. Not sure
+        account and no key to enter, it asks for access to only netflix.com and omdbapi.com, and
+        it sends nothing but title names to OMDb. There is also an optional Pro AR mode that shows
+        the same scores over a TV screen through your phone camera. Not sure
         how the two scores differ? See{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.
       </p>
@@ -236,7 +227,7 @@ export default function AlternativesPage() {
       <aside className={`ds-card ${s.callout}`}>
         <h2 className={`ds-display ${s.calloutTitle}`}>Try it on your own Netflix</h2>
         <p>
-          Rating Watch is free and installs in about a minute. It is independent and not
+          The Rating Watch extension is free and installs in about a minute. It is independent and not
           affiliated with Netflix, IMDb or Rotten Tomatoes.
         </p>
         <a href="/install" className="ds-btn ds-btn-signal">

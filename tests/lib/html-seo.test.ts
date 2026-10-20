@@ -3,7 +3,7 @@ import { checkPage, htmlFileForPath } from '../../lib/html-seo';
 const SITE = 'https://example.test';
 const TITLE = 'Install Rating Watch on Chrome · Rating Watch';
 const DESC =
-  'Install the free Rating Watch extension in about a minute: download from GitHub and click Load unpacked.';
+  'Install the free Rating Watch extension in about a minute: download the zip and click Load unpacked.';
 
 const ld = (data: unknown) =>
   `<script type="application/ld+json">${typeof data === 'string' ? data : JSON.stringify(data)}</script>`;

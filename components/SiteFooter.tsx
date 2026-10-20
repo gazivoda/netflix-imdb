@@ -1,6 +1,6 @@
 import c from './site-chrome.module.css';
 import { PAGES, pagesInGroup } from '../lib/pages';
-import { REPO_URL, AUTHOR_NAME } from '../lib/content';
+import { AUTHOR_NAME } from '../lib/content';
 
 // Links are generated from the page registry, so every registered guide is
 // linked sitewide and can never become an orphan.
@@ -27,7 +27,6 @@ export default function SiteFooter({ updated }: { updated?: { iso: string; label
           <nav className={c.footerCol} aria-label="Project">
             <span className={c.footerHead}>Project</span>
             {home && <a href={home.path}>Home</a>}
-            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub (open source)</a>
             <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">Powered by OMDb</a>
             {about.map((p) => (
               <a key={p.path} href={p.path}>{p.label ?? p.title}</a>
@@ -38,13 +37,13 @@ export default function SiteFooter({ updated }: { updated?: { iso: string; label
           </nav>
         </div>
         <p className={c.footerMeta}>
-          Built by <a href={REPO_URL} target="_blank" rel="noopener noreferrer">{AUTHOR_NAME}</a>
+          Built by <a href="/about">{AUTHOR_NAME}</a>
           {updated && (
             <>
               {' · '}Updated <time dateTime={updated.iso}>{updated.label}</time>
             </>
           )}
-          {'. '}Rating Watch is an independent open-source project. It is not affiliated with or
+          {'. '}Rating Watch is an independent project. It is not affiliated with or
           endorsed by Netflix, IMDb or Rotten Tomatoes; those names belong to their owners.
         </p>
       </div>

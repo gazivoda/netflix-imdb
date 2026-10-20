@@ -2,7 +2,7 @@
 
 Prepared 2026-10-15 from the extension source (`extension/manifest.json`, `content.js`, `background.js`). Everything below matches what the code does. Verify field names and category list in the live Developer Dashboard before submitting, since Google changes them.
 
-Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/package-extension.sh`). Version in manifest: 1.1.1.
+Package to upload: `extension.zip` (repo root; rebuild with `bash scripts/package-extension.sh`). Version in manifest: 1.2.1. The same file is served to site visitors at `https://rating.watch/downloads/rating-watch-extension.zip` (the packaging script refreshes both).
 
 ## 1. Name (trademark-safe suggestion)
 
@@ -16,10 +16,10 @@ The store listing name is read from `manifest.json` `name` (max 75 characters). 
 
 **Applied 2026-10-16:** manifest `name` is now "Rating Watch: IMDb & Rotten Tomatoes for Netflix". (Earlier note, now superseded: changing the manifest `name` was not done.) If the store name differs from the site brand "Rating Watch", keep the on-page and repo wording "Rating Watch" and add the not-affiliated line (below) to the listing.
 
-## 2. Short description (manifest `description`, 114 / 132 characters)
+## 2. Short description (manifest `description`, 101 / 132 characters)
 
 ```
-Shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Free, open source, no account needed.
+Shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Free, no account needed.
 ```
 
 This text is already set in `extension/manifest.json`. The store uses it as the summary.
@@ -46,8 +46,8 @@ PRIVACY
 - Does not read your Netflix account, watch history, cookies or session
 - Privacy policy: https://rating.watch/privacy
 
-FREE AND OPEN SOURCE
-The full source code is on GitHub: https://github.com/gazivoda/netflix-imdb
+FREE, NO ACCOUNT
+The extension is free and needs no account or API key.
 Website and install help: https://rating.watch
 
 TIPS
@@ -66,7 +66,7 @@ Replace the first line's name if you keep "Rating Watch" as the store name.
 - Category: **Entertainment** if offered in the dashboard; otherwise **Fun** (current dashboard category for media and viewing helpers) or **Tools**. Pick the closest available.
 - Language: English.
 - Official URL / website: https://rating.watch
-- Support URL: https://github.com/gazivoda/netflix-imdb/issues
+- Support URL: https://rating.watch/about (support email: hello@rating.watch)
 - Privacy policy URL: https://rating.watch/privacy
 
 ## 5. Screenshot shot-list (you capture these)
@@ -77,7 +77,7 @@ Dashboard accepts up to 5 screenshots, **1280x800** (preferred) or 640x400, PNG 
 2. **Close-up of badges.** Zoom the browser to about 150-200% on one row so the badge format (`⭐ score` and `🍅 percent`) is legible, then capture. Caption: "Both scores at a glance".
 3. **Search results.** Search a genre or a title name and capture the results grid with badges. Caption: "Works in search results too".
 4. **More Like This / title detail.** Open a title's detail modal and capture the "More Like This" cards with badges. Caption: "Rates suggestions as they load".
-5. **Install or permissions view.** Either the `chrome://extensions` card for the extension with the two host permissions visible in Details, or the rating.watch/install page. Caption: "Open source, two permissions, no account".
+5. **Install or permissions view.** Either the `chrome://extensions` card for the extension with the two host permissions visible in Details, or the rating.watch/install page. Caption: "Two permissions, no account".
 
 Also needed by the dashboard:
 - Store icon 128x128 (`extension/icon.png` is 128x128, but the file is only 307 bytes, so it is likely a plain placeholder; consider a proper icon before submitting).

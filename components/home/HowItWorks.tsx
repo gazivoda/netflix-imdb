@@ -1,7 +1,7 @@
 import styles from './HowItWorks.module.css';
 
 const STEPS = [
-  { n: '1', title: 'Install the extension', desc: 'Load it unpacked from GitHub in a couple of clicks. No store account required.' },
+  { n: '1', title: 'Install the extension', desc: 'Download the zip from this site and load it unpacked in a couple of clicks. No store account required.' },
   { n: '2', title: 'Open Netflix', desc: 'Browse like you always do. The extension activates automatically on netflix.com.' },
   { n: '3', title: 'See ratings everywhere', desc: 'IMDb and Rotten Tomatoes scores appear on every card — and on new rows as you scroll.' },
 ];

@@ -1,0 +1,671 @@
+{
+  "schemaVersion": 1,
+  "name": "Fixture films",
+  "description": "Fake films used only by tests/blog.",
+  "license": "Fixture data, not real scores",
+  "selectionRule": "Fixture rule.",
+  "listSource": "committed-snapshot",
+  "netflix": {
+    "weeklyUrl": "https://example.test/weekly.tsv",
+    "mostPopularUrl": "https://example.test/most-popular.tsv",
+    "downloadedAt": "2026-10-15T08:00:00.000Z",
+    "firstWeek": "2021-07-04",
+    "lastWeek": "2026-10-04",
+    "weeklySha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "mostPopularSha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "generatedAt": "2026-10-15T09:31:00.000Z",
+  "counts": {
+    "filmTitles": 12,
+    "tvTitlesSkipped": 0,
+    "poolEvaluated": 12,
+    "eligible": 100,
+    "excluded": 0
+  },
+  "films": [
+    {
+      "slug": "harbor-lights-2021",
+      "popularityRank": 1,
+      "poolRank": 1,
+      "netflix": {
+        "title": "HARBOR LIGHTS — Part One",
+        "category": "Films (English)",
+        "popularityHours": 310000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 9,
+        "peakRank": 1,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": 1,
+        "runtimeMin": 112
+      },
+      "omdb": {
+        "imdbId": "tt9000010",
+        "title": "Harbor Lights",
+        "year": 2021,
+        "rated": "PG-13",
+        "released": "2021-01-10",
+        "runtimeMin": 112,
+        "genres": [
+          "Drama",
+          "Romance"
+        ],
+        "directors": [
+          "Mara Venn"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Ines Calder",
+          "Tobias Rook",
+          "Lena Marsh",
+          "Odin Pryce"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": "2 nominations total",
+        "metascore": 86,
+        "imdbRating": 7.8,
+        "imdbVotes": 184200,
+        "rtPercent": 91
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "crimson-static-2022",
+      "popularityRank": 2,
+      "poolRank": 2,
+      "netflix": {
+        "title": "Crimson Static",
+        "category": "Films (English)",
+        "popularityHours": 262000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 8,
+        "peakRank": 1,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": 2,
+        "runtimeMin": 118
+      },
+      "omdb": {
+        "imdbId": "tt9000011",
+        "title": "Crimson Static",
+        "year": 2022,
+        "rated": "PG-13",
+        "released": "2022-02-11",
+        "runtimeMin": 118,
+        "genres": [
+          "Action",
+          "Thriller"
+        ],
+        "directors": [
+          "Dario Kessel"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Rhett Alden",
+          "Mila Stroud",
+          "Jonas Brandt"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 41,
+        "imdbRating": 6.4,
+        "imdbVotes": 402310,
+        "rtPercent": 38
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "the-quiet-orchard-2023",
+      "popularityRank": 3,
+      "poolRank": 3,
+      "netflix": {
+        "title": "The Quiet Orchard",
+        "category": "Films (English)",
+        "popularityHours": 150000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 4,
+        "peakRank": 2,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 104
+      },
+      "omdb": {
+        "imdbId": "tt9000012",
+        "title": "The Quiet Orchard",
+        "year": 2023,
+        "rated": "PG",
+        "released": "2023-03-12",
+        "runtimeMin": 104,
+        "genres": [
+          "Drama"
+        ],
+        "directors": [
+          "Hana Okafor"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Bruno Leclerc",
+          "Ada Whitlock",
+          "Sven Moreau"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 72,
+        "imdbRating": 7.4,
+        "imdbVotes": 96440,
+        "rtPercent": 75
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "paper-lanterns-2020",
+      "popularityRank": 4,
+      "poolRank": 4,
+      "netflix": {
+        "title": "Paper Lanterns",
+        "category": "Films (English)",
+        "popularityHours": 120000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 5,
+        "peakRank": 3,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 96
+      },
+      "omdb": {
+        "imdbId": "tt9000013",
+        "title": "Paper Lanterns",
+        "year": 2020,
+        "rated": "PG",
+        "released": "2020-04-13",
+        "runtimeMin": 96,
+        "genres": [
+          "Comedy",
+          "Family"
+        ],
+        "directors": [
+          "Pia Lorenz"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Gus Hartley",
+          "Nell Barlow"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": "2 nominations total",
+        "metascore": 52,
+        "imdbRating": 5.9,
+        "imdbVotes": 48210,
+        "rtPercent": 58
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "neon-meridian-2024",
+      "popularityRank": 5,
+      "poolRank": 5,
+      "netflix": {
+        "title": "Neon Meridian",
+        "category": "Films (English)",
+        "popularityHours": 205000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 6,
+        "peakRank": 1,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 126
+      },
+      "omdb": {
+        "imdbId": "tt9000014",
+        "title": "Neon Meridian",
+        "year": 2024,
+        "rated": "PG-13",
+        "released": "2024-05-14",
+        "runtimeMin": 126,
+        "genres": [
+          "Sci-Fi",
+          "Adventure"
+        ],
+        "directors": [
+          "Corin Vale"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Yara Quist",
+          "Elias Brandt",
+          "Mio Tanaka"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 69,
+        "imdbRating": 6.6,
+        "imdbVotes": 71005,
+        "rtPercent": 82
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "salt-and-iron-2019",
+      "popularityRank": 6,
+      "poolRank": 6,
+      "netflix": {
+        "title": "Salt & Iron",
+        "category": "Films (English)",
+        "popularityHours": 98000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 3,
+        "peakRank": 4,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 109
+      },
+      "omdb": {
+        "imdbId": "tt9000015",
+        "title": "Salt and Iron",
+        "year": 2019,
+        "rated": "R",
+        "released": "2019-06-15",
+        "runtimeMin": 109,
+        "genres": [
+          "Action",
+          "Drama"
+        ],
+        "directors": [
+          "Dario Kessel"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Wes Harlan",
+          "Dora Finch",
+          "Mila Stroud"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 61,
+        "imdbRating": 7,
+        "imdbVotes": 133870,
+        "rtPercent": 64
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "glass-harvest-2022",
+      "popularityRank": 7,
+      "poolRank": 7,
+      "netflix": {
+        "title": "Glass Harvest",
+        "category": "Films (English)",
+        "popularityHours": 131000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 5,
+        "peakRank": 2,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 115
+      },
+      "omdb": {
+        "imdbId": "tt9000016",
+        "title": "Glass Harvest",
+        "year": 2022,
+        "rated": "R",
+        "released": "2022-07-16",
+        "runtimeMin": 115,
+        "genres": [
+          "Drama",
+          "Mystery"
+        ],
+        "directors": [
+          "Hana Okafor"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Nora Hale",
+          "Piers Odell"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": "2 nominations total",
+        "metascore": 44,
+        "imdbRating": 6.2,
+        "imdbVotes": 58920,
+        "rtPercent": 40
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "midnight-ferry-2025",
+      "popularityRank": 8,
+      "poolRank": 8,
+      "netflix": {
+        "title": "Midnight Ferry",
+        "category": "Films (English)",
+        "popularityHours": 88000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 3,
+        "peakRank": 5,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 101
+      },
+      "omdb": {
+        "imdbId": "tt9000017",
+        "title": "Midnight Ferry",
+        "year": 2025,
+        "rated": "PG-13",
+        "released": "2025-08-17",
+        "runtimeMin": 101,
+        "genres": [
+          "Thriller",
+          "Mystery"
+        ],
+        "directors": [
+          "Corin Vale"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Ines Calder",
+          "Lars Everett"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": null,
+        "imdbRating": 6.9,
+        "imdbVotes": 33280,
+        "rtPercent": 71
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "echo-valley-2021",
+      "popularityRank": 9,
+      "poolRank": 9,
+      "netflix": {
+        "title": "Echo Valley",
+        "category": "Films (English)",
+        "popularityHours": 76000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 4,
+        "peakRank": 6,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": null
+      },
+      "omdb": {
+        "imdbId": "tt9000018",
+        "title": "Echo Valley",
+        "year": 2021,
+        "rated": "PG-13",
+        "released": "2021-09-18",
+        "runtimeMin": 94,
+        "genres": [
+          "Comedy"
+        ],
+        "directors": [
+          "Pia Lorenz"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Gus Hartley",
+          "Rhea Dunmore",
+          "Otto Falk"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 63,
+        "imdbRating": 6.3,
+        "imdbVotes": 27640,
+        "rtPercent": 79
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "tin-soldier-blues-2018",
+      "popularityRank": 10,
+      "poolRank": 10,
+      "netflix": {
+        "title": "Tin Soldier Blues",
+        "category": "Films (Non-English)",
+        "popularityHours": 64000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 2,
+        "peakRank": 7,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 131
+      },
+      "omdb": {
+        "imdbId": "tt9000019",
+        "title": "Tin Soldier Blues",
+        "year": 2018,
+        "rated": "R",
+        "released": "2018-01-10",
+        "runtimeMin": 131,
+        "genres": [
+          "Drama",
+          "War"
+        ],
+        "directors": [
+          "Mara Venn"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Tobias Rook",
+          "Lena Marsh"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": "2 nominations total",
+        "metascore": 77,
+        "imdbRating": 8,
+        "imdbVotes": 512300,
+        "rtPercent": 80
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "velvet-orbit-2023",
+      "popularityRank": 11,
+      "poolRank": 11,
+      "netflix": {
+        "title": "Velvet Orbit",
+        "category": "Films (English)",
+        "popularityHours": 170000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 7,
+        "peakRank": 1,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 107
+      },
+      "omdb": {
+        "imdbId": "tt9000020",
+        "title": "Velvet Orbit",
+        "year": 2023,
+        "rated": "PG-13",
+        "released": "2023-02-11",
+        "runtimeMin": 107,
+        "genres": [
+          "Sci-Fi",
+          "Comedy"
+        ],
+        "directors": [
+          "Corin Vale"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Yara Quist",
+          "Mio Tanaka",
+          "Otto Falk"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 29,
+        "imdbRating": 5.5,
+        "imdbVotes": 81230,
+        "rtPercent": 22
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    },
+    {
+      "slug": "sundown-express-2024",
+      "popularityRank": 12,
+      "poolRank": 12,
+      "netflix": {
+        "title": "Sundown Express",
+        "category": "Films (English)",
+        "popularityHours": 112000000,
+        "hoursSource": "weekly-sum",
+        "weeksInTop10": 4,
+        "peakRank": 3,
+        "firstWeek": "2022-03-06",
+        "lastWeek": "2022-05-08",
+        "mostPopularRank": null,
+        "runtimeMin": 99
+      },
+      "omdb": {
+        "imdbId": "tt9000021",
+        "title": "Sundown Express",
+        "year": 2024,
+        "rated": "PG-13",
+        "released": "2024-03-12",
+        "runtimeMin": 99,
+        "genres": [
+          "Action",
+          "Comedy"
+        ],
+        "directors": [
+          "Dario Kessel"
+        ],
+        "writers": [
+          "Fixture Writer"
+        ],
+        "actors": [
+          "Rhett Alden",
+          "Dora Finch",
+          "Piers Odell"
+        ],
+        "plot": "A fictional test film used only by the fixture suite, with a short invented plot about a lighthouse keeper who finds a map.",
+        "languages": [
+          "English"
+        ],
+        "countries": [
+          "United States"
+        ],
+        "awards": null,
+        "metascore": 49,
+        "imdbRating": 6.8,
+        "imdbVotes": 45130,
+        "rtPercent": 60
+      },
+      "fetchedAt": "2026-10-15T09:30:00.000Z",
+      "dataChangedAt": "2026-10-15"
+    }
+  ],
+  "excluded": []
+}

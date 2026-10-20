@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "slug": "harbor-lights-2021",
+  "imdbId": "tt9000010",
+  "status": "published",
+  "published": "2026-10-20",
+  "contentUpdated": "2026-10-18",
+  "h1": "Why critics rate Harbor Lights above its audience score",
+  "description": "{{title}} has IMDb {{imdb}} from {{votesShort}} votes and {{rt}} on Rotten Tomatoes. See how the two scores compare and what may explain the difference.",
+  "summary": "{{title}} carries an IMDb score of {{imdb}} from {{votesShort}} votes and {{rt}} on Rotten Tomatoes, so critics rate it noticeably higher than audiences, by {{gapAbs}} points on one shared scale. That is the {{gapRank}} largest difference among the {{setSize}} Netflix films in this set. Scores are as of {{asOf}}.",
+  "sections": [
+    {
+      "id": "why-split",
+      "heading": "Why do critics and audiences rate Harbor Lights apart?",
+      "paragraphs": [
+        "Critics land on the higher side of this pair. Converted to one scale, the IMDb score becomes {{imdbX10}} while Rotten Tomatoes shows {{rt}}, a clear gap of {{gapAbs}} points in favor of the critic side. That makes {{title}} the {{gapRank}} largest difference in the set.",
+        "Two pieces of context make the critic reading look sturdy. First, the Metascore of {{metascore}} points the same direction as Rotten Tomatoes, which suggests critics were consistent across two different aggregators instead of one site producing a quirk. Second, {{votes}} IMDb votes is a deep pool, so the audience figure is unlikely to be moved by a few voters.",
+        "Genre adds a third angle. Among {{genreCount}} {{genre}} titles in this set, the median difference is {{genreMedianGap}}, so this film leans toward critics more than a typical {{genre}} entry does. That is consistent with a reading in which reviewers may reward patient, character-led storytelling, but it remains a reading and not proof.",
+        "The two numbers also measure different things. IMDb averages ratings from registered users, while Rotten Tomatoes reports the share of critic reviews that are positive, so a film can rate warmly with critics and still land lower among general viewers. The [short guide to how the scores are built](/compare/imdb-vs-rotten-tomatoes) covers the mechanics."
+      ]
+    },
+    {
+      "id": "the-film",
+      "heading": "What is Harbor Lights about and who made it?",
+      "paragraphs": [
+        "The story follows a keeper of a coastal beacon who comes across an old chart and has to decide what to do with it. {{director}} directs, and the billed leads are Ines Calder, Tobias Rook and Lena Marsh, across {{runtime}}. Netflix publishes weekly Top 10 lists by hours viewed, and in that data the film logged {{weeksInTop10}} weeks, a peak position of {{peakRank}} and {{hours}} hours, which ranks it {{popularityRank}} by viewing among the {{setSize}} films here.{{cite:tudum}}",
+        "OMDb records the film as rated PG-13 and lists the genres Drama and Romance. The awards field reads two nominations total. Everything on this page about the film itself comes from those fields and from Netflix data, not from our own viewing."
+      ]
+    },
+    {
+      "id": "who-it-suits",
+      "heading": "Who is Harbor Lights likely to suit?",
+      "paragraphs": [
+        "If a slow-building drama with a romantic thread is what you are after, the critic score is the stronger signal here, because {{votes}} IMDb votes still leave the audience figure on a respectable {{imdb}}. If you prefer fast, plot-driven films, the lower audience number is worth taking seriously, since that is where casual viewers tend to differ from reviewers.",
+        "At {{runtime}} and rated PG-13, it asks for an evening rather than a quick watch. Treat the pairing as a pointer rather than a verdict: the numbers describe how two groups scored the film, not whether it will suit your taste."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Why do critics and audiences rate Harbor Lights differently?",
+      "a": "Critics gave it {{rt}} on Rotten Tomatoes while IMDb users averaged {{imdb}}, which is {{imdbX10}} on the same scale. Metascore {{metascore}} backs the critic side, and {{votes}} votes make the audience figure steady, so the difference looks like a real divergence of taste rather than noise."
+    },
+    {
+      "q": "Did {{title}} win any awards according to OMDb?",
+      "a": "OMDb lists the awards line for the film as 2 nominations total, and nothing more. Awards recognition is a separate question from audience or critic scores, so we report that line as it appears and add no claims of our own beyond it."
+    },
+    {
+      "q": "How many weeks did Harbor Lights spend in the Netflix Top 10?",
+      "a": "Netflix data shows {{weeksInTop10}} weeks in the global Top 10, with a peak weekly rank of {{peakRank}}. Those weeks come from Netflix weekly lists for the period from the first listed week to the last, and they are not a claim about where the film can be watched."
+    }
+  ],
+  "sources": [
+    {
+      "id": "tudum",
+      "url": "https://www.netflix.com/tudum/top10",
+      "title": "Netflix Top 10",
+      "publisher": "Netflix Tudum",
+      "accessed": "2026-10-16",
+      "supports": "Netflix publishes weekly Top 10 lists ranked by hours viewed."
+    }
+  ],
+  "review": {
+    "writer": "Fixture Writer",
+    "writtenOn": "2026-10-16",
+    "factChecker": "Fixture Checker",
+    "factCheckedOn": "2026-10-18",
+    "cuts": [],
+    "rtCheck": null
+  }
+}

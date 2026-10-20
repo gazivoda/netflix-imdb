@@ -5,7 +5,7 @@ const ROOT = join(__dirname, '..');
 
 // Order matters: this is the order the sections render in <main>.
 const SECTIONS = [
-  'HomeNav', 'Hero', 'Stats', 'Marquee', 'Story', 'BeforeAfter', 'Features',
+  'HomeNav', 'Hero', 'Stats', 'Marquee', 'Story', 'PromoVideo', 'BeforeAfter', 'Features',
   'HowItWorks', 'Testimonials', 'CompareCta', 'Faq', 'FinalCta', 'HomeFooter',
 ];
 
@@ -23,7 +23,7 @@ describe('home page structure', () => {
     expect(existsSync(join(ROOT, 'components/ScoreChip.module.css'))).toBe(true);
   });
 
-  it('app/page.tsx imports and renders all 13 sections', () => {
+  it('app/page.tsx imports and renders all 14 sections', () => {
     for (const name of SECTIONS) {
       expect(page).toContain(`from '../components/home/${name}'`);
       expect(page).toContain(`<${name} />`);

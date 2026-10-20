@@ -1,18 +1,15 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
 import s from './about.module.css';
-import { AUTHOR_NAME, PUBLISHED_DATE, REPO_URL, SITE_URL } from '../../lib/content';
+import { AUTHOR_NAME, PUBLISHED_DATE, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
 import { absoluteUrl, authorRef, pageMetadata } from '../../lib/seo';
 
 const PATH = '/about';
 export const metadata = pageMetadata(PATH);
 
-const AUTHOR_PROFILE_URL = 'https://github.com/gazivoda';
-const CONTACT_EMAIL = 'gazivodai61@gmail.com'; // already public on /privacy
-
 const FAQS: Faq[] = [
   {
     q: 'Who makes Rating Watch?',
-    a: `Rating Watch is made by ${AUTHOR_NAME}, an independent developer who publishes the project on GitHub under the username gazivoda. It is a personal open-source project, not a company product, and it is not affiliated with Netflix, IMDb or Rotten Tomatoes.`,
+    a: `Rating Watch is made by ${AUTHOR_NAME}, an independent developer. It is not affiliated with Netflix, IMDb or Rotten Tomatoes.`,
   },
   {
     q: 'Where do the ratings come from?',
@@ -20,7 +17,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'What if a rating is wrong or missing?',
-    a: 'Scores are third-party data, shown exactly as OMDb returns them, so an error usually originates there or at the rating source. If you spot a wrong match or a missing badge, open an issue on the GitHub repository with the title and what you saw, and it can be investigated.',
+    a: `Scores are third-party data, shown exactly as OMDb returns them, so an error usually originates there or at the rating source. If you spot a wrong match or a missing badge, email ${SUPPORT_EMAIL} with the title and what you saw, and it can be investigated.`,
   },
   {
     q: 'Is Rating Watch affiliated with Netflix, IMDb or Rotten Tomatoes?',
@@ -28,7 +25,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'How can I contact the maker?',
-    a: `The best route for bugs, wrong ratings and feature ideas is a GitHub issue, because the answer then helps everyone. For anything else, email ${CONTACT_EMAIL}. The project has no account system, so there is no user account to manage or delete.`,
+    a: `Email ${SUPPORT_EMAIL} for bugs, wrong ratings, feature ideas or anything else. The extension has no account system, so there is nothing to manage or delete there. Accounts for AR mode are covered by the privacy policy.`,
   },
 ];
 
@@ -54,7 +51,7 @@ export default function AboutPage() {
       lede={
         <>
           <strong>
-            Rating Watch is a free, open-source browser extension made by {AUTHOR_NAME} that
+            Rating Watch is a free browser extension made by {AUTHOR_NAME} that
             shows IMDb and Rotten Tomatoes scores on Netflix title cards.
           </strong>{' '}
           This page explains who is behind it, why it exists, where the scores come from and how
@@ -75,11 +72,9 @@ export default function AboutPage() {
             <dd>Independent developer</dd>
           </div>
           <div className={s.stubRow}>
-            <dt className="ds-label">Source</dt>
+            <dt className="ds-label">Contact</dt>
             <dd>
-              <a href={AUTHOR_PROFILE_URL} target="_blank" rel="noopener noreferrer">
-                GitHub / gazivoda
-              </a>
+              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
             </dd>
           </div>
           <div className={s.stubRow}>
@@ -94,16 +89,9 @@ export default function AboutPage() {
       <h2 className={s.h2}>Who makes Rating Watch?</h2>
       <p className={s.p}>
         Rating Watch is built and maintained by {AUTHOR_NAME}, an independent developer. The
-        code, the issue tracker and the release history all live on GitHub, so you can check the
-        work directly: see the{' '}
-        <a href={AUTHOR_PROFILE_URL} target="_blank" rel="noopener noreferrer">
-          {AUTHOR_NAME} profile on GitHub
-        </a>{' '}
-        and the{' '}
-        <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
-          project repository
-        </a>
-        . It is a personal project, not a company product.
+        extension is free, needs no account, and asks for access to only netflix.com and
+        omdbapi.com. There is also an optional Pro AR mode, described on the{' '}
+        <a href="/pricing">pricing page</a>.
       </p>
 
       <h2 className={s.h2}>Why does it exist?</h2>
@@ -111,15 +99,15 @@ export default function AboutPage() {
         Choosing what to watch on Netflix usually means leaving Netflix to look the title up on
         IMDb or Rotten Tomatoes. Rating Watch removes that step by putting both scores in a
         small badge in the top-right corner of every title card, so the rating is there while you
-        browse. It is deliberately small in scope: it does one job, needs no account, and asks for
+        browse. It is deliberately small in scope: the extension does one job, needs no account, and asks for
         access to only two sites.
       </p>
 
       <h2 className={s.h2}>How long has it been around?</h2>
       <p className={s.p}>
         The first public release was on <time dateTime={PUBLISHED_DATE}>May 1, 2026</time>. It is
-        currently installed as an unpacked extension from GitHub rather than from the Chrome Web
-        Store; the <a href="/install">install guide</a> walks through it in about a minute.
+        currently installed as an unpacked extension from a zip on this site rather than from the
+        Chrome Web Store; the <a href="/install">install guide</a> walks through it in about a minute.
       </p>
 
       <h2 className={s.h2}>Where do the ratings come from?</h2>
@@ -143,9 +131,8 @@ export default function AboutPage() {
         <li>If OMDb lacks one of the two scores for a title, only the available one is shown.</li>
         <li>If OMDb has neither score, or cannot match the title, the card shows no rating.</li>
         <li>
-          To report a wrong match or a bad score, open an issue on the{' '}
-          <a href={`${REPO_URL}/issues`} target="_blank" rel="noopener noreferrer">GitHub issue tracker</a>{' '}
-          with the title and what you saw.
+          To report a wrong match or a bad score, email{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> with the title and what you saw.
         </li>
       </ul>
 
@@ -157,13 +144,10 @@ export default function AboutPage() {
         <a href="/privacy">privacy policy</a> lists exactly what is sent.
       </p>
 
-      <h2 className={s.h2}>Is it open source, and how do I get in touch?</h2>
+      <h2 className={s.h2}>How do I get in touch?</h2>
       <p className={s.p}>
-        The full source is public in the{' '}
-        <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub repository</a>, so
-        anyone can read, audit and discuss it. For bugs, wrong ratings and ideas, a GitHub issue is
-        the best route. For anything else, email{' '}
-        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        For bugs, wrong ratings, ideas or anything else, email{' '}
+        <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
       </p>
     </GuideLayout>
   );

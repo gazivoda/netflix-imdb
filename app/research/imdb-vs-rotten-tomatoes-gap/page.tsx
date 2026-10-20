@@ -1,10 +1,11 @@
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
 import s from '../research.module.css';
-import { AUTHOR_NAME, REPO_URL, SITE_URL } from '../../../lib/content';
+import { AUTHOR_NAME, SITE_URL } from '../../../lib/content';
 import { authorRef, pageMetadata } from '../../../lib/seo';
 import { getPage } from '../../../lib/pages';
 import { summarize, toGapRow } from '../../../lib/research-stats';
+import { articlePathForImdbId, isBlogHubReady } from '../../../lib/blog/inbound';
 import raw from '../../../data/imdb-rt-gap.json';
 
 const PATH = '/research/imdb-vs-rotten-tomatoes-gap';
@@ -26,7 +27,7 @@ interface Title {
 const titles = raw.titles as Title[];
 const flagged = raw.flagged;
 const rows = titles
-  .map((t) => ({ ...toGapRow({ title: t.title, imdb: t.imdbRating, rt: t.rtPercent }), year: t.year }))
+  .map((t) => ({ ...toGapRow({ title: t.title, imdb: t.imdbRating, rt: t.rtPercent }), year: t.year, imdbId: t.imdbId }))
   .sort((a, b) => b.gap - a.gap || a.title.localeCompare(b.title));
 const stats = summarize(titles.map((t) => ({ title: t.title, imdb: t.imdbRating, rt: t.rtPercent })));
 const statsClean = summarize(
@@ -48,6 +49,9 @@ const seriesExcluded = raw.excluded.filter((e) => e.type === 'series').length;
 const seriesNoRt = raw.excluded.filter((e) => e.type === 'series' && /Rotten Tomatoes/.test(e.reason)).length;
 const filmsExcluded = raw.excluded.filter((e) => e.type === 'movie');
 const seriesTotal = seriesExcluded + titles.filter((t) => t.type === 'series').length;
+
+// Title cells link a published blog analysis of the same film, matched by IMDb id (I8).
+const articleHref = (imdbId: string): string | null => articlePathForImdbId(imdbId);
 
 const maxGap = Math.max(...rows.map((r) => Math.abs(r.gap)), 1);
 const topCritics = rows.slice(0, 5);
@@ -73,7 +77,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Can I reproduce these numbers or reuse the data?',
-    a: `Yes. The raw data is a single JSON file, and the repository includes the Node script that fetched it from OMDb, the fixed list of candidate titles, and the unit-tested statistics code. Re-running the script gives a fresh snapshot, so scores may differ from those published here because both sites change over time.`,
+    a: `Yes. The raw data is a single JSON file you can download from this page. It lists every title with its IMDb and Rotten Tomatoes scores, the excluded titles with reasons, and the snapshot date, and the method above shows how each statistic is derived. A fresh OMDb lookup may return different scores, because both sites change over time.`,
   },
 ];
 
@@ -84,7 +88,7 @@ const datasetNode = {
   name: raw.name,
   description: `${raw.description} ${stats.n} films, snapshot of ${fetchedDate}.`,
   url: `${SITE_URL}${PATH}`,
-  creator: { '@type': 'Person', '@id': authorRef['@id'], name: AUTHOR_NAME, url: REPO_URL },
+  creator: { '@type': 'Person', '@id': authorRef['@id'], name: AUTHOR_NAME, url: `${SITE_URL}/about` },
   datePublished: page.published ?? isoDate,
   dateModified: isoDate,
   inLanguage: 'en',
@@ -171,6 +175,13 @@ export default function Page() {
         to lean on which, see{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.
       </p>
+      {isBlogHubReady() && (
+        <p className={g.p}>
+          This study covers {stats.n} Netflix Originals. For a larger and separate list, see{' '}
+          <a href="/blog">IMDb and Rotten Tomatoes scores for the 100 most-watched Netflix films</a>, ranked
+          by hours viewed in Netflix&apos;s own Top 10 data.
+        </p>
+      )}
 
       <h2 className={g.h2}>How was the study done?</h2>
       <ul className={g.list}>
@@ -181,7 +192,7 @@ export default function Page() {
         </li>
         <li>
           <strong>Source:</strong> one OMDb API lookup per title ({raw.omdbRequests} requests in
-          total), by title, release year and type. Responses are cached in the repository.
+          total), by title, release year and type.
         </li>
         <li>
           <strong>Normalisation:</strong> IMDb rating &times; 10 puts both scores on a 0-100
@@ -200,11 +211,8 @@ export default function Page() {
         </li>
       </ul>
       <p className={g.p}>
-        Anyone can re-run it: the fixed title list and fetch script are in{' '}
-        <a href={`${REPO_URL}/blob/main/${raw.script}`} target="_blank" rel="noopener noreferrer">
-          {raw.script}
-        </a>
-        . The same OMDb database powers the{' '}
+        Every title, score and exclusion is in the downloadable JSON file below. The same OMDb
+        database powers the{' '}
         <a href="/install">Rating Watch extension</a>, so these are the numbers it shows on
         Netflix cards.
       </p>
@@ -268,7 +276,8 @@ export default function Page() {
               return (
                 <tr key={r.title}>
                   <th scope="row">
-                    {r.title} <span className={s.year}>({r.year})</span>
+                    {articleHref(r.imdbId) ? <a href={articleHref(r.imdbId)!}>{r.title}</a> : r.title}{' '}
+                    <span className={s.year}>({r.year})</span>
                     {isFlagged && <span title="OMDb value differs from rottentomatoes.com; see limitations"> *</span>}
                   </th>
                   <td className={s.num}>{r.imdb.toFixed(1)}</td>
@@ -307,8 +316,8 @@ export default function Page() {
         </a>
       </p>
       <p className={g.p}>
-        Want both scores while you browse? <a href="/install">Install Rating Watch</a>, a free,
-        open-source extension that shows IMDb and Rotten Tomatoes on every Netflix title card. It
+        Want both scores while you browse? <a href="/install">Install Rating Watch</a>, a free
+        extension that shows IMDb and Rotten Tomatoes on every Netflix title card. It
         is not affiliated with Netflix, IMDb or Rotten Tomatoes.
       </p>
     </GuideLayout>

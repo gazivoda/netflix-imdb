@@ -1,7 +1,9 @@
 import { buildLlmsTxt, buildLlmsFullTxt, sectionsFor, LLMS_HEADERS } from '../../lib/llms';
-import { PAGES } from '../../lib/pages';
-import { FAQS, SITE_URL, REPO_URL } from '../../lib/content';
+import { PAGES, buildPages, type SitePage } from '../../lib/pages';
+import type { BlogArticlePage } from '../../lib/blog/registry.generated';
+import { FAQS, SITE_URL } from '../../lib/content';
 import { absoluteUrl } from '../../lib/seo';
+import manifest from '../../extension/manifest.json';
 
 describe('llms.txt', () => {
   const txt = buildLlmsTxt();
@@ -14,7 +16,7 @@ describe('llms.txt', () => {
   });
 
   it('lists every registry page by absolute URL with its description', () => {
-    for (const p of PAGES) {
+    for (const p of PAGES.filter((x) => x.kind !== 'article')) {
       expect(txt).toContain(`](${absoluteUrl(p.path)}): ${p.description}`);
     }
   });
@@ -25,10 +27,15 @@ describe('llms.txt', () => {
     for (const l of links) expect(l).toMatch(/^https:\/\//);
   });
 
-  it('includes key facts and the repo link', () => {
+  it('includes key facts, and points at no GitHub or open-source claim', () => {
     expect(txt).toContain('## Key facts');
-    expect(txt).toContain(REPO_URL);
     expect(txt).toContain('Manifest V3');
+    expect(txt).toContain(`version ${manifest.version}`);
+    for (const out of [txt, buildLlmsFullTxt()]) {
+      expect(out).not.toMatch(/github/i);
+      expect(out).not.toMatch(/open[- ]source/i);
+      expect(out).not.toContain('## Source');
+    }
   });
 
   it('never uses the wrong brand name', () => {
@@ -60,7 +67,7 @@ describe('llms-full.txt', () => {
   const full = buildLlmsFullTxt();
 
   it('contains every registry URL and title', () => {
-    for (const p of PAGES) {
+    for (const p of PAGES.filter((x) => x.kind !== 'article')) {
       expect(full).toContain(`URL: ${absoluteUrl(p.path)}`);
       expect(full).toContain(`### ${p.title}`);
     }
@@ -75,6 +82,61 @@ describe('llms-full.txt', () => {
 
   it('is richer than llms.txt', () => {
     expect(full.length).toBeGreaterThan(buildLlmsTxt().length);
+  });
+});
+
+describe('blog film analyses', () => {
+  const fake: BlogArticlePage = {
+    path: '/blog/fake-film-2020',
+    title: 'Fake Film (2020): IMDb 6.3 vs RT 36%',
+    description: 'Fake Film (2020) has IMDb 6.3 and Rotten Tomatoes 36%, a wide gap. A synthetic registry entry used only by the tests.',
+    published: '2026-10-20',
+    updated: '2026-10-25',
+    label: 'Fake Film (2020)',
+    scores: { imdb: 6.3, rt: 36, gap: -27, asOf: '2026-10-15' },
+    imdbId: 'tt0000001',
+  };
+  // Article pages exist only with a ready hub (I9).
+  const READY = { ready: true, dataUpdated: '2026-10-15' };
+  const withArticle: SitePage[] = buildPages([fake], READY);
+  const fakeUrl = absoluteUrl(fake.path);
+
+  it('sectionsFor keeps articles out of every llms.txt section, Project included', () => {
+    const all = sectionsFor(withArticle).flatMap((s) => s.pages.map((p) => p.path));
+    expect(all).not.toContain(fake.path);
+    expect(all).toContain('/blog'); // the hub is a normal guide
+    expect(sectionsFor(withArticle).find((s) => s.heading === 'Guides')!.pages.map((p) => p.label)).toContain('Blog');
+  });
+
+  it('llms.txt links the hub but no article URL, and adds the dataset link once articles exist', () => {
+    const txt = buildLlmsTxt(withArticle);
+    expect(txt).toContain(`](${absoluteUrl('/blog')})`);
+    expect(txt).not.toContain(fakeUrl);
+    expect(txt).toContain(`](${absoluteUrl('/data/netflix-top-100.json')})`);
+  });
+
+  it('llms.txt has no /blog line while the hub is not ready (I9)', () => {
+    expect(buildLlmsTxt(buildPages([], { ready: false, dataUpdated: null }))).not.toContain(`](${absoluteUrl('/blog')})`);
+  });
+
+  it('llms.txt has no dataset link while nothing is published', () => {
+    expect(buildLlmsTxt()).not.toContain('netflix-top-100.json');
+    expect(buildLlmsFullTxt()).not.toContain('## Film analyses');
+  });
+
+  it('llms-full.txt lists every published article in a Film analyses section', () => {
+    const full = buildLlmsFullTxt(withArticle);
+    expect(full).toContain('## Film analyses');
+    expect(full).toContain(`- [Fake Film (2020)](${fakeUrl}): IMDb 6.3, RT 36%, gap -27, scores as of October 15, 2026`);
+    expect(full).not.toContain(`### ${fake.title}`);
+    expect(full.indexOf('## Film analyses')).toBeLessThan(full.indexOf('## Frequently asked questions'));
+  });
+
+  it('formats a positive gap with a plus sign and keeps one line per article', () => {
+    const two = buildPages([fake, { ...fake, path: '/blog/other-2019', label: 'Other (2019)', scores: { imdb: 7, rt: 91, gap: 21, asOf: '2026-10-15' } }], READY);
+    const lines = buildLlmsFullTxt(two).split('\n').filter((l) => l.startsWith('- [') && l.includes('/blog/'));
+    expect(lines).toHaveLength(2);
+    expect(lines[1]).toContain('IMDb 7.0, RT 91%, gap +21');
   });
 });
 

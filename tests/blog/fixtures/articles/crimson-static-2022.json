@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "slug": "crimson-static-2022",
+  "imdbId": "tt9000011",
+  "status": "checked",
+  "published": null,
+  "contentUpdated": "2026-10-17",
+  "h1": "Crimson Static: why audiences rate it far above critics",
+  "description": "With IMDb {{imdb}} from {{votesShort}} votes and only {{rt}} on Rotten Tomatoes, {{title}} shows one of the sharpest score splits in this set.",
+  "summary": "Viewers and critics part ways on {{title}}: IMDb users give it {{imdb}}, while Rotten Tomatoes shows only {{rt}}. Audiences therefore rate it sharply higher than critics, a wide gap of {{gapAbs}} points, and the score table on this page shows where that difference places the film in this set. Figures reflect OMDb data as of {{asOf}}, so they will move when the source does.",
+  "sections": [
+    {
+      "id": "why-split",
+      "heading": "What lies behind the split on Crimson Static?",
+      "paragraphs": [
+        "The audience side wins this comparison by a wide margin. Put on one hundred-point scale, the audience average works out to {{imdbX10}} against the critics' {{rt}}, a large gap of {{gapAbs}} points in the audience favor. Audiences rate it sharply higher than critics do, and {{title}} is {{gapRank}} when the set is ordered by the size of the difference.",
+        "Critics appear to agree with each other. The Metascore is {{metascore}}, which sits near the Rotten Tomatoes figure instead of near the audience score, so this is not one aggregator being unusually harsh. Meanwhile {{votes}} IMDb votes make the audience figure hard to dismiss as a small-sample effect.",
+        "Genre offers a hint about taste. The median difference across the {{genreCount}} {{genre}} films in the set is {{genreMedianGap}}, far smaller than here, which suggests a crowd-pleasing action film can reach viewers that reviewers do not reward in the same way. That is an interpretation, not a measurement.",
+        "A measurement difference is also in play. Because the critic number is a share of positive reviews, a film with mixed but mild reactions can score low on it while still earning decent star ratings from viewers, as [this comparison](/compare/imdb-vs-rotten-tomatoes) lays out."
+      ]
+    },
+    {
+      "id": "the-film",
+      "heading": "Who made Crimson Static and how did it chart?",
+      "paragraphs": [
+        "The premise is a coastal beacon operator who comes upon a hand-drawn chart. {{director}} directed it, with Rhett Alden, Mila Stroud and Jonas Brandt billed in the lead roles, and it runs {{runtime}}. In the Netflix Top 10 data it reached a peak rank of {{peakRank}} and stayed {{weeksInTop10}} weeks, which puts it {{popularityRank}} among the {{setSize}} films by hours viewed.",
+        "OMDb files it under {{genre}} and thriller, with a PG-13 rating, and lists no awards for the title, so we make no awards claim. We also keep the plot to one line on purpose, because the OMDb record is our only source and we do not retell scenes."
+      ]
+    },
+    {
+      "id": "who-it-suits",
+      "heading": "Who might enjoy Crimson Static most?",
+      "paragraphs": [
+        "If you want a brisk action thriller and trust viewer scores over critic scores, the audience number here is the more relevant guide. If reviews guide your picks, the critic side deserves more weight, and the film may feel thinner than its {{imdb}} suggests.",
+        "At {{runtime}} it is a standard feature length, so the question is taste rather than commitment. Use the pairing as a pointer, not a ruling, because scores describe other people.",
+        "One practical test is to read the two numbers as two different questions. The audience figure asks whether many viewers enjoyed the film, and the critic figure asks whether reviewers judged it well made. {{title}} answers the first question far more warmly than the second."
+      ]
+    },
+    {
+      "id": "more",
+      "heading": "What else shapes how to read these two scores?",
+      "paragraphs": [
+        "Scores move over time, which is why every figure on this page carries a date. Newer releases can collect early votes from enthusiastic fans before the numbers settle, and critic percentages can shift as late reviews arrive. Check the date above before comparing {{title}} with any other number you see.",
+        "Vote counts matter in a second way. A film that reaches a very large audience collects ratings from people who chose it casually, not only from those who sought it out, and a broad pool like that tends to settle on a moderate average. Critics, by contrast, review almost every wide release, so their share of positive reviews reflects a fairly stable group of professional viewers. Keep that difference in who is scoring in mind when the two numbers disagree this much, as they do here."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Is the gap on Crimson Static unusual for an action film?",
+      "a": "Among the {{genreCount}} {{genre}} films in this set the median difference is {{genreMedianGap}}, while {{title}} shows {{gap}}. That makes it the largest difference inside its genre in this set, and {{gapRank}} overall, so yes, it stands out here."
+    },
+    {
+      "q": "How do the Crimson Static scores compare on one scale?",
+      "a": "Converting IMDb to the same scale as Rotten Tomatoes gives {{imdbX10}} against {{rt}}, so the audience side is ahead by {{gapAbs}} points. The conversion simply multiplies the IMDb average by ten, which is the method the rest of this site uses, so the figures here match our other pages."
+    },
+    {
+      "q": "How many people voted for Crimson Static on IMDb?",
+      "a": "IMDb shows {{votes}} votes for the film, rounded in our headline figures to {{votesShort}}. A pool of that size makes it unlikely that the score swings on a few ballots, though it says nothing about why people voted as they did."
+    }
+  ],
+  "sources": [],
+  "review": {
+    "writer": "Fixture Writer",
+    "writtenOn": "2026-10-16",
+    "factChecker": "Fixture Checker",
+    "factCheckedOn": "2026-10-18",
+    "cuts": [],
+    "rtCheck": null
+  }
+}

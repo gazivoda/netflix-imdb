@@ -30,7 +30,7 @@ export default function Hero() {
     <section className={styles.hero} aria-labelledby="hero-title">
       <div className={styles.heroHead}>
         <div className={`${styles.heroBadge} ${shared.reveal}`}>
-          <span aria-hidden>★</span> Free open-source Chrome extension
+          <span aria-hidden>★</span> Free Chrome extension
         </div>
         <h1 id="hero-title" className={`${styles.heroTitle} ${shared.reveal} ${shared.d1}`}>
           Know if it&apos;s worth watching <em>before</em> you press play.
@@ -39,10 +39,10 @@ export default function Hero() {
 
       <div className={styles.heroCopy}>
         <p className={`${styles.heroSubtitle} ${shared.reveal} ${shared.d2}`}>
-          Rating Watch is a free, open-source Chrome extension that shows the{' '}
+          Rating Watch is a free Chrome extension that shows the{' '}
           <strong>IMDb</strong> rating and the <strong>Rotten Tomatoes</strong> score on every
-          Netflix title card as you browse. No account, no second tab, no searching — just
-          scroll and decide.
+          Netflix title card as you browse. The extension needs no account, no second tab, no
+          searching. Just scroll and decide.
         </p>
         <div className={`${styles.heroCta} ${shared.reveal} ${shared.d3}`}>
           <a href="/install" className="ds-btn ds-btn-signal">
@@ -55,7 +55,7 @@ export default function Hero() {
         <ul className={`${styles.heroNote} ${shared.reveal} ${shared.d4}`}>
           <li>IMDb + Rotten Tomatoes</li>
           <li>Chrome, Edge &amp; Brave</li>
-          <li>No account needed</li>
+          <li>Extension needs no account</li>
         </ul>
       </div>
 

@@ -11,11 +11,13 @@ export const OG_ALT =
   'Rating Watch: IMDb and Rotten Tomatoes scores shown on Netflix title cards';
 
 // Brand tokens from docs/DESIGN.md. next/og cannot read CSS variables.
-const PAPER = '#ece6d8';
-const CARD = '#f6f1e5';
-const INK = '#111111';
-const SIGNAL = '#e5241b';
-const GOLD = '#f2c230';
+export const PAPER = '#ece6d8';
+export const CARD = '#f6f1e5';
+export const INK = '#111111';
+export const SIGNAL = '#e5241b';
+/** Text on SIGNAL (globals.css: --signal takes white text only). */
+export const ON_SIGNAL = '#fff';
+export const GOLD = '#f2c230';
 
 // next/og cannot fetch fonts (offline builds), so the same faces the site uses are
 // bundled in lib/fonts (Archivo static instance at wdth 62 / wght 900, JetBrains Mono
@@ -23,7 +25,7 @@ const GOLD = '#f2c230';
 // Read from disk (the route is prerendered at build time, cwd is the project root).
 const load = (file: string) => readFile(path.join(process.cwd(), 'lib/fonts', file));
 
-async function loadFonts() {
+export async function loadFonts() {
   const [archivo, mono, serif] = await Promise.all([
     load('Archivo-ExtraCondensed-Black.ttf'),
     load('JetBrainsMono-Bold.ttf'),
@@ -36,7 +38,7 @@ async function loadFonts() {
   ];
 }
 
-const mono = {
+export const mono = {
   fontFamily: 'JetBrains Mono',
   fontWeight: 700,
   textTransform: 'uppercase' as const,

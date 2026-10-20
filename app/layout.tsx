@@ -1,9 +1,11 @@
 import './globals.css';
+import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
-import { SITE_URL, REPO_URL } from '../lib/content';
+import { SITE_URL } from '../lib/content';
 import { HOME_TITLE, HOME_DESCRIPTION } from '../lib/pages';
 import { TITLE_SUFFIX, jsonLdString, siteGraph } from '../lib/seo';
+import { ANALYTICS_ENABLED, GA_MEASUREMENT_ID, GTAG_INIT } from '../lib/analytics';
 
 // Variable Archivo with the width axis: `font-stretch: 62%` + weight 900 gives the
 // condensed display face; normal width (100%) is the body text.
@@ -54,7 +56,7 @@ export const metadata: Metadata = {
     'what to watch on Netflix',
     'Netflix browser extension',
   ],
-  authors: [{ name: 'Igor Gazivoda', url: REPO_URL }],
+  authors: [{ name: 'Igor Gazivoda', url: `${SITE_URL}/about` }],
   creator: 'Igor Gazivoda',
   category: 'technology',
   openGraph: {
@@ -104,7 +106,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {ANALYTICS_ENABLED && (
+          <>
+            {/* Google tag (gtag.js) */}
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
+            <Script id="gtag-init" strategy="afterInteractive">{GTAG_INIT}</Script>
+          </>
+        )}
+      </body>
     </html>
   );
 }

@@ -4,7 +4,10 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://rating.watch';
 
-export const REPO_URL = 'https://github.com/gazivoda/netflix-imdb';
+export const SUPPORT_EMAIL = 'hello@rating.watch';
+
+// Hosted on this site (public/downloads); scripts/package-extension.sh refreshes it.
+export const EXTENSION_ZIP_PATH = '/downloads/rating-watch-extension.zip';
 
 // Author + freshness signals. Surfaced as a visible byline/date on pages and in
 // the JSON-LD graph (Person, datePublished/dateModified) so AI search engines
@@ -33,7 +36,7 @@ export const FEATURES = [
   {
     icon: '04',
     title: 'Private by default',
-    desc: 'No account, no login, no tracking. The extension only talks to the ratings source — your watch history stays yours.',
+    desc: 'The extension needs no account or login and does no tracking. It only talks to the ratings source, so your watch history stays yours.',
   },
   {
     icon: '05',
@@ -49,9 +52,9 @@ export const FEATURES = [
 
 export const STATS = [
   { value: '2', label: 'rating sources on every card', sub: 'IMDb + Rotten Tomatoes' },
-  { value: '0', label: 'accounts or sign-ups', sub: 'no login, ever' },
+  { value: '0', label: 'accounts needed for the extension', sub: 'no login needed' },
   { value: '2', label: 'sites it can access', sub: 'netflix.com + omdbapi.com' },
-  { value: '100%', label: 'free & open source', sub: 'audit it on GitHub' },
+  { value: '$0', label: 'cost of the extension', sub: 'free, no card needed' },
 ];
 
 export const TESTIMONIALS = [
@@ -104,11 +107,11 @@ export const MARQUEE = [
 export const FAQS = [
   {
     q: 'What is Rating Watch?',
-    a: 'Rating Watch is a free, open-source Chrome extension that shows the IMDb rating and the Rotten Tomatoes score in a small badge on each Netflix title card as you browse. You see both scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave.',
+    a: 'Rating Watch is a free Chrome extension that shows the IMDb rating and the Rotten Tomatoes score in a small badge on each Netflix title card as you browse. You see both scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave. There is also an optional Pro AR mode that shows the same scores over a TV screen through your phone camera.',
   },
   {
     q: 'Is Rating Watch free?',
-    a: 'Yes. Rating Watch is completely free and open source. There is no paid tier, no subscription and no account to create. The full source code is on GitHub, so you can read exactly what the extension does before you install it.',
+    a: 'The Chrome extension is free: no account and nothing to subscribe to. AR mode, which draws ratings over your TV through your phone camera, is Pro: $2.99 a month or $29 a year, with a 3-day free trial that needs no card. You can cancel any time from your account page.',
   },
   {
     q: 'Where do the ratings come from?',
@@ -140,6 +143,6 @@ export const FAQS = [
   },
   {
     q: 'How do I install Rating Watch?',
-    a: 'It is not on the Chrome Web Store yet, so you install it from GitHub. Download the repository, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the extension folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
+    a: 'It is not on the Chrome Web Store yet, so you install it from this site. Download the zip from the install page, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the unzipped folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
   },
 ];

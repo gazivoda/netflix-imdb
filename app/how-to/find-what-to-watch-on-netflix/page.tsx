@@ -3,6 +3,7 @@ import g from '../../../components/guide.module.css';
 import { ImdbChip, RtChip } from '../../../components/ScoreChip';
 import h from '../how-to.module.css';
 import { howTo, pageMetadata } from '../../../lib/seo';
+import { isBlogHubReady } from '../../../lib/blog/inbound';
 
 const PATH = '/how-to/find-what-to-watch-on-netflix';
 export const metadata = pageMetadata(PATH);
@@ -160,6 +161,13 @@ export default function FindWhatToWatchPage() {
           <strong>Both low:</strong> usually safe to skip.
         </li>
       </ul>
+      {isBlogHubReady() && (
+        <p className={g.p}>
+          To see these patterns on real titles, our{' '}
+          <a href="/blog">IMDb and Rotten Tomatoes scores for the 100 most-watched Netflix films</a>{' '}
+          shows where critics and audiences agree and where they split.
+        </p>
+      )}
 
       <h2 className={g.h2}>How do I choose what to watch on Netflix in 60 seconds?</h2>
       <p className={g.p}>
@@ -256,8 +264,8 @@ export default function FindWhatToWatchPage() {
       <aside className={g.callout}>
         <h2 className={g.calloutTitle}>Put both scores on every Netflix card</h2>
         <p>
-          The routine above takes seconds when the ratings are already in front of you. Netflix
-          Ratings is free and open source, needs no account, and takes about a minute to set up.
+          The routine above takes seconds when the ratings are already in front of you. The Rating
+          Watch extension is free, needs no account, and takes about a minute to set up.
         </p>
         <a href="/install" className={g.btnPrimary}>
           How to install <span aria-hidden>→</span>

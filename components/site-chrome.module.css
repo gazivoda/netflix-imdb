@@ -35,18 +35,11 @@
   line-height: 1;
   text-decoration: none;
 }
+/* The Rating Watch mark (public/icon.svg): gold block, red star, hard shadow. */
 .navLogoIcon {
   width: 34px;
   height: 34px;
-  display: grid;
-  place-items: center;
-  background: var(--signal);
-  color: #fff;
-  border: 3px solid var(--ink);
-  font-family: var(--body);
-  font-stretch: 100%;
-  font-size: 16px;
-  line-height: 1;
+  display: block;
 }
 .navRight {
   display: flex;

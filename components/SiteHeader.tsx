@@ -6,7 +6,7 @@ export default function SiteHeader() {
       <a className="skip-link" href="#main">Skip to main content</a>
       <nav className={c.nav} aria-label="Primary">
         <a className={c.navLogo} href="/">
-          <span className={c.navLogoIcon} aria-hidden>★</span>
+          <img className={c.navLogoIcon} src="/icon.svg" alt="" width={34} height={34} />
           Rating Watch
         </a>
         <div className={c.navRight}>

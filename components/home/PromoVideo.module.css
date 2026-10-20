@@ -1,0 +1,123 @@
+/* ── PROMO VIDEO (click to play, flat ink frame with a hard shadow) ── */
+.promo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(24px, 3vw, 40px) clamp(20px, 5vw, 48px) clamp(40px, 5vw, 64px);
+}
+.label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6px 10px;
+  margin-bottom: 20px;
+}
+.title {
+  font-family: var(--display);
+  font-weight: 900;
+  font-stretch: 62%;
+  text-transform: uppercase;
+  font-size: clamp(40px, 6.5vw, 76px);
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+.title em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-stretch: 100%;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--red-text);
+}
+
+.figure { margin: 0; }
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+  overflow: hidden;
+}
+.video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--ink);
+}
+
+/* The whole frame is the button; the visible play control sits bottom right. */
+.play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: clamp(14px, 3vw, 28px);
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.playIcon {
+  order: 2;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 72px;
+  height: 72px;
+  padding-left: 4px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+}
+.playLabel {
+  align-self: flex-end;
+  padding: 8px 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.play:focus-visible { outline: 3px solid var(--signal); outline-offset: -6px; }
+.play:hover .playIcon { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); }
+.play:active .playIcon { transform: translate(3px, 3px); box-shadow: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .playIcon { transition: transform 0.12s ease-out, box-shadow 0.12s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .play:hover .playIcon,
+  .play:active .playIcon { transform: none; }
+}
+
+.caption {
+  margin-top: 20px;
+  max-width: 68ch;
+  font-family: var(--body);
+  font-size: clamp(17px, 1.5vw, 19px);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .frame { box-shadow: var(--shadow-hard-sm); }
+  .playIcon { width: 56px; height: 56px; }
+  .playLabel { display: none; }
+}

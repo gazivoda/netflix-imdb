@@ -1,4 +1,5 @@
-import { PAGES, getPage } from '../../lib/pages';
+import { PAGES, getPage, STATIC_PAGES, BLOG_HUB_PAGE, blogPages, buildPages, type SitePage } from '../../lib/pages';
+import { BLOG_HUB, type BlogArticlePage, type BlogHubState } from '../../lib/blog/registry.generated';
 import {
   pageMetadata,
   renderedTitle,
@@ -9,11 +10,17 @@ import {
   graph,
   jsonLdString,
   absoluteUrl,
+  webPage,
+  nodeId,
+  blogPosting,
+  movie,
+  BLOG_DATASET_DESCRIPTION,
 } from '../../lib/seo';
+import { filmBySlug } from '../blog/fixtures';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import sitemap from '../../app/sitemap';
-import { SITE_URL } from '../../lib/content';
+import { SITE_URL, EXTENSION_ZIP_PATH } from '../../lib/content';
 
 describe('page registry', () => {
   it('has unique, well-formed paths', () => {
@@ -40,9 +47,24 @@ describe('page registry', () => {
     }
   });
 
+  it('has unique titles and descriptions across all pages', () => {
+    const titles = PAGES.map((p) => renderedTitle(p));
+    const descriptions = PAGES.map((p) => p.description);
+    expect(new Set(titles).size).toBe(titles.length);
+    expect(new Set(descriptions).size).toBe(descriptions.length);
+  });
+
+  // Articles share one dynamic route; /blog is its own static page. Only REGISTERED paths are
+  // checked here (the hub is registered only when ready); the hub file itself is checked below.
+  it('the /blog hub has a page file on disk even while it is not registered', () => {
+    expect(existsSync(join(__dirname, '../..', 'app/blog/page.tsx'))).toBe(true);
+  });
+
+  const pageFileFor = (path: string): string =>
+    path === '/' ? 'app/page.tsx' : path.startsWith('/blog/') ? 'app/blog/[slug]/page.tsx' : `app${path}/page.tsx`;
+
   it.each(PAGES.map((p) => [p.path] as const))('%s has a page file on disk', (path) => {
-    const file = path === '/' ? 'app/page.tsx' : `app${path}/page.tsx`;
-    expect(existsSync(join(__dirname, '../..', file))).toBe(true);
+    expect(existsSync(join(__dirname, '../..', pageFileFor(path)))).toBe(true);
   });
 
   it('getPage throws for unregistered paths', () => {
@@ -52,10 +74,17 @@ describe('page registry', () => {
 
 describe('pageMetadata', () => {
   it.each(PAGES.map((p) => [p.path] as const))('%s sets its own canonical, OG and Twitter', (path) => {
-    const m = pageMetadata(path);
+    const isArticle = getPage(path).kind === 'article';
+    const m = pageMetadata(path, isArticle ? { fileImages: true } : undefined);
     expect(m.alternates?.canonical).toBe(path);
     expect(m.openGraph).toMatchObject({ url: absoluteUrl(path), siteName: 'Rating Watch' });
     expect(m.twitter).toMatchObject({ card: 'summary_large_image' });
+    if (isArticle) {
+      // Articles use the file-based opengraph-image / twitter-image convention: no config images.
+      expect(m.openGraph).not.toHaveProperty('images');
+      expect(m.twitter).not.toHaveProperty('images');
+      return;
+    }
     expect((m.openGraph as any).images[0]).toMatchObject({ url: expect.stringMatching(/^\/opengraph-image\?v=\w+$/), width: 1200, height: 630 });
     expect((m.twitter as any).images[0].url).toMatch(/^\/twitter-image\?v=\w+$/);
   });
@@ -152,5 +181,252 @@ describe('layout JSON-LD', () => {
   it('does not put FAQPage in the root layout (it would leak onto every page)', () => {
     const src = readFileSync(join(__dirname, '../../app/layout.tsx'), 'utf8');
     expect(src).not.toContain('FAQPage');
+  });
+
+  it('credits the author with the site /about URL, never a repository', () => {
+    const src = readFileSync(join(__dirname, '../../app/layout.tsx'), 'utf8');
+    expect(src).toContain('url: `${SITE_URL}/about`');
+    expect(src).not.toMatch(/REPO_URL|github/i);
+  });
+});
+
+describe('author byline', () => {
+  it('GuideLayout links the byline to /about by default', () => {
+    const src = readFileSync(join(__dirname, '../../components/GuideLayout.tsx'), 'utf8');
+    expect(src).toContain("bylineHref = '/about'");
+    expect(src).not.toMatch(/REPO_URL|github/i);
+  });
+});
+
+describe('extension download', () => {
+  it('is hosted on this site, is a real zip, and is a copy of extension.zip', () => {
+    expect(EXTENSION_ZIP_PATH).toBe('/downloads/rating-watch-extension.zip');
+    const hosted = readFileSync(join(__dirname, '../../public', EXTENSION_ZIP_PATH));
+    expect(hosted.subarray(0, 2).toString()).toBe('PK');
+    expect(hosted.equals(readFileSync(join(__dirname, '../../extension.zip')))).toBe(true);
+  });
+
+  it('the install page and both how-to pages link to it, not to a repository', () => {
+    const install = readFileSync(join(__dirname, '../../app/install/page.tsx'), 'utf8');
+    expect(install).toContain('href={EXTENSION_ZIP_PATH}');
+    expect(install).toContain('Download Rating Watch (zip)');
+    for (const p of ['show-imdb-ratings-on-netflix', 'show-rotten-tomatoes-on-netflix']) {
+      expect(readFileSync(join(__dirname, '../../app/how-to', p, 'page.tsx'), 'utf8')).toContain('href={EXTENSION_ZIP_PATH}');
+    }
+  });
+});
+
+describe('pageMetadata options', () => {
+  it('fileImages: true omits openGraph and twitter images, everything else is identical', () => {
+    const base = pageMetadata('/install') as any;
+    const file = pageMetadata('/install', { fileImages: true }) as any;
+    expect(file.openGraph).not.toHaveProperty('images');
+    expect(file.twitter).not.toHaveProperty('images');
+    const { images: _og, ...ogRest } = base.openGraph;
+    const { images: _tw, ...twRest } = base.twitter;
+    expect(file.openGraph).toEqual(ogRest);
+    expect(file.twitter).toEqual(twRest);
+    expect(file.alternates).toEqual(base.alternates);
+  });
+
+  it('default and explicit false are byte-identical to the legacy output', () => {
+    const base = JSON.stringify(pageMetadata('/install'));
+    expect(JSON.stringify(pageMetadata('/install', {}))).toBe(base);
+    expect(JSON.stringify(pageMetadata('/install', { fileImages: false }))).toBe(base);
+  });
+});
+
+describe('webPage options', () => {
+  it('defaults are unchanged: type WebPage, about the app', () => {
+    const wp = webPage('/install') as any;
+    expect(wp['@type']).toBe('WebPage');
+    expect(wp.about).toEqual({ '@id': `${SITE_URL}/#app` });
+    expect(JSON.stringify(webPage('/install', {}))).toBe(JSON.stringify(wp));
+  });
+
+  it('accepts a type and an about reference', () => {
+    const wp = webPage('/install', { type: 'CollectionPage', about: { '@id': nodeId('/install', 'film') } }) as any;
+    expect(wp['@type']).toBe('CollectionPage');
+    expect(wp.about).toEqual({ '@id': `${SITE_URL}/install#film` });
+    expect(wp['@id']).toBe(`${SITE_URL}/install#webpage`);
+  });
+});
+
+describe('blog JSON-LD builders (spec 4.5)', () => {
+  const film = filmBySlug('crimson-static-2022');
+  const path = `/blog/${film.slug}`;
+  const post = blogPosting(path, {
+    headline: 'Why Crimson Static splits critics and viewers',
+    description: 'A short description.',
+    published: '2026-10-20',
+    updated: '2026-10-22',
+    wordCount: 712,
+  }) as any;
+  const mov = movie(film) as any;
+  const all = JSON.stringify([post, mov]);
+
+  it('BlogPosting links article, page, film, collection and dataset by @id', () => {
+    expect(post['@type']).toBe('BlogPosting');
+    expect(post['@id']).toBe(`${SITE_URL}${path}#article`);
+    expect(post.mainEntityOfPage).toEqual({ '@id': `${SITE_URL}${path}#webpage` });
+    expect(post.about).toEqual({ '@id': `${SITE_URL}${path}#film` });
+    expect(post.author).toEqual({ '@id': `${SITE_URL}/#author` });
+    expect(post.publisher).toEqual({ '@id': `${SITE_URL}/#org` });
+    expect(post.datePublished).toBe('2026-10-20');
+    expect(post.dateModified).toBe('2026-10-22');
+    expect(post.wordCount).toBe(712);
+    expect(post.inLanguage).toBe('en');
+    expect(post.isPartOf).toMatchObject({ '@type': 'CollectionPage', '@id': `${SITE_URL}/blog#webpage`, url: `${SITE_URL}/blog` });
+    expect(post.isPartOf.name).toEqual(expect.any(String));
+    expect(post.isBasedOn).toMatchObject({ '@type': 'Dataset', '@id': `${SITE_URL}/blog#dataset` });
+    expect(post.isBasedOn.name).toEqual(expect.any(String));
+    expect(post.isBasedOn.url).toMatch(/^https:\/\//);
+  });
+
+  it('BlogPosting.isBasedOn carries the Dataset description (Google requires it), the same string as the hub', () => {
+    expect(BLOG_DATASET_DESCRIPTION.length).toBeGreaterThanOrEqual(50);
+    expect(post.isBasedOn.description).toBe(BLOG_DATASET_DESCRIPTION);
+    const hubSrc = readFileSync(join(__dirname, '../../app/blog/page.tsx'), 'utf8');
+    expect(hubSrc).toMatch(/description: BLOG_DATASET_DESCRIPTION/);
+  });
+
+  it('blogPosting does not need /blog to be registered (articles exist only with a ready hub)', () => {
+    expect(post.isPartOf.name).toBe(renderedTitle(BLOG_HUB_PAGE));
+  });
+
+  it('Movie carries only OMDb facts and the IMDb sameAs, no ratings and no image', () => {
+    expect(mov['@type']).toBe('Movie');
+    expect(mov['@id']).toBe(`${SITE_URL}${path}#film`);
+    expect(mov.name).toBe(film.omdb.title);
+    expect(mov.duration).toBe(`PT${film.omdb.runtimeMin}M`);
+    expect(mov.sameAs).toBe(`https://www.imdb.com/title/${film.omdb.imdbId}/`);
+    expect(mov.director.length).toBeLessThanOrEqual(2);
+    expect(mov.actor.length).toBeLessThanOrEqual(4);
+    expect(mov.director[0]).toEqual({ '@type': 'Person', name: film.omdb.directors[0] });
+  });
+
+  it('never emits rating, review, FAQ, how-to, additionalProperty or image keys', () => {
+    for (const bad of ['aggregateRating', 'Review', 'FAQPage', 'HowTo', 'additionalProperty', '"image"', 'N/A', 'undefined']) {
+      expect(all).not.toContain(bad);
+    }
+  });
+
+  it('omits N/A and missing facts instead of printing them', () => {
+    const sparse = JSON.parse(JSON.stringify(film));
+    sparse.omdb.released = null;
+    sparse.omdb.directors = [];
+    sparse.omdb.actors = ['N/A'];
+    sparse.omdb.genres = [];
+    const m = movie(sparse) as any;
+    expect(m).not.toHaveProperty('datePublished');
+    expect(m).not.toHaveProperty('director');
+    expect(m).not.toHaveProperty('actor');
+    expect(m).not.toHaveProperty('genre');
+    expect(JSON.stringify(m)).not.toContain('N/A');
+  });
+
+  it('renders the film title with display-safe dashes', () => {
+    const dashed = JSON.parse(JSON.stringify(film));
+    dashed.omdb.title = 'Part One \u2014 The Start';
+    expect((movie(dashed) as any).name).toBe('Part One - The Start');
+  });
+});
+
+describe('blog pages in the registry', () => {
+  const fake: BlogArticlePage = {
+    path: '/blog/fake-film-2020',
+    title: 'Fake Film (2020): IMDb 6.3 vs RT 36%',
+    description: 'Fake Film (2020) has IMDb 6.3 and Rotten Tomatoes 36%, a wide gap. A synthetic registry entry used only by the tests.',
+    published: '2026-10-20',
+    updated: '2026-10-25',
+    label: 'Fake Film (2020)',
+    scores: { imdb: 6.3, rt: 36, gap: -27, asOf: '2026-10-15' },
+    imdbId: 'tt0000001',
+  };
+
+  const READY: BlogHubState = { ready: true, dataUpdated: '2026-10-15' };
+  const NOT_READY: BlogHubState = { ready: false, dataUpdated: null };
+
+  it('defines the /blog hub page for the guide group (registered only when ready)', () => {
+    expect(BLOG_HUB_PAGE).toMatchObject({ path: '/blog', group: 'guide', label: 'Blog', priority: 0.7, changeFrequency: 'monthly', ogType: 'article' });
+    expect(BLOG_HUB_PAGE.title).toBe('Top 100 Netflix Films Rated by Critics and Fans');
+    expect(BLOG_HUB_PAGE.kind).toBeUndefined();
+    expect(STATIC_PAGES.some((p) => p.path === '/blog')).toBe(false);
+  });
+
+  it('I9: /blog is not registered while the hub is not ready (no sitemap, footer or llms line)', () => {
+    const pages = buildPages([], NOT_READY);
+    expect(pages.some((p) => p.path === '/blog')).toBe(false);
+    expect(pages.filter((p) => p.group === 'guide').map((p) => p.label)).not.toContain('Blog');
+    if (!BLOG_HUB.ready) {
+      expect(PAGES.some((p) => p.path === '/blog')).toBe(false);
+      expect(() => getPage('/blog')).toThrow();
+    }
+  });
+
+  it('I9: a ready hub is registered in the guide group right after the research study', () => {
+    const pages = buildPages([], READY);
+    const hub = pages.find((p) => p.path === '/blog')!;
+    expect(hub).toMatchObject({ group: 'guide', label: 'Blog' });
+    const paths = pages.map((p) => p.path);
+    expect(paths.indexOf('/blog')).toBe(paths.indexOf('/research/imdb-vs-rotten-tomatoes-gap') + 1);
+  });
+
+  it('I9: article entries with a hub that is not ready is a stale registry and throws', () => {
+    expect(() => buildPages([fake], NOT_READY)).toThrow(/hub/);
+  });
+
+  it('adds no article pages while the generated registry is empty', () => {
+    expect(PAGES.filter((p) => p.kind === 'article')).toEqual([]);
+    expect(PAGES.every((p) => !p.path.startsWith('/blog/'))).toBe(true);
+  });
+
+  it('blogPages maps registry entries to article pages (kind, priority, no group)', () => {
+    const [p] = blogPages([fake]);
+    expect(p).toMatchObject({
+      path: fake.path,
+      title: fake.title,
+      description: fake.description,
+      published: '2026-10-20',
+      updated: '2026-10-25',
+      label: 'Fake Film (2020)',
+      kind: 'article',
+      priority: 0.5,
+      changeFrequency: 'monthly',
+      ogType: 'article',
+    });
+    expect(p.group).toBeUndefined();
+  });
+
+  it('a synthetic article entry satisfies every registry rule, metadata and JSON-LD builder', () => {
+    const pages: SitePage[] = buildPages([fake], READY);
+    const page = pages.find((x) => x.path === fake.path)!;
+    expect(renderedTitle(page).length).toBeLessThanOrEqual(65);
+    expect(page.description.length).toBeGreaterThanOrEqual(70);
+    expect(page.description.length).toBeLessThanOrEqual(160);
+    expect(new Set(pages.map((x) => x.path)).size).toBe(pages.length);
+    expect(pages.filter((x) => x.group === 'guide' || x.group === 'compare').every((x) => x.kind !== 'article')).toBe(true);
+  });
+
+  it('the hub lastmod follows the newest published article (never a stale hub)', () => {
+    const base = BLOG_HUB_PAGE;
+    const hubOf = (pages: SitePage[]) => pages.find((x) => x.path === '/blog')!;
+    expect(hubOf(buildPages([], { ready: true, dataUpdated: null })).updated).toBe(base.updated);
+    expect(hubOf(buildPages([fake], READY)).updated).toBe('2026-10-25');
+    expect(hubOf(buildPages([{ ...fake, updated: '2020-01-01', published: '2020-01-01' }], READY)).updated).toBe(base.updated);
+  });
+
+  it('I10: the hub lastmod also follows max(films dataChangedAt), so unpublished rows count', () => {
+    const hubOf = (pages: SitePage[]) => pages.find((x) => x.path === '/blog')!;
+    expect(hubOf(buildPages([], { ready: true, dataUpdated: '2026-11-05' })).updated).toBe('2026-11-05');
+    expect(hubOf(buildPages([fake], { ready: true, dataUpdated: '2026-11-05' })).updated).toBe('2026-11-05');
+    expect(hubOf(buildPages([fake], { ready: true, dataUpdated: '2026-10-01' })).updated).toBe('2026-10-25');
+  });
+
+  it('article pages use file-based og/twitter images; other pages keep the config images', () => {
+    const m = pageMetadata('/install', { fileImages: true }) as any;
+    expect(m.openGraph).not.toHaveProperty('images');
+    expect(m.twitter).not.toHaveProperty('images');
+    expect((pageMetadata('/install') as any).openGraph.images).toHaveLength(1);
   });
 });

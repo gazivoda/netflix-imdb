@@ -1,6 +1,6 @@
 # Launch Kit: Rating Watch
 
-_Prepared 2026-10-15. Ready-to-use, honest launch copy for the off-site levers called out in `GEO-PLATFORM-OPTIMIZATION.md` (Product Hunt, AlternativeTo, Reddit, Hacker News, YouTube, GitHub). Entity work (Wikidata, awesome-lists, CWS, LinkedIn) is in `OFFSITE-ENTITY.md`._
+_Prepared 2026-10-15. Ready-to-use, honest launch copy for the off-site levers called out in `GEO-PLATFORM-OPTIMIZATION.md` (Product Hunt, AlternativeTo, Reddit, Hacker News, YouTube). Entity work (Wikidata, awesome-lists, CWS, LinkedIn) is in `OFFSITE-ENTITY.md`._
 
 **Who does what.** Everything in this file has to be posted, recorded or clicked by **you (Igor)**. Nothing here can be automated or delegated to an agent, and several platforms forbid it. Each item is tagged `[YOU]` (needs your account/hands), `[ASSET]` (something you must create first) or `[CHECK]` (verify live before acting).
 
@@ -14,16 +14,16 @@ These are problems in the product as it stands today. Each one changes how the d
 
 | # | Blocker | Why it matters | Decision needed from you |
 |---|---|---|---|
-| 1 | **No `LICENSE` file in the repo** (checked: `git ls-files` shows only `README.md` at root, no license anywhere in the repo or site). | Every draft below says "free". None says "open source" or names a license, on purpose. Without a license file the code is legally "all rights reserved" even though it is public. Wikidata's license property, AlternativeTo's License field and GitHub's license badge all need this. | Pick a license (MIT is the usual choice for a small extension; your call) and commit `LICENSE`. Then the drafts can say "open source". Until then, keep the wording as written. |
-| 2 | **A single shared OMDb API key is hard-coded in `extension/background.js` and the repo is public.** OMDb's free key is limited to **1,000 requests per day** (source: `omdbapi.com/apikey.aspx`, fetched 2026-10-15). | The background worker makes 1 request per unseen title and up to 3 when the first lookup has no Rotten Tomatoes score. One Netflix home page has dozens of cards. A Show HN or Product Hunt spike will exhaust the shared quota within hours, badges will silently disappear, and the launch will look broken. The key is also visible to anyone reading the repo. | Choose before launch: (a) let each user paste their own free OMDb key (what several competing extensions do), (b) buy a higher OMDb tier, or (c) put a small caching proxy in front of OMDb. Also rotate the key if you pick (a) or (c), since the current one is public. |
+| 1 | **Positioning decision (2026-10-20): Rating Watch is a free extension with a paid Pro AR mode, and makes no claims about its code or licensing.** There is no `LICENSE` file and none is planned. | Every draft below says "free" and nothing else about licensing, on purpose. The site, the store listing and every post must stay consistent with that: no repository link, no statement about the code. | None. If a platform form has a License field (AlternativeTo), choose "Free" (freeware). |
+| 2 | **A single shared OMDb API key is hard-coded in `extension/background.js`, and the extension package is downloadable by anyone.** OMDb's free key is limited to **1,000 requests per day** (source: `omdbapi.com/apikey.aspx`, fetched 2026-10-15). | The background worker makes 1 request per unseen title and up to 3 when the first lookup has no Rotten Tomatoes score. One Netflix home page has dozens of cards. A Show HN or Product Hunt spike will exhaust the shared quota within hours, badges will silently disappear, and the launch will look broken. The key is also visible to anyone who unzips the extension. | Choose before launch: (a) let each user paste their own free OMDb key (what several competing extensions do), (b) buy a higher OMDb tier, or (c) put a small caching proxy in front of OMDb. Also rotate the key if you pick (a) or (c), since the current one is public. |
 | 3 | **Homepage testimonials in `lib/content.ts` (`TESTIMONIALS`: "Maya R.", "Devin O.", "Priya S.", "Tomás L."...) look like placeholders**, and the stats are illustrative per the GEO report. | A launch audience will read your homepage. Invented or unverified testimonials are the fastest way to lose trust, and they conflict with our own rules (see section 8). Product Hunt and HN comments also get screenshotted. | Confirm each testimonial is a real, consented quote. If they are placeholders, remove them before any launch. Never reuse them in any listing, post or comment. |
-| 4 | **The extension is not on the Chrome Web Store.** Install is "Load unpacked" from GitHub. | Show HN requires that people can try the project easily; Product Hunt and AlternativeTo listings look weak without a store link; most "awesome" lists want a store link. Dev-mode install loses most casual users. | Submit to the Chrome Web Store first (see `OFFSITE-ENTITY.md`, section 4). If review is still pending on launch day, the drafts below own the friction honestly instead of hiding it. |
+| 4 | **The extension is not on the Chrome Web Store.** Install is "Load unpacked" from the zip on rating.watch. | Show HN requires that people can try the project easily; Product Hunt and AlternativeTo listings look weak without a store link; most "awesome" lists want a store link. Dev-mode install loses most casual users. | Submit to the Chrome Web Store first (see `OFFSITE-ENTITY.md`, section 4). If review is still pending on launch day, the drafts below own the friction honestly instead of hiding it. |
 
-Also **tell the truth about competition.** `COMPETITOR-ANALYSIS.md` implies the direct-competitor field is weak. A search on 2026-10-15 found several existing extensions that do this job, including FlixMonkey (open source, GPLv3, also supports Rotten Tomatoes via OMDb, fades low-rated titles), Sift: IMDB ratings, NFRatings, and "IMDb Ratings on Netflix" (about 5K users per a third-party store mirror). So **no draft claims "first", "only" or "best".** Rating Watch is a small, simple, focused option: both scores at a glance in one badge, no account.
+Also **tell the truth about competition.** `COMPETITOR-ANALYSIS.md` implies the direct-competitor field is weak. A search on 2026-10-15 found several existing extensions that do this job, including FlixMonkey (GPLv3 licensed, also supports Rotten Tomatoes via OMDb, fades low-rated titles), Sift: IMDB ratings, NFRatings, and "IMDb Ratings on Netflix" (about 5K users per a third-party store mirror). So **no draft claims "first", "only" or "best".** Rating Watch is a small, simple, focused option: both scores at a glance in one badge, no account.
 
 Also required wording on every listing: _"Rating Watch is an independent project and is not affiliated with, endorsed by or sponsored by Netflix, IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners."_
 
-Facts you may state (all verified against the repo): shows IMDb rating (x/10) and Rotten Tomatoes % in a badge on Netflix title cards at `www.netflix.com`; ratings come from OMDb via the background worker; Manifest V3; permissions limited to `netflix.com` and `omdbapi.com`; no account; works on Chromium browsers (Chrome, Edge, Brave), untested in Firefox/Safari; only the title text from the card is sent to OMDb; repository `https://github.com/gazivoda/netflix-imdb`. Known limitation you should be ready to state: lookups are by title text only (no year), so a few remakes or same-name titles can show the wrong score. The code tries a second search to prefer an exact-title newer match, but it is not perfect.
+Facts you may state (all verified against the extension): shows IMDb rating (x/10) and Rotten Tomatoes % in a badge on Netflix title cards at `www.netflix.com`; ratings come from OMDb via the background worker; Manifest V3; permissions limited to `netflix.com` and `omdbapi.com`; no account; works on Chromium browsers (Chrome, Edge, Brave), untested in Firefox/Safari; only the title text from the card is sent to OMDb; free to use, with an optional paid Pro AR mode; install guide and download at `https://rating.watch/install`. Do not link a code repository or describe the licensing of the code. Known limitation you should be ready to state: lookups are by title text only (no year), so a few remakes or same-name titles can show the wrong score. The code tries a second search to prefer an exact-title newer match, but it is not perfect.
 
 ---
 
@@ -61,11 +61,11 @@ I kept opening IMDb in a second tab while browsing Netflix, so I built a small e
 
 What it does: IMDb (x/10) and Rotten Tomatoes (%) in one badge on every card at netflix.com. No account, no settings. Ratings are fetched from OMDb by the extension's background worker; only the title text on the card is sent. Permissions are limited to netflix.com and omdbapi.com.
 
-What it doesn't do (yet): it matches by title text, so a few same-name titles or remakes can show the wrong score. It works on Chromium browsers (Chrome, Edge, Brave); I haven't tested Firefox or Safari. [Install note: it is on GitHub as an unpacked extension while the Chrome Web Store review is pending / the Chrome Web Store link is here: ____.]
+What it doesn't do (yet): it matches by title text, so a few same-name titles or remakes can show the wrong score. It works on Chromium browsers (Chrome, Edge, Brave); I haven't tested Firefox or Safari. [Install note: it installs as an unpacked extension from https://rating.watch/install while the Chrome Web Store review is pending / the Chrome Web Store link is here: ____.]
 
 It's an independent project and not affiliated with Netflix, IMDb or Rotten Tomatoes.
 
-I'd really like feedback on two things: which other score sources you'd want (Metacritic? Letterboxd?), and anything that looks wrong on your Netflix layout. Source and issues: https://github.com/gazivoda/netflix-imdb
+I'd really like feedback on two things: which other score sources you'd want (Metacritic? Letterboxd?), and anything that looks wrong on your Netflix layout. Install and details: https://rating.watch/install
 ```
 
 ### Gallery and video `[ASSET]`
@@ -84,7 +84,7 @@ Reply to every comment, thank people for bug reports, fix and say so. Do **not**
 
 **Process (per FAQ):** sign up, use **Suggest new application** under the user menu, fill Platforms, License, Descriptions and Tags, submit; the site verifies and approves entries. To list yours as an alternative to another app, open that app's page and use **Contribute to this page > Suggest Alternatives**. A third-party review (SaaSCity, not official) reports a free queue that can be slow and an optional paid priority review; **we do not recommend paying for anything unless you decide it is worth it**, and the review does not promise approval.
 
-`[CHECK]` The **License** field needs your real license (blocker 1). Do not guess one.
+`[CHECK]` If the form has a **License** field, choose "Free" (freeware). Do not pick a named software license.
 
 ### Listing copy
 - **Name:** Rating Watch
@@ -103,14 +103,14 @@ Limitations: lookups are by title text, so some same-name titles can show the wr
 Independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
 ```
 - **Platforms:** Chrome, Microsoft Edge, Brave (Chromium browsers only; do not tick Firefox or Safari since they are untested)
-- **License:** `[YOU]` your chosen license once `LICENSE` exists; "Free" pricing
-- **Website:** `https://rating.watch/` (add GitHub as the source link)
+- **License:** "Free" (freeware); "Free" pricing
+- **Website:** `https://rating.watch/`
 - **Tags:** `netflix`, `imdb`, `rotten-tomatoes`, `ratings`, `streaming` (use the tags the form offers)
 
 ### Alternatives to list on **your** page (all found in a 2026-10-15 search; open each before submitting and keep only ones that still exist)
 | Candidate | What it is | Evidence | Note |
 |---|---|---|---|
-| **Sift: IMDB ratings** | Free, open-source extension (Chrome/Firefox/Edge) adding IMDb scores to streaming sites | AlternativeTo has a listing: `alternativeto.net/software/sift-imdb-ratings-on-netflix-and-others` | Best first alternative: it already has a page where you can add yours via "Suggest Alternatives" |
+| **Sift: IMDB ratings** | Free extension (Chrome/Firefox/Edge) adding IMDb scores to streaming sites | AlternativeTo has a listing: `alternativeto.net/software/sift-imdb-ratings-on-netflix-and-others` | Best first alternative: it already has a page where you can add yours via "Suggest Alternatives" |
 | **FlixMonkey** | Chrome/Firefox/userscript; IMDb on Netflix and others, optional Metacritic and RT via OMDb; GPLv3 | `addons.mozilla.org/firefox/addon/flixmonkey/`, repo `github.com/fran2889/flix-monkey` | `[CHECK]` whether it has an AlternativeTo page |
 | **NFRatings** | Netflix IMDb and Rotten Tomatoes integration with threshold filters, needs an OMDb key | `github.com/tjs-w/nfratings` | License not stated in what we found |
 | **IMDb Ratings on Netflix** | Chrome extension; IMDb, RT, Metacritic | `github.com/pawanmaurya/imdb-ratings-on-netflix` | Store listing last updated 2024-09-04 per a mirror |
@@ -157,7 +157,7 @@ Things I learned:
 
 4. The free OMDb key is 1,000 requests a day, so a shared key is not sustainable for a public extension. I'm deciding between user-supplied keys and a proxy. If you've shipped an extension on a metered API, what did you do?
 
-Permissions are only netflix.com and omdbapi.com. Source: https://github.com/gazivoda/netflix-imdb . Not affiliated with Netflix, IMDb or Rotten Tomatoes.
+Permissions are only netflix.com and omdbapi.com. Details: https://rating.watch/install . Not affiliated with Netflix, IMDb or Rotten Tomatoes.
 
 Happy to hear what I got wrong, especially on #3 and #4.
 ```
@@ -169,11 +169,11 @@ A big general-audience subreddit is the most likely to prohibit app promotion, a
 ```
 Disclosure: I made one of these, so take my answer with a grain of salt.
 
-There are a few browser extensions that add IMDb/Rotten Tomatoes scores to Netflix cards. FlixMonkey and Sift are open source and have been around a while; I built a smaller one called Rating Watch that shows both scores in one badge on each card (Chromium browsers only, untested in Firefox/Safari, and it can mismatch some same-name titles).
+There are a few browser extensions that add IMDb/Rotten Tomatoes scores to Netflix cards. FlixMonkey and Sift have been around a while; I built a smaller one called Rating Watch that shows both scores in one badge on each card (Chromium browsers only, untested in Firefox/Safari, and it can mismatch some same-name titles).
 
 If you'd rather not install anything, searching "<title> imdb" or opening the title on IMDb/Rotten Tomatoes works, and critic vs audience scores often disagree for a reason, so it's worth looking at both.
 
-Mine is here if you want to look at the code before installing: https://github.com/gazivoda/netflix-imdb (install is "load unpacked" for now).
+Mine is here if you want to try it: https://rating.watch/install (install is "load unpacked" for now).
 ```
 `[CHECK]` Verify FlixMonkey/Sift are still maintained the day you post; edit if not.
 
@@ -181,12 +181,12 @@ Mine is here if you want to look at the code before installing: https://github.c
 ```
 Disclosure: I'm the author of one of the options, so here's an honest rundown rather than a pitch.
 
-- FlixMonkey: open source (GPLv3), Chrome/Firefox/userscript, IMDb by default, optional Metacritic and Rotten Tomatoes via an OMDb key, can fade low-rated titles. Most featured of the ones I found.
-- Sift: IMDB ratings: open source, Chrome/Firefox/Edge, IMDb scores across several streaming sites.
+- FlixMonkey: GPLv3 licensed, Chrome/Firefox/userscript, IMDb by default, optional Metacritic and Rotten Tomatoes via an OMDb key, can fade low-rated titles. Most featured of the ones I found.
+- Sift: IMDB ratings: Chrome/Firefox/Edge, IMDb scores across several streaming sites.
 - NFRatings: IMDb + RT with threshold filters, needs your own OMDb key.
-- Rating Watch (mine): both IMDb and RT in one badge, no key or account, Chromium only (Firefox/Safari untested), much less polished than the others, matching is by title so remakes can be wrong. https://github.com/gazivoda/netflix-imdb
+- Rating Watch (mine): both IMDb and RT in one badge, no key or account, Chromium only (Firefox/Safari untested), much less polished than the others, matching is by title so remakes can be wrong. https://rating.watch/install
 
-I'd check each repo's last commit before installing, since Netflix changes its markup often and these tend to break.
+I'd check each listing's last update date before installing, since Netflix changes its markup often and these tend to break.
 ```
 
 ### 3.4 Hacker News: Show HN draft
@@ -197,7 +197,7 @@ I'd check each repo's last commit before installing, since Netflix changes its m
 **Honest fit check:** Show HN needs it to be "easy to try". Today that means Load unpacked, which is friction. Best timing is after Chrome Web Store approval and after blocker 2 is fixed. Expect questions about the hard-coded API key.
 
 **Title (no hype, no caps):** `Show HN: Rating Watch, a Chrome extension adding IMDb and RT scores to Netflix cards`
-**URL:** `https://github.com/gazivoda/netflix-imdb` (HN prefers the original source; a repo is better than a landing page).
+**URL:** `https://rating.watch/` (a landing page with a direct download; HN's Show HN guidance says landing pages alone may not qualify, so make sure the first screen lets people try the extension, or wait for the store listing).
 
 **First-comment skeleton (write in your own words):**
 - Who you are, why you built it (the second-tab habit).
@@ -220,7 +220,7 @@ YouTube chapters require: first timestamp `00:00`, at least three timestamps in 
 |---|---|---|
 | 00:00 to 00:10 | Netflix browse page before: cards with no ratings. Then the extension loads and badges appear on the cards. | "Netflix doesn't show ratings on its cards. This is Rating Watch, a browser extension that adds the IMDb score and Rotten Tomatoes score to each card." |
 | 00:10 to 00:20 | Scroll a row; badges appear as new cards load. Pause on one card so the numbers are readable. | "IMDb shows out of 10, Rotten Tomatoes as a percentage. They appear as you scroll, with no extra tab." |
-| 00:20 to 00:30 | `chrome://extensions` (Developer mode, Load unpacked) or the Chrome Web Store page if live, then the GitHub repo page. | "It's free, has no account, and works on Chromium browsers. Source and install steps are on GitHub. It's an independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes." |
+| 00:20 to 00:30 | `chrome://extensions` (Developer mode, Load unpacked) or the Chrome Web Store page if live, then the rating.watch/install page. | "It's free, has no account, and works on Chromium browsers. Install steps are on rating.watch. It's an independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes." |
 
 Do not narrate a claim you haven't confirmed on camera. Do not show the same title with a wrong score and say it's right.
 
@@ -234,14 +234,13 @@ Rating Watch is a free Chrome extension that shows the IMDb rating and Rotten To
 
 Website: https://rating.watch/
 Install guide: https://rating.watch/install
-Source code: https://github.com/gazivoda/netflix-imdb
 IMDb vs Rotten Tomatoes explained: https://rating.watch/compare/imdb-vs-rotten-tomatoes
 
 I'm the developer (Igor Gazivoda). Ratings are looked up through OMDb; only the title text is sent. Independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
 
 00:00 The problem and the badges
 00:10 Ratings as you scroll
-00:20 Install and source
+00:20 Install
 ```
 
 ### Transcript / captions template `[ASSET]`
@@ -257,7 +256,7 @@ IMDb shows out of 10, Rotten Tomatoes as a percentage. They appear as you scroll
 
 3
 00:00:20,000 --> 00:00:30,000
-It's free, has no account, and works on Chromium browsers. Source and install steps are on GitHub. It's an independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
+It's free, has no account, and works on Chromium browsers. Install steps are on rating.watch. It's an independent project, not affiliated with Netflix, IMDb or Rotten Tomatoes.
 ```
 `[YOU]` Edit the script to match what you actually record, and keep captions and speech identical.
 
@@ -265,31 +264,14 @@ It's free, has no account, and works on Chromium browsers. Source and install st
 
 ---
 
-## 5. GitHub repository: description, topics, social preview
+## 5. Site download page (replaces the former repository section)
 
-`[YOU]` in repo **Settings** and the "About" gear on the repo home page.
+Removed 2026-10-20: the project is no longer promoted through a code repository, so there is no repository description, topics list or social preview to prepare. Everything that used to point there now points at `https://rating.watch/install`.
 
-### Description (one line, plain)
-`Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards. Free, no account. Site: https://rating.watch`
-
-### Website field
-`https://rating.watch`
-
-### Topics (GitHub allows up to 20; lowercase letters, numbers and hyphens, max 50 characters each; source: GitHub Docs, fetched 2026-10-15)
-`netflix`, `imdb`, `rotten-tomatoes`, `chrome-extension`, `browser-extension`, `manifest-v3`, `ratings`, `movies`, `tv-shows`, `streaming`, `omdb`, `javascript`
-
-Add `open-source` only after the LICENSE exists.
-
-### Social preview
-GitHub: PNG, JPG or GIF under 1 MB; at least 640x320, best at **1280x640**; upload under **Settings > Social preview > Edit** (GitHub Docs, fetched 2026-10-15). Use a solid background (transparency renders unpredictably). The site already generates an OG image; export a 1280x640 version of the same artwork rather than making a new brand.
-
-### Repo checklist
-- [ ] `LICENSE` file committed (blocker 1)
-- [ ] README top: one-sentence description, a **real** screenshot or GIF, install steps (Load unpacked, and the store link when live), "Limitations" list, the not-affiliated sentence
-- [ ] `SECURITY.md`/issue templates optional; at least enable **Issues**
-- [ ] Pinned release: attach `extension.zip` to a GitHub Release (v1.0.0) so people don't clone the repo
+- [ ] The install page offers the direct download (`/downloads/rating-watch-extension.zip`); run `bash scripts/package-extension.sh` after every extension change so the download is current
 - [ ] Remove or replace the hard-coded API key (blocker 2)
-- [ ] Add a link to the site and the privacy page in the README
+- [ ] Real screenshots or a short GIF on the install page and in each listing
+- [ ] Keep the not-affiliated sentence on every listing
 
 ---
 
@@ -300,16 +282,16 @@ Time estimates are your active hands-on time, not waiting for reviews. `[YOU]` t
 ### Days 1 to 3: fix what a launch would expose (about 4 h)
 | Order | Task | Est. | Needs |
 |---|---|---|---|
-| 1 | Choose and commit a `LICENSE` | 15 min | Your decision |
+| 1 | Confirm the positioning (free extension, paid Pro AR mode, no statement about the code) is applied in every listing | 15 min | Your decision |
 | 2 | Decide the OMDb approach and implement or purchase it (blocker 2); rotate the key | 1 to 3 h | Code change, OMDb account |
 | 3 | Confirm or remove homepage testimonials (blocker 3) | 20 min | Site edit |
 | 4 | Submit extension to the Chrome Web Store (details in `OFFSITE-ENTITY.md`) | 1 h plus review wait | Dev account, store assets, privacy page already at `/privacy` |
-| 5 | GitHub repo polish: description, topics, social preview, README screenshot, Release with `extension.zip` | 45 min | Real screenshot |
+| 5 | Install page polish: real screenshot, confirm the zip download works end to end | 45 min | Real screenshot |
 
 ### Days 3 to 6: assets (about 4 h)
 | Task | Est. | Needs |
 |---|---|---|
-| Take 2 real gallery screenshots (1270x760) and a README GIF | 45 min | Your Netflix account, blur personal info |
+| Take 2 real gallery screenshots (1270x760) and a short GIF for the install page | 45 min | Your Netflix account, blur personal info |
 | Record and upload the 30-second demo with captions (section 4) | 1.5 h | Screen recorder, YouTube channel |
 | Create LinkedIn profile mention and/or page for the project (see `OFFSITE-ENTITY.md`) | 30 min | LinkedIn |
 | Read the live rules of r/chrome_extensions and r/netflix; note the result here | 20 min | Reddit account |
@@ -318,7 +300,7 @@ Time estimates are your active hands-on time, not waiting for reviews. `[YOU]` t
 | Task | Est. | Needs |
 |---|---|---|
 | Submit AlternativeTo listing and suggest as an alternative to Sift (section 2) | 45 min | AlternativeTo account |
-| PR to `xyNNN/awesome-chrome` (see `OFFSITE-ENTITY.md`) | 30 min | GitHub; store link or GitHub as Website |
+| PR to `xyNNN/awesome-chrome` (see `OFFSITE-ENTITY.md`) | 30 min | GitHub account (the list is on GitHub); store link as Website |
 | Start ordinary participation in r/chrome_extensions and r/netflix: answer other people's questions without links, 3 to 5 days | 15 min/day | Reddit account |
 
 ### Days 10 to 14: launches, on different days (about 5 h including replies)
@@ -327,14 +309,14 @@ Time estimates are your active hands-on time, not waiting for reviews. `[YOU]` t
 | ~11 | Product Hunt launch (schedule 12:01 am Pacific, reply to comments all day) | 2.5 h | Store link live ideally, blocker 2 fixed |
 | ~13 | Show HN (post, then answer comments for a few hours) | 2 h | Same prerequisites |
 | ~12 to 14 | One Reddit post/answer if (and only if) the rules allow it (drafts 3.1 to 3.3) | 30 min | Rule check done |
-| Day 14 | Review: record results (GitHub stars, referrals in site analytics, issues); do **not** repost anything that underperformed | 30 min | Analytics |
+| Day 14 | Review: record results (referrals in site analytics, support emails); do **not** repost anything that underperformed | 30 min | Analytics |
 
 **If blockers are not resolved by day 10, move the launches back**; do not launch broken.
 
 ---
 
 ## 7. Success measures (honest)
-- GitHub referrals and stars; issues filed by real users; Chrome Web Store installs when available.
+- Referrals in site analytics; support emails from real users; Chrome Web Store installs when available.
 - Branded searches for "Rating Watch" in Search Console; Bing Webmaster Tools query data.
 - Re-run the AI-visibility check (see `GEO-PLATFORM-OPTIMIZATION.md`, item 18) 4 to 6 weeks after launches; entity signals take time and nothing here guarantees a citation.
 

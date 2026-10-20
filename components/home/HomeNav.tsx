@@ -4,7 +4,7 @@ export default function HomeNav() {
   return (
     <nav className={styles.nav} aria-label="Primary">
       <a className={styles.navLogo} href="/">
-        <span className={styles.navLogoIcon} aria-hidden>★</span>
+        <img className={styles.navLogoIcon} src="/icon.svg" alt="" width={30} height={30} />
         <span>Rating Watch</span>
       </a>
       <div className={styles.navLinks}>

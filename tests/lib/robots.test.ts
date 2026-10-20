@@ -24,14 +24,17 @@ describe('robots.txt', () => {
     expect(group!.allow).toBe('/');
   });
 
-  it('has a generic group that allows / and disallows /api/', () => {
+  it('has a generic group that allows / and disallows /account and /api/', () => {
     const star = groupFor('*');
     expect(star?.allow).toBe('/');
-    expect(star?.disallow).toBe('/api/');
+    expect(star?.disallow).toEqual(['/account', '/api/']);
   });
 
-  it('disallows /api/ in every group (named groups do not inherit "*")', () => {
-    for (const r of rules) expect(r.disallow).toBe('/api/');
+  it('disallows /account and /api/ in every group (named groups do not inherit "*")', () => {
+    for (const r of rules) {
+      expect(r.disallow).toContain('/account');
+      expect(r.disallow).toContain('/api/');
+    }
   });
 
   it('omits undocumented user-agents', () => {

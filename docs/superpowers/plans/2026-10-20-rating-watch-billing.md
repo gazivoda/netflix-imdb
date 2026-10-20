@@ -28,7 +28,7 @@
 ## Deviations from the spec (call out to the owner at review)
 
 1. **AR gate is client-side, not a server-side layout check.** `seo:validate` requires every page in `lib/pages.ts` to be prerendered HTML, and a layout reading cookies would make `/camera-vision/ar` dynamic. The camera analysis runs entirely in the browser, so a server check would protect nothing real. The gate is a client component that asks `/api/user/me`.
-2. **Webhook hardening beyond Name Habitat:** reject timestamps older than 5 minutes (already in spec); accept several `h1` values (secret rotation); user lookup order is `custom_data.userId`, then subscription id, then Paddle customer id, then email (Name Habitat only used userId then email, but Paddle subscription events carry no email); `subscription.updated` honours `data.status` (canceled/paused/past_due) instead of always setting active.
+2. **Webhook hardening beyond Name Habitat:** reject timestamps older than 5 minutes (already in spec); accept several `h1` values (secret rotation); user lookup order is subscription id, then Paddle customer id, then `custom_data.userId`, then email (`custom_data.userId` is buyer-controlled, so Paddle's own ids win); an event found only via `custom_data.userId` or email can only activate, never cancel, pause or expire; events are bound to the user's current subscription (an event for another subscription id does not change that user); only Rating Watch price ids are accepted (`PADDLE_PRICE_IDS`, because the Paddle account is shared with another product; an empty list accepts nothing); `subscription.updated` honours `data.status` (canceled/paused/past_due) instead of always setting active; `/api/paddle/verify-subscription` returns 409 for a subscription that belongs to another account or to another product.
 3. `/account` is **not** in `lib/pages.ts`: it is `force-dynamic` with `noindex`, so it is never prerendered and never appears in the sitemap. `/pricing`, `/terms`, `/refund-policy` are registered normally.
 
 ## Review Focus
@@ -2035,6 +2035,87 @@ it('can seed an expired user', () => {
 - [ ] **Step 3: Report to the owner**, honestly: what was verified (tests, build, browser states), what could not be verified (Google sign-in with a real account, Paddle checkout, webhook delivery from Paddle, Coolify volume, DNS), the owner steps remaining (API key, webhook secret, domain approval, OAuth redirect, GitHub repo rename, Chrome Web Store, support mailbox), and the three spec deviations listed at the top.
 - [ ] **Step 3b: Remove any dev state:** delete throwaway DB files and unset the shell variables.
 - [ ] **Step 4: Ask the owner for explicit approval to commit.** Only after a clear yes: stage by explicit path (never `git add -A`; leave `eng.traineddata` out), commit with message `feat: rename to Rating Watch and add Google sign-in + Paddle subscriptions for AR mode` and the repository's attribution trailer, and push only if the owner also approves the push. Watch the CI run afterwards (`gh run list --limit 1`) and report its result.
+
+---
+
+### Task 11: Copy accuracy once Pro exists
+
+**Depends on:** Task 7 (it adds `SUPPORT_EMAIL` and `/pricing` to the same files).
+
+**Files:**
+- Modify: `lib/content.ts`, `lib/llms.ts`, `lib/seo.ts`, `lib/pages.ts`, `components/home/Hero.tsx`, `README.md`
+- Create: `tests/billing/copy-accuracy.test.ts`
+
+**Why:** Several site-wide sentences were true when the product was only a free Chrome extension and are false once the Pro AR mode exists. Claims about **the extension** ("no account", "no tracking", "free and open source") stay true and stay, but must say "the extension" so they are not read as claims about the whole product.
+
+**Interfaces:**
+- Consumes: the `/pricing` page and Pro terms from Task 7 (`$2.99 / month or $29 / year`, 3-day free trial, AR mode).
+
+- [ ] **Step 1: Write the failing test** `tests/billing/copy-accuracy.test.ts`
+
+```ts
+import fs from 'fs'
+import path from 'path'
+
+const ROOT = path.join(__dirname, '..', '..')
+const read = (f: string) => fs.readFileSync(path.join(ROOT, f), 'utf8')
+const SCAN = ['app', 'components', 'lib', 'README.md']
+const EXT = new Set(['.ts', '.tsx', '.md'])
+const walk = (p: string): string[] => {
+  const full = path.join(ROOT, p)
+  if (fs.statSync(full).isFile()) return [p]
+  return fs.readdirSync(full).flatMap((n) => walk(path.join(p, n)))
+}
+const files = SCAN.flatMap(walk).filter((f) => EXT.has(path.extname(f)))
+const hits = (re: RegExp) => files.filter((f) => re.test(read(f)))
+
+describe('copy stays accurate with a paid tier', () => {
+  it('no longer claims there is no paid tier or subscription', () => {
+    expect(hits(/no paid tier/i)).toEqual([])
+    expect(hits(/no subscription/i)).toEqual([])
+  })
+  it('the "Is Rating Watch free?" answer separates the free extension from Pro AR mode', () => {
+    const src = read('lib/content.ts')
+    const i = src.indexOf('Is Rating Watch free?')
+    expect(i).toBeGreaterThan(-1)
+    const answer = src.slice(i, i + 700)
+    expect(answer).toMatch(/extension is free/i)
+    expect(answer).toMatch(/Pro/)
+    expect(answer).toMatch(/\$2\.99/)
+    expect(answer).toMatch(/\$29/)
+  })
+  it('llms.txt copy mentions Pro and the pricing page', () => {
+    const src = read('lib/llms.ts')
+    expect(src).toMatch(/Pro/)
+    expect(src).toMatch(/pricing/i)
+  })
+  it('keeps the "no account" claim only where it is about the extension', () => {
+    for (const f of ['lib/llms.ts', 'lib/pages.ts', 'components/home/Hero.tsx']) {
+      const lines = read(f).split('\n').filter((l) => /no account/i.test(l))
+      for (const l of lines) expect(l).toMatch(/extension/i)
+    }
+  })
+  it('README says the extension (not the whole product) has no backend', () => {
+    const src = read('README.md')
+    expect(src).not.toMatch(/and no backend server/i)
+    expect(src).toMatch(/extension/i)
+  })
+})
+```
+
+- [ ] **Step 2:** Run `npx jest tests/billing/copy-accuracy.test.ts` -> FAIL.
+- [ ] **Step 3: Implement the copy changes (no em dashes, no emoji).**
+  - `lib/content.ts` FAQ `'Is Rating Watch free?'`: new answer: `The Chrome extension is free and open source: no account, no subscription, and the full source code is on GitHub. AR mode, which draws ratings over your TV through your phone camera, is Pro: $2.99 a month or $29 a year, with a 3-day free trial that needs no card. You can cancel any time from your account page.`
+  - `lib/content.ts` the `'What is Rating Watch?'` answer: append one sentence: `There is also an optional Pro AR mode that shows the same scores over a TV screen through your phone camera.`
+  - `lib/content.ts` lines about "No account, no login, no tracking" (feature card) and the FAQ "No. The extension needs no account...": make the subject explicitly `The extension` where it is not already.
+  - `lib/llms.ts`: change `'Free and open source. No account or login.'` to `'The Chrome extension is free and open source and needs no account. AR mode is Pro ($2.99/month or $29/year, 3-day free trial); see /pricing.'` and add a pricing line wherever that file lists pages (use `/pricing` from the registry if it lists registry pages automatically; do not hard-code a second list).
+  - `lib/pages.ts`: the home description ends `No account, no tab-switching.` -> `The extension needs no account.`; the privacy description ends `No account, no tracking.` -> `The extension needs no account and does no tracking.` (keep each description between 70 and 160 characters; `tests/lib/seo.test.ts` checks lengths).
+  - `lib/seo.ts` feature list entries `'No account or login required'` and `'Privacy-friendly, no tracking'` -> `'Extension needs no account or login'` and `'Extension is privacy-friendly with no tracking'`. If the `SoftwareApplication` node declares a price of 0, keep the extension at price 0 and add nothing else (YAGNI).
+  - `components/home/Hero.tsx`: `No account needed` list item -> `Extension needs no account`; the sentence `No account, no second tab, no searching` keeps its meaning but must name the extension.
+  - `README.md`: line about no account/sign-in/API key -> start with `The extension needs...`; `No account, no analytics, no telemetry, and no backend server.` -> `The extension has no account, no analytics, no telemetry and no backend server. The website offers an optional Pro AR mode with sign-in; see /pricing.`
+  - Do not touch `docs/`.
+- [ ] **Step 4:** Run `npx jest tests/billing/copy-accuracy.test.ts tests/lib tests/design-guards.test.ts tests/no-emoji-content.test.ts` -> PASS. Fix any existing test that pins the old wording (for example `tests/lib/llms.test.ts`, `tests/lib/seo.test.ts`) by updating the expected text to the new wording.
+- [ ] **Step 5: Checkpoint:** `npx tsc --noEmit`, `npx jest`, `npm run seo:validate` after a build; uncommitted.
 
 ---
 

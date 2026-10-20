@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "slug": "salt-and-iron-2019",
+  "imdbId": "tt9000015",
+  "status": "review",
+  "published": null,
+  "contentUpdated": "2026-10-17",
+  "h1": "Salt and Iron: where critics and viewers mostly agree",
+  "description": "{{title}} has IMDb {{imdb}} from {{votesShort}} votes and {{rt}} on Rotten Tomatoes. A short look at where the two scores meet and where they drift.",
+  "summary": "Critics and audiences mostly agree on {{title}}: IMDb gives {{imdb}} from {{votesShort}} votes and Rotten Tomatoes gives {{rt}}. The audience side is slightly higher, a small gap of {{gapAbs}} points, which ranks {{gapRank}} of {{setSize}} in the set. Scores are dated {{asOf}} and come from OMDb, so treat them as a snapshot.",
+  "sections": [
+    {
+      "id": "why-split",
+      "heading": "Why do the scores differ slightly on Salt and Iron?",
+      "paragraphs": [
+        "The difference is small and runs in the audience direction. Converted to one scale, IMDb reads {{imdbX10}} and Rotten Tomatoes reads {{rt}}, so the audience side is slightly higher, with a small gap of {{gapAbs}} points. Critics and viewers mostly agree on the broad verdict.",
+        "Vote volume offers one explanation worth testing. With {{votes}} IMDb votes the audience number is steady, while the critic percentage counts each review as simply positive or not. A film with many mildly positive reviews and some lukewarm ones can sit a few points under its star rating.",
+        "Metascore points to the same mild difference. At {{metascore}} it sits below both main numbers, which hints that weighted critic scores are a touch cooler than the share of positive reviews. That is a small observation and should not be pushed further.",
+        "Genre gives context. The median difference for the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so {{title}} at {{gap}} sits slightly closer to agreement than the typical {{genre}} film here. [Our guide to the two scores](/compare/imdb-vs-rotten-tomatoes) explains why such small differences are normal."
+      ]
+    },
+    {
+      "id": "the-film",
+      "heading": "What is Salt and Iron and where did it chart?",
+      "paragraphs": [
+        "The setup is a coastal light keeper and a map that turns up unexpectedly. {{director}} directs, with Wes Harlan, Dora Finch and Mila Stroud as the first billed performers, across {{runtime}}. In the Netflix Top 10 data it spent {{weeksInTop10}} weeks on the global chart, peaked at rank {{peakRank}}, and ranks {{popularityRank}} here with {{hours}} hours viewed.",
+        "OMDb lists an R rating, the genres Action and Drama, and no awards line. We add nothing beyond those fields. Netflix, not us, supplies the chart facts: the hours figure is the higher of the weekly sum Netflix reports and the total on its Most Popular list, and the weeks come from the weekly lists."
+      ]
+    },
+    {
+      "id": "who-it-suits",
+      "heading": "Who should consider Salt and Iron?",
+      "paragraphs": [
+        "If you pick films by consensus, this one is easy: the scores mostly agree, so either source leads you to the same expectation. If you favor action with some emotional weight, note that OMDb lists the second genre as drama, and the audience side being slightly higher may reflect that.",
+        "It is a full-length feature with an R rating, so check the rating before choosing it for a mixed group. The numbers point to a steady middle-of-the-road reception, and they say nothing about taste.",
+        "A useful habit with close scores is to look at the vote count before the percentages. Here {{votes}} votes stand behind the audience number, so it is a settled figure rather than an early reading, and that makes the mild difference a fairer description of how viewers feel."
+      ]
+    },
+    {
+      "id": "more",
+      "heading": "How much should a small difference matter?",
+      "paragraphs": [
+        "Not much. A few points on a shared scale can come from rounding, from the day the data were pulled, or from how each site counts. We flag the difference because it is measurable, not because it changes the picture. If you remember one thing, remember that this film sits close to agreement in the set, with neither group far from the other."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Do critics and audiences mostly agree on Salt and Iron?",
+      "a": "Yes. IMDb reads {{imdbX10}} on the shared scale and Rotten Tomatoes reads {{rt}}, so the audience side is slightly higher, by a small gap of {{gapAbs}} points. The Metascore is {{metascore}}. All three tell the same broad story as of {{asOf}}."
+    },
+    {
+      "q": "Is Salt and Iron rated higher by critics or audiences?",
+      "a": "Audiences, slightly. IMDb converts to {{imdbX10}} and Rotten Tomatoes shows {{rt}}, so the audience side is ahead, though the two mostly agree. The difference is {{gapAbs}} points, which this site calls a small gap, and it ranks {{gapRank}} of {{setSize}} in the set."
+    },
+    {
+      "q": "Who directed Salt and Iron and who stars in it?",
+      "a": "OMDb names {{director}} as director. The first billed performers are Wes Harlan, Dora Finch and Mila Stroud. We take these names directly from the OMDb record and add nothing from other sources, so treat them as a pointer for your own check."
+    }
+  ],
+  "sources": [],
+  "review": {
+    "writer": "Fixture Writer",
+    "writtenOn": "2026-10-16",
+    "factChecker": null,
+    "factCheckedOn": null,
+    "cuts": [],
+    "rtCheck": null
+  }
+}

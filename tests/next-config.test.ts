@@ -31,9 +31,11 @@ describe('next.config.js', () => {
   it('keeps camera allowed for /camera-vision but disables other sensitive features', async () => {
     const policy = headersFor(await rules(), '/:path*')['Permissions-Policy']
     expect(policy).toContain('camera=(self)')
-    for (const f of ['microphone', 'geolocation', 'payment']) {
+    for (const f of ['microphone', 'geolocation']) {
       expect(policy).toContain(`${f}=()`)
     }
+    // Paddle's checkout iframe needs wallet payments (Apple Pay, Google Pay).
+    expect(policy).toContain('payment=(self "https://*.paddle.com")')
   })
 
   it('does not set a CSP or cross-origin isolation (would break tfjs/tesseract CDN loads)', async () => {

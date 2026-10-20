@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import { pageMetadata, faqPage, graph } from '../lib/seo';
+import { pageMetadata, faqPage, videoObject, graph } from '../lib/seo';
 import JsonLd from '../components/JsonLd';
 import { FAQS } from '../lib/content';
 import HomeNav from '../components/home/HomeNav';
@@ -7,6 +7,7 @@ import Hero from '../components/home/Hero';
 import Stats from '../components/home/Stats';
 import Marquee from '../components/home/Marquee';
 import Story from '../components/home/Story';
+import PromoVideo from '../components/home/PromoVideo';
 import BeforeAfter from '../components/home/BeforeAfter';
 import Features from '../components/home/Features';
 import HowItWorks from '../components/home/HowItWorks';
@@ -22,8 +23,9 @@ export default function Page() {
   return (
     <div className={styles.page}>
       <a className="skip-link" href="#main">Skip to main content</a>
-      {/* FAQPage schema lives only here — it must match the visible FAQ on this page */}
-      <JsonLd data={graph(faqPage(FAQS))} />
+      {/* FAQPage schema lives only here — it must match the visible FAQ on this page.
+          VideoObject describes the promo video section (components/home/PromoVideo). */}
+      <JsonLd data={graph(faqPage(FAQS), videoObject())} />
       <HomeNav />
 
       <main id="main" tabIndex={-1}>
@@ -31,6 +33,7 @@ export default function Page() {
         <Stats />
         <Marquee />
         <Story />
+        <PromoVideo />
         <BeforeAfter />
         <Features />
         <HowItWorks />

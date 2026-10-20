@@ -42,3 +42,4 @@ node_modules
 
 # Benchmark dataset (posters + rendered scenes), regenerate with scripts/ar-bench
 .cache/
+data/blog/source/raw/

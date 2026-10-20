@@ -3,22 +3,24 @@
 // llms.txt is an unofficial convention that some AI tools read; Google Search
 // does not use it. It is cheap to generate, so we keep it accurate and small.
 
-import { SITE_URL, REPO_URL, AUTHOR_NAME, FAQS } from './content';
+import { SITE_URL, AUTHOR_NAME, FAQS } from './content';
 import { absoluteUrl } from './seo';
+import manifest from '../extension/manifest.json';
 import { PAGES, type SitePage } from './pages';
+import { formatAsOf, formatImdb, formatSigned } from './blog/format';
 
 const SITE_NAME = 'Rating Watch';
 
 const SUMMARY =
-  'Rating Watch is a free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
+  'Rating Watch is a free Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
 
 // Verified against extension/ (manifest.json, content.js, background.js).
 const KEY_FACTS = [
   'Shows the IMDb rating (out of 10) and the Rotten Tomatoes percentage in a badge at the top-right of each title card on www.netflix.com.',
   'Ratings are fetched from OMDb by the extension background worker.',
-  'Manifest V3 extension, version 1.1.1. Permissions are limited to netflix.com and omdbapi.com.',
-  'Free and open source. No account or login.',
-  'Not on the Chrome Web Store yet: install by downloading from GitHub and using "Load unpacked" in chrome://extensions.',
+  `Manifest V3 extension, version ${manifest.version}. Permissions are limited to netflix.com and omdbapi.com.`,
+  'The Chrome extension is free and needs no account. AR mode is Pro ($2.99/month or $29/year, 3-day free trial); see /pricing.',
+  'Not on the Chrome Web Store yet: install by downloading the zip from this site and using "Load unpacked" in chrome://extensions.',
   'Works in Chromium browsers (Chrome, Edge, Brave). Not tested in Firefox or Safari.',
   `Author: ${AUTHOR_NAME}.`,
 ];
@@ -33,7 +35,8 @@ const url = (path: string): string => absoluteUrl(path);
 // Registry group -> llms.txt section. "Optional" is the spec's name for pages
 // a reader may skip when short on context.
 export function sectionsFor(pages: SitePage[] = PAGES): Section[] {
-  const rest = pages.filter((p) => p.path !== '/');
+  // Blog film analyses (kind 'article') are listed only in llms-full.txt "Film analyses".
+  const rest = pages.filter((p) => p.path !== '/' && p.kind !== 'article');
   const by = (pred: (p: SitePage) => boolean) => rest.filter(pred);
   return [
     { heading: 'Docs', pages: pages.filter((p) => p.path === '/') },
@@ -51,19 +54,45 @@ const header = (): string[] => [`# ${SITE_NAME}`, '', `> ${SUMMARY}`, ''];
 
 const keyFacts = (): string[] => ['## Key facts', '', ...KEY_FACTS.map((f) => `- ${f}`), ''];
 
-const sourceSection = (): string[] => [
-  '## Source',
-  '',
-  `- [GitHub repository](${REPO_URL}): Source code, install instructions, extension.zip and issue tracker.`,
-  '',
-];
+export const DATASET_PATH = '/data/netflix-top-100.json';
+
+const articlesOf = (pages: SitePage[]): SitePage[] => pages.filter((p) => p.kind === 'article');
+
+// Only present once the blog has published films; with nothing to list the section is omitted.
+const dataSection = (pages: SitePage[]): string[] =>
+  articlesOf(pages).length > 0
+    ? [
+        '## Data',
+        '',
+        `- [Top 100 Netflix films dataset (JSON)](${url(DATASET_PATH)}): IMDb and Rotten Tomatoes scores for the 100 most-watched Netflix films, with the selection rule and sources.`,
+        '',
+      ]
+    : [];
+
+// One compact line per published article: `- [Title (Year)](url): IMDb x, RT y%, gap z, scores as of d`.
+const filmAnalysesSection = (pages: SitePage[]): string[] => {
+  const articles = articlesOf(pages);
+  if (articles.length === 0) return [];
+  return [
+    '## Film analyses',
+    '',
+    ...articles.map((p) => {
+      const sc = p.scores;
+      const facts = sc
+        ? `: IMDb ${formatImdb(sc.imdb)}, RT ${sc.rt}%, gap ${formatSigned(sc.gap)}, scores as of ${formatAsOf(sc.asOf)}`
+        : '';
+      return `- [${p.label ?? p.title}](${url(p.path)})${facts}`;
+    }),
+    '',
+  ];
+};
 
 export function buildLlmsTxt(pages: SitePage[] = PAGES): string {
   const lines = [...header(), ...keyFacts()];
   for (const s of sectionsFor(pages)) {
     lines.push(`## ${s.heading}`, '', ...s.pages.map(entry), '');
   }
-  lines.push(...sourceSection());
+  lines.push(...dataSection(pages));
   return lines.join('\n').trimEnd() + '\n';
 }
 
@@ -91,9 +120,10 @@ export function buildLlmsFullTxt(
       );
     }
   }
+  lines.push(...filmAnalysesSection(pages));
   lines.push(`## Frequently asked questions (from ${url('/')})`, '');
   for (const f of faqs) lines.push(`### ${f.q}`, '', f.a, '');
-  lines.push(...sourceSection());
+  lines.push(...dataSection(pages));
   return lines.join('\n').trimEnd() + '\n';
 }
 

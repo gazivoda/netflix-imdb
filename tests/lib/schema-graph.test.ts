@@ -1,8 +1,9 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { PAGES } from '../../lib/pages';
-import { SITE_URL, REPO_URL } from '../../lib/content';
-import { siteGraph, webPage, breadcrumbList, nodeId, jsonLdString } from '../../lib/seo';
+import { SITE_URL, EXTENSION_ZIP_PATH } from '../../lib/content';
+import { siteGraph, webPage, breadcrumbList, nodeId, jsonLdString, blogPosting, movie } from '../../lib/seo';
+import { filmBySlug } from '../blog/fixtures';
 import manifest from '../../extension/manifest.json';
 
 type Node = Record<string, any>;
@@ -65,11 +66,29 @@ describe('siteGraph (root layout JSON-LD)', () => {
     if (!hasLicense) expect(app).not.toHaveProperty('license');
   });
 
-  it('sameAs lists only the GitHub repo/profile', () => {
-    for (const n of nodes) {
-      for (const url of n.sameAs ?? []) expect(url).toMatch(/^https:\/\/github\.com\/gazivoda(\/netflix-imdb)?$/);
+  it('has no GitHub link and no code-repository or open-source claim anywhere', () => {
+    const json = JSON.stringify(g);
+    expect(json).not.toMatch(/github/i);
+    expect(json).not.toMatch(/open[- ]source/i);
+    expect(json).not.toContain('codeRepository');
+    expect(json).not.toContain('"license"');
+  });
+
+  it('omits sameAs on the site entities while there is nothing to list', () => {
+    for (const type of ['Person', 'Organization', 'SoftwareApplication']) {
+      expect(nodes.find((n) => n['@type'] === type)).not.toHaveProperty('sameAs');
     }
-    expect(nodes.find((n) => n['@type'] === 'Organization')!.sameAs).toEqual([REPO_URL]);
+  });
+
+  it('points the author URL at /about and the download at the hosted zip', () => {
+    expect(nodes.find((n) => n['@type'] === 'Person')!.url).toBe(`${SITE_URL}/about`);
+    expect(nodes.find((n) => n['@type'] === 'SoftwareApplication')!.downloadUrl).toBe(`${SITE_URL}${EXTENSION_ZIP_PATH}`);
+  });
+
+  it('keeps the free-price facts of the extension', () => {
+    const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
+    expect(app.isAccessibleForFree).toBe(true);
+    expect(app.offers).toMatchObject({ price: '0', priceCurrency: 'USD' });
   });
 
   it('WebSite has no SearchAction (the site has no search)', () => {
@@ -100,5 +119,54 @@ describe('webPage', () => {
     expect(new Set([...ids, ...site]).size).toBe(ids.length + site.size); // no collisions with the site graph
     const known = new Set([...ids, ...site]);
     for (const ref of collectRefs(pageNodes)) expect(known).toContain(ref);
+  });
+});
+
+describe('blog page graph (WebPage + BreadcrumbList + BlogPosting + Movie)', () => {
+  const site = new Set(definedIds(nodesOf(siteGraph())));
+  const film = filmBySlug('crimson-static-2022');
+  const path = `/blog/${film.slug}`;
+
+  // Article paths come from the generated registry (empty until a batch is published), so the
+  // WebPage node is stood in by its @id; the real hub proves the webPage options end to end.
+  const pageNodes: Node[] = [
+    { '@type': 'WebPage', '@id': nodeId(path, 'webpage'), about: { '@id': nodeId(path, 'film') }, breadcrumb: { '@id': nodeId(path, 'breadcrumb') } },
+    { ...breadcrumbList([{ name: 'Home', path: '/' }]), '@id': nodeId(path, 'breadcrumb') },
+    blogPosting(path, { headline: 'Headline', description: 'Description.', published: '2026-10-20', updated: '2026-10-20', wordCount: 700 }),
+    movie(film),
+  ];
+
+  it('has exactly one Movie and one BlogPosting, no undefined values', () => {
+    expect(pageNodes.filter((n) => n['@type'] === 'Movie')).toHaveLength(1);
+    expect(pageNodes.filter((n) => n['@type'] === 'BlogPosting')).toHaveLength(1);
+    expect(findUndefined(pageNodes)).toEqual([]);
+    expect(JSON.parse(jsonLdString({ '@graph': pageNodes } as any))['@graph']).toEqual(pageNodes);
+  });
+
+  it('every bare @id reference resolves in the page graph or the site graph', () => {
+    const ids = definedIds(pageNodes);
+    expect(new Set([...ids, ...site]).size).toBe(ids.length + site.size);
+    const known = new Set([...ids, ...site]);
+    for (const ref of collectRefs(pageNodes)) expect(known).toContain(ref);
+  });
+
+  it('the hub WebPage can be typed CollectionPage and keeps its defaults otherwise', () => {
+    // /blog is registered only when the hub is ready (I9): build the hub node against a ready registry.
+    let hub = {} as Node;
+    jest.isolateModules(() => {
+      jest.doMock('../../lib/blog/registry.generated', () => ({
+        BLOG_HUB: { ready: true, dataUpdated: '2026-10-15' },
+        BLOG_ARTICLE_PAGES: [],
+      }));
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const seo = require('../../lib/seo') as typeof import('../../lib/seo');
+      hub = seo.webPage('/blog', { type: 'CollectionPage' }) as Node;
+    });
+    jest.dontMock('../../lib/blog/registry.generated');
+    expect(hub['@type']).toBe('CollectionPage');
+    expect(hub['@id']).toBe(`${SITE_URL}/blog#webpage`);
+    expect(hub.about).toEqual({ '@id': `${SITE_URL}/#app` });
+    // the inline CollectionPage inside BlogPosting.isPartOf is the same @id as the hub's WebPage
+    expect((pageNodes[2] as Node).isPartOf['@id']).toBe(hub['@id']);
   });
 });

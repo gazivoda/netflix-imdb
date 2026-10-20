@@ -2,6 +2,7 @@ import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
 import { ImdbChip } from '../../../components/ScoreChip';
 import h from '../how-to.module.css';
+import { EXTENSION_ZIP_PATH } from '../../../lib/content';
 import { howTo, pageMetadata } from '../../../lib/seo';
 import { STEPS } from './steps';
 
@@ -27,7 +28,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Is it free, and what does it send?',
-    a: 'It is free and open source, with no account needed. To fetch a rating it sends only the title name to OMDb, the database that supplies the scores. It requests access to just netflix.com and omdbapi.com, and the privacy policy lists exactly what it does.',
+    a: 'It is free, with no account needed. To fetch a rating it sends only the title name to OMDb, the database that supplies the scores. It requests access to just netflix.com and omdbapi.com, and the privacy policy lists exactly what it does.',
   },
 ];
 
@@ -43,7 +44,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
             open netflix.com and read the badge in the top-right corner of each title card.
           </strong>{' '}
           The number beside the star is the IMDb rating out of 10. It works in Chrome, Edge and
-          Brave, needs no account, and the code is open source.
+          Brave and needs no account.
         </>
       }
       faqs={FAQS}
@@ -51,7 +52,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
         howTo({
           name: 'How to show IMDb ratings on Netflix',
           description:
-            'Show IMDb ratings on Netflix title cards in a Chromium browser using the free, open-source Rating Watch extension.',
+            'Show IMDb ratings on Netflix title cards in a Chromium browser using the free Rating Watch extension.',
           totalTime: 'PT3M',
           steps: STEPS,
         }),
@@ -69,9 +70,12 @@ export default function ShowImdbRatingsOnNetflixPage() {
         </ol>
       </div>
       <p className={g.p}>
-        <a href="/install" className={g.btnPrimary}>
-          Install Rating Watch <span aria-hidden>→</span>
+        <a href={EXTENSION_ZIP_PATH} download className={g.btnPrimary}>
+          Download Rating Watch (zip) <span aria-hidden>→</span>
         </a>
+      </p>
+      <p className={g.p}>
+        The full walkthrough is on the <a href="/install">install page</a>.
       </p>
       <p className={g.p}>
         Step-by-step install instructions, including how to turn on Developer mode, are on the{' '}

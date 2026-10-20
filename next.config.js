@@ -13,7 +13,7 @@ const securityHeaders = [
   {
     key: 'Permissions-Policy',
     value:
-      'camera=(self), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+      'camera=(self), microphone=(), geolocation=(), payment=(self "https://*.paddle.com"), usb=(), interest-cohort=()',
   },
 ]
 
@@ -22,6 +22,7 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
+  experimental: { serverComponentsExternalPackages: ['better-sqlite3'] },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },

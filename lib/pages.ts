@@ -2,6 +2,8 @@
 // "Guides" links and (later) llms.txt all read from here, so a new page is
 // listed everywhere by adding exactly one entry — no page can be an orphan.
 
+import { BLOG_ARTICLE_PAGES, BLOG_HUB, type BlogArticlePage, type BlogHubState } from './blog/registry.generated';
+
 export type ChangeFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 export interface SitePage {
@@ -21,13 +23,42 @@ export interface SitePage {
   label?: string;
   /** OpenGraph type. */
   ogType?: 'website' | 'article';
+  /**
+   * 'article' marks a blog film analysis (/blog/{slug}): in the sitemap and llms-full.txt, but
+   * not in the footer or the llms.txt sections (there are too many); metadata uses file-based images.
+   */
+  kind?: 'article';
+  /** Article pages only: the scores shown in llms-full.txt (from the generated registry). */
+  scores?: BlogArticlePage['scores'];
 }
 
 export const HOME_TITLE = 'Rating Watch: IMDb & Rotten Tomatoes on Netflix Cards';
 export const HOME_DESCRIPTION =
-  'Free, open-source Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. No account, no tab-switching.';
+  'Free Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. The extension needs no account.';
 
-export const PAGES: SitePage[] = [
+/**
+ * The /blog hub. Registered (sitemap, footer, llms.txt) only when the generated registry says the
+ * hub is ready, that is films.json holds the expected number of films (I9). Until then the route
+ * is a 404 and nothing links to it.
+ */
+export const BLOG_HUB_PAGE: SitePage = {
+    path: '/blog',
+    title: 'Top 100 Netflix Films Rated by Critics and Fans',
+    description:
+      'The 100 most-watched Netflix films with IMDb and Rotten Tomatoes scores side by side, where critics and audiences split most, and how the list is built.',
+    published: '2026-10-20',
+    updated: '2026-10-20',
+    changeFrequency: 'monthly',
+    priority: 0.7,
+    group: 'guide',
+    label: 'Blog',
+    ogType: 'article',
+  };
+
+/** Static pages; the hub is inserted after this path when ready, so the footer order is stable. */
+const BLOG_HUB_AFTER = '/research/imdb-vs-rotten-tomatoes-gap';
+
+export const STATIC_PAGES: SitePage[] = [
   {
     path: '/',
     title: HOME_TITLE,
@@ -42,7 +73,7 @@ export const PAGES: SitePage[] = [
     path: '/install',
     title: 'Install Rating Watch on Chrome, Edge, Brave',
     description:
-      'Install the free Rating Watch extension in about a minute: download from GitHub, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
+      'Install the free Rating Watch extension in about a minute: download the zip, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'monthly',
@@ -133,7 +164,7 @@ export const PAGES: SitePage[] = [
     path: '/about',
     title: 'About Rating Watch and Its Maker',
     description:
-      'Rating Watch is a free open-source extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker.',
+      'Rating Watch is a free browser extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker.',
     published: '2026-10-15',
     updated: '2026-10-15',
     changeFrequency: 'yearly',
@@ -159,7 +190,7 @@ export const PAGES: SitePage[] = [
     path: '/camera-vision/ar',
     title: 'AR Ratings: Netflix Scores Over the TV Screen',
     description:
-      'Experimental AR demo: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores drawn over each tile, with on-device recognition.',
+      'AR mode for Rating Watch Pro: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. 3-day free trial.',
     published: '2026-10-20',
     updated: '2026-10-20',
     changeFrequency: 'monthly',
@@ -170,15 +201,92 @@ export const PAGES: SitePage[] = [
     path: '/privacy',
     title: 'Privacy Policy',
     description:
-      'What the Rating Watch extension sends (only title names, to OMDb), what it never collects, and the browser permissions it asks for. No account, no tracking.',
-    updated: '2026-10-16',
+      'What the Rating Watch extension sends (only title names, to OMDb) and never collects. The extension needs no account; AR mode uses Google sign-in.',
+    updated: '2026-10-20',
     changeFrequency: 'yearly',
     priority: 0.3,
     group: 'legal',
     label: 'Privacy',
     ogType: 'website',
   },
+  {
+    path: '/pricing',
+    title: 'Pricing: Free Extension and Pro AR Mode',
+    description:
+      'Rating Watch is free as a Chrome extension. Pro adds AR mode for $2.99 a month or $29 a year, with a 3-day free trial and a 14-day refund window.',
+    published: '2026-10-20',
+    updated: '2026-10-20',
+    changeFrequency: 'monthly',
+    priority: 0.6,
+    group: 'about',
+    label: 'Pricing',
+    ogType: 'website',
+  },
+  {
+    path: '/terms',
+    title: 'Terms of Service',
+    description:
+      'The terms for using Rating Watch: the free Chrome extension, the Pro AR mode subscription, billing through Paddle, cancellation and acceptable use.',
+    published: '2026-10-20',
+    updated: '2026-10-20',
+    changeFrequency: 'yearly',
+    priority: 0.3,
+    group: 'legal',
+    label: 'Terms',
+    ogType: 'website',
+  },
+  {
+    path: '/refund-policy',
+    title: 'Refund Policy',
+    description:
+      'Request a full refund within 14 days of your first Rating Watch Pro payment. How to ask, how long it takes and what happens to your access afterwards.',
+    published: '2026-10-20',
+    updated: '2026-10-20',
+    changeFrequency: 'yearly',
+    priority: 0.3,
+    group: 'legal',
+    label: 'Refund policy',
+    ogType: 'website',
+  },
 ];
+
+/** Blog film analyses from the generated registry (priority 0.5; no group, so not in nav or llms.txt sections). */
+export function blogPages(entries: readonly BlogArticlePage[] = BLOG_ARTICLE_PAGES): SitePage[] {
+  return entries.map((e) => ({
+    path: e.path,
+    title: e.title,
+    description: e.description,
+    published: e.published,
+    updated: e.updated,
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+    label: e.label,
+    ogType: 'article' as const,
+    kind: 'article' as const,
+    scores: e.scores,
+  }));
+}
+
+/**
+ * STATIC_PAGES + the /blog hub (only when ready) + the blog articles. The hub changes whenever
+ * an article is published or edited, or a film's data changes, so its lastmod is the max of its
+ * own date, the newest article and max(films dataChangedAt) (I10).
+ */
+export function buildPages(
+  entries: readonly BlogArticlePage[] = BLOG_ARTICLE_PAGES,
+  hub: BlogHubState = BLOG_HUB,
+): SitePage[] {
+  const articles = blogPages(entries);
+  if (!hub.ready) {
+    if (articles.length) throw new Error('registry has article pages but the blog hub is not ready; run `npm run blog:registry`');
+    return [...STATIC_PAGES];
+  }
+  const updated = [BLOG_HUB_PAGE.updated, hub.dataUpdated ?? '', ...articles.map((p) => p.updated)].reduce((a, b) => (b > a ? b : a));
+  const at = STATIC_PAGES.findIndex((p) => p.path === BLOG_HUB_AFTER) + 1;
+  return [...STATIC_PAGES.slice(0, at), { ...BLOG_HUB_PAGE, updated }, ...STATIC_PAGES.slice(at), ...articles];
+}
+
+export const PAGES: SitePage[] = buildPages();
 
 export const getPage = (path: string): SitePage => {
   const page = PAGES.find((p) => p.path === path);

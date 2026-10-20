@@ -248,7 +248,7 @@ export default function CameraVision() {
 
         <div className={s.actions}>
           <Link href="/camera-vision/ar" className={`ds-btn ${s.btn}`}>
-            Try AR mode
+            Try AR mode (Pro, 3-day trial)
           </Link>
           {!isStreaming ? (
             <button

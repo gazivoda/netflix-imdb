@@ -3,6 +3,7 @@ import g from '../../../components/guide.module.css';
 import GuideLayout from '../../../components/GuideLayout';
 import { ImdbChip, RtChip } from '../../../components/ScoreChip';
 import { pageMetadata } from '../../../lib/seo';
+import { isBlogHubReady } from '../../../lib/blog/inbound';
 
 const PATH = '/compare/imdb-vs-rotten-tomatoes';
 
@@ -173,6 +174,12 @@ export default function ComparePage() {
         <li><strong>High RT, lower IMDb</strong> — a critics&apos; darling that didn&apos;t land with everyone. Worth it if you&apos;re in the mood for something ambitious.</li>
         <li><strong>Both low</strong> — usually safe to skip.</li>
       </ul>
+      {isBlogHubReady() && (
+        <p className={g.p}>
+          For both scores side by side on the films people actually watch, see{' '}
+          <a href="/blog">the 100 most-watched Netflix films rated by critics and audiences</a>.
+        </p>
+      )}
 
       <h2 className={g.h2}>How are the scores calculated?</h2>
       <p className={g.p}>
@@ -207,7 +214,7 @@ export default function ComparePage() {
           The free <strong>Rating Watch</strong> extension puts the IMDb rating and the Rotten
           Tomatoes score on Netflix title cards as you browse in Chrome, Edge or Brave, so you can
           compare audience and critics at a glance. It is not on the Chrome Web Store yet; installing
-          from GitHub takes about a minute.
+          from a zip on this site takes about a minute.
         </p>
         <a href="/install" className={g.btnPrimary}>
           Install free <span aria-hidden>→</span>

@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next';
 import { PAGES } from '../lib/pages';
 import { absoluteUrl } from '../lib/seo';
 
+// Fully static: the registry (including blog articles) is a build-time constant.
+export const dynamic = 'force-static';
+
 // lastModified comes from each page's real edit date in the registry. A
 // build-time `new Date()` on every URL is a lie crawlers learn to ignore.
 export default function sitemap(): MetadataRoute.Sitemap {
