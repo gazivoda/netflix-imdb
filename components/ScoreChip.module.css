@@ -13,4 +13,4 @@
   white-space: nowrap;
 }
 .imdb { background: var(--imdb, #f5c518); }
-.rt { background: var(--signal, var(--rt, #fa320a)); }
+.rt { background: var(--signal, var(--rt, #fa320a)); color: #fff; } /* white on #e5241b is 4.57:1; ink was 4.14:1 */

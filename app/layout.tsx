@@ -106,7 +106,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        {/* First in the body so assistive tech reaches it early. Google Analytics loads only after Accept. */}
+        {/* The skip link is the very first tab stop, before the cookie banner, so keyboard users can skip both. */}
+        <a className="skip-link" href="#main">Skip to main content</a>
+        {/* Early in the body so assistive tech reaches it. Google Analytics loads only after Accept. */}
         <ConsentBanner />
         {children}
       </body>

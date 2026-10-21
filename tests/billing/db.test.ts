@@ -1,3 +1,7 @@
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import Database from 'better-sqlite3'
 import { openUsersDb } from '../../lib/billing/db'
 import type { UserRecord } from '../../lib/billing/types'
 
@@ -39,5 +43,36 @@ describe('users db', () => {
   })
   it('returns null for an unknown id', () => {
     expect(openUsersDb(':memory:').get('nope')).toBeNull()
+  })
+})
+
+describe('last_event_at column', () => {
+  it('round-trips, and a user saved without it reads back as null', () => {
+    const db = openUsersDb(':memory:', () => NOW)
+    db.save(base())
+    expect(db.get('g1')?.last_event_at).toBeNull()
+    db.save(base({ last_event_at: '2026-10-20T11:00:00Z' }))
+    expect(db.get('g1')?.last_event_at).toBe('2026-10-20T11:00:00Z')
+  })
+  it('is added in place to a database created before the column existed, keeping its rows', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'users-db-'))
+    const file = path.join(dir, 'users.db')
+    try {
+      const old = new Database(file)
+      old.exec(`CREATE TABLE users (id TEXT PRIMARY KEY, email TEXT, name TEXT, avatar TEXT, trial_end_date TEXT NOT NULL,
+        subscription_status TEXT NOT NULL DEFAULT 'trial', subscription_plan TEXT, subscription_end_date TEXT,
+        paddle_subscription_id TEXT, paddle_customer_id TEXT, created_at TEXT NOT NULL)`)
+      old.prepare("INSERT INTO users (id, email, trial_end_date, subscription_status, created_at) VALUES ('old', 'o@x.co', ?, 'active', ?)")
+        .run(new Date(NOW).toISOString(), new Date(NOW).toISOString())
+      old.close()
+      const db = openUsersDb(file, () => NOW)
+      expect(db.get('old')).toMatchObject({ id: 'old', subscription_status: 'active', last_event_at: null })
+      db.save({ ...db.get('old')!, last_event_at: '2026-10-20T11:00:00Z' })
+      expect(db.get('old')?.last_event_at).toBe('2026-10-20T11:00:00Z')
+      db.close()
+      openUsersDb(file, () => NOW).close() // reopening an already migrated database is a no-op
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true })
+    }
   })
 })

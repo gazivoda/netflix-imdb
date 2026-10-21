@@ -6,7 +6,7 @@ import SiteHeader from './SiteHeader';
 import SiteFooter from './SiteFooter';
 import { getPage } from '../lib/pages';
 import { AUTHOR_NAME } from '../lib/content';
-import { article, breadcrumbList, faqPage, graph, nodeId, webPage } from '../lib/seo';
+import { article, breadcrumbList, faqPage, graph, nodeId, softwareApplication, webPage } from '../lib/seo';
 
 export interface Faq {
   q: string;
@@ -70,6 +70,8 @@ export default function GuideLayout({
   const trail = [{ name: 'Home', path: '/' }, ...crumbs, { name: page.label ?? page.title, path }];
   const jsonLd = graph(
     webPage(path, webPageOptions),
+    // webPage() points `about` at the app unless overridden, so the page defines it (the root layout no longer does).
+    ...(webPageOptions?.about ? [] : [softwareApplication()]),
     { ...breadcrumbList(trail), '@id': nodeId(path, 'breadcrumb') },
     articleNode ?? article(path),
     ...schema,

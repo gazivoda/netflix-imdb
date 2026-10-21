@@ -1,5 +1,5 @@
 import { RgbaImage } from '../../../lib/card-hash'
-import { createTileReader, DEFAULT_PASSES, OcrEngine, preparePass, tesseractEngine } from '../../../lib/ar/tile-reader'
+import { createTileReader, DEFAULT_PASSES, FALLBACK_PASSES, OcrEngine, preparePass, tesseractEngine } from '../../../lib/ar/tile-reader'
 import { createVocabulary } from '../../../lib/ar/title-vocab'
 
 // Passes see images of at least 360 px wide, so a 120x68 crop becomes ~360x204 and "title sized" text is >= ~30 px tall.
@@ -50,7 +50,7 @@ describe('createTileReader', () => {
   it('hands every pass its page-segmentation mode and a grey hint', async () => {
     const seen: unknown[] = []
     const engine: OcrEngine = { recognize: async (_img, hints) => { seen.push(hints); return { text: '', words: [] } } }
-    await createTileReader(engine, { passes: [{ region: [0, 0, 1, 1], scale: 3, prep: 'sharp', psm: 6 }, { region: [0, 0, 1, 1], scale: 3, prep: 'col', psm: 11 }] }).read(frame())
+    await createTileReader(engine, { fallbackPasses: [], passes: [{ region: [0, 0, 1, 1], scale: 3, prep: 'sharp', psm: 6 }, { region: [0, 0, 1, 1], scale: 3, prep: 'col', psm: 11 }] }).read(frame())
     expect(seen).toEqual([{ psm: 6, grey: true }, { psm: 11, grey: false }])
   })
 
@@ -69,6 +69,33 @@ describe('createTileReader', () => {
     const { engine: engine2 } = scripted([[word('VIRGIN', 20, 40, 88, 50)], [word('RIVER', 20, 40, 85, 50)]])
     const snapped = await createTileReader(engine2, { vocabulary, certainScore: 2, passes: DEFAULT_PASSES.slice(0, 2) }).read(frame())
     expect(snapped.candidates[0]).toBe('Virgin River')
+  })
+
+  it('tries a downscaled pass and a lower-left strip only when the main plan found nothing', async () => {
+    const widths: number[] = []
+    const engine: OcrEngine = {
+      recognize: async img => {
+        widths.push(img.width)
+        // large logo text is only legible at the small size
+        return { text: '', words: img.width <= 240 ? [word('OZARK', 0, 20, 95), word('', 0)] : [] }
+      },
+    }
+    const r = await createTileReader(engine).read(frame(400, 225))
+    expect(r.candidates[0]).toBe('Ozark')
+    expect(widths.slice(0, DEFAULT_PASSES.length).every(w => w > 240)).toBe(true)
+    expect(widths[DEFAULT_PASSES.length]).toBe(200)
+    expect(r.passes).toBeGreaterThan(DEFAULT_PASSES.length)
+  })
+
+  it('does not run the fallback passes when the plan already found a title', async () => {
+    const { engine, calls } = scripted([[word('THE', 0, 20, 97), word('GRAY', 60, 20, 97), word('MAN', 140, 20, 97)]])
+    await createTileReader(engine).read(frame())
+    expect(calls()).toBe(1)
+  })
+
+  it('has a downscaled pass and a lower-left strip in the fallback plan', () => {
+    expect(FALLBACK_PASSES.some(p => p.width && p.width <= 240)).toBe(true)
+    expect(FALLBACK_PASSES.some(p => p.region[0] === 0 && p.region[1] >= 0.4 && p.region[2] < 1)).toBe(true)
   })
 
   it('reports how long it took with the injected clock', async () => {
@@ -93,6 +120,10 @@ describe('preparePass', () => {
     expect(img.height).toBe(200)
   })
 
+  it('honours an explicit output width (the downscaled pass)', () => {
+    expect(preparePass(frame(400, 225), { region: [0, 0, 1, 1], scale: 1, width: 200, prep: 'sharp', psm: 11 }).img.width).toBe(200)
+  })
+
   it('caps the output width for big crops', () => {
     expect(preparePass(frame(900, 500), { region: [0, 0, 1, 1], scale: 4, prep: 'luma', psm: 11 }).img.width).toBe(1000)
   })
@@ -110,7 +141,7 @@ describe('tesseractEngine', () => {
     const out = await engine.recognize(img, { psm: 6 })
     await engine.recognize(img, { psm: 6 })
     await engine.recognize(img, { psm: 11 })
-    expect(params).toEqual([{ tessedit_pageseg_mode: '6' }, { tessedit_pageseg_mode: '11' }])
+    expect(params).toEqual([{ tessedit_pageseg_mode: '6', user_defined_dpi: '300', preserve_interword_spaces: '1' }, { tessedit_pageseg_mode: '11' }])
     expect(out.words).toEqual([{ text: 'DARK', confidence: 90, bbox: { x0: 1, y0: 2, x1: 3, y1: 4 } }])
     expect(out.text).toBe('DARK')
   })

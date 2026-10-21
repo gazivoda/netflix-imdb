@@ -16,20 +16,20 @@ const article: Article = { ...loadFixtureArticles().find((a) => a.slug === film.
 const PATH = `/blog/${film.slug}`;
 
 const graph = (): any[] => [
-  { '@type': 'WebPage', '@id': `${SITE}${PATH}#webpage`, url: `${SITE}${PATH}`, dateModified: '2026-10-20' },
+  { '@type': 'WebPage', '@id': `${SITE}${PATH}#webpage`, url: `${SITE}${PATH}`, dateModified: '2026-10-20T00:00:00+00:00' },
   {
     '@type': 'BlogPosting',
     '@id': `${SITE}${PATH}#article`,
     headline: 'Why critics rate it higher',
-    datePublished: '2026-10-20',
-    dateModified: '2026-10-21',
+    datePublished: '2026-10-20T00:00:00+00:00',
+    dateModified: '2026-10-21T00:00:00+00:00',
     isPartOf: { '@type': 'CollectionPage', '@id': `${SITE}/blog#webpage`, name: 'Blog', url: `${SITE}/blog` },
   },
   {
     '@type': 'Movie',
     '@id': `${SITE}${PATH}#film`,
     name: 'Harbor Lights',
-    datePublished: '2021-06-04',
+    datePublished: '2021-06-04T00:00:00+00:00',
     duration: 'PT112M',
     sameAs: 'https://www.imdb.com/title/tt0000001/',
   },
@@ -194,10 +194,16 @@ describe('checkBlogPage', () => {
     });
     it('accepts ISO date-times', () => {
       expect(jsonRules((g) => (g[1].dateModified = '2026-10-21T08:00:00.000Z'))).toEqual([]);
+      expect(jsonRules((g) => (g[1].dateModified = '2026-10-21T08:00:00+02:00'))).toEqual([]);
+    });
+    it('rejects bare dates and date-times without a time zone (Search Console wants a zone)', () => {
+      expect(jsonRules((g) => (g[1].dateModified = '2026-10-21'))).not.toHaveLength(0);
+      expect(jsonRules((g) => (g[1].dateModified = '2026-10-21T08:00:00'))).not.toHaveLength(0);
+      expect(jsonRules((g) => (g[2].datePublished = '2021-06-04'))).not.toHaveLength(0);
     });
     it('requires dateModified >= datePublished', () => {
-      expect(jsonRules((g) => (g[1].dateModified = '2026-10-19'))).toHaveLength(1);
-      expect(jsonRules((g) => (g[1].dateModified = '2026-10-20'))).toEqual([]);
+      expect(jsonRules((g) => (g[1].dateModified = '2026-10-19T00:00:00+00:00'))).toHaveLength(1);
+      expect(jsonRules((g) => (g[1].dateModified = '2026-10-20T00:00:00+00:00'))).toEqual([]);
     });
     it('also fails when the graph is a bare array or nested blocks', () => {
       const html = page().replace(

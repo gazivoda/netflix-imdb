@@ -4,7 +4,9 @@
 import { hashCard, RgbaImage } from '../card-hash'
 import { DEFAULT_RULE, IndexEntry, matchCard, MatchRule } from '../card-index'
 import { Box, CardTracker, Detection, Track } from '../card-tracker'
-import { cropToRgba } from './rectify'
+import { cropToRgba, type Pt } from './rectify'
+
+export type Quad = [Pt, Pt, Pt, Pt]
 
 export interface PipelineOptions {
   analysisWidth: number // frame is downscaled to this width before finding cards
@@ -15,7 +17,8 @@ export interface PipelineOptions {
 
 export interface ArFrameResult {
   tracks: Track[] // boxes in pixel coords of the INPUT image
-  unknownCards: { box: Box; crop: RgbaImage }[] // this frame's unmatched detections (enrolment candidates)
+  /** This frame's unmatched detections (enrolment candidates). `quad` (tl, tr, br, bl; input-image pixels) is set when the finder reports corners. */
+  unknownCards: { box: Box; crop: RgbaImage; quad?: Quad }[]
   timings: { findMs: number; hashMs: number; totalMs: number }
 }
 
@@ -55,7 +58,7 @@ export class ArPipeline {
   private tracker = new CardTracker()
   private scratch: RgbaImage | null = null
 
-  constructor(private deps: { findCards: (img: RgbaImage) => Box[] }, opts: Partial<PipelineOptions> = {}) {
+  constructor(private deps: { findCards: (img: RgbaImage) => Box[]; findCardsDetailed?: (img: RgbaImage) => { box: Box; quad?: Quad }[] }, opts: Partial<PipelineOptions> = {}) {
     this.opts = { ...DEFAULT_PIPELINE, ...opts }
   }
 
@@ -79,17 +82,18 @@ export class ArPipeline {
       const h = Math.max(1, Math.round(guideImage.height / scale))
       analysis = this.scratch = downscale(guideImage, analysisWidth, h, this.scratch)
     }
-    const boxes = this.deps.findCards(analysis)
+    const found = this.deps.findCardsDetailed ? this.deps.findCardsDetailed(analysis) : this.deps.findCards(analysis).map((box) => ({ box, quad: undefined as Quad | undefined }))
     const t1 = now()
 
     const detections: Detection[] = []
     const unknownCards: ArFrameResult['unknownCards'] = []
-    for (const b of boxes) {
+    for (const { box: b, quad: q } of found) {
       const box: Box = scale === 1 ? b : { x: b.x * scale, y: b.y * scale, w: b.w * scale, h: b.h * scale }
+      const quad = q && scale !== 1 ? (q.map((p) => ({ x: p.x * scale, y: p.y * scale })) as Quad) : q
       const crop = cropToRgba(guideImage, box, cardOutW, cardOutH)
       const m = matchCard(hashCard(crop), this.index, rule)
       detections.push({ box, match: m ? { id: m.entry.id, title: m.entry.title } : null })
-      if (!m) unknownCards.push({ box, crop })
+      if (!m) unknownCards.push(quad ? { box, crop, quad } : { box, crop })
     }
     const t2 = now()
 

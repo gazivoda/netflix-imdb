@@ -2,7 +2,8 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { PAGES } from '../../lib/pages';
 import { SITE_URL, EXTENSION_ZIP_PATH, SUPPORT_EMAIL, PRO_PRICING } from '../../lib/content';
-import { siteGraph, webPage, breadcrumbList, nodeId, jsonLdString, blogPosting, movie } from '../../lib/seo';
+import { siteGraph, softwareApplication, webPage, breadcrumbList, nodeId, jsonLdString, blogPosting, movie, isoDateTime } from '../../lib/seo';
+import { isFullDateTime } from '../../lib/html-seo';
 import { filmBySlug } from '../blog/fixtures';
 import manifest from '../../extension/manifest.json';
 
@@ -52,18 +53,9 @@ describe('siteGraph (root layout JSON-LD)', () => {
     for (const ref of refs) expect(ids).toContain(ref);
   });
 
-  it('SoftwareApplication reads its version from the extension manifest', () => {
-    const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
-    expect(app.softwareVersion).toBe(manifest.version);
-    expect(app.installUrl).toBe(`${SITE_URL}/install`);
-    expect(app.applicationSubCategory).toBeTruthy();
-    expect(app.browserRequirements).toBeTruthy();
-  });
-
-  it('only claims a license when a LICENSE file exists', () => {
-    const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
-    const hasLicense = ['LICENSE', 'LICENSE.md', 'LICENSE.txt'].some((f) => existsSync(join(__dirname, '../..', f)));
-    if (!hasLicense) expect(app).not.toHaveProperty('license');
+  it('does not define the SoftwareApplication: only product pages emit it (never the legal pages or /account)', () => {
+    expect(nodes.find((n) => n['@type'] === 'SoftwareApplication')).toBeUndefined();
+    expect(JSON.stringify(g)).not.toContain('#app');
   });
 
   it('has no GitHub link and no code-repository or open-source claim anywhere', () => {
@@ -75,33 +67,13 @@ describe('siteGraph (root layout JSON-LD)', () => {
   });
 
   it('omits sameAs on the site entities while there is nothing to list', () => {
-    for (const type of ['Person', 'Organization', 'SoftwareApplication']) {
+    for (const type of ['Person', 'Organization']) {
       expect(nodes.find((n) => n['@type'] === type)).not.toHaveProperty('sameAs');
     }
   });
 
-  it('points the author URL at /about and the download at the hosted zip', () => {
+  it('points the author URL at /about', () => {
     expect(nodes.find((n) => n['@type'] === 'Person')!.url).toBe(`${SITE_URL}/about`);
-    expect(nodes.find((n) => n['@type'] === 'SoftwareApplication')!.downloadUrl).toBe(`${SITE_URL}${EXTENSION_ZIP_PATH}`);
-  });
-
-  it('keeps the free-price facts of the extension', () => {
-    const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
-    expect(app.isAccessibleForFree).toBe(true);
-    const offers = app.offers as Array<Record<string, any>>;
-    expect(offers[0]).toMatchObject({ price: '0', priceCurrency: 'USD' });
-  });
-
-  it('lists Pro AR mode as paid offers that match the pricing page', () => {
-    const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
-    const offers = app.offers as Array<Record<string, any>>;
-    const pro = offers.slice(1);
-    expect(pro.map((o) => [o.price, o.priceCurrency, o.priceSpecification.billingDuration])).toEqual([
-      [PRO_PRICING.monthly, 'USD', 'P1M'],
-      [PRO_PRICING.yearly, 'USD', 'P1Y'],
-    ]);
-    expect(pro.every((o) => o.priceSpecification['@type'] === 'UnitPriceSpecification')).toBe(true);
-    expect((app.featureList as string[]).join(' ')).toMatch(/AR mode/);
   });
 
   it('gives the Organization a logo and a support contactPoint', () => {
@@ -119,8 +91,78 @@ describe('siteGraph (root layout JSON-LD)', () => {
   });
 });
 
+describe('softwareApplication (product pages only)', () => {
+  const off = softwareApplication(false) as Node;
+  const on = softwareApplication(true) as Node;
+
+  it('has the fixed @id the webPage nodes reference, and no undefined values', () => {
+    expect(off['@id']).toBe(`${SITE_URL}/#app`);
+    expect(findUndefined(off)).toEqual([]);
+    expect(findUndefined(on)).toEqual([]);
+    expect(JSON.parse(jsonLdString({ '@graph': [on] } as any))['@graph'][0]).toEqual(on);
+  });
+
+  it('reads its version from the extension manifest and points at the install page and hosted zip', () => {
+    expect(off.softwareVersion).toBe(manifest.version);
+    expect(off.installUrl).toBe(`${SITE_URL}/install`);
+    expect(off.downloadUrl).toBe(`${SITE_URL}${EXTENSION_ZIP_PATH}`);
+    expect(off.applicationSubCategory).toBeTruthy();
+    expect(off.browserRequirements).toBeTruthy();
+  });
+
+  it('operatingSystem is a short platform value, not a sentence', () => {
+    expect(off.operatingSystem).toBe('Chrome, Web browser');
+    expect((off.operatingSystem as string).length).toBeLessThan(40);
+    expect(off.operatingSystem).not.toMatch(/\(|runs in/i);
+  });
+
+  it('dates are full ISO 8601 date-times with a time zone', () => {
+    for (const key of ['datePublished', 'dateModified']) expect(isFullDateTime(off[key])).toBe(true);
+  });
+
+  it('Pro not on sale: free only. One free Offer, isAccessibleForFree, no price or trial anywhere', () => {
+    expect(off.isAccessibleForFree).toBe(true);
+    const offers = off.offers as Array<Record<string, any>>;
+    expect(offers).toHaveLength(1);
+    expect(offers[0]).toMatchObject({ price: '0', priceCurrency: 'USD' });
+    const json = JSON.stringify(off);
+    expect(json).not.toMatch(new RegExp(`${PRO_PRICING.monthly}|"${PRO_PRICING.yearly}"|trial|UnitPriceSpecification`));
+    expect((off.featureList as string[]).join(' ')).toMatch(/Experimental AR mode/);
+  });
+
+  it('Pro on sale: paid Offers that match the pricing page, and no isAccessibleForFree next to them', () => {
+    expect(on).not.toHaveProperty('isAccessibleForFree');
+    const offers = on.offers as Array<Record<string, any>>;
+    expect(offers[0]).toMatchObject({ price: '0', priceCurrency: 'USD' });
+    const pro = offers.slice(1);
+    expect(pro.map((o) => [o.price, o.priceCurrency, o.priceSpecification.billingDuration])).toEqual([
+      [PRO_PRICING.monthly, 'USD', 'P1M'],
+      [PRO_PRICING.yearly, 'USD', 'P1Y'],
+    ]);
+    expect(pro.every((o) => o.priceSpecification['@type'] === 'UnitPriceSpecification')).toBe(true);
+    expect((on.featureList as string[]).join(' ')).toMatch(/Pro AR mode.*3-day free trial/);
+  });
+
+  it('only claims a license when a LICENSE file exists, and makes no tracking claim', () => {
+    const hasLicense = ['LICENSE', 'LICENSE.md', 'LICENSE.txt'].some((f) => existsSync(join(__dirname, '../..', f)));
+    if (!hasLicense) expect(off).not.toHaveProperty('license');
+    expect(JSON.stringify(off)).not.toMatch(/tracking/i);
+  });
+
+  it('is emitted by home, pricing and GuideLayout pages but not by the legal pages or /account', () => {
+    const read = (f: string) => require('fs').readFileSync(join(__dirname, '../..', f), 'utf8') as string;
+    expect(read('app/page.tsx')).toMatch(/softwareApplication\(\)/);
+    expect(read('app/pricing/page.tsx')).toMatch(/softwareApplication\(\)/);
+    expect(read('components/GuideLayout.tsx')).toMatch(/softwareApplication\(\)/);
+    for (const f of ['app/privacy/page.tsx', 'app/terms/page.tsx', 'app/refund-policy/page.tsx', 'app/account/page.tsx', 'app/layout.tsx']) {
+      expect(read(f)).not.toMatch(/softwareApplication/);
+    }
+  });
+});
+
 describe('webPage', () => {
-  const site = new Set(definedIds(nodesOf(siteGraph())));
+  // webPage() points `about` at the app, which the page itself defines (GuideLayout adds softwareApplication()).
+  const site = new Set([...definedIds(nodesOf(siteGraph())), (softwareApplication(false) as Node)['@id'] as string]);
 
   it.each(PAGES.map((p) => [p.path] as const))('%s: complete node, refs resolve against site graph + page breadcrumb', (path) => {
     const page = PAGES.find((p) => p.path === path)!;
@@ -130,8 +172,9 @@ describe('webPage', () => {
 
     expect(wp['@type']).toBe('WebPage');
     expect(wp['@id']).toBe(`${SITE_URL}${path}#webpage`);
-    expect(wp.dateModified).toBe(page.updated);
-    expect(wp.datePublished).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(wp.dateModified).toBe(isoDateTime(page.updated));
+    expect(isFullDateTime(wp.dateModified)).toBe(true);
+    expect(isFullDateTime(wp.datePublished)).toBe(true);
     expect(findUndefined(wp)).toEqual([]);
 
     const ids = definedIds(pageNodes);

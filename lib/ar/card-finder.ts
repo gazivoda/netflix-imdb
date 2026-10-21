@@ -31,6 +31,11 @@ export function findCardsDetailed(img: RgbaImage): CardCandidate[] {
   return found
 }
 
+/** Boxes with their corners, for callers that want to read a tile rectified (see rectify.warpQuad). */
+export function findCardsWithQuads(img: RgbaImage): { box: Box; quad: CardCandidate['quad'] }[] {
+  return findCardsDetailed(img).map((c) => ({ box: c.box, quad: c.quad }))
+}
+
 export function findCards(img: RgbaImage): Box[] {
   return findCardsDetailed(img).map((c) => c.box)
 }

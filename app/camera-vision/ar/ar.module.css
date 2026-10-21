@@ -376,6 +376,10 @@
 }
 
 @media (max-width: 520px) {
+  /* The idle icon is centred in the stage and the guide is nearly as wide as the stage, so a label pinned inside the guide's
+     top edge landed on the icon. Stack it above the guide instead and keep the idle block clear of it. */
+  .guideLabel { top: auto; bottom: 100%; margin-bottom: 6px; }
+  .idleInner { margin-top: 40px; }
   .actions, .tools { gap: 12px; width: 100%; }
   .actions > .btn, .tools > .btn { flex: 1 1 calc(50% - 6px); min-width: 0; padding-inline: 12px; }
   .sub { font-size: 16px; }
@@ -385,3 +389,7 @@
   .guide[data-live] { animation: none; }
   .chips, .unknown { transition: none; }
 }
+
+/* camera zoom slider, shown only when the camera reports a zoom range */
+.zoom { display: inline-flex; align-items: center; gap: 0.6rem; }
+.zoom input[type='range'] { width: min(14rem, 50vw); accent-color: var(--teal); }

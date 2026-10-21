@@ -50,6 +50,8 @@ export interface PassSpec {
   region: [number, number, number, number]
   /** Upscale relative to the crop's own pixels (the output width is clamped to MIN_W..MAX_W). */
   scale: number
+  /** Output width in px, overriding scale and the MIN_W..MAX_W clamp (the downscaled fallback pass). */
+  width?: number
   prep: Prep
   psm: number
 }
@@ -66,8 +68,19 @@ export const DEFAULT_PASSES: PassSpec[] = [
   { region: [0, 0.65, 1, 0.35], scale: 3, prep: 'sharp', psm: 6 },
 ]
 
+/**
+ * Tried only when the main plan found no title at all. Large logo text can come back garbled from an upscaled pass and read fine
+ * at ~200 px wide (measured on 240-400 px cards), and Netflix title logos usually sit in the lower left of the art.
+ */
+export const FALLBACK_PASSES: PassSpec[] = [
+  { region: FULL, scale: 1, width: 200, prep: 'sharp', psm: 11 },
+  { region: [0, 0.5, 0.7, 0.5], scale: 4, prep: 'sharp2', psm: 6 },
+]
+
 export interface TileReaderOptions {
   passes: PassSpec[]
+  /** Run (in order) when `passes` produced no candidate above minScore. */
+  fallbackPasses: PassSpec[]
   /** Stop when the best candidate scores at least this AND has this many agreeing passes. */
   confidentScore: number
   confidentSupport: number
@@ -86,6 +99,7 @@ export interface TileReaderOptions {
 
 export const DEFAULT_TILE_READER: TileReaderOptions = {
   passes: DEFAULT_PASSES,
+  fallbackPasses: FALLBACK_PASSES,
   confidentScore: 0.62,
   confidentSupport: 2,
   certainScore: 0.9,
@@ -125,7 +139,7 @@ function lumaSpread(img: RgbaImage): number {
 export function preparePass(crop: RgbaImage, pass: PassSpec): { img: RgbaImage; grey: boolean } {
   const [fx, fy, fw, fh] = pass.region
   const box = { x: crop.width * fx, y: crop.height * fy, w: crop.width * fw, h: crop.height * fh }
-  const outW = Math.round(Math.min(MAX_W, Math.max(MIN_W, box.w * pass.scale)))
+  const outW = pass.width ?? Math.round(Math.min(MAX_W, Math.max(MIN_W, box.w * pass.scale)))
   const k = outW / Math.max(1, box.w)
   const big = cropToRgba(crop, box, outW, Math.max(8, Math.round(box.h * k)))
   switch (pass.prep) {
@@ -154,20 +168,24 @@ export function createTileReader(engine: OcrEngine, opts: Partial<TileReaderOpti
       let passes = 0
       let merged: TitleCandidate[] = []
       if (crop.width >= 8 && crop.height >= 8 && lumaSpread(crop) >= MIN_SPREAD) {
-        for (const pass of o.passes) {
-          const { img, grey } = preparePass(crop, pass)
-          const res = await engine.recognize(img, { psm: pass.psm, grey })
-          passes++
-          raw += (raw ? '\n' : '') + res.text.trim()
-          lists.push(candidatesFromWords(res.words as OcrWordLike[], { imageHeight: img.height, ...o.candidate }))
-          let snapped: TitleCandidate[] = []
-          if (o.vocabulary) {
-            tokens.push(...tokensFromWords(res.words as OcrWordLike[], img.height, passes - 1))
-            snapped = o.vocabulary.match(tokens, 2).map(m => ({ text: m.title, score: o.vocabBase + (1 - o.vocabBase) * m.score, confidence: 90, words: 1, support: 1 }))
+        const run = async (plan: PassSpec[]): Promise<void> => {
+          for (const pass of plan) {
+            const { img, grey } = preparePass(crop, pass)
+            const res = await engine.recognize(img, { psm: pass.psm, grey })
+            passes++
+            raw += (raw ? '\n' : '') + res.text.trim()
+            lists.push(candidatesFromWords(res.words as OcrWordLike[], { imageHeight: img.height, ...o.candidate }))
+            let snapped: TitleCandidate[] = []
+            if (o.vocabulary) {
+              tokens.push(...tokensFromWords(res.words as OcrWordLike[], img.height, passes - 1))
+              snapped = o.vocabulary.match(tokens, 2).map(m => ({ text: m.title, score: o.vocabBase + (1 - o.vocabBase) * m.score, confidence: 90, words: 1, support: 1 }))
+            }
+            merged = mergeCandidates([...lists, snapped])
+            if (isConfident(merged[0], o)) return
           }
-          merged = mergeCandidates([...lists, snapped])
-          if (isConfident(merged[0], o)) break
         }
+        await run(o.passes)
+        if (!merged.some(c => c.score >= o.minScore)) await run(o.fallbackPasses)
       }
       const top = merged.filter(c => c.score >= o.minScore).slice(0, o.maxCandidates)
       return { candidates: top.map(c => normaliseCase(c.text)), scores: top.map(c => c.score), raw, passes, ms: o.now() - t0 }
@@ -208,16 +226,25 @@ function defaultToImage(img: OcrImage, grey: boolean): unknown {
   return Buffer.from(toPnmBytes(img, grey))
 }
 
+const OCR_PARAMS = { user_defined_dpi: '300', preserve_interword_spaces: '1' }
+
 /**
  * Wraps a tesseract.js worker as an OcrEngine. Use `createWorker('eng')` once and keep it for the page's life; the page
  * segmentation mode is switched per pass only when it changes.
  */
 export function tesseractEngine(worker: TesseractWorkerLike, toImage: (img: OcrImage, grey: boolean) => unknown = defaultToImage): OcrEngine {
   let psm: number | null = null
+  let configured = false
   return {
     async recognize(img, hints = {}) {
       const want = hints.psm ?? 11
-      if (psm !== want) { await worker.setParameters({ tessedit_pageseg_mode: String(want) }); psm = want }
+      if (psm !== want || !configured) {
+        // The crops are rasters with no resolution tag: say what Tesseract should assume (otherwise it estimates, and warns), and
+        // keep the spaces between words so a logo's words are not glued together.
+        await worker.setParameters({ tessedit_pageseg_mode: String(want), ...(configured ? {} : OCR_PARAMS) })
+        psm = want
+        configured = true
+      }
       const { data } = await worker.recognize(toImage(img, !!hints.grey), {}, { blocks: true })
       return { text: data.text ?? '', words: wordsFromBlocks(data.blocks) }
     },

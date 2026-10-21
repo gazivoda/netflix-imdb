@@ -6,9 +6,11 @@ Order of work: deploy first with billing off (the paywall is off by default, see
 
 ## Paywall stays off until configured
 
-Deploying this code before the variables below exist is safe. The paywall is off until billing is fully configured, so AR mode (`/camera-vision/ar`) stays free and nobody is sent to a sign-in that cannot work. `/pricing` and `/account` show "Subscriptions open soon. AR mode is free to use until then." instead of sign-in and checkout buttons.
+Deploying this code before the variables below exist is safe. The paywall is off until billing is fully configured, so AR mode (`/camera-vision/ar`) stays free and nobody is sent to a sign-in that cannot work. `/account` shows "Subscriptions open soon. AR mode is free to use until then." instead of sign-in and checkout buttons. `/pricing` still shows the plan prices ($2.99 a month, $29 a year) with a "Coming soon" badge and disabled Monthly and Yearly buttons, so Paddle's reviewer can see what will be sold; it makes no trial or refund promise until billing is on.
 
-The server checks this on every request to `GET /api/user/me` (runtime variables are read at request time; the `NEXT_PUBLIC_*` ones were fixed when the app was built). The paywall switches on automatically, with no code change, once all seven are true:
+**The paywall is enforced on the server.** `app/camera-vision/ar/layout.tsx` reads the `rw_session` cookie, loads the user from `users.db` and applies the access rules before it renders the AR page. A visitor who is not entitled receives only the sign-in / paywall card, never the AR page. If the account lookup fails (database locked or missing) the gate is closed, not open. With billing off the layout renders the AR page for everyone. Because the layout reads cookies, `/camera-vision/ar` is rendered per request.
+
+The server checks this on every request to `GET /api/user/me` and in the AR layout (runtime variables are read at request time; the `NEXT_PUBLIC_*` ones were fixed when the app was built). The paywall switches on automatically, with no code change, once all seven are true:
 
 1. Google OAuth is configured: `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are both set.
 2. The session secret is valid: `JWT_SECRET` is set and at least 32 characters.
@@ -21,6 +23,18 @@ The server checks this on every request to `GET /api/user/me` (runtime variables
 While billing is off, `GET /api/user/me` does not open the users database at all. Once billing is on, a database that cannot be opened makes it answer 503 `{"error":"Service unavailable"}` (the paywall never fails open for a configured deployment).
 
 If any one is missing or invalid, AR mode stays free. A restart is enough for runtime variables; the `NEXT_PUBLIC_*` values (client token and the two price ids) are build-time values and need a rebuild.
+
+**The same three `NEXT_PUBLIC_*` values also decide the wording of the static pages.** Meta descriptions (`/pricing`, `/terms`, `/refund-policy`, `/camera-vision/ar`), the home FAQ, `llms.txt`, `llms-full.txt` and the SoftwareApplication JSON-LD mention Pro prices, the free trial and the refund window only when all three are present at **build** time (`lib/billing/flag.ts`). Without them those pages say AR mode is free to try and offer nothing for sale. So tick **Available at Buildtime** for `NEXT_PUBLIC_PADDLE_CLIENT_TOKEN`, `NEXT_PUBLIC_PADDLE_PRICE_ID_MONTHLY` and `NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY`, and **rebuild** (Redeploy) when you turn billing on; a restart leaves the prerendered pages describing Pro as not on sale.
+
+### Pre-launch check
+
+Before turning billing on, run the readiness check in a shell that has the production values exported (it never reads `.env` files and never prints a value):
+
+```sh
+npm run billing:readiness
+```
+
+It exits 1 and lists blockers when billing is on for the build and something is missing: `LEGAL_ADDRESS` and `GOVERNING_LAW` are still empty in `lib/content.ts` (both are marked `TODO(pre-launch)`; `LEGAL_ENTITY` is "Igor Gazivoda"), the Google, JWT, Paddle or OMDb values are missing, or `BILLING_DATA_PERSISTENT` is not `true`. While billing is off it reports nothing as blocking. Fill in the two legal constants before the first live sale: Paddle's review and EU consumer law both want a named seller with an address.
 
 **How to verify.** Open `https://rating.watch/api/user/me` (or run `curl -s https://rating.watch/api/user/me`). The JSON must contain `"billingEnabled":true` once everything is set. If it says `"billingEnabled":false`, one of the seven requirements is missing; the response never says which and never shows a secret, so check the seven items above in Coolify. Also open `/pricing` and confirm the Monthly and Yearly buttons appear (they only exist when the build-time ids were baked in). Do this check before announcing paid plans, and again after any change to the variables.
 
@@ -43,9 +57,15 @@ Product and price ids are not secrets. Set them as `NEXT_PUBLIC_PADDLE_PRICE_ID_
 3. **API key.** Developer Tools > Authentication > API keys: create a key with read access to subscriptions and transactions and write access to customer portal sessions, and set it as `PADDLE_API_KEY`. It is a secret and server only.
 4. **Webhook destination.** Developer Tools > Notifications > New destination:
    - URL: `https://rating.watch/api/paddle/webhook`
-   - Events: `subscription.created`, `subscription.activated`, `subscription.updated`, `subscription.paused`, `subscription.resumed`, `subscription.canceled`, `transaction.payment_failed`
+   - Events: `subscription.created`, `subscription.activated`, `subscription.updated`, `subscription.paused`, `subscription.resumed`, `subscription.canceled`, `transaction.payment_failed`, `adjustment.created`, `adjustment.updated`
    - Copy the destination's secret key into `PADDLE_WEBHOOK_SECRET`.
    Requests older than 5 minutes or with a bad signature are rejected with 401.
+
+   How events are applied (`lib/billing/handlers.ts`, `paddle.ts`):
+   - **Who an event belongs to.** By the subscription id or customer id already stored for a user. Only the first event of a new purchase has neither, and then it binds through `custom_data.userId` **only if** the Paddle customer on the event has the same email as that user's Google-verified email (one Paddle API lookup). The checkout email alone never binds anyone, and an event naming an unknown user is acknowledged and ignored.
+   - **Order.** Each applied event stores its `occurred_at` as `last_event_at` on the user (a column added automatically to an existing `users.db`; no manual migration). An event older than the last applied one is ignored. A `subscription.canceled` that arrives before `subscription.created` is kept: it binds the subscription as cancelled, so the late `created` cannot re-activate it.
+   - **Refunds and chargebacks.** An approved `adjustment.created` / `adjustment.updated` that is a chargeback or a full refund on the user's subscription ends their access (status cancelled). Partial refunds and pending, rejected or reversed adjustments do nothing. It is matched through the subscription id only. Add both adjustment events to the destination or this protection never fires.
+   - **Paused.** A paused subscription keeps AR access only until the end of the period it already paid for (`subscription_end_date`) plus one day; without a future end date it is treated as not subscribed.
 5. **Website approval.** Paddle will not approve the domain for live checkout until these pages are publicly reachable: `/pricing`, `/terms`, `/refund-policy`. Deploy them first, then submit the domain under Checkout > Website approval. Until it is approved, use the sandbox for all purchase testing and do not complete a live purchase.
 
 ## 2. Google OAuth
@@ -70,6 +90,8 @@ Do these in this order. Names in `code` are the exact variable names.
 3. **Runtime variables** (normal environment variables, NOT build variables):
    - `APP_URL=https://rating.watch`
    - `OMDB_API_KEY`: your OMDb key. Without it the camera demo and AR mode cannot look up ratings, and `/api/ratings` answers 503 `{"error":"ratings unavailable"}` and logs a single error line at the first request. Use a different key from the one bundled in the Chrome extension.
+   - `OMDB_DAILY_BUDGET` (optional): the most OMDb calls the server makes per UTC day. Default **900**, which leaves a margin under the free key's 1,000 requests a day (every title can cost up to three calls, and 20 titles fit in one request). When the budget is spent `/api/ratings` serves only what it has cached until UTC midnight: titles never looked up come back as `{"found":false,"unavailable":true}`, and if nothing in a request can be answered the response is 503 with `Retry-After`. The counter lives in memory, so a restart resets it. Each OMDb call also has an 8 second timeout. Raise the number only if your OMDb key has a higher limit.
+   - Rate limiting trusts the **last** `X-Forwarded-For` entry, the one the Coolify proxy (Traefik) appends, because anything to its left is client-supplied. Keep Traefik as the only proxy in front of the app; a second proxy that also appends would put all visitors in one bucket (stricter, never looser).
    - `PADDLE_PRICE_IDS` (the monthly and yearly price ids, comma-separated; required, see "Shared Paddle account" above)
    - `JWT_SECRET` (generate with `openssl rand -hex 32`, 32 or more characters; changing it signs everyone out)
    - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET`, `PADDLE_ENV`
@@ -111,6 +133,8 @@ JWT_SECRET=$(openssl rand -hex 32) USERS_DB_PATH=/tmp/rw-dev.db node scripts/dev
 Statuses: `trial`, `active`, `expired`, `cancelled`. Run the dev server with the same `JWT_SECRET` and `USERS_DB_PATH`, then paste the printed `rw_session=...` value into the browser (`document.cookie = '...; path=/'`). The script prints only the cookie and the resulting user state, never the secret.
 
 ## 6. Manual test checklist
+
+Also check: `GET /favicon.ico` returns 200; with billing on, `curl -s -o /dev/null -w '%{http_code}' https://rating.watch/camera-vision/ar` returns the sign-in card HTML (search it for "Sign in with Google") and not the AR tool; `POST /api/paddle/verify-subscription` answers 429 after a burst of calls from one account (5 burst, then 2 a minute; 30 burst, then 15 a minute for all users together).
 
 Run against the sandbox first (`test_` token, sandbox API key, sandbox webhook destination), then repeat the signed-in checks on production without completing a payment until Paddle approves the domain.
 

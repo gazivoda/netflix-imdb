@@ -25,7 +25,7 @@ describe('tileLabel', () => {
     const full = statuses.map(s => tileLabel(s, ctx).full)
     expect(new Set(full).size).toBe(statuses.length)
     for (const s of statuses) expect(tileLabel(s, ctx).short.length).toBeLessThanOrEqual(8)
-    expect(tileLabel('no-text', ctx).full).toBe('no text found')
+    expect(tileLabel('no-text', ctx).full).toBe('no readable title')
     expect(tileLabel('not-in-catalogue', ctx).full).toBe('not in catalogue')
   })
 
@@ -34,7 +34,7 @@ describe('tileLabel', () => {
     expect(tileLabel('waiting', { auto: true, ocrReady: false }).full).toBe('loading reader…')
     expect(tileLabel('waiting', ctx).full).toBe('waiting')
     // a finished verdict is never overridden by reader state
-    expect(tileLabel('no-text', { auto: false, ocrReady: false }).full).toBe('no text found')
+    expect(tileLabel('no-text', { auto: false, ocrReady: false }).full).toBe('no readable title')
   })
 })
 
@@ -119,6 +119,17 @@ describe('buildDebugReport', () => {
     const r = buildDebugReport(base())
     expect(r.tiles[0].box).toEqual({ x: 10, y: 20, w: 100, h: 56 })
     expect(r.tiles[0].boxImage).toEqual({ x: 20, y: 40, w: 200, h: 112 })
+  })
+
+  it('records the native camera pixels of every tile and whether they are enough to read', () => {
+    // the saved PNG is the video region itself, so boxImage is in native camera pixels
+    const r = buildDebugReport(base())
+    expect(r.tiles[0]).toMatchObject({ nativeWidth: 200, nativeHeight: 112 })
+    expect(r.tiles.every(t => t.raw !== undefined && t.candidates !== undefined)).toBe(true)
+    expect(r.pixels.minReadable).toBe(220)
+    expect(r.pixels.medianTileWidth).toBe(r.tiles.map(t => t.nativeWidth).sort((a, b) => a - b)[1])
+    expect(r.pixels.tooSmall).toBe(r.pixels.medianTileWidth < 220)
+    expect(buildDebugReport({ ...base(), tiles: [] }).pixels).toEqual({ medianTileWidth: 0, minReadable: 220, tooSmall: false })
   })
 
   it('always serialises: non-finite numbers become null/0 and long text is clipped', () => {

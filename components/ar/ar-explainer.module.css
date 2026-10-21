@@ -1,0 +1,5 @@
+/* Explanatory copy under the AR tool and in its sign-in state. Tokens come from globals.css. */
+.explainer { display: grid; gap: 24px; max-width: 68ch; margin: 32px 0 0; font-family: var(--body); font-size: 16px; line-height: 1.6; color: var(--ink); }
+.explainer p { margin: 0; }
+.h2 { font-size: clamp(22px, 4vw, 30px); margin: 0 0 8px; }
+.list { margin: 0; padding-left: 22px; display: grid; gap: 6px; }

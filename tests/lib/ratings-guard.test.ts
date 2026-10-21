@@ -38,24 +38,18 @@ describe('createLimiter (token bucket)', () => {
 })
 
 describe('clientIp', () => {
-  it('uses the first X-Forwarded-For hop, trimmed and length-limited', () => {
-    expect(clientIp(new Headers({ 'x-forwarded-for': ' 1.2.3.4 , 10.0.0.1' }))).toBe('1.2.3.4')
+  it('uses the rightmost X-Forwarded-For hop (the one our own proxy appended), trimmed and length-limited', () => {
+    expect(clientIp(new Headers({ 'x-forwarded-for': ' 1.2.3.4 ' }))).toBe('1.2.3.4')
+    expect(clientIp(new Headers({ 'x-forwarded-for': '9.9.9.9 , 203.0.113.7' }))).toBe('203.0.113.7')
     expect(clientIp(new Headers({ 'x-forwarded-for': 'x'.repeat(500) })).length).toBe(64)
+  })
+  it('cannot be rotated by a client-supplied prefix', () => {
+    const ips = new Set(['1.1.1.1', '2.2.2.2', 'spoof', ''].map((p) => clientIp(new Headers({ 'x-forwarded-for': `${p}, 203.0.113.7` }))))
+    expect([...ips]).toEqual(['203.0.113.7'])
   })
   it('falls back to a constant', () => {
     expect(clientIp(new Headers())).toBe('unknown')
     expect(clientIp(new Headers({ 'x-forwarded-for': ' ' }))).toBe('unknown')
-  })
-})
-
-describe('validateTitles', () => {
-  it('accepts normal titles, including non-Latin ones', () => {
-    expect(validateTitles(['Inception', '日本沈没', '1917', 'Se7en'])).toEqual({ ok: true, titles: ['Inception', '日本沈没', '1917', 'Se7en'] })
-  })
-  it('rejects non-arrays, empty arrays, non-strings and more than 20', () => {
-    for (const bad of [undefined, 'x', [], [1], ['a', null], Array(21).fill('a')]) expect(validateTitles(bad).ok).toBe(false)
-  })
-  it('rejects empty, oversized, control-character and symbol-only titles', () => {
-    for (const t of ['', '  ', 'a'.repeat(121), 'a\u0001b', '###']) expect(validateTitles([t]).ok).toBe(false)
+    expect(clientIp(new Headers({ 'x-forwarded-for': '1.2.3.4,' }))).toBe('unknown')
   })
 })

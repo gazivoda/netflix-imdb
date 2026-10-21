@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { FAQS, PRO_PRICING } from '../../lib/content'
+import { buildFaqs, FAQS, PRO_PRICING } from '../../lib/content'
 import { PRICES } from '../../lib/billing/client'
 
 const ROOT = path.join(__dirname, '..', '..')
@@ -20,12 +20,26 @@ describe('copy stays accurate with a paid tier', () => {
     expect(hits(/no paid tier/i)).toEqual([])
     expect(hits(/no subscription/i)).toEqual([])
   })
-  it('the "Is Rating Watch free?" answer separates the free extension from Pro AR mode', () => {
-    const answer = FAQS.find((f) => f.q === 'Is Rating Watch free?')?.a ?? ''
+  const free = (onSale: boolean) => buildFaqs(onSale).find((f) => f.q === 'Is Rating Watch free?')?.a ?? ''
+  it('the "Is Rating Watch free?" answer separates the free extension from Pro AR mode once Pro is on sale', () => {
+    const answer = free(true)
     expect(answer).toMatch(/extension is free/i)
     expect(answer).toMatch(/Pro/)
     expect(answer).toMatch(/\$2\.99/)
     expect(answer).toMatch(/\$29/)
+    expect(answer).toMatch(/3-day free trial/)
+  })
+  it('while Pro is not on sale the FAQ promises no price, trial or Pro plan, anywhere in the answers', () => {
+    const answer = free(false)
+    expect(answer).toMatch(/extension is free/i)
+    expect(answer).toMatch(/free to try/i)
+    expect(answer).toMatch(/not on sale yet/i)
+    const all = buildFaqs(false).map((f) => `${f.q} ${f.a}`).join('\n')
+    expect(all).not.toMatch(/\$\d|trial|\bPro\b|cancel any time/i)
+    expect(buildFaqs(true).map((f) => f.a).join('\n')).toMatch(/Pro AR mode/)
+  })
+  it('FAQS is the variant for this build (the build-time flag), with no hard-coded price outside PRO_PRICING', () => {
+    expect(FAQS).toEqual(buildFaqs(require('../../lib/billing/flag').PRO_ON_SALE))
   })
   it('PRO_PRICING (FAQ, JSON-LD, llms) equals the prices the pricing page and checkout use', () => {
     expect(PRO_PRICING.monthly).toBe(PRICES.monthly.amount)

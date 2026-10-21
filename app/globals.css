@@ -52,6 +52,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* The cookie banner publishes its height as --consent-h; a focused or anchored element scrolls above it, not under it. */
+  scroll-padding-bottom: var(--consent-h, 0px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -85,6 +87,15 @@ body {
 
 a {
   color: inherit;
+}
+
+/* WCAG 2.5.8 target size (24px): links inside running text get vertical padding. On an inline box padding does not
+   change the line height, so nothing moves; it only grows the area the pointer and the bounding box see. Class rules
+   such as .ds-btn and the banner link set their own padding and win on specificity. */
+p a,
+li a,
+dd a {
+  padding-block: 5px;
 }
 
 :focus-visible {
@@ -197,7 +208,10 @@ a {
   box-shadow: 0 0 0 var(--ink);
 }
 
-/* Primary CTA variant: add alongside .ds-btn (<a class="ds-btn ds-btn-signal">). */
+/* Primary CTA variant: add alongside .ds-btn (<a class="ds-btn ds-btn-signal">).
+   Two classes so the white text wins over any later module rule that sets a colour on the button
+   (ink on --signal is only 4.14:1; white is 4.57:1). */
+.ds-btn.ds-btn-signal,
 .ds-btn-signal {
   background: var(--signal);
   color: #fff;

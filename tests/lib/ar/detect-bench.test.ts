@@ -82,7 +82,7 @@ maybe('tile detection on the realistic benchmark', () => {
         (['clean', 'mild', 'medium', 'severe'] as BenchLevel[])
           .map((level) => {
             const all = cellsOf(level)
-            return `  ${level.padEnd(6)} all ${fmt(all)}   ` + (['landscape', 'caption', 'top10'] as Layout[]).map((l) => `${l} ${fmt(byCell.get(`${level}/${l}`)!)}`).join('   ')
+            return `  ${level.padEnd(6)} all ${fmt(all)}   ` + (['landscape', 'caption', 'top10', 'plain'] as Layout[]).map((l) => `${l} ${fmt(byCell.get(`${level}/${l}`) ?? emptyTotals())}`).join('   ')
           })
           .join('\n') +
         `\n  ${(totalMs / frames).toFixed(1)} ms per frame`,

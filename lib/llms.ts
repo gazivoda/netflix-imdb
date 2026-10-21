@@ -4,6 +4,7 @@
 // does not use it. It is cheap to generate, so we keep it accurate and small.
 
 import { SITE_URL, AUTHOR_NAME, FAQS, PRO_PRICING } from './content';
+import { PRO_ON_SALE } from './billing/flag';
 import { absoluteUrl } from './seo';
 import manifest from '../extension/manifest.json';
 import { PAGES, type SitePage } from './pages';
@@ -15,11 +16,15 @@ const SUMMARY =
   'Rating Watch is a free Chrome extension that shows IMDb ratings, and Rotten Tomatoes scores where available, on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
 
 // Verified against extension/ (manifest.json, content.js, background.js).
-const KEY_FACTS = [
+// The Pro line depends on the build-time flag (lib/billing/flag.ts): AI tools quote this file, so it must not
+// advertise a price or trial while Pro cannot be bought.
+export const keyFactsFor = (proOnSale: boolean): string[] => [
   'Shows the IMDb rating (out of 10) and, where OMDb has one, the Rotten Tomatoes percentage in a badge at the top-right of each title card on www.netflix.com. OMDb usually has no Rotten Tomatoes score for TV series, so series cards mostly show IMDb only.',
   'Ratings are fetched from OMDb by the extension background worker. It works out of the box on a shared daily OMDb allowance that can run out on busy days; users can add a free personal OMDb key on the extension options page.',
   `Manifest V3 extension, version ${manifest.version}. Permissions are limited to netflix.com and omdbapi.com.`,
-  `The Chrome extension is free and needs no account. AR mode is Pro ($${PRO_PRICING.monthly}/month or $${PRO_PRICING.yearly}/year, ${PRO_PRICING.trialDays}-day free trial); see /pricing.`,
+  proOnSale
+    ? `The Chrome extension is free and needs no account. AR mode is Pro ($${PRO_PRICING.monthly}/month or $${PRO_PRICING.yearly}/year, ${PRO_PRICING.trialDays}-day free trial); see /pricing.`
+    : 'The Chrome extension is free and needs no account. AR mode, which shows ratings over a TV screen through a phone camera, is experimental and free to try for now; paid plans are not on sale yet.',
   'Not on the Chrome Web Store yet: install by downloading the zip from this site and using "Load unpacked" in chrome://extensions.',
   'Works in Chromium browsers (Chrome, Edge, Brave). Not tested in Firefox or Safari.',
   `Author: ${AUTHOR_NAME}.`,
@@ -52,7 +57,7 @@ const entry = (p: SitePage): string =>
 
 const header = (): string[] => [`# ${SITE_NAME}`, '', `> ${SUMMARY}`, ''];
 
-const keyFacts = (): string[] => ['## Key facts', '', ...KEY_FACTS.map((f) => `- ${f}`), ''];
+const keyFacts = (proOnSale: boolean): string[] => ['## Key facts', '', ...keyFactsFor(proOnSale).map((f) => `- ${f}`), ''];
 
 export const DATASET_PATH = '/data/netflix-top-100.json';
 
@@ -87,8 +92,8 @@ const filmAnalysesSection = (pages: SitePage[]): string[] => {
   ];
 };
 
-export function buildLlmsTxt(pages: SitePage[] = PAGES): string {
-  const lines = [...header(), ...keyFacts()];
+export function buildLlmsTxt(pages: SitePage[] = PAGES, proOnSale: boolean = PRO_ON_SALE): string {
+  const lines = [...header(), ...keyFacts(proOnSale)];
   for (const s of sectionsFor(pages)) {
     lines.push(`## ${s.heading}`, '', ...s.pages.map(entry), '');
   }
@@ -99,12 +104,13 @@ export function buildLlmsTxt(pages: SitePage[] = PAGES): string {
 export function buildLlmsFullTxt(
   pages: SitePage[] = PAGES,
   faqs: ReadonlyArray<{ q: string; a: string }> = FAQS,
+  proOnSale: boolean = PRO_ON_SALE,
 ): string {
   const lines = [
     ...header(),
     `Full version of ${url('/llms.txt')}. Site: ${SITE_URL}`,
     '',
-    ...keyFacts(),
+    ...keyFacts(proOnSale),
   ];
   for (const s of sectionsFor(pages)) {
     lines.push(`## ${s.heading}`, '');

@@ -1,4 +1,5 @@
-import { lookupTitle, searchTitle } from '../../lib/omdb'
+import { lookupTitle, OMDB_TIMEOUT_MS, searchTitle } from '../../lib/omdb'
+import { resetOmdbBudgetForTests } from '../../lib/omdb-budget'
 
 const mockFetch = jest.fn()
 global.fetch = mockFetch as typeof fetch
@@ -272,5 +273,35 @@ describe('lookupTitle', () => {
 
     const result = await lookupTitle('Inception')
     expect(result.status === 'found' && result.title.imdbId).toBe('tt1375666')
+  })
+})
+
+describe('OMDb request timeout and budget', () => {
+  beforeEach(() => { mockFetch.mockReset(); resetOmdbBudgetForTests() })
+  afterEach(() => resetOmdbBudgetForTests())
+
+  it('passes an AbortSignal with a timeout on every request', async () => {
+    mockFetch.mockResolvedValue({ ok: true, json: async () => ({ Response: 'False', Error: 'Movie not found!' }) })
+    await lookupTitle('Inception')
+    const init = mockFetch.mock.calls[0][1] as RequestInit
+    expect(init.signal).toBeInstanceOf(AbortSignal)
+    expect(OMDB_TIMEOUT_MS).toBeLessThanOrEqual(10_000)
+  })
+
+  it('treats a request that times out as an error (not "not found"), so it is never cached', async () => {
+    mockFetch.mockRejectedValue(Object.assign(new Error('timed out'), { name: 'TimeoutError' }))
+    expect(await lookupTitle('Inception')).toEqual({ status: 'error' })
+  })
+
+  it('does not call OMDb once the daily budget is spent', async () => {
+    process.env.OMDB_DAILY_BUDGET = '1'
+    try {
+      mockFetch.mockResolvedValue({ ok: true, json: async () => ({ Response: 'False', Error: 'Movie not found!' }) })
+      expect(await lookupTitle('One')).toEqual({ status: 'not_found' })
+      expect(await lookupTitle('Two')).toEqual({ status: 'error' })
+      expect(mockFetch).toHaveBeenCalledTimes(1)
+    } finally {
+      delete process.env.OMDB_DAILY_BUDGET
+    }
   })
 })

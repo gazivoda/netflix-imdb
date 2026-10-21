@@ -9,8 +9,8 @@
  *
  * Pipeline under test = what app/camera-vision/ar/page.tsx does: the frame is downsampled to 640x360, findCards finds boxes,
  * and for each box createTileReader (over a tesseract worker) reads the tile's HIGH-RESOLUTION pixels, then AutoLabeler validates
- * the candidates against a catalogue. The catalogue is a local stub (closest title among the whole poster set) instead of the
- * network; it has no vote counts, so the page's minVotes guard is not exercised. AR_BENCH_OLD=1 runs the original reader instead
+ * the candidates against a catalogue. The catalogue is a local stub instead of the network and, like OMDb ?t=, it is EXACT (same title
+ * ignoring case, punctuation and a leading article): an OCR slip is "not found" unless something repairs it first. AR_BENCH_OLD=1 runs the original reader instead
  * (3x upscale, Otsu pass then plain, PSM 11, extractMovieTitles) for comparison. It prints numbers and does not assert on them.
  */
 import { createWorker, Worker } from 'tesseract.js'
@@ -172,6 +172,7 @@ describe('realistic benchmark scoring', () => {
     const table = formatTable(rows)
     expect(table).toContain('mild   top10')
     expect(table).toContain('mild   ALL')
-    expect(LEVELS.length + LAYOUTS.length).toBe(7)
+    expect(LEVELS.length + LAYOUTS.length).toBe(8)
+    expect(LAYOUTS).toContain('plain') // the honest class: no caption, no overlay text, some tiles without a legible title
   })
 })

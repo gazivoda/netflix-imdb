@@ -2,6 +2,7 @@
 // "Guides" links and (later) llms.txt all read from here, so a new page is
 // listed everywhere by adding exactly one entry — no page can be an orphan.
 
+import { PRO_ON_SALE } from './billing/flag';
 import { BLOG_ARTICLE_PAGES, BLOG_HUB, type BlogArticlePage, type BlogHubState } from './blog/registry.generated';
 
 export type ChangeFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -83,7 +84,11 @@ export const BLOG_HUB_PAGE: SitePage = {
 /** Static pages; the hub is inserted after this path when ready, so the footer order is stable. */
 const BLOG_HUB_AFTER = '/research/imdb-vs-rotten-tomatoes-gap';
 
-export const STATIC_PAGES: SitePage[] = [
+/**
+ * Static pages. Prerendered text must not offer what cannot be bought: while Pro is not on sale (build-time flag,
+ * lib/billing/flag.ts) the /pricing and AR descriptions say AR mode is free to try and promise no trial, price or refund.
+ */
+export const staticPages = (proOnSale: boolean): SitePage[] => [
   {
     path: '/',
     title: HOME_TITLE,
@@ -214,8 +219,9 @@ export const STATIC_PAGES: SitePage[] = [
   {
     path: '/camera-vision/ar',
     title: 'AR Ratings: Netflix Scores Over the TV Screen',
-    description:
-      'AR mode for Rating Watch Pro: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. 3-day free trial.',
+    description: proOnSale
+      ? 'AR mode for Rating Watch Pro: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. 3-day free trial.'
+      : 'AR mode for Rating Watch: point your phone camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. Free to try for now.',
     published: '2026-10-20',
     updated: PAGE_UPDATED['/camera-vision/ar'],
     changeFrequency: 'monthly',
@@ -236,9 +242,10 @@ export const STATIC_PAGES: SitePage[] = [
   },
   {
     path: '/pricing',
-    title: 'Pricing: Free Extension and Pro AR Mode',
-    description:
-      'Rating Watch is free as a Chrome extension. Pro adds AR mode for $2.99 a month or $29 a year, with a 3-day free trial and a 14-day refund window.',
+    title: proOnSale ? 'Pricing: Free Extension and Pro AR Mode' : 'Pricing: Free Extension and AR Mode',
+    description: proOnSale
+      ? 'Rating Watch is free as a Chrome extension. Pro adds AR mode for $2.99 a month or $29 a year, with a 3-day free trial and a 14-day refund window.'
+      : 'Rating Watch is free as a Chrome extension. AR mode, which shows ratings over a TV via your phone camera, is free to try while paid plans are not on sale.',
     published: '2026-10-20',
     updated: PAGE_UPDATED['/pricing'],
     changeFrequency: 'monthly',
@@ -250,8 +257,9 @@ export const STATIC_PAGES: SitePage[] = [
   {
     path: '/terms',
     title: 'Terms of Service',
-    description:
-      'The terms for using Rating Watch: the free Chrome extension, the Pro AR mode subscription, billing through Paddle, cancellation and acceptable use.',
+    description: proOnSale
+      ? 'The terms for using Rating Watch: the free Chrome extension, the Pro AR mode subscription, billing through Paddle, cancellation and acceptable use.'
+      : 'The terms for using Rating Watch: the free Chrome extension, AR mode, billing through Paddle once paid plans are on sale, cancellation and acceptable use.',
     published: '2026-10-20',
     updated: PAGE_UPDATED['/terms'],
     changeFrequency: 'yearly',
@@ -263,8 +271,9 @@ export const STATIC_PAGES: SitePage[] = [
   {
     path: '/refund-policy',
     title: 'Refund Policy',
-    description:
-      'Request a full refund within 14 days of your first Rating Watch Pro payment. How to ask, how long it takes and what happens to your access afterwards.',
+    description: proOnSale
+      ? 'Request a full refund within 14 days of your first Rating Watch Pro payment. How to ask, how long it takes and what happens to your access afterwards.'
+      : 'How refunds will work for paid Rating Watch plans once they are on sale: how to ask, how long it takes and what happens to your access afterwards.',
     published: '2026-10-20',
     updated: PAGE_UPDATED['/refund-policy'],
     changeFrequency: 'yearly',
@@ -274,6 +283,8 @@ export const STATIC_PAGES: SitePage[] = [
     ogType: 'website',
   },
 ];
+
+export const STATIC_PAGES: SitePage[] = staticPages(PRO_ON_SALE);
 
 /** Blog film analyses from the generated registry (priority 0.5; no group, so not in nav or llms.txt sections). */
 export function blogPages(entries: readonly BlogArticlePage[] = BLOG_ARTICLE_PAGES): SitePage[] {

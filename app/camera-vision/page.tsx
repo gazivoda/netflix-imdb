@@ -6,8 +6,7 @@ import { createWorker } from 'tesseract.js'
 import { extractMovieTitles, wordsFromBlocks } from '@/lib/extract-titles'
 import { binarizeForOcr } from '@/lib/ocr-preprocess'
 import { ImdbChip, RtChip } from '@/components/ScoreChip'
-import { useAccount } from '@/components/billing/useAccount'
-import { arLinkLabel, billingView } from '@/components/billing/pricing-state'
+import { AR_LINK_LABEL } from '@/components/billing/pricing-state'
 import s from './camera.module.css'
 
 interface DetectedContent {
@@ -56,7 +55,9 @@ export default function CameraVision() {
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [ocrFailureCount, setOcrFailureCount] = useState(0)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const account = useAccount()
+  // Status counters are for tuning, not for visitors: they show only on /camera-vision?debug=1.
+  const [debugAllowed, setDebugAllowed] = useState(false)
+  useEffect(() => { setDebugAllowed(new URLSearchParams(window.location.search).get('debug') === '1') }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -252,7 +253,7 @@ export default function CameraVision() {
 
         <div className={s.actions}>
           <Link href="/camera-vision/ar" className={`ds-btn ${s.btn}`}>
-            {arLinkLabel(billingView(account))}
+            {AR_LINK_LABEL}
           </Link>
           {!isStreaming ? (
             <button
@@ -347,6 +348,43 @@ export default function CameraVision() {
         )}
       </div>
 
+      {/* Server-rendered explanation: what the demo does, how to use it, privacy, requirements. */}
+      <div className={`ds-card ${s.panel}`}>
+        <section aria-labelledby="cv-what">
+          <h2 id="cv-what" className={`ds-display ${s.aboutTitle}`}>What Camera Vision does</h2>
+          <p className={s.aboutBody}>
+            Camera Vision is a demo of the text reading behind Rating Watch AR mode. It reads text from your camera feed, picks out
+            what looks like a movie or series title, and shows the IMDb and Rotten Tomatoes scores for it over the live view.
+          </p>
+        </section>
+        <section aria-labelledby="cv-how">
+          <h2 id="cv-how" className={`ds-display ${s.aboutTitle}`}>How to use it</h2>
+          <ol className={s.aboutList}>
+            <li>Press Start Camera and allow camera access when your browser asks.</li>
+            <li>Point the camera at a screen, poster or printed text with a clear title and hold it steady for a few seconds.</li>
+            <li>Detected titles appear over the video with their ratings. Use Hide Overlays to remove them.</li>
+          </ol>
+          <p className={s.aboutBody}>
+            For a TV showing the Netflix browse screen, with a frame to line up and ratings on every card, use <Link href="/camera-vision/ar">AR Ratings</Link>.
+          </p>
+        </section>
+        <section aria-labelledby="cv-privacy">
+          <h2 id="cv-privacy" className={`ds-display ${s.aboutTitle}`}>Privacy</h2>
+          <p className={s.aboutBody}>
+            Camera images are processed on your device and are not uploaded or stored on our servers. Only the title text that was read is
+            sent to look up its ratings. The text-reading code and its language data are downloaded from the jsDelivr CDN when the page loads,
+            so jsDelivr can see your IP address.
+          </p>
+        </section>
+        <section aria-labelledby="cv-reqs">
+          <h2 id="cv-reqs" className={`ds-display ${s.aboutTitle}`}>Requirements</h2>
+          <ul className={s.aboutList}>
+            <li>A device with a camera and a browser that allows camera access on HTTPS pages.</li>
+            <li>Titles in clear, well-lit, in-focus text. Reading is slower on small or stylised lettering.</li>
+          </ul>
+        </section>
+      </div>
+
       {/* Info Panel */}
       <div className={`ds-card ${s.panel}`}>
         <h2 className={`ds-display ${s.panelTitle}`}>Real-Time OCR Processing</h2>
@@ -397,8 +435,8 @@ export default function CameraVision() {
         </div>
       </div>
 
-      {/* Debug Info */}
-      <div className={`ds-card ${s.debug}`}>
+      {/* Debug Info (?debug=1 only) */}
+      {debugAllowed && <div className={`ds-card ${s.debug}`}>
         <h3 className={s.debugHead}>Debug Information</h3>
         <div className={s.debugRows}>
           <div><span className={`${s.dot} ${isStreaming ? s.dotLive : ''}`} aria-hidden />Status: {isStreaming ? 'Camera Active' : 'Camera Inactive'}</div>
@@ -409,7 +447,7 @@ export default function CameraVision() {
           <div className={s.noDot}>OCR Failures: {ocrFailureCount}</div>
           <div className={s.noDot}>Last Process: {lastProcessedTime ? new Date(lastProcessedTime).toLocaleTimeString() : 'Never'}</div>
         </div>
-      </div>
+      </div>}
 
       {/* Status */}
       <p className={s.foot}>

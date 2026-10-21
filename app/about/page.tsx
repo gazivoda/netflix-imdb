@@ -1,8 +1,8 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
 import s from './about.module.css';
-import { AUTHOR_NAME, PUBLISHED_DATE, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
+import { AR_MODE_NAME, AUTHOR_NAME, PUBLISHED_DATE, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
 import { getPage } from '../../lib/pages';
-import { absoluteUrl, authorRef, nodeId, pageMetadata } from '../../lib/seo';
+import { absoluteUrl, authorNode, isoDateTime, nodeId, pageMetadata } from '../../lib/seo';
 
 const PATH = '/about';
 export const metadata = pageMetadata(PATH);
@@ -30,20 +30,22 @@ const FAQS: Faq[] = [
   },
 ];
 
-// References the layout's Person (#author) instead of redefining it. GuideLayout already emits the
-// page's WebPage node (#webpage), so this node gets its own @id and points at it.
+// The ProfilePage embeds the full Person (name, url) as mainEntity rather than a bare { "@id" }: Google reads each
+// JSON-LD block on its own, and the Person in the root layout's block is invisible to this one. GuideLayout already
+// emits the page's WebPage node (#webpage), so this node gets its own @id and points at it.
 const page = getPage(PATH);
 const aboutPage = {
   '@type': ['AboutPage', 'ProfilePage'],
   '@id': nodeId(PATH, 'about'),
   url: absoluteUrl(PATH),
   name: 'About Rating Watch',
-  datePublished: page.published ?? PUBLISHED_DATE,
-  dateModified: page.updated,
+  // ProfilePage needs full date-times (Search Console: "Invalid datetime value for dateModified").
+  datePublished: isoDateTime(page.published ?? PUBLISHED_DATE),
+  dateModified: isoDateTime(page.updated),
   mainEntityOfPage: { '@id': nodeId(PATH, 'webpage') },
   inLanguage: 'en',
   isPartOf: { '@id': `${SITE_URL}/#website` },
-  mainEntity: authorRef,
+  mainEntity: authorNode(),
   about: { '@id': `${SITE_URL}/#app` },
 };
 
@@ -94,7 +96,7 @@ export default function AboutPage() {
       <p className={s.p}>
         Rating Watch is built and maintained by {AUTHOR_NAME}, an independent developer. The
         extension is free, needs no account, and asks for access to only netflix.com and
-        omdbapi.com. There is also an optional Pro AR mode, described on the{' '}
+        omdbapi.com. There is also an optional {AR_MODE_NAME}, described on the{' '}
         <a href="/pricing">pricing page</a>.
       </p>
 

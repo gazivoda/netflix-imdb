@@ -26,8 +26,13 @@ export function ProCard() {
   return (
     <section className={`ds-card ${s.tier}`}>
       <h2 className={`ds-display ${s.h2}`}>Pro</h2>
-      {copy.priceLine && <p className={s.priceLine}>{PRICES.monthly.label} or {PRICES.yearly.label}</p>}
-      {copy.comingSoon && <p className={s.priceLine}>{copy.comingSoon}</p>}
+      {copy.priceLine && (
+        <p className={s.priceLine}>
+          {PRICES.monthly.label} or {PRICES.yearly.label}
+          {copy.badge && <span className={s.badge}>{copy.badge}</span>}
+        </p>
+      )}
+      {copy.comingSoon && <p className={s.body}>{copy.comingSoon}</p>}
       <ul className={s.list}>
         <li>AR mode: point your phone at the TV</li>
         {copy.terms && <li>3-day free trial, no card</li>}
@@ -36,7 +41,15 @@ export function ProCard() {
       <Suspense fallback={null}><AuthError /></Suspense>
       <div className={s.action}>
         {view === 'checking' ? <p className={s.notice} role="status">Checking your account...</p>
-          : view === 'off' ? <a className={`ds-btn ds-btn-signal ${s.cta}`} href="/camera-vision/ar">Try AR mode free for now</a>
+          : view === 'off' ? (
+            <>
+              <div className={s.plans}>
+                <button type="button" className={`ds-btn ${s.plan}`} disabled>Monthly <span className={s.price}>{PRICES.monthly.label}</span></button>
+                <button type="button" className={`ds-btn ${s.plan}`} disabled>Yearly <span className={s.price}>{PRICES.yearly.label}</span></button>
+              </div>
+              <a className={`ds-btn ds-btn-signal ${s.cta}`} href="/camera-vision/ar">Try AR mode free for now</a>
+            </>
+          )
           : view === 'unreachable' ? <p className={s.notice} role="alert">We could not check your account. <button type="button" className={`ds-btn ${s.cta}`} onClick={() => void refresh()}>Try again</button></p>
           : !user ? <a className={`ds-btn ds-btn-signal ${s.cta}`} href="/api/auth/google?next=/pricing">Sign in with Google to start</a>
           : access === 'subscribed' ? <p className={s.notice}>You are subscribed: {describeSubscription(user).headline}. <a href="/account">Manage on your account page</a></p>

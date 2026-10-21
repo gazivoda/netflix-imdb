@@ -83,6 +83,19 @@ const isAbsoluteHttps = (u: string): boolean => {
   }
 };
 
+// Every date-like property Google reads from JSON-LD must be a full ISO 8601 date-time with a time zone (Z or an
+// offset). Bare YYYY-MM-DD was rejected by Search Console on ProfilePage ("Invalid datetime value") and Google
+// recommends a time zone everywhere. Rule: jsonld-date.
+const DATE_PROPERTIES = new Set(['datePublished', 'dateModified', 'dateCreated', 'uploadDate', 'startDate', 'endDate', 'expires']);
+const FULL_DATE_TIME = /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/;
+
+export function isFullDateTime(value: string): boolean {
+  const m = FULL_DATE_TIME.exec(value);
+  if (!m) return false;
+  const day = new Date(`${m[1]}-${m[2]}-${m[3]}T00:00:00Z`);
+  return !Number.isNaN(day.getTime()) && day.toISOString().slice(0, 10) === `${m[1]}-${m[2]}-${m[3]}` && !Number.isNaN(Date.parse(value));
+}
+
 export function checkPage({ path, html, siteUrl = SITE_URL }: PageInput): SeoFinding[] {
   const findings: SeoFinding[] = [];
   const fail = (rule: string, message: string) => findings.push({ path, rule, message });
@@ -194,6 +207,20 @@ export function checkPage({ path, html, siteUrl = SITE_URL }: PageInput): SeoFin
   for (const id of new Set(refs)) {
     if (!defined.has(id)) fail('jsonld-ref', `{ "@id": "${id}" } is referenced but never defined on this page`);
   }
+
+  // Date properties: full date-time with a time zone, everywhere in every block.
+  const badDates = new Set<string>();
+  for (const data of parsed) {
+    walk(data, (o) => {
+      for (const [key, value] of Object.entries(o)) {
+        if (!DATE_PROPERTIES.has(key)) continue;
+        for (const v of Array.isArray(value) ? value : [value]) {
+          if (typeof v !== 'string' || !isFullDateTime(v)) badDates.add(`"${key}": ${JSON.stringify(v)}`);
+        }
+      }
+    });
+  }
+  for (const d of badDates) fail('jsonld-date', `${d} is not a full ISO 8601 date-time with Z or a UTC offset (e.g. 2026-10-21T00:00:00+00:00)`);
 
   // FAQPage must be backed by visible FAQ copy (questions and answers).
   const faqNodes: JsonObject[] = [];

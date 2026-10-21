@@ -190,6 +190,7 @@ export default function FindWhatToWatchPage() {
       <h2 className={g.h2}>What should I do for each score pattern?</h2>
       <div className={`${g.tableWrap} ${h.board}`}>
         <table className={h.boardTable} role="table">
+          <caption className="sr-only">What each IMDb and Rotten Tomatoes score pattern usually means, and what to do</caption>
           <thead role="rowgroup">
             <tr role="row">
               <th scope="col" role="columnheader">What the badge shows</th>

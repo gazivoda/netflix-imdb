@@ -137,7 +137,8 @@ const FORBIDDEN_KEYS = new Set(['aggregateRating', 'review', 'additionalProperty
 const FORBIDDEN_TYPES = new Set(['AggregateRating', 'Review', 'FAQPage', 'HowTo']);
 const URL_KEYS = new Set(['url', 'sameAs', 'item', 'image', 'logo', 'contentUrl', 'embedUrl', 'thumbnailUrl', 'license', 'mainEntityOfPage', '@id']);
 const DATE_KEYS = ['datePublished', 'dateModified', 'dateCreated'];
-const ISO = /^(\d{4})-(\d{2})-(\d{2})(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
+// A time zone is required: bare dates are rejected (same rule as html-seo's jsonld-date).
+const ISO = /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/;
 
 function isIso(s: string): boolean {
   const m = ISO.exec(s);
@@ -188,7 +189,7 @@ function jsonLdFindings(html: string, fail: (rule: string, message: string) => v
     }
     for (const key of DATE_KEYS) {
       const v = o[key];
-      if (typeof v === 'string' && !isIso(v)) fail('blog-jsonld', `"${key}" is not an ISO date: ${v}`);
+      if (typeof v === 'string' && !isIso(v)) fail('blog-jsonld', `"${key}" is not a full ISO 8601 date-time with a time zone: ${v}`);
     }
     const { datePublished: pub, dateModified: mod } = o;
     if (typeof pub === 'string' && typeof mod === 'string' && isIso(pub) && isIso(mod) && Date.parse(mod) < Date.parse(pub)) {

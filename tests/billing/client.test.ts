@@ -38,9 +38,12 @@ describe('describeSubscription', () => {
     expect(d.detail).toMatch(/Current period ends Oct 20, 2027/)
     expect(d.detail).not.toMatch(/Renews/)
   })
-  it('paused matches the gate: AR mode stays available while paused', () => {
-    const d = describeSubscription(user({ subscription_status: 'paused', subscription_end_date: '2026-11-20T00:00:00Z', has_billing_portal: true, access: 'subscribed' }))
-    expect(d).toEqual({ headline: 'Paused', detail: 'AR mode stays available while the subscription is paused.', canManage: true, canSubscribe: false })
+  it('paused matches the gate: AR mode stays available until the paid period ends, then it is off', () => {
+    const open = describeSubscription(user({ subscription_status: 'paused', subscription_end_date: '2026-11-20T00:00:00Z', has_billing_portal: true, access: 'subscribed' }))
+    expect(open).toEqual({ headline: 'Paused', detail: 'AR mode stays available until Nov 20, 2026.', canManage: true, canSubscribe: false })
+    const off = describeSubscription(user({ subscription_status: 'paused', subscription_end_date: '2026-09-20T00:00:00Z', has_billing_portal: true, access: 'paywall' }))
+    expect(off).toMatchObject({ headline: 'Paused', canManage: true, canSubscribe: false })
+    expect(off.detail).toMatch(/AR mode is off/)
   })
   it('cancelled means access has already ended: no access-until promise, invoices stay reachable', () => {
     const d = describeSubscription(user({ subscription_status: 'cancelled', subscription_end_date: '2026-11-20T00:00:00Z', has_billing_portal: true, access: 'paywall' }))

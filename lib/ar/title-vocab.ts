@@ -8,7 +8,7 @@
 // Pure; the vocabulary is injected (lib/ar/popular-titles.ts plus whatever the ratings API has confirmed on this device).
 
 import { titleSimilarity } from './auto-label'
-import type { OcrWordLike } from './title-candidates'
+import { isUiText, type OcrWordLike } from './title-candidates'
 
 export interface VocabToken {
   text: string
@@ -35,7 +35,17 @@ export const DEFAULT_VOCAB_OPTIONS: VocabOptions = { minCoverage: 0.6, minTokenS
 
 const STOP = new Set(['the', 'a', 'an', 'of', 'and', 'in', 'to', 'on', 'for', 'at', 'is', 'it', 'by', 'with', 'my', 'i'])
 const key = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '')
+const ARTICLE = /^(the|a|an)\s+/i
+// A title as compared by lookups: no leading article, only letters and digits ("The Crown" and "Crown!" are the same entry).
+const bareKey = (s: string) => key(s.trim().replace(ARTICLE, ''))
+const numberTokens = (s: string) => s.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(w => /^\d+$/.test(w))
+// Typos a string of this many letters may carry and still count as the same title: none for short ones (every short word is a
+// word), one for 5-7 letters, two up to 16, three beyond that. One slip is "Money Heis!", two is a smeared letter pair.
+const editBudget = (len: number) => (len <= 4 ? 0 : len <= 7 ? 1 : len <= 16 ? 2 : 3)
+const REPAIR_PREFIX_MIN = 12 // a cut-off caption ("All Quiet on the West") needs this many letters to point at one title
 const words = (s: string) => s.toLowerCase().split(/[^\p{L}\p{N}']+/u).map(w => key(w)).filter(Boolean)
+
+const UI_TOKEN_MAX_HEIGHT = 0.07 // fraction of the image height
 
 /** Words of one OCR pass as vocabulary tokens (glyph junk is cleaned by the key; sizes are relative to the image). */
 export function tokensFromWords(ws: OcrWordLike[], imageHeight: number, pass = 0): VocabToken[] {
@@ -43,12 +53,14 @@ export function tokensFromWords(ws: OcrWordLike[], imageHeight: number, pass = 0
   for (const w of ws) {
     const k = key(w.text)
     if (k.length < 2 || w.confidence < 25) continue
-    out.push({ text: k, confidence: w.confidence, height: imageHeight > 0 ? (w.bbox.y1 - w.bbox.y0) / imageHeight : 1, pass })
+    const height = imageHeight > 0 ? (w.bbox.y1 - w.bbox.y0) / imageHeight : 1
+    if (height < UI_TOKEN_MAX_HEIGHT && isUiText(w.text)) continue // small "TOP" / "NEW" / "MATCH" badges are not title words
+    out.push({ text: k, confidence: w.confidence, height, pass })
   }
   return out
 }
 
-interface Entry { title: string; tokens: string[]; content: string[]; letters: number }
+interface Entry { title: string; tokens: string[]; content: string[]; letters: number; bare: string }
 
 // How close an OCR word must be to a title word: exact for tiny words, one slip for short ones, ~25% for long ones. A word that
 // is the start of the title word ("PROBL" for "problem") also counts when it is long enough to be unambiguous.
@@ -73,7 +85,7 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
       const tokens = words(title)
       let content = tokens.filter(t => !STOP.has(t))
       if (!content.length) content = tokens
-      entries.push({ title, tokens, content, letters: content.reduce((a, t) => a + t.length, 0) })
+      entries.push({ title, tokens, content, letters: content.reduce((a, t) => a + t.length, 0), bare: bareKey(title) })
     }
   }
   add(titles)
@@ -81,6 +93,37 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
   return {
     get size() { return entries.length },
     add,
+    /**
+     * Snaps ONE string (a whole OCR candidate such as "Money Heis!") onto the vocabulary title it is a typo of, or returns null.
+     * Strict on purpose, because the answer goes straight to the ratings lookup: a title of <= 4 letters must match exactly, longer ones
+     * may carry a few slips (see editBudget), the numbers in it must be the same ("Extraction" is not "Extraction 2"), a title that is
+     * only the start of a longer one is not repaired unless it is a long cut-off caption, and a tie between two different titles
+     * repairs nothing.
+     */
+    repair(text: string): string | null {
+      const k = bareKey(text)
+      if (k.length < 3) return null
+      const nums = numberTokens(text).join(',')
+      const budget = editBudget(k.length)
+      let best: { title: string; dist: number } | null = null
+      let tie = false
+      const sameNumbers = (e: Entry) => numberTokens(e.title).join(',') === nums
+      for (const e of entries) {
+        if (!sameNumbers(e)) continue
+        if (e.bare === k) return e.title
+        if (!budget || Math.abs(k.length - e.bare.length) > budget) continue
+        const dist = Math.round((1 - titleSimilarity(k, e.bare)) * Math.max(k.length, e.bare.length))
+        if (dist > budget) continue
+        if (!best || dist < best.dist) { best = { title: e.title, dist }; tie = false }
+        else if (dist === best.dist && key(e.title) !== key(best.title)) tie = true
+      }
+      if (best) return tie ? null : best.title
+      if (k.length >= REPAIR_PREFIX_MIN) {
+        const longer = entries.filter(e => sameNumbers(e) && e.bare.startsWith(k) && 2 * k.length >= e.bare.length)
+        if (longer.length === 1) return longer[0].title
+      }
+      return null
+    },
     /** Vocabulary titles the tokens point at, best first (at most `max`). */
     match(tokens: VocabToken[], max = 3): VocabMatch[] {
       if (!tokens.length) return []
@@ -98,7 +141,8 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
             const s = wordSimilarity(want, t.text)
             if (s > 0 && (!best || s * t.confidence > best.s * best.t.confidence)) best = { s, t }
           }
-          if (!best && want.length <= 2) missedShort = true // a number or initial ("2", "E") must be seen, or it is another title
+          // a number or initial ("2", "E", "1994") must be seen exactly, or it is another title ("Fear Street ... 1978" is not "... 1994")
+          if (!best && (want.length <= 2 || /^\d+$/.test(want))) missedShort = true
           if (best) { matched += want.length; sim += best.s * want.length; conf += best.t.confidence * want.length; size += best.t.height * want.length; hits++ }
         }
         if (!matched || missedShort) continue
@@ -113,6 +157,13 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
           if (new Set(seenBy.map(t => t.pass ?? 0)).size < 2) continue
         }
         if (meanSize < (short ? o.minShortTokenSize : o.minTokenSize)) continue
+        // A one-word title is not it when the tile carries another word of the same size that the title does not have: "STRANGER THINGS"
+        // is not "The Stranger", "MONEY HEIST" is not "Heist". (Small print, junk and the title's own words do not count.)
+        if (single) {
+          const own = new Set(e.tokens)
+          const other = tokens.some(t => t.text.length >= 3 && !own.has(t.text) && wordSimilarity(e.content[0], t.text) === 0 && t.confidence >= 50 && t.height >= 0.6 * meanSize)
+          if (other) continue
+        }
         // one matched word is thin evidence for a multi-word title unless it carries almost all of it
         if (hits < 2 && e.content.length > 1 && coverage < 0.8) continue
         const quality = (sim / matched) * (conf / matched / 100)

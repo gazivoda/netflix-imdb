@@ -1,6 +1,7 @@
 import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
-import { pageMetadata } from '../../lib/seo';
+import JsonLd from '../../components/JsonLd';
+import { graph, pageMetadata, softwareApplication } from '../../lib/seo';
 import { PricingLead, ProCard } from './PricingClient';
 import s from '../../components/billing/billing.module.css';
 
@@ -9,6 +10,7 @@ export const metadata = pageMetadata('/pricing');
 export default function PricingPage() {
   return (
     <div className={s.page}>
+      <JsonLd data={graph(softwareApplication())} />
       <SiteHeader />
       <main id="main" tabIndex={-1} className={s.main}>
         <h1 className={`ds-display ${s.h1}`}>Pricing</h1>

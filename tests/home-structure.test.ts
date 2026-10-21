@@ -36,7 +36,9 @@ describe('home page structure', () => {
   });
 
   it('keeps #main as the skip-link target and the page module as a bare shell', () => {
-    expect(page).toContain('href="#main"');
+    // The skip link itself lives in the root layout (first in the body, before the cookie banner); the page keeps its target.
+    expect(readFileSync(join(ROOT, 'app/layout.tsx'), 'utf8')).toContain('href="#main"');
+    expect(page).not.toContain('skip-link');
     expect(page).toContain('<main id="main"');
     const css = readFileSync(join(ROOT, 'app/page.module.css'), 'utf8');
     const selectors = css.match(/^[.#][^{]*(?=\{)/gm)?.map((s) => s.trim());

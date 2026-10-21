@@ -1,4 +1,4 @@
-import { checkPage, htmlFileForPath } from '../../lib/html-seo';
+import { checkPage, htmlFileForPath, isFullDateTime } from '../../lib/html-seo';
 
 const SITE = 'https://example.test';
 const TITLE = 'Install Rating Watch on Chrome · Rating Watch';
@@ -193,6 +193,43 @@ describe('checkPage', () => {
     it('does not treat a bare reference as its own definition', () => {
       const selfOnly = ld({ '@context': 'https://schema.org', '@type': 'Thing', sameAs: { '@id': `${SITE}/#x` } });
       expect(rules(page({ scripts: [selfOnly] }))).toContain('jsonld-ref');
+    });
+  });
+
+  describe('date properties (jsonld-date)', () => {
+    const withDates = (node: Record<string, unknown>) =>
+      page({ scripts: [ld({ '@context': 'https://schema.org', '@graph': [...BASE_LD['@graph'], node] })] });
+    const dateRules = (node: Record<string, unknown>) => run(withDates(node)).filter((f) => f.rule === 'jsonld-date');
+
+    it('accepts full date-times with Z or a UTC offset, with or without seconds and fractions', () => {
+      for (const v of ['2026-10-21T00:00:00+00:00', '2026-10-21T08:30:00Z', '2026-10-21T08:30:00.123Z', '2026-10-21T08:30+0200', '2026-10-21T08:30:00-05:00']) {
+        expect(dateRules({ '@type': 'WebPage', datePublished: v, dateModified: v })).toEqual([]);
+      }
+    });
+
+    it('rejects a bare date on every date property, at any depth', () => {
+      for (const key of ['datePublished', 'dateModified', 'dateCreated', 'uploadDate', 'startDate', 'endDate', 'expires']) {
+        const found = dateRules({ '@type': 'Thing', [key]: '2026-10-21' });
+        expect(found).toHaveLength(1);
+        expect(found[0].message).toContain(`"${key}": "2026-10-21"`);
+      }
+      expect(dateRules({ '@type': 'Dataset', creator: { '@type': 'Person', name: 'A' }, distribution: [{ '@type': 'DataDownload', dateModified: '2026-10-21' }] })).toHaveLength(1);
+    });
+
+    it('rejects a date-time without a time zone, an impossible date, a non-string and prose', () => {
+      for (const v of ['2026-10-21T08:30:00', '2026-02-31T00:00:00Z', 20261021, 'October 21, 2026', '', null]) {
+        expect(dateRules({ '@type': 'Thing', dateModified: v })).toHaveLength(1);
+      }
+    });
+
+    it('checks arrays and ignores properties that are not dates', () => {
+      expect(dateRules({ '@type': 'Thing', datePublished: ['2026-10-21T00:00:00Z', '2026-10-22'] })).toHaveLength(1);
+      expect(dateRules({ '@type': 'Dataset', temporalCoverage: '2013/2026', description: 'updated 2026-10-21' })).toEqual([]);
+    });
+
+    it('isFullDateTime is exported for the other validators', () => {
+      expect(isFullDateTime('2026-10-21T00:00:00+00:00')).toBe(true);
+      expect(isFullDateTime('2026-10-21')).toBe(false);
     });
   });
 

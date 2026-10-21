@@ -10,10 +10,13 @@ export function useAccount(): AccountState {
   const refresh = useCallback(async () => {
     try {
       const res = await fetch('/api/user/me', { credentials: 'same-origin', cache: 'no-store' })
+      // A 503 (database trouble) carries a JSON body without billingEnabled; reading it as "billing off" would show
+      // the free/open view, so any non-2xx answer is a failure, not an account state.
+      if (!res.ok) throw new Error(`user/me ${res.status}`)
       const body: Partial<MeResponse> = await res.json()
       setState({ loading: false, failed: false, user: body.user ?? null, access: body.access ?? 'no_auth', billingEnabled: body.billingEnabled === true })
     } catch {
-      // Fail closed: an unreachable API must not send people to a sign-in that may not exist. Callers show a retry.
+      // Fail closed: an unreachable or failing API must not unlock anything or send people to a sign-in that may not exist. Callers show a retry.
       setState({ loading: false, failed: true, user: null, access: 'no_auth', billingEnabled: false })
     }
   }, [])

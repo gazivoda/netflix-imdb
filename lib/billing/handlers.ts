@@ -3,17 +3,19 @@ import type { Deps } from './deps'
 import { readCappedText } from '../body-limit'
 import { applyEvent, eventTarget, planFromSubscription, verifyWebhookSignature, type PaddleEvent } from './paddle'
 import { eventPriceIds } from './prices'
+import { createLimiter, type BucketConfig, type Limiter } from '../ratings-guard'
 import { readSessionUserId } from './session'
 import type { UserRecord } from './types'
 
 const json = (body: unknown, status = 200): Response =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } })
 
-type FoundVia = 'subscription' | 'customer' | 'userId' | 'email'
+type FoundVia = 'subscription' | 'customer' | 'userId'
 
 // Lookup order matters: custom_data.userId is set by the buyer (checkout custom data), so it is
 // consulted only after Paddle's own subscription and customer ids and cannot redirect an event
-// that Paddle ids already resolve to the real owner.
+// that Paddle ids already resolve to the real owner. There is no email fallback: Paddle does not verify
+// the checkout email, so matching on it would let a stranger attach a subscription to someone else's account.
 // Signed payloads still carry buyer-influenced fields: anything that is not a non-empty string never reaches the DB.
 const str = (v: unknown): string | null => (typeof v === 'string' && v !== '' ? v : null)
 
@@ -27,10 +29,7 @@ function findUser(deps: Deps, e: PaddleEvent): { user: UserRecord; via: FoundVia
   if (byCustomer) return { user: byCustomer, via: 'customer' }
   const userId = str(t.userId)
   const byUserId = userId ? deps.db.get(userId) : null
-  if (byUserId) return { user: byUserId, via: 'userId' }
-  const email = str(t.email)
-  const byEmail = email ? deps.db.findByEmail(email) : null
-  return byEmail ? { user: byEmail, via: 'email' } : null
+  return byUserId ? { user: byUserId, via: 'userId' } : null
 }
 
 const isObject = (v: unknown): v is Record<string, any> => typeof v === 'object' && v !== null && !Array.isArray(v)
@@ -52,12 +51,17 @@ function priceVerdict(deps: Deps, data: any): PriceVerdict {
   return eventPriceIds(data).some((id) => deps.priceIds.includes(id)) ? 'allowed' : 'foreign'
 }
 
-// Ruling K: userId and email are buyer-influenced, so an event resolved only through them may bind a
-// subscription (activation) but can never cancel, pause or expire anyone.
-const ACTIVATION_EVENTS = new Set(['subscription.created', 'subscription.activated', 'subscription.updated', 'subscription.resumed'])
-function isActivation(e: PaddleEvent): boolean {
-  const status = e.data?.status
-  return ACTIVATION_EVENTS.has(e.event_type) && (status === 'active' || status === 'trialing')
+// Adjustments (refunds, chargebacks) carry item ids, not price ids, so the price filter cannot apply to them:
+// like events without items they count only through a subscription already bound to a user.
+const isAdjustment = (e: PaddleEvent): boolean => e.event_type.startsWith('adjustment.')
+
+// Ordering: Paddle does not guarantee delivery order. An event older than the newest one already applied to
+// this user is dropped (an unparsable occurred_at carries no ordering information and is applied as before).
+const eventTime = (e: PaddleEvent): number => Date.parse(e.occurred_at ?? '')
+function isStale(user: UserRecord, e: PaddleEvent): boolean {
+  const last = Date.parse(user.last_event_at ?? '')
+  const at = eventTime(e)
+  return Number.isFinite(last) && Number.isFinite(at) && at < last
 }
 
 // SEC-6: Paddle events are a few KB; anything near this size is not one. The cap is enforced from the declared
@@ -80,7 +84,7 @@ export async function handleWebhook(req: Request, deps: Deps): Promise<Response>
   }
   if (!isEvent(event)) return json({ error: 'Invalid event' }, 400)
   // 200 for everything ignored below, so Paddle stops retrying events that are not ours.
-  const prices = priceVerdict(deps, event.data)
+  const prices = isAdjustment(event) ? 'no_items' : priceVerdict(deps, event.data)
   if (deps.priceIds.length === 0 || prices === 'foreign') {
     // fail closed: no allow-list, or another product's price => no writes
     warnPrices('ignored', deps, event.event_type, event.data)
@@ -88,12 +92,23 @@ export async function handleWebhook(req: Request, deps: Deps): Promise<Response>
   }
   try {
     const found = findUser(deps, event)
-    const trusted = found && (found.via === 'subscription' || found.via === 'customer')
-    // Ruling T: Paddle keeps one customer per email across the shared account, so without items only the
-    // subscription id proves the event is about a Rating Watch subscription.
-    if (prices === 'no_items' && found?.via !== 'subscription') return json({ received: true })
-    const patch = found && (trusted || isActivation(event)) ? applyEvent(found.user, event) : null
-    if (found && patch) deps.db.save({ ...found.user, ...patch })
+    if (!found) return json({ received: true }) // unknown user: ignored safely
+    // Ruling T: Paddle keeps one customer per email across the shared account, so without items (and for
+    // adjustments) only the subscription id proves the event is about a Rating Watch subscription.
+    if (prices === 'no_items' && found.via !== 'subscription') return json({ received: true })
+    // A userId comes from the buyer, so it binds a subscription only when the Paddle customer behind the event
+    // has the account's Google-verified email. Without a Paddle API, or on a mismatch, the event is ignored.
+    // A Paddle outage here throws, answers 500 and lets Paddle retry.
+    if (found.via === 'userId') {
+      const customerId = str(eventTarget(event).customerId)
+      if (!customerId || !(await customerMatchesUser(deps, customerId, found.user))) return json({ received: true })
+    }
+    if (isStale(found.user, event)) return json({ received: true })
+    const patch = applyEvent(found.user, event)
+    if (patch) {
+      const at = eventTime(event)
+      deps.db.save({ ...found.user, ...patch, last_event_at: Number.isFinite(at) ? event.occurred_at! : found.user.last_event_at ?? null })
+    }
     return json({ received: true }) // 200 even for unknown users/events so Paddle stops retrying
   } catch (err) {
     console.error('paddle webhook failed:', (err as Error).message)
@@ -109,6 +124,18 @@ async function customerMatchesUser(deps: Deps, customerId: string, user: UserRec
   if (!deps.paddle) return false
   const customer = await deps.paddle.getCustomer(customerId)
   return sameEmail(customer?.email, user.email)
+}
+
+// Each verify call costs up to three requests on the shared Paddle API. Sign-up is free, so any account could
+// otherwise exhaust the API quota that checkout and the portal depend on: one bucket per user, one for everybody.
+// A real checkout needs one call (a few at most when Paddle is slow to create the subscription).
+export const VERIFY_USER_BUCKET: BucketConfig = { capacity: 5, refillPerSec: 1 / 30 } // 5 burst, then 2 per minute
+export const VERIFY_GLOBAL_BUCKET: BucketConfig = { capacity: 30, refillPerSec: 0.25 } // 30 burst, then 15 per minute
+let verifyUserLimiter: Limiter = createLimiter(VERIFY_USER_BUCKET)
+let verifyGlobalLimiter: Limiter = createLimiter(VERIFY_GLOBAL_BUCKET, 1)
+export function resetVerifyLimitersForTests(): void {
+  verifyUserLimiter = createLimiter(VERIFY_USER_BUCKET)
+  verifyGlobalLimiter = createLimiter(VERIFY_GLOBAL_BUCKET, 1)
 }
 
 export async function handleVerifySubscription(req: Request, deps: Deps): Promise<Response> {
@@ -128,6 +155,15 @@ export async function handleVerifySubscription(req: Request, deps: Deps): Promis
   if (deps.priceIds.length === 0) {
     warnPrices('refused', deps, 'verify', null)
     return json({ error: 'Billing is not configured' }, 503)
+  }
+  // Taken only once the request is well formed and about to call Paddle; the user bucket first, so a refused user never spends a global token.
+  const limited = verifyUserLimiter.take(user.id, deps.now())
+  const limit = limited.allowed ? verifyGlobalLimiter.take('*', deps.now()) : limited
+  if (!limit.allowed) {
+    return new Response(JSON.stringify({ error: 'Too many requests' }), {
+      status: 429,
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Retry-After': String(limit.retryAfterS) },
+    })
   }
   try {
     const txn = await deps.paddle.getTransaction(transactionId)

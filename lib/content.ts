@@ -4,22 +4,28 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://rating.watch';
 
+import { PRO_ON_SALE } from './billing/flag';
+
 export const SUPPORT_EMAIL = 'hello@rating.watch';
 
 // ---------------------------------------------------------------------------------------------
-// LEGAL IDENTITY. FILL THESE IN BEFORE LAUNCH (privacy policy, terms and the Paddle review all
-// want a named seller). Each block renders on /privacy and /terms ONLY when its constant is a
-// non-empty string, so leaving them empty never prints a blank line or a placeholder.
-//   LEGAL_ENTITY   legal name of the operator or sole proprietor, e.g. 'Jane Doe' or 'Acme d.o.o.'
+// LEGAL IDENTITY (privacy policy, terms and the Paddle review all want a named seller). Each block renders
+// on /privacy and /terms ONLY when its constant is a non-empty string, so an empty one never prints a blank
+// line or a placeholder.
+//   LEGAL_ENTITY   the operator: an individual (sole proprietor) trading as Rating Watch
 //   LEGAL_ADDRESS  postal address of that operator, one line, e.g. '1 Main St, 11000 Belgrade, Serbia'
 //   GOVERNING_LAW  governing law and venue sentence, e.g. 'the laws of Serbia' (rendered after "governed by")
+//
+// TODO(pre-launch): LEGAL_ADDRESS and GOVERNING_LAW are still empty. They block turning billing on:
+// `npm run billing:readiness` (lib/billing/readiness.ts) reports each empty one as a blocker as soon as billing is
+// configured. Fill them in, then the check passes. Do not put a placeholder here.
 // ---------------------------------------------------------------------------------------------
-export const LEGAL_ENTITY: string = '';
-export const LEGAL_ADDRESS: string = '';
-export const GOVERNING_LAW: string = '';
+export const LEGAL_ENTITY: string = 'Igor Gazivoda';
+export const LEGAL_ADDRESS: string = ''; // TODO(pre-launch): postal address of the operator
+export const GOVERNING_LAW: string = ''; // TODO(pre-launch): governing law and venue
 
 // Pro (AR mode) pricing in one place. The FAQ, the SoftwareApplication offers in JSON-LD and
-// llms.txt read it; tests/billing/copy-accuracy.test.ts checks it against lib/billing/client.ts PRICES.
+// llms.txt read it (all gated on PRO_ON_SALE, so nothing prerendered offers Pro before it can be bought); tests/billing/copy-accuracy.test.ts checks it against lib/billing/client.ts PRICES.
 export const PRO_PRICING = {
   monthly: '2.99',
   yearly: '29',
@@ -59,7 +65,7 @@ export const FEATURES = [
   {
     icon: '04',
     title: 'Private by default',
-    desc: 'The extension needs no account or login and does no tracking. It only talks to the ratings source, OMDb, so your watch history stays yours.',
+    desc: 'The extension needs no account or login and has no analytics. It only talks to the ratings source, OMDb, so your watch history stays yours. This website measures visits only if you accept analytics in the cookie banner.',
   },
   {
     icon: '05',
@@ -124,14 +130,21 @@ export const MARQUEE: Array<{ title: string } & ShowcaseScore> = [
   'Nimona',
 ].map((title) => ({ title, ...SHOWCASE[title] }));
 
-export const FAQS = [
+// Pro wording appears only when Pro is on sale (build-time flag, see lib/billing/flag.ts); otherwise AR mode is described as
+// free to try, which is what the app does while billing is off.
+export const AR_MODE_NAME = PRO_ON_SALE ? 'Pro AR mode' : 'AR mode';
+
+export function buildFaqs(onSale: boolean) {
+  return [
   {
     q: 'What is Rating Watch?',
-    a: 'Rating Watch is a free Chrome extension that shows the IMDb rating, and the Rotten Tomatoes score where one exists, in a small badge on each Netflix title card as you browse. You see the scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave. There is also an optional Pro AR mode that shows scores over a TV screen through your phone camera.',
+    a: `Rating Watch is a free Chrome extension that shows the IMDb rating, and the Rotten Tomatoes score where one exists, in a small badge on each Netflix title card as you browse. You see the scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave. ${onSale ? 'There is also an optional Pro AR mode that shows scores over a TV screen through your phone camera.' : 'There is also an experimental AR mode that shows scores over a TV screen through your phone camera.'}`,
   },
   {
     q: 'Is Rating Watch free?',
-    a: `The Chrome extension is free: no account and nothing to subscribe to. AR mode, which draws ratings over your TV through your phone camera, is Pro: $${PRO_PRICING.monthly} a month or $${PRO_PRICING.yearly} a year, with a ${PRO_PRICING.trialDays}-day free trial that needs no card. You can cancel any time from your account page.`,
+    a: onSale
+      ? `The Chrome extension is free: no account and nothing to subscribe to. AR mode, which draws ratings over your TV through your phone camera, is Pro: $${PRO_PRICING.monthly} a month or $${PRO_PRICING.yearly} a year, with a ${PRO_PRICING.trialDays}-day free trial that needs no card. You can cancel any time from your account page.`
+      : 'The Chrome extension is free: no account and nothing to subscribe to. AR mode, which draws ratings over your TV through your phone camera, is free to try for now. A paid plan for it is not on sale yet.',
   },
   {
     q: 'Where do the ratings come from?',
@@ -151,7 +164,7 @@ export const FAQS = [
   },
   {
     q: 'Does it work on the Netflix mobile app or TV?',
-    a: 'No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there. AR mode (Pro) is the way to get scores for a TV, through your phone camera.',
+    a: `No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there. ${onSale ? 'AR mode (Pro)' : 'AR mode'} is the way to get scores for a TV, through your phone camera.`,
   },
   {
     q: 'Does it slow Netflix down?',
@@ -169,4 +182,7 @@ export const FAQS = [
     q: 'How do I install Rating Watch?',
     a: 'It is a free download that you add to Chrome yourself, because it is not on the Chrome Web Store yet. Download the zip from the install page, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the unzipped folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
   },
-];
+  ];
+}
+
+export const FAQS = buildFaqs(PRO_ON_SALE);

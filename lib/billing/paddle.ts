@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import type { SubscriptionPlan, UserRecord } from './types'
 
-export interface PaddleEvent { event_type: string; data: any }
+export interface PaddleEvent { event_type: string; data: any; occurred_at?: string }
 export interface EventTarget { userId?: string; subscriptionId?: string; customerId?: string; email?: string }
 
 export function verifyWebhookSignature(
@@ -46,6 +46,24 @@ export function planFromSubscription(data: any): SubscriptionPlan {
   return data?.items?.[0]?.price?.billing_cycle?.interval === 'year' ? 'yearly' : 'monthly'
 }
 
+// Binds the subscription when a user had none, so a cancel that arrives before `created` is remembered:
+// the later (stale) created/activated event then meets "cancelled is terminal for the same subscription" and does nothing.
+const cancelPatch = (user: UserRecord, d: any): Partial<UserRecord> =>
+  user.paddle_subscription_id
+    ? { subscription_status: 'cancelled' }
+    : {
+        subscription_status: 'cancelled',
+        paddle_subscription_id: typeof d.id === 'string' ? d.id : null,
+        paddle_customer_id: d.customer_id ?? user.paddle_customer_id,
+      }
+
+// Money went back to the buyer: the adjustment names the subscription it belongs to, never the (shared) customer.
+// Partial refunds (goodwill or pro rata) leave the subscription running; full refunds and chargebacks end access.
+const REVOKING_ACTIONS = new Set(['refund', 'chargeback'])
+function revokesAccess(d: any): boolean {
+  return d.status === 'approved' && REVOKING_ACTIONS.has(d.action) && !(d.action === 'refund' && d.type === 'partial')
+}
+
 const periodEnd = (d: any): string | null => d?.current_billing_period?.ends_at ?? d?.next_billed_at ?? null
 
 export function applyEvent(user: UserRecord, e: PaddleEvent): Partial<UserRecord> | null {
@@ -58,7 +76,7 @@ export function applyEvent(user: UserRecord, e: PaddleEvent): Partial<UserRecord
     case 'subscription.activated':
     case 'subscription.updated':
     case 'subscription.resumed': {
-      if (d.status === 'canceled') return foreign ? null : { subscription_status: 'cancelled' }
+      if (d.status === 'canceled') return foreign ? null : cancelPatch(user, d)
       if (d.status === 'paused') return foreign ? null : { subscription_status: 'paused' }
       if (d.status !== 'active' && d.status !== 'trialing') return null // past_due (dunning), unknown or missing status
       if (foreign && user.subscription_status === 'active') return null // cannot steal an active binding
@@ -74,7 +92,11 @@ export function applyEvent(user: UserRecord, e: PaddleEvent): Partial<UserRecord
     case 'subscription.paused':
       return foreign ? null : { subscription_status: 'paused' } // keep subscription_end_date: access holds until period end
     case 'subscription.canceled':
-      return foreign ? null : { subscription_status: 'cancelled' }
+      return foreign ? null : cancelPatch(user, d)
+    case 'adjustment.created':
+    case 'adjustment.updated':
+      // Approved refund or chargeback on the bound subscription revokes access (cancelled is terminal for it).
+      return bound && d.subscription_id === bound && revokesAccess(d) ? { subscription_status: 'cancelled' } : null
     case 'transaction.payment_failed':
       // Only the bound, currently active subscription can be expired by a failed payment.
       return bound && d.subscription_id === bound && user.subscription_status === 'active'

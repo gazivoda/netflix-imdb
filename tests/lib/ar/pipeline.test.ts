@@ -144,6 +144,21 @@ describe('ArPipeline', () => {
     expect(r.tracks[0].title).toBeNull()
   })
 
+  it('hands the corners of an unrecognised card back in input-image pixels (scaled with the box)', () => {
+    const quad: [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }, { x: number; y: number }] = [{ x: 10, y: 12 }, { x: 110, y: 10 }, { x: 112, y: 66 }, { x: 11, y: 68 }]
+    const box = { x: 10, y: 10, w: 102, h: 58 }
+    const frame = blank(1280, 720) // analysed at 640 wide: everything doubles
+    const p = new ArPipeline({ findCards: () => [box], findCardsDetailed: () => [{ box, quad }] })
+    const r = p.processFrame(frame)
+    expect(r.unknownCards[0].box).toEqual({ x: 20, y: 20, w: 204, h: 116 })
+    expect(r.unknownCards[0].quad).toEqual([{ x: 20, y: 24 }, { x: 220, y: 20 }, { x: 224, y: 132 }, { x: 22, y: 136 }])
+  })
+
+  it('works without corners (a finder that only returns boxes)', () => {
+    const p = new ArPipeline({ findCards: () => [{ x: 5, y: 5, w: 100, h: 56 }] })
+    expect(p.processFrame(blank(200, 100)).unknownCards[0].quad).toBeUndefined()
+  })
+
   it('returns nothing for a frame with no cards', () => {
     const p = new ArPipeline({ findCards: () => [] })
     p.setIndex(INDEX)

@@ -1,4 +1,5 @@
 import type { Deps } from './deps'
+import { clientBuild, type ClientBuild } from './flag'
 import { isSessionConfigured } from './session'
 
 // Ruling V: the paywall is OFF until billing is fully configured, so deploying this code before the
@@ -12,13 +13,7 @@ import { isSessionConfigured } from './session'
 //
 // SEC-4: the users database must live on a persistent volume or every redeploy deletes all accounts. The code
 // cannot see the mount, so the owner asserts it with BILLING_DATA_PERSISTENT=true (a runtime variable).
-export interface ClientBuild { token?: string; monthly?: string; yearly?: string }
-
-const clientBuild = (): ClientBuild => ({
-  token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN,
-  monthly: process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_MONTHLY,
-  yearly: process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY,
-})
+export type { ClientBuild } from './flag'
 
 export function billingConfigured(
   deps: Deps,

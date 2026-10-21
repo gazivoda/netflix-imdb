@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import s from './alternatives.module.css';
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
+import { AR_MODE_NAME } from '../../../lib/content';
 import { absoluteUrl, pageMetadata } from '../../../lib/seo';
 
 const PATH = '/compare/alternatives';
@@ -17,6 +18,8 @@ const SRC = {
   rtAbout: 'https://www.rottentomatoes.com/about',
   rateflix: 'https://chromewebstore.google.com/detail/ebldhbkjcdliijniaheecfjojdhjlaji',
   overlay: 'https://www.chromeboard.com/extension/netflix-imdb-overlay-cnhpjpnmjlgcpkdngmdoembbdgiobodc',
+  // Read on 2026-10-21 (after the other sources, which were read on 2026-10-15).
+  svodex: 'https://chromewebstore.google.com/detail/svodex/malgjkedapomgdnolihjjfbdagghmljb',
 };
 
 /** Cells that say "Not stated." get the muted mono style. */
@@ -86,6 +89,14 @@ const ROWS: Row[] = [
     cost: 'Chrome Web Store listing shows no price; it says no personal data is collected.',
   },
   {
+    name: 'SVODEX',
+    url: SRC.svodex,
+    what: <>Chrome extension whose {ext(SRC.svodex, 'Chrome Web Store listing')} says it shows IMDb and Rotten Tomatoes ratings on Netflix, Disney+ and HBO Max.</>,
+    where: 'On those streaming sites (the listing does not say where exactly).',
+    tab: 'Not stated.',
+    cost: 'Not stated.',
+  },
+  {
     name: 'Netflix IMDb Overlay',
     url: SRC.overlay,
     what: <>Extension that {ext(SRC.overlay, 'overlays IMDb ratings on Netflix thumbnails')}.</>,
@@ -106,15 +117,15 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Are there other Chrome extensions that add ratings to Netflix?',
-    a: 'Yes. On 2026-10-15 I found RateFlix, which lists IMDb and Rotten Tomatoes ratings on Netflix titles, and Netflix IMDb Overlay, which shows IMDb ratings only and needs your own free OMDb API key. Both listings were thin on details such as source code, so check reviews and permissions before installing any of them.',
+    a: 'Yes. On 2026-10-15 I found RateFlix, which lists IMDb and Rotten Tomatoes ratings on Netflix titles, and Netflix IMDb Overlay, which shows IMDb ratings only and needs your own free OMDb API key. Both listings were thin on details such as source code, so check reviews and permissions before installing any of them. On 2026-10-21 I also read the Chrome Web Store listing for SVODEX, which says it shows IMDb and Rotten Tomatoes ratings on Netflix, Disney+ and HBO Max.',
   },
   {
     q: 'Is Rating Watch on the Chrome Web Store?',
-    a: 'Not yet. It installs as an unpacked extension from a zip you download from this site, which takes about a minute in Chrome, Edge or Brave. If you want one-click installation from the store today, a store-listed alternative such as RateFlix is easier, though I have not verified its source code or how it fetches ratings.',
+    a: 'Not yet. It installs as an unpacked extension from a zip you download from this site, which takes about a minute in Chrome, Edge or Brave. If you want one-click installation from the store today, a store-listed alternative such as RateFlix or SVODEX is easier, though I have not verified the source code of either or how they fetch ratings.',
   },
   {
     q: 'Are these services affiliated with Rating Watch?',
-    a: 'No. Rating Watch is an independent project and is not affiliated with Netflix, IMDb, Rotten Tomatoes, JustWatch, Reelgood, RateFlix or any other product named here. All names belong to their owners and are used only to identify the products being compared.',
+    a: 'No. Rating Watch is an independent project and is not affiliated with Netflix, IMDb, Rotten Tomatoes, JustWatch, Reelgood, RateFlix, SVODEX or any other product named here. All names belong to their owners and are used only to identify the products being compared.',
   },
 ];
 
@@ -153,7 +164,8 @@ export default function AlternativesPage() {
     >
       <p className={s.note}>
         <strong className={s.stamp}>Last verified: 2026-10-15.</strong> Every claim about another product comes from
-        the page linked beside it, read on that date. Where a page said nothing, the table says
+        the page linked beside it, read on that date; the SVODEX row is the exception and comes from its Chrome Web
+        Store listing as read on 2026-10-21. Where a page said nothing, the table says
         &quot;not stated&quot;. reelgood.com and imdb.com refused my automated requests, so Reelgood is
         described from its App Store listing and IMDb from its help page. Things change; check the
         source before you decide.
@@ -162,6 +174,7 @@ export default function AlternativesPage() {
       <h2 className={`ds-display ${s.h2}`}>How do the options <em className="ds-serif">compare</em>?</h2>
       <div className={s.tableWrap} role="region" aria-label="Comparison table, scrolls sideways on small screens" tabIndex={0}>
         <table className={s.table}>
+          <caption className="sr-only">Ways to see ratings while browsing Netflix, compared</caption>
           <thead>
             <tr>
               <th scope="col">Option</th>
@@ -191,7 +204,7 @@ export default function AlternativesPage() {
         score (Rotten Tomatoes, a percentage) on title cards without opening anything else (Rotten Tomatoes is mostly available for films, not
         TV series). It has no account, needs no key to start (an optional free personal OMDb key lifts the
         shared daily limit), it asks for access to only netflix.com and omdbapi.com, and
-        it sends nothing but title names to OMDb. There is also an optional Pro AR mode that shows
+        it sends nothing but title names to OMDb. There is also an optional {AR_MODE_NAME} that shows
         the same scores over a TV screen through your phone camera. Not sure
         how the two scores differ? See{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.
@@ -213,6 +226,10 @@ export default function AlternativesPage() {
           the <a href="/install">Load unpacked steps</a>.
         </li>
         <li>
+          <strong>You want ratings on more than Netflix.</strong> {ext(SRC.svodex, 'SVODEX')} says in its listing that it
+          covers Netflix, Disney+ and HBO Max. Rating Watch only works on netflix.com.
+        </li>
+        <li>
           <strong>You use another browser.</strong> Rating Watch targets Chromium browsers and is
           untested in Firefox and Safari.
         </li>
@@ -221,8 +238,9 @@ export default function AlternativesPage() {
       <p className={s.p}>
         A note on the other extensions: {ext(SRC.rateflix, 'RateFlix')} showed 17 users and{' '}
         {ext(SRC.overlay, 'Netflix IMDb Overlay')} 105 users on the day I checked, so both are
-        young and small. That says nothing about quality, but there is little track record either
-        way.
+        small. {ext(SRC.svodex, 'SVODEX')} listed about 2,000 users and a 3.5 star average from 59
+        ratings on 2026-10-21, far more than the other two. User counts say little about quality, but
+        they show how much track record each one has.
       </p>
 
       <aside className={`ds-card ${s.callout}`}>

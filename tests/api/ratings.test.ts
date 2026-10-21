@@ -4,6 +4,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 import { getRatingsStore, resetRatingsStoreForTests } from '../../lib/ratings-store'
+import { omdbDailyBudget, takeOmdbCall } from '../../lib/omdb-budget'
 import { IP_BUCKET, MAX_BODY_BYTES, MAX_TITLE_LENGTH, resetRatingsGuardForTests } from '../../lib/ratings-guard'
 
 const mockFetch = jest.fn()
@@ -257,18 +258,73 @@ describe('POST /api/ratings', () => {
       expect((await POST(makeRequest({ titles: ['Inception'] }, fromIp('198.51.100.9')))).status).toBe(200)
     })
 
-    it('keys on the first X-Forwarded-For hop, so appended proxy hops do not matter', async () => {
+    it('keys on the rightmost X-Forwarded-For hop, so a client-supplied prefix cannot mint fresh buckets', async () => {
       mockFetch.mockResolvedValue(omdbResponse())
       for (let i = 0; i < IP_BUCKET.capacity; i++) {
-        await POST(makeRequest({ titles: ['Inception'] }, fromIp(`203.0.113.7, 10.0.0.${i}`)))
+        await POST(makeRequest({ titles: ['Inception'] }, fromIp(`10.0.0.${i}, 203.0.113.7`)))
       }
-      expect((await POST(makeRequest({ titles: ['Inception'] }, fromIp('203.0.113.7, 10.9.9.9')))).status).toBe(429)
+      expect((await POST(makeRequest({ titles: ['Inception'] }, fromIp('10.9.9.9, 203.0.113.7')))).status).toBe(429)
+      expect((await POST(makeRequest({ titles: ['Inception'] }, fromIp('203.0.113.7, 198.51.100.1')))).status).toBe(200)
     })
 
     it('falls back to one shared bucket when there is no X-Forwarded-For', async () => {
       mockFetch.mockResolvedValue(omdbResponse())
       for (let i = 0; i < IP_BUCKET.capacity; i++) await POST(makeRequest({ titles: ['Inception'] }))
       expect((await POST(makeRequest({ titles: ['Inception'] }))).status).toBe(429)
+    })
+  })
+
+  describe('daily OMDb budget', () => {
+    afterEach(() => { delete process.env.OMDB_DAILY_BUDGET })
+    const spend = () => { while (takeOmdbCall()) { /* drain */ } }
+
+    it('serves cached titles and flags unknown ones once the budget is spent; never calls OMDb', async () => {
+      mockFetch.mockResolvedValue(omdbResponse())
+      await POST(makeRequest({ titles: ['Inception'] }))
+      expect(mockFetch).toHaveBeenCalledTimes(1)
+      spend()
+      const res = await POST(makeRequest({ titles: ['Inception', 'Never Seen Before'] }))
+      expect(res.status).toBe(200)
+      expect(res.headers.get('Cache-Control')).toBe('no-store')
+      const body = await res.json()
+      expect(body[0]).toMatchObject({ query: 'Inception', found: true, rating: 8.8 })
+      expect(body[1]).toEqual({ query: 'Never Seen Before', found: false, unavailable: true })
+      expect(mockFetch).toHaveBeenCalledTimes(1)
+    })
+
+    it('503s with Retry-After until UTC midnight when nothing can be answered from the cache', async () => {
+      spend()
+      const res = await POST(makeRequest({ titles: ['Never Seen Before'] }))
+      expect(res.status).toBe(503)
+      expect(res.headers.get('Cache-Control')).toBe('no-store')
+      expect(Number(res.headers.get('Retry-After'))).toBeGreaterThanOrEqual(1)
+      expect(Number(res.headers.get('Retry-After'))).toBeLessThanOrEqual(86_400)
+      expect((await res.json()).error).toMatch(/daily lookup limit/)
+      expect(mockFetch).not.toHaveBeenCalled()
+    })
+
+    it('a cached "not found" answers found:false without the unavailable flag', async () => {
+      mockFetch.mockResolvedValue({ ok: true, json: async () => ({ Response: 'False', Error: 'Movie not found!' }) })
+      await POST(makeRequest({ titles: ['xyz nothing'] }))
+      spend()
+      const body = await (await POST(makeRequest({ titles: ['xyz nothing'] }))).json()
+      expect(body[0]).toEqual({ query: 'xyz nothing', found: false })
+    })
+
+    it('counts every OMDb call (a title without RT costs two) and stops calling at the budget', async () => {
+      process.env.OMDB_DAILY_BUDGET = '2'
+      mockFetch.mockResolvedValue(omdbResponse({ Ratings: [] })) // no RT => a second ?s= search call
+      await POST(makeRequest({ titles: ['A Title'] }))
+      expect(mockFetch).toHaveBeenCalledTimes(2)
+      const res = await POST(makeRequest({ titles: ['Another Title'] }))
+      expect(res.status).toBe(503)
+      expect(mockFetch).toHaveBeenCalledTimes(2)
+    })
+
+    it('uses the documented default of 900 unless OMDB_DAILY_BUDGET is a positive integer', () => {
+      expect(omdbDailyBudget(undefined)).toBe(900)
+      for (const bad of ['', 'abc', '0', '-5', '1.5']) expect(omdbDailyBudget(bad)).toBe(900)
+      expect(omdbDailyBudget('250')).toBe(250)
     })
   })
 

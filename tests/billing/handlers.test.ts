@@ -1,5 +1,5 @@
 import { createHmac } from 'node:crypto'
-import { handlePortalSession, handleVerifySubscription, handleWebhook, MAX_WEBHOOK_BYTES } from '../../lib/billing/handlers'
+import { handlePortalSession, handleVerifySubscription, handleWebhook, MAX_WEBHOOK_BYTES, resetVerifyLimitersForTests, VERIFY_GLOBAL_BUCKET, VERIFY_USER_BUCKET } from '../../lib/billing/handlers'
 import { openUsersDb } from '../../lib/billing/db'
 import { SESSION_COOKIE, signSession } from '../../lib/billing/session'
 import type { Deps } from '../../lib/billing/deps'
@@ -12,7 +12,7 @@ const PRICE_IDS = ['pri_rw_monthly', 'pri_rw_yearly']
 const RW_YEARLY_ITEMS = [{ price: { id: 'pri_rw_yearly', billing_cycle: { interval: 'year' } } }]
 const RW_MONTHLY_ITEMS = [{ price: { id: 'pri_rw_monthly', billing_cycle: { interval: 'month' } } }]
 const FOREIGN_ITEMS = [{ price: { id: 'pri_other_product', billing_cycle: { interval: 'month' } } }]
-beforeEach(() => { process.env.JWT_SECRET = 'k'.repeat(40) })
+beforeEach(() => { process.env.JWT_SECRET = 'k'.repeat(40); resetVerifyLimitersForTests() })
 afterAll(() => { delete process.env.JWT_SECRET })
 // Ruling U: ignored and refused billing paths warn on purpose; keep jest output clean and assert on the spy.
 let warnSpy: jest.SpyInstance
@@ -23,13 +23,18 @@ const warned = () => JSON.stringify(warnSpy.mock.calls)
 const baseUser = (over: Partial<UserRecord> = {}): UserRecord => ({
   id: 'g1', email: 'igor@example.com', name: 'I', avatar: null, trial_end_date: new Date(NOW + 1e6).toISOString(),
   subscription_status: 'trial', subscription_plan: null, subscription_end_date: null,
-  paddle_subscription_id: null, paddle_customer_id: null, created_at: new Date(NOW - 1e6).toISOString(), ...over,
+  paddle_subscription_id: null, paddle_customer_id: null, created_at: new Date(NOW - 1e6).toISOString(), last_event_at: null, ...over,
 })
 function deps(over: Partial<Deps> = {}, users: UserRecord[] = [baseUser()]): Deps {
   const db = openUsersDb(':memory:', () => NOW)
   users.forEach((u) => db.save(u))
   return { db, paddle: null, webhookSecret: SECRET, google: null, appUrl: 'https://rating.watch', priceIds: PRICE_IDS, now: () => NOW, ...over }
 }
+// Paddle API stub for the userId path: the customer behind the event has this email.
+const paddleFor = (...email: [unknown?]): PaddleApi => ({
+  getTransaction: async () => ({}), getSubscription: async () => ({}), createPortalSession: async () => 'https://portal/x',
+  getCustomer: async () => ({ id: 'ctm_1', email: email.length ? email[0] : 'igor@example.com' }),
+})
 const signedReq = (event: object, opts: { ts?: number; secret?: string; tamper?: boolean } = {}) => {
   const body = JSON.stringify(event)
   const ts = opts.ts ?? Math.floor(NOW / 1000)
@@ -40,7 +45,7 @@ const subEvent = (type: string, data: any = {}) => ({ event_type: type, data: { 
 
 describe('handleWebhook', () => {
   it('activates the user named in custom_data and stores plan, period and Paddle ids', async () => {
-    const d = deps()
+    const d = deps({ paddle: paddleFor() })
     const r = await handleWebhook(signedReq(subEvent('subscription.created')), d)
     expect(r.status).toBe(200)
     expect(d.db.get('g1')).toMatchObject({ subscription_status: 'active', subscription_plan: 'yearly', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1', subscription_end_date: '2027-10-20T00:00:00Z' })
@@ -62,16 +67,54 @@ describe('handleWebhook', () => {
     const r = await handleWebhook(new Request('https://x/api/paddle/webhook', { method: 'POST', headers: { 'paddle-signature': `ts=${ts};h1=${h1}` }, body }), deps())
     expect(r.status).toBe(400)
   })
-  it('finds the user by subscription id, then customer id, then email in any case', async () => {
+  it('finds the user by subscription id, then customer id, then a verified userId; an email alone binds nobody', async () => {
     const bySub = deps({}, [baseUser({ paddle_subscription_id: 'sub_1' })])
     await handleWebhook(signedReq(subEvent('subscription.canceled', { custom_data: undefined })), bySub)
     expect(bySub.db.get('g1')!.subscription_status).toBe('cancelled')
     const byCustomer = deps({}, [baseUser({ paddle_customer_id: 'ctm_1' })])
     await handleWebhook(signedReq(subEvent('subscription.paused', { custom_data: undefined })), byCustomer)
     expect(byCustomer.db.get('g1')!.subscription_status).toBe('paused')
-    const byEmail = deps()
-    await handleWebhook(signedReq(subEvent('subscription.created', { custom_data: undefined, customer: { email: 'IGOR@Example.COM' } })), byEmail)
-    expect(byEmail.db.get('g1')!.subscription_status).toBe('active')
+    const byUserId = deps({ paddle: paddleFor('IGOR@Example.COM') })
+    await handleWebhook(signedReq(subEvent('subscription.created')), byUserId)
+    expect(byUserId.db.get('g1')!.subscription_status).toBe('active')
+    // The buyer-typed checkout email is not an identity: no userId, no binding, whatever the email says.
+    const byEmail = deps({ paddle: paddleFor() })
+    await handleWebhook(signedReq(subEvent('subscription.created', { custom_data: undefined, customer: { email: 'igor@example.com' } })), byEmail)
+    expect(byEmail.db.get('g1')).toEqual(baseUser())
+  })
+  describe('userId binding is verified against the Paddle customer', () => {
+    it('ignores the event when the Paddle customer email is not the account email (attacker names a victim userId)', async () => {
+      const d = deps({ paddle: paddleFor('attacker@example.com') })
+      expect((await handleWebhook(signedReq(subEvent('subscription.created')), d)).status).toBe(200)
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it.each([['missing', undefined], ['empty', ''], ['not a string', 42]])('ignores the event when the Paddle customer email is %s', async (_n, email) => {
+      const d = deps({ paddle: paddleFor(email) })
+      await handleWebhook(signedReq(subEvent('subscription.created')), d)
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it('ignores the event when the account has no email on record', async () => {
+      const d = deps({ paddle: paddleFor('igor@example.com') }, [baseUser({ email: null })])
+      await handleWebhook(signedReq(subEvent('subscription.created')), d)
+      expect(d.db.get('g1')).toEqual(baseUser({ email: null }))
+    })
+    it('ignores the event when there is no Paddle API to verify with (fail closed)', async () => {
+      const d = deps({ paddle: null })
+      expect((await handleWebhook(signedReq(subEvent('subscription.created')), d)).status).toBe(200)
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it('ignores the event when it names no customer', async () => {
+      const d = deps({ paddle: paddleFor() })
+      await handleWebhook(signedReq(subEvent('subscription.created', { customer_id: undefined })), d)
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it('answers 500 (Paddle retries) when the customer lookup fails, and writes nothing', async () => {
+      const err = jest.spyOn(console, 'error').mockImplementation(() => {})
+      const d = deps({ paddle: { ...paddleFor(), getCustomer: async () => { throw new Error('down') } } })
+      expect((await handleWebhook(signedReq(subEvent('subscription.created')), d)).status).toBe(500)
+      expect(d.db.get('g1')).toEqual(baseUser())
+      err.mockRestore()
+    })
   })
   it('returns 200 and writes nothing for an unknown user or an unknown event type', async () => {
     const d = deps()
@@ -115,11 +158,12 @@ describe('handleWebhook', () => {
       expect(d.db.get('free')).toEqual(unbound)
     })
   })
-  describe('Ruling K: events resolved only via userId or email can bind but never cancel, pause or expire', () => {
+  describe('Ruling K: an unverified userId (no Paddle API, or a customer that is not the account owner) can never change anyone', () => {
     const trialUser = () => baseUser({ email: 'igor@example.com' })
     const unknownIds = { id: 'sub_nobody', customer_id: 'ctm_nobody' }
-    it('canceled / paused / payment_failed that match nobody by Paddle ids leave an unbound trial user unchanged (200)', async () => {
+    it('created / canceled / paused / payment_failed leave an unbound trial user unchanged (200) without a verifying Paddle API', async () => {
       for (const ev of [
+        subEvent('subscription.created', unknownIds),
         subEvent('subscription.canceled', { ...unknownIds, status: 'canceled' }),
         subEvent('subscription.paused', { ...unknownIds, status: 'paused' }),
         { event_type: 'transaction.payment_failed', data: { subscription_id: 'sub_nobody', customer_id: 'ctm_nobody', custom_data: { userId: 'g1' } } },
@@ -130,20 +174,88 @@ describe('handleWebhook', () => {
         expect(d.db.get('g1')).toEqual(trialUser())
       }
     })
-    it('userId-only matches ignore an updated event whose status is not active or trialing', async () => {
-      const d = deps({}, [trialUser()])
-      for (const status of ['canceled', 'paused', 'past_due']) {
-        await handleWebhook(signedReq(subEvent('subscription.updated', { ...unknownIds, status })), d)
-      }
+    it('a verified userId ignores updated events whose status is past_due or unknown', async () => {
+      const d = deps({ paddle: paddleFor() }, [trialUser()])
+      await handleWebhook(signedReq(subEvent('subscription.updated', { ...unknownIds, status: 'past_due' })), d)
       expect(d.db.get('g1')).toEqual(trialUser())
     })
-    it('a subscription.created (active) naming the userId still activates and binds, and so does an email-only match', async () => {
-      const byUserId = deps({}, [trialUser()])
-      await handleWebhook(signedReq(subEvent('subscription.created', unknownIds)), byUserId)
-      expect(byUserId.db.get('g1')).toMatchObject({ subscription_status: 'active', paddle_subscription_id: 'sub_nobody', paddle_customer_id: 'ctm_nobody' })
-      const byEmail = deps({}, [trialUser()])
-      await handleWebhook(signedReq(subEvent('subscription.created', { ...unknownIds, custom_data: undefined, customer: { email: 'IGOR@example.com' } })), byEmail)
-      expect(byEmail.db.get('g1')).toMatchObject({ subscription_status: 'active', paddle_subscription_id: 'sub_nobody' })
+    it('a verified userId activates and binds', async () => {
+      const d = deps({ paddle: paddleFor() }, [trialUser()])
+      await handleWebhook(signedReq(subEvent('subscription.created', unknownIds)), d)
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'active', paddle_subscription_id: 'sub_nobody', paddle_customer_id: 'ctm_nobody' })
+    })
+    it('a payment_failed naming only a userId changes nobody (no bound subscription to expire)', async () => {
+      const d = deps({ paddle: paddleFor() }, [trialUser()])
+      await handleWebhook(signedReq({ event_type: 'transaction.payment_failed', data: { subscription_id: 'sub_nobody', customer_id: 'ctm_nobody', items: RW_MONTHLY_ITEMS, custom_data: { userId: 'g1' } } }), d)
+      expect(d.db.get('g1')).toEqual(trialUser())
+    })
+  })
+
+  describe('event ordering (last_event_at)', () => {
+    const at = (iso: string) => ({ occurred_at: iso })
+    it('records occurred_at of the applied event', async () => {
+      const d = deps({ paddle: paddleFor() })
+      await handleWebhook(signedReq({ ...subEvent('subscription.created'), ...at('2026-10-20T11:00:00Z') }), d)
+      expect(d.db.get('g1')!.last_event_at).toBe('2026-10-20T11:00:00Z')
+    })
+    it('ignores an older event: a late updated(active) cannot re-activate a user expired by a newer payment failure', async () => {
+      const d = deps({}, [baseUser({ subscription_status: 'active', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1', last_event_at: '2026-10-20T11:00:00Z' })])
+      await handleWebhook(signedReq({ event_type: 'transaction.payment_failed', occurred_at: '2026-10-20T11:30:00Z', data: { subscription_id: 'sub_1' } }), d)
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'expired', last_event_at: '2026-10-20T11:30:00Z' })
+      await handleWebhook(signedReq({ ...subEvent('subscription.updated'), ...at('2026-10-20T11:10:00Z') }), d)
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'expired', last_event_at: '2026-10-20T11:30:00Z' })
+    })
+    it('applies an event with the same timestamp and a newer one, and applies events without occurred_at as before', async () => {
+      const d = deps({}, [baseUser({ subscription_status: 'active', paddle_subscription_id: 'sub_1', last_event_at: '2026-10-20T11:00:00Z' })])
+      await handleWebhook(signedReq({ ...subEvent('subscription.paused', { status: 'paused' }), ...at('2026-10-20T11:00:00Z') }), d)
+      expect(d.db.get('g1')!.subscription_status).toBe('paused')
+      await handleWebhook(signedReq(subEvent('subscription.canceled', { status: 'canceled' })), d)
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'cancelled', last_event_at: '2026-10-20T11:00:00Z' })
+    })
+    it('canceled before created is not lost: the cancel binds the subscription and the late created does not re-activate', async () => {
+      const d = deps({ paddle: paddleFor() })
+      await handleWebhook(signedReq({ ...subEvent('subscription.canceled', { status: 'canceled' }), ...at('2026-10-20T11:05:00Z') }), d)
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'cancelled', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1' })
+      await handleWebhook(signedReq({ ...subEvent('subscription.created'), ...at('2026-10-20T11:00:00Z') }), d)
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'cancelled' })
+      // Even a created event that carries no usable timestamp is stopped by the binding.
+      await handleWebhook(signedReq(subEvent('subscription.created')), d)
+      expect(d.db.get('g1')!.subscription_status).toBe('cancelled')
+    })
+  })
+
+  describe('refunds and chargebacks (adjustment events)', () => {
+    const bound = () => baseUser({ subscription_status: 'active', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1' })
+    const adj = (data: object, type = 'adjustment.updated') => ({ event_type: type, occurred_at: '2026-10-20T11:40:00Z', data: { id: 'adj_1', action: 'refund', type: 'full', status: 'approved', subscription_id: 'sub_1', customer_id: 'ctm_1', items: [{ item_id: 'txnitm_1', type: 'full' }], ...data } })
+    it('an approved full refund or a chargeback revokes access for the bound user', async () => {
+      for (const data of [{}, { action: 'chargeback' }, { action: 'chargeback', type: 'partial' }]) {
+        const d = deps({}, [bound()])
+        expect((await handleWebhook(signedReq(adj(data, 'adjustment.created')), d)).status).toBe(200)
+        expect(d.db.get('g1')).toMatchObject({ subscription_status: 'cancelled', last_event_at: '2026-10-20T11:40:00Z' })
+      }
+    })
+    it('pending, rejected, partial refunds and other actions leave access alone', async () => {
+      for (const data of [{ status: 'pending_approval' }, { status: 'rejected' }, { type: 'partial' }, { action: 'credit' }, { action: 'chargeback_warning' }, { action: 'chargeback_reverse' }]) {
+        const d = deps({}, [bound()])
+        await handleWebhook(signedReq(adj(data)), d)
+        expect(d.db.get('g1')).toEqual(bound())
+      }
+    })
+    it('matches only through the bound subscription id (not the shared Paddle customer, not another subscription)', async () => {
+      const d = deps({}, [bound()])
+      await handleWebhook(signedReq(adj({ subscription_id: 'sub_other' })), d)
+      await handleWebhook(signedReq(adj({ subscription_id: undefined })), d)
+      await handleWebhook(signedReq(adj({ subscription_id: 'sub_unbound' })), deps({}, [baseUser({ paddle_customer_id: 'ctm_1' })]))
+      expect(d.db.get('g1')).toEqual(bound())
+      const customerOnly = deps({}, [baseUser({ paddle_customer_id: 'ctm_1' })])
+      await handleWebhook(signedReq(adj({ subscription_id: 'sub_zzz' })), customerOnly)
+      expect(customerOnly.db.get('g1')).toEqual(baseUser({ paddle_customer_id: 'ctm_1' }))
+    })
+    it('a revoked subscription is not re-activated by a stale subscription event for it', async () => {
+      const d = deps({}, [bound()])
+      await handleWebhook(signedReq(adj({})), d)
+      await handleWebhook(signedReq(subEvent('subscription.updated')), d)
+      expect(d.db.get('g1')!.subscription_status).toBe('cancelled')
     })
   })
   it('an old subscription canceled event does not touch a user now active on a new subscription', async () => {
@@ -348,7 +460,7 @@ describe('Ruling P: only Rating Watch prices count (the Paddle account is shared
     }
   })
   it('accepts an event when at least one item carries an allowed price (price.id or price_id)', async () => {
-    const mixed = deps()
+    const mixed = deps({ paddle: paddleFor() })
     await handleWebhook(signedReq(subEvent('subscription.created', { items: [...FOREIGN_ITEMS, ...RW_YEARLY_ITEMS] })), mixed)
     expect(mixed.db.get('g1')).toMatchObject({ subscription_status: 'active', paddle_subscription_id: 'sub_1' })
     const canceled = deps({}, [bound()])
@@ -548,9 +660,60 @@ describe('SEC-6: the webhook refuses oversized bodies before reading them', () =
     expect((await handleWebhook(req, deps())).status).toBe(401)
   })
   it('still accepts a validly signed event at normal size (multi-byte UTF-8 survives the capped read)', async () => {
-    const d = deps()
+    const d = deps({ paddle: paddleFor() })
     const r = await handleWebhook(signedReq(subEvent('subscription.created', { custom_data: { userId: 'g1', note: 'č ž 日本' } })), d)
     expect(r.status).toBe(200)
     expect(d.db.get('g1')!.subscription_status).toBe('active')
+  })
+})
+
+describe('handleVerifySubscription rate limits (shared Paddle API quota)', () => {
+  let errSpy: jest.SpyInstance
+  beforeEach(() => { errSpy = jest.spyOn(console, 'error').mockImplementation(() => {}) })
+  afterEach(() => { errSpy.mockRestore() })
+  const postAs = (userId: string) =>
+    new Request('https://rating.watch/api/paddle/verify-subscription', {
+      method: 'POST', body: JSON.stringify({ transactionId: 'txn_1' }),
+      headers: { cookie: `${SESSION_COOKIE}=${signSession(userId)}`, 'content-type': 'application/json' },
+    })
+
+  it('429s one user after the per-user burst, with Retry-After, without calling Paddle again', async () => {
+    const getTransaction = jest.fn(async () => ({}))
+    const d = deps({ paddle: api({ getTransaction }) })
+    for (let i = 0; i < VERIFY_USER_BUCKET.capacity; i++) expect((await handleVerifySubscription(postAs('g1'), d)).status).toBe(202)
+    const limited = await handleVerifySubscription(postAs('g1'), d)
+    expect(limited.status).toBe(429)
+    expect(Number(limited.headers.get('Retry-After'))).toBeGreaterThanOrEqual(1)
+    expect(getTransaction).toHaveBeenCalledTimes(VERIFY_USER_BUCKET.capacity)
+  })
+  it('refills over time', async () => {
+    let now = NOW
+    const d = deps({ paddle: api({ getTransaction: async () => ({}) }), now: () => now })
+    for (let i = 0; i < VERIFY_USER_BUCKET.capacity; i++) await handleVerifySubscription(postAs('g1'), d)
+    expect((await handleVerifySubscription(postAs('g1'), d)).status).toBe(429)
+    now += 31_000
+    expect((await handleVerifySubscription(postAs('g1'), d)).status).toBe(202)
+  })
+  it('one user hitting the limit does not block another user', async () => {
+    const other = baseUser({ id: 'g2', email: 'two@example.com' })
+    const d = deps({ paddle: api({ getTransaction: async () => ({}) }) }, [baseUser(), other])
+    for (let i = 0; i < VERIFY_USER_BUCKET.capacity + 1; i++) await handleVerifySubscription(postAs('g1'), d)
+    expect((await handleVerifySubscription(postAs('g2'), d)).status).toBe(202)
+  })
+  it('a global ceiling stops many different users together', async () => {
+    const users = Array.from({ length: VERIFY_GLOBAL_BUCKET.capacity + 2 }, (_, i) => baseUser({ id: `u${i}`, email: `u${i}@example.com` }))
+    const d = deps({ paddle: api({ getTransaction: async () => ({}) }) }, users)
+    const statuses: number[] = []
+    for (const u of users) statuses.push((await handleVerifySubscription(postAs(u.id), d)).status)
+    expect(statuses.filter((s) => s === 202)).toHaveLength(VERIFY_GLOBAL_BUCKET.capacity)
+    expect(statuses.slice(-2)).toEqual([429, 429])
+  })
+  it('malformed requests and signed-out callers do not spend tokens', async () => {
+    const d = deps({ paddle: api() })
+    for (let i = 0; i < 20; i++) {
+      const bad = new Request('https://rating.watch/api/paddle/verify-subscription', { method: 'POST', body: JSON.stringify({ transactionId: '..' }), headers: { cookie: `${SESSION_COOKIE}=${signSession('g1')}` } })
+      expect((await handleVerifySubscription(bad, d)).status).toBe(400)
+    }
+    expect((await handleVerifySubscription(postAs('g1'), d)).status).not.toBe(429)
   })
 })

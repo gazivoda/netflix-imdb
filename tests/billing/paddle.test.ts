@@ -81,7 +81,7 @@ describe('applyEvent', () => {
   })
   it('paused, canceled and payment_failed map like Name Habitat', () => {
     expect(applyEvent(user({ subscription_status: 'active' }), { event_type: 'subscription.paused', data: sub() })).toEqual({ subscription_status: 'paused' })
-    expect(applyEvent(user({ subscription_status: 'active' }), { event_type: 'subscription.canceled', data: sub() })).toEqual({ subscription_status: 'cancelled' })
+    expect(applyEvent(user({ subscription_status: 'active', paddle_subscription_id: 'sub_1' }), { event_type: 'subscription.canceled', data: sub() })).toEqual({ subscription_status: 'cancelled' })
     expect(applyEvent(user({ subscription_status: 'active', paddle_subscription_id: 'sub_1' }), { event_type: 'transaction.payment_failed', data: { subscription_id: 'sub_1' } })).toEqual({ subscription_status: 'expired' })
   })
   it('ignores event types it does not know', () => {
@@ -134,8 +134,14 @@ describe('applyEvent subscription binding and ordering (ruling H)', () => {
   })
   it('an unbound user still gets activation and canceled applied', () => {
     expect(applyEvent(user(), ev('subscription.created'))?.subscription_status).toBe('active')
-    expect(applyEvent(user(), ev('subscription.canceled'))).toEqual({ subscription_status: 'cancelled' })
     expect(applyEvent(user(), ev('subscription.paused'))).toEqual({ subscription_status: 'paused' })
+  })
+  it('a cancel for an unbound user binds the subscription, so a late created cannot re-activate it', () => {
+    const cancelled = applyEvent(user(), ev('subscription.canceled'))
+    expect(cancelled).toEqual({ subscription_status: 'cancelled', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1' })
+    const after = user({ ...cancelled })
+    expect(applyEvent(after, ev('subscription.created'))).toBeNull()
+    expect(applyEvent(after, ev('subscription.activated'))).toBeNull()
   })
   it('payment_failed expires only the active, bound subscription', () => {
     const pf = (id?: string) => ({ event_type: 'transaction.payment_failed', data: { subscription_id: id } })

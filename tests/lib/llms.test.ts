@@ -146,3 +146,25 @@ describe('response headers', () => {
     expect(LLMS_HEADERS['Cache-Control']).toMatch(/max-age/);
   });
 });
+
+describe('llms.txt Pro wording follows the billing flag (build-time)', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { staticPages } = require('../../lib/pages') as typeof import('../../lib/pages')
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { buildFaqs } = require('../../lib/content') as typeof import('../../lib/content')
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { buildLlmsTxt, buildLlmsFullTxt } = require('../../lib/llms') as typeof import('../../lib/llms')
+
+  it('while Pro is not on sale neither file advertises a price, trial, refund window or Pro plan', () => {
+    const off = [buildLlmsTxt(staticPages(false), false), buildLlmsFullTxt(staticPages(false), buildFaqs(false), false)]
+    for (const text of off) {
+      expect(text).toMatch(/free to try/i)
+      expect(text).not.toMatch(/\$\d|free trial|3-day|14-day|refund window|\bPro\b/)
+    }
+  })
+
+  it('once Pro is on sale llms.txt states the prices and the trial', () => {
+    const on = buildLlmsTxt(staticPages(true), true)
+    expect(on).toMatch(/AR mode is Pro \(\$2\.99\/month or \$29\/year, 3-day free trial\); see \/pricing/)
+  })
+})

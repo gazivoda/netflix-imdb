@@ -7,7 +7,10 @@
 // degradations. The jest benchmark reads the finished PNGs and needs nothing but zlib.
 //
 // Layouts: landscape (16:9 key-art tiles, hero, nav rail, focused tile, cut tiles), caption (title printed under each tile),
-// top10 (big numerals + portrait posters). Each is rendered clean and at mild / medium / severe "phone photographing a TV" levels.
+// top10 (big numerals + portrait posters), plain (the honest one: landscape rows of key art with NO caption under the tiles and NO
+// overlay text, and about half of the windows cut from the poster at random instead of centred on the printed title, so a good share
+// of the tiles show no legible title at all, as on a real Netflix row). Each is rendered clean and at mild / medium / severe "phone photographing a TV"
+// levels. AR_BENCH_LAYOUTS=plain renders only those layouts and merges them into an existing index.json (the other scenes are kept).
 // Ground truth per tile: box (after the photo warp), true canonical title, and whether the title is legible in the tile.
 
 import fs from 'node:fs'
@@ -33,7 +36,8 @@ const sharp = loadSharp()
 const W = 1280, H = 720
 const PER_LAYOUT = Number(process.env.AR_BENCH_PER_LAYOUT ?? 6)
 const WORKERS = Number(process.env.AR_BENCH_WORKERS ?? 6)
-const LAYOUTS = ['landscape', 'caption', 'top10']
+const ALL_LAYOUTS = ['landscape', 'caption', 'top10', 'plain']
+const LAYOUTS = (process.env.AR_BENCH_LAYOUTS ? process.env.AR_BENCH_LAYOUTS.split(',') : ALL_LAYOUTS).filter(l => ALL_LAYOUTS.includes(l))
 const LEVELS = ['clean', 'mild', 'medium', 'severe']
 
 // ---------- utils ----------
@@ -207,10 +211,18 @@ function titleOverlaySvg(rng, title, tw, th) {
 }
 
 // A tw x th tile cut out of a poster: the window is centred on where the title is printed, then darkened at the bottom.
-async function tileArt(p, tw, th, rng, { overlay = false, portrait = false } = {}) {
+async function tileArt(p, tw, th, rng, { overlay = false, portrait = false, free = false } = {}) {
   let cw, ch, cx, cy
   if (portrait) { cw = p.w; ch = Math.min(p.h, Math.round(cw * th / tw)); cx = p.w / 2; cy = p.h / 2 }
-  else {
+  else if (free && rng() < 0.5) {
+    // half of the tiles: a window anywhere on the poster, as a streaming service crops key art, so the printed title may or may not end
+    // up inside (the other half keep the title in frame as the other layouts do: artwork whose logo is part of the row's art)
+    cw = Math.round(p.w * (0.72 + rng() * 0.28))
+    ch = Math.round((cw * th) / tw)
+    if (ch > p.h) { ch = p.h; cw = Math.round((ch * tw) / th) }
+    cx = cw / 2 + rng() * (p.w - cw)
+    cy = ch / 2 + rng() * (p.h - ch)
+  } else {
     const tb = p.tb
     const zMin = tb ? Math.max(0.72, ((tb.x1 - tb.x0) * 1.25) / p.w) : 0.72
     cw = Math.round(p.w * Math.min(1, zMin + rng() * (1 - zMin)))
@@ -307,6 +319,34 @@ async function sceneLandscape(posters, rng) {
       if (focused) for (const [rx, ry, rw, rh] of [[fx, fy, fw, 3], [fx, fy + fh - 3, fw, 3], [fx, fy, 3, fh], [fx + fw - 3, fy, 3, fh]]) fillRect(b.buf, rx, ry, rw, rh, [255, 255, 255])
       b.record(p, fx, fy, fw, fh, { focused, overlay, titleInFrame: art.titleInFrame, legibleBy: overlay ? 'overlay' : art.titleInFrame ? 'poster' : 'none', font: art.font })
       x += (focused ? fw : tw) + gap
+    }
+  }
+  return b
+}
+
+// The honest class: rows of key art, no caption, no overlay text, windows not centred on the printed title.
+async function scenePlain(posters, rng) {
+  const b = new SceneBuilder(posters, rng)
+  await b.chrome({ rail: true, topBar: true })
+  const hero = b.nextPoster()
+  const heroArt = await tileArt(hero, 1216, 200, rng, {})
+  blit(b.buf, heroArt.buf, 1216, 200, 64, 56)
+  b.ignore.push({ x: 64, y: 56, w: 1216, h: 200 })
+
+  const tw = 196 + Math.floor(rng() * 40), th = Math.round((tw * 9) / 16), gap = 8 + Math.floor(rng() * 6)
+  const pitch = 26 + th + 16
+  let rowTop = 270
+  for (let r = 0; rowTop + 26 + th * 0.5 < H; r++, rowTop += pitch) {
+    await b.label(pick(rng, CAPTIONS), 84, rowTop)
+    const ty = rowTop + 26
+    let x = 84
+    for (let i = 0; x < W - 4; i++) {
+      const p = b.nextPoster()
+      const trng = mulberry32(Math.floor(rng() * 1e9))
+      const art = await tileArt(p, tw, th, trng, { free: true })
+      blit(b.buf, art.buf, tw, th, x, ty)
+      b.record(p, x, ty, tw, th, { titleInFrame: art.titleInFrame, legibleBy: art.titleInFrame ? 'poster' : 'none', font: null })
+      x += tw + gap
     }
   }
   return b
@@ -478,10 +518,11 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true })
   const posters = await loadPosters()
   if (posters.length < 40) throw new Error(`Only ${posters.length} posters cached; need at least 40 (run node scripts/ar-bench/fetch.mjs).`)
-  const builders = { landscape: sceneLandscape, caption: sceneCaption, top10: sceneTop10 }
+  const builders = { landscape: sceneLandscape, caption: sceneCaption, top10: sceneTop10, plain: scenePlain }
   const pool = await pooled(WORKERS, async () => { const w = await createWorker('eng'); await w.setParameters({ tessedit_pageseg_mode: '11' }); return w })
   const scenes = []
-  for (const [li, layout] of LAYOUTS.entries()) {
+  for (const layout of LAYOUTS) {
+    const li = ALL_LAYOUTS.indexOf(layout) // seeds depend on the layout's fixed position, so a partial render matches a full one
     for (let n = 1; n <= PER_LAYOUT; n++) {
       const seed = li * 1000 + n
       const clean = await builders[layout](posters, mulberry32(seed))
@@ -517,8 +558,16 @@ async function main() {
     }
   }
   await pool.close()
-  fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify({ version: 1, width: W, height: H, knownTitles: posters.map(p => p.title), scenes }))
-  console.log(`done: ${scenes.length} scenes in .cache/ar-scenes (${LAYOUTS.length} layouts x ${PER_LAYOUT} x ${LEVELS.length} levels)`)
+  // a partial render (AR_BENCH_LAYOUTS) keeps the scenes of the other layouts that are already in the index
+  const indexFile = path.join(outDir, 'index.json')
+  let merged = scenes
+  if (LAYOUTS.length < ALL_LAYOUTS.length && fs.existsSync(indexFile)) {
+    const old = JSON.parse(fs.readFileSync(indexFile, 'utf8')).scenes ?? []
+    merged = [...old.filter(sc => !LAYOUTS.includes(sc.layout)), ...scenes]
+    merged.sort((a, b) => ALL_LAYOUTS.indexOf(a.layout) - ALL_LAYOUTS.indexOf(b.layout))
+  }
+  fs.writeFileSync(indexFile, JSON.stringify({ version: 1, width: W, height: H, knownTitles: posters.map(p => p.title), scenes: merged }))
+  console.log(`done: ${scenes.length} scenes rendered, ${merged.length} in the index (.cache/ar-scenes; ${LAYOUTS.length} layouts x ${PER_LAYOUT} x ${LEVELS.length} levels)`)
 }
 
 main().catch(e => { console.error(e); process.exit(1) })

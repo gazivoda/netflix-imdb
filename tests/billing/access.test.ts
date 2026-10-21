@@ -1,4 +1,4 @@
-import { computeAccessStatus, toPublicUser, TRIAL_DAYS } from '../../lib/billing/access'
+import { computeAccessStatus, PAUSED_GRACE_MS, toPublicUser, TRIAL_DAYS } from '../../lib/billing/access'
 import type { UserRecord } from '../../lib/billing/types'
 
 const NOW = Date.parse('2026-10-20T12:00:00Z')
@@ -25,9 +25,21 @@ describe('computeAccessStatus', () => {
     expect(computeAccessStatus(user({ trial_end_date: '' }), NOW)).toBe('paywall')
     expect(computeAccessStatus(user({ trial_end_date: 'nonsense' }), NOW)).toBe('paywall')
   })
-  it('active and paused are subscribed whatever the dates say', () => {
+  it('active is subscribed whatever the dates say (the end date is not a gate for active)', () => {
     expect(computeAccessStatus(user({ subscription_status: 'active', trial_end_date: iso(NOW - 9e9), subscription_end_date: iso(NOW - 9e9) }), NOW)).toBe('subscribed')
-    expect(computeAccessStatus(user({ subscription_status: 'paused' }), NOW)).toBe('subscribed')
+    expect(computeAccessStatus(user({ subscription_status: 'active', subscription_end_date: null }), NOW)).toBe('subscribed')
+  })
+  it('paused is subscribed only while the paid period (plus a short grace) lasts', () => {
+    const paused = (end: string | null) => user({ subscription_status: 'paused', subscription_end_date: end, trial_end_date: iso(NOW - 9e9) })
+    expect(computeAccessStatus(paused(iso(NOW + 86_400_000)), NOW)).toBe('subscribed')
+    expect(computeAccessStatus(paused(iso(NOW - PAUSED_GRACE_MS + 1000)), NOW)).toBe('subscribed') // inside the grace
+    expect(computeAccessStatus(paused(iso(NOW - PAUSED_GRACE_MS)), NOW)).toBe('paywall')
+    expect(computeAccessStatus(paused(iso(NOW - 30 * 86_400_000)), NOW)).toBe('paywall') // paused forever is not free forever
+  })
+  it('paused without a usable end date is not subscribed', () => {
+    for (const end of [null, '', 'nonsense']) {
+      expect(computeAccessStatus(user({ subscription_status: 'paused', subscription_end_date: end }), NOW)).toBe('paywall')
+    }
   })
   it('cancelled and expired never fall back to the trial', () => {
     expect(computeAccessStatus(user({ subscription_status: 'cancelled' }), NOW)).toBe('paywall')

@@ -18,9 +18,9 @@ import { titleSimilarity } from '../../lib/ar/auto-label'
 
 export const DATASET_DIR = path.join(__dirname, '..', '..', '.cache', 'ar-scenes')
 
-export type Layout = 'landscape' | 'caption' | 'top10'
+export type Layout = 'landscape' | 'caption' | 'top10' | 'plain'
 export type BenchLevel = 'clean' | 'mild' | 'medium' | 'severe'
-export const LAYOUTS: Layout[] = ['landscape', 'caption', 'top10']
+export const LAYOUTS: Layout[] = ['landscape', 'caption', 'top10', 'plain']
 export const LEVELS: BenchLevel[] = ['clean', 'mild', 'medium', 'severe']
 
 export interface RealTile {
@@ -201,18 +201,20 @@ export function loadScenes(filter: SceneFilter = {}): RealScene[] {
 }
 
 // ---------- catalogue stub ----------
+const LEADING_ARTICLE = /^(the|a|an)\s+/i
+const bareTitle = (s: string) => s.trim().replace(LEADING_ARTICLE, '').toLowerCase().replace(/[^a-z0-9]+/g, '')
+
 /**
- * Stand-in for /api/ratings: OMDb's fuzzy search resolves a query to the closest known title. Anything at least `floor` similar
- * to some known title "is found"; the AutoLabeler's own similarity rule (0.8) then decides whether to trust it.
+ * Stand-in for /api/ratings, and like OMDb's `?t=` it is EXACT: a query finds a title only when it is the same title, ignoring case,
+ * punctuation and a leading "The" / "A" / "An". Anything else (an OCR slip, a prefix, a fragment) is "not found". An earlier stub
+ * returned the closest known title above a similarity floor, which quietly repaired OCR typos the real service would reject and
+ * so overstated every reading result. Titles come back with a vote count above the page's minVotes guard, as a popular film would.
  */
-export function catalogueLookup(known: string[] = knownTitles(), floor = 0.5): (title: string) => Promise<{ title: string } | null> {
+export function catalogueLookup(known: string[] = knownTitles()): (title: string) => Promise<{ title: string; voteCount: number } | null> {
+  const byBare = new Map(known.map(t => [bareTitle(t), t]))
   return async query => {
-    let best: { title: string; s: number } | null = null
-    for (const t of known) {
-      const s = titleSimilarity(query, t)
-      if (!best || s > best.s) best = { title: t, s }
-    }
-    return best && best.s >= floor ? { title: best.title } : null
+    const hit = byBare.get(bareTitle(query))
+    return hit ? { title: hit, voteCount: 1_000_000 } : null
   }
 }
 

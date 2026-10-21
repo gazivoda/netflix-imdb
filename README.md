@@ -2,7 +2,7 @@
 
 **Rating Watch is a free Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards.**
 
-It adds a small badge to the top-right corner of title cards on netflix.com, so you can see the IMDb score (out of 10) and, where OMDb has one, the Rotten Tomatoes critic score (a percentage, mostly for films, not TV series) without opening another tab. The extension needs no account and does no tracking. It works out of the box on a shared OMDb lookup allowance that can run out on a busy day; an optional free personal OMDb key in the extension options lifts it.
+It adds a small badge to the top-right corner of title cards on netflix.com, so you can see the IMDb score (out of 10) and, where OMDb has one, the Rotten Tomatoes critic score (a percentage, mostly for films, not TV series) without opening another tab. The extension needs no account and has no analytics; this website measures visits only if you accept analytics in its cookie banner. It works out of the box on a shared OMDb lookup allowance that can run out on a busy day; an optional free personal OMDb key in the extension options lifts it.
 
 Website: [rating.watch](https://rating.watch) · [Install guide](https://rating.watch/install) · [Privacy policy](https://rating.watch/privacy) · [IMDb vs Rotten Tomatoes](https://rating.watch/compare/imdb-vs-rotten-tomatoes)
 

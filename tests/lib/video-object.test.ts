@@ -27,8 +27,8 @@ describe('videoObject (home page promo)', () => {
   });
 
   it('has an ISO 8601 date and a PT30S duration', () => {
-    expect(v.uploadDate).toBe('2026-10-20');
-    expect(v.uploadDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(v.uploadDate).toBe('2026-10-20T00:00:00+00:00'); // a time zone is required, not a bare date
+    expect(v.uploadDate).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/);
     expect(Number.isNaN(Date.parse(v.uploadDate as string))).toBe(false);
     expect(v.duration).toBe('PT30S');
     expect(v.duration).toMatch(/^PT(\d+H)?(\d+M)?(\d+S)?$/);

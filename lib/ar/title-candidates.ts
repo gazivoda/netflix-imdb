@@ -44,8 +44,8 @@ export interface CandidateOptions {
 export const DEFAULT_CANDIDATE_OPTIONS: CandidateOptions = {
   minWordConfidence: 30,
   minChars: 3,
-  maxChars: 44,
-  maxWords: 7,
+  maxChars: 60,
+  maxWords: 10,
   partPenalty: 0.85,
   imageHeight: 0,
   titleHeightFrac: 0.15,
@@ -62,7 +62,34 @@ const UI_PHRASES = new Set([
   'netflix series', 'netflix film', 'now playing', 'coming soon', 'watch now', 'streaming now', 'only on', 'season', 'episode',
   'limited series', 'a netflix limited series', 'original series', 'original', 'series', 'film', 'trailer', 'info', 'tv',
   'top 10', 'top ten', 'true story', 'a true story', 'true events', 'based on a true story', 'new series', 'new season', 'new episodes', 'the', 'a', 'an', 'of', 'and', 'in', 'on', 'by', 'from',
+  'recently added', 'new release', 'new releases', 'just added', 'leaving soon', 'new on netflix', 'popular on netflix', 'trending now',
+  'continue watching', 'watch again', 'watch it again', 'watch trailer', 'play trailer', 'play next', 'next episode', 'skip intro',
+  'remind me', 'add to list', 'my list', 'top picks', 'top picks for you', 'because you watched', 'tv series', 'tv movie', 'netflix originals',
+  'documentary', 'documentaries', 'audio and subtitles', 'available now', 'streaming', 'exclusive', 'season finale', 'series finale',
+  'final season', 'new and popular', 'kids', 'browse', 'genres', 'sign in', 'sign out', 'help center', 'account',
 ])
+
+// Patterns, not words: maturity ratings ("TV-MA", "TV-14 16", "PG-13"), "98 Match" (the % is stripped from the OCR token),
+// "Season 2", "Episode 3", "Top 10 in the US today", ages ("16" from "16+"), durations ("2h 14m"), "Because you watched ...".
+const UI_PATTERNS: RegExp[] = [
+  /^(tv ?(ma|14|g|pg|y7?|y)|pg ?13|nc ?17|pg|r|g|nr|u|12a?|15|18|r18)( \d{1,2})?$/,
+  /^\d{1,3} ?match$/,
+  /^(season|episode|ep|series|part|chapter|vol|volume) ?(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten)$/,
+  /^s\d{1,2} ?e\d{1,3}$/,
+  /^top ?(10|ten)\b.*(today|week|now)$/,
+  /^\d{1,2}h( ?\d{1,2}m)?$|^\d{1,3} ?(min|mins|minutes)$/,
+  /^on (a |the )?(true|novel|book)\b/,
+  /^(because you watched|continue watching|more like|watch (it )?again|new episodes?|recently added|remind me|only on)\b/,
+  /^(a )?netflix (original|series|film|limited series|documentary|comedy special)\b/,
+]
+
+const normUi = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, ' ').replace(/\s+/g, ' ').trim()
+
+/** Netflix chrome and badges ("Recently added", "TV-MA", "98 Match", "Season 2") that must never reach the catalogue. */
+export function isUiText(text: string): boolean {
+  const t = normUi(text)
+  return UI_PHRASES.has(t) || UI_PATTERNS.some(re => re.test(t))
+}
 
 // A word is "wordlike" if it can plausibly be an English / Latin-script word: mostly letters, some vowel (or short), no long
 // consonant run. Used to rank, not to reject.
@@ -74,15 +101,19 @@ function wordlike(w: string): boolean {
   return !/[^aeiouy\s]{6,}/i.test(letters)
 }
 
-// Words that are marketing copy wherever they appear ("ONLY ON NETFLIX", "ALL EPISODES JULY 4", "COMING SOON"): they end a
-// candidate instead of being part of it, so "NETFLIX APRIL" never reaches the catalogue (which might well know a film called
-// "April") and a title printed next to them survives on its own.
+// Words that are marketing copy ("ONLY ON NETFLIX", "ALL EPISODES JULY 4", "COMING SOON"): they end a candidate instead of being
+// part of it, so a title printed next to them survives on its own. Only words that are never part of a real title are
+// unconditional; ordinary title words (may, march, august, season, original, watch ...) end a candidate only where the context
+// says it is a badge or a date (see isMarketing), so "THE WATCH", "MARCH OF THE PENGUINS" and "MAY DECEMBER" stay whole.
 const MARKETING_WORDS = new Set([
-  'netflix', 'episodes', 'premiere', 'premieres', 'streaming', 'soon', 'theaters', 'theatres', 'starring', 'presents', 'directed',
-  'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december',
-  'jan', 'feb', 'mar', 'apr', 'jun', 'jul', 'aug', 'sep', 'sept', 'oct', 'nov', 'dec', 'season', 'seasons', 'based', 'novel',
-  'original', 'originals', 'exclusive', 'watch',
+  'netflix', 'episodes', 'premiere', 'premieres', 'streaming', 'soon', 'theaters', 'theatres', 'starring', 'presents', 'directed', 'exclusive',
 ])
+const MONTHS = new Set([
+  'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december',
+  'jan', 'feb', 'mar', 'apr', 'jun', 'jul', 'aug', 'sep', 'sept', 'oct', 'nov', 'dec',
+])
+const NUMBER_WORDS = new Set(['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'i', 'ii', 'iii', 'iv', 'v'])
+const isDayOrYear = (w: string | undefined) => !!w && /^(\d{1,2}(st|nd|rd|th)?|(19|20)\d{2})$/.test(keyOf(w))
 
 const keyOf = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '')
 
@@ -110,6 +141,22 @@ function cleanWords(words: OcrWordLike[], o: CandidateOptions): CleanWord[] {
     out.push({ ...word, text, h, w: Math.max(1, word.bbox.x1 - word.bbox.x0), cy: (word.bbox.y0 + word.bbox.y1) / 2 })
   }
   return out
+}
+
+// Whether word i of a line is marketing copy rather than part of a title (see MARKETING_WORDS).
+function isMarketing(line: CleanWord[], i: number): boolean {
+  const k = keyOf(line[i].text)
+  if (MARKETING_WORDS.has(k)) return true
+  const prev = i > 0 ? keyOf(line[i - 1].text) : ''
+  const next = i + 1 < line.length ? keyOf(line[i + 1].text) : ''
+  // "JULY 4", "4 JULY", "NETFLIX APRIL": a month beside a day, a year or other marketing copy is a release date; "MAY DECEMBER" is a title
+  if (MONTHS.has(k)) return isDayOrYear(line[i + 1]?.text) || isDayOrYear(line[i - 1]?.text) || MARKETING_WORDS.has(prev) || MARKETING_WORDS.has(next)
+  // "SEASON 2", "NEW SEASON", "FINAL SEASON": a badge; "Season of the Witch" is a title
+  if (k === 'season' || k === 'seasons') return /^\d{1,2}$/.test(next) || NUMBER_WORDS.has(next) || ['new', 'final', 'last', 'complete', 'all'].includes(prev)
+  if (k === 'original' || k === 'originals') return next === 'series' || next === 'film' || next === 'movie' || prev === 'netflix'
+  // "BASED ON A TRUE STORY": the badge, not a title that starts with "Based"
+  if (k === 'based') return next === 'on'
+  return false
 }
 
 // Words of one visual line (same baseline, close in x), then lines top to bottom.
@@ -142,18 +189,21 @@ function groupLines(words: CleanWord[]): CleanWord[][] {
   const segments: CleanWord[][] = []
   for (const seg of split) {
     let cur: CleanWord[] = []
-    for (const word of seg) {
-      if (MARKETING_WORDS.has(keyOf(word.text))) { if (cur.length) segments.push(cur); cur = [] } else cur.push(word)
-    }
+    seg.forEach((word, i) => {
+      if (isMarketing(seg, i)) { if (cur.length) segments.push(cur); cur = [] } else cur.push(word)
+    })
     if (cur.length) segments.push(cur)
   }
   return segments.map(fuseLetters).filter(l => l.length).sort((a, b) => a[0].cy - b[0].cy)
 }
 
-// Spaced-out logos come back as single letters ("D" "A" "R" "K"). Three or more in a row become one word; stray single
-// letters are dropped unless they are the real one-letter words A / I / &.
+// Spaced-out logos come back as single letters ("D" "A" "R" "K"). Three or more in a row become one word; stray single letters
+// are dropped unless they are the real one-letter words A / I / &, or a single digit beside a word of 3+ letters (the sequel
+// number of "EXTRACTION 2", "ENOLA HOLMES 2" or the "3" of "3 BODY PROBLEM").
 function fuseLetters(line: CleanWord[]): CleanWord[] {
-  const isSingle = (w: CleanWord) => w.text.replace(/[^\p{L}\p{N}]/gu, '').length < 2
+  const letters = (w: CleanWord) => w.text.replace(/[^\p{L}\p{N}]/gu, '')
+  const isSingle = (w: CleanWord) => letters(w).length < 2
+  const isWord = (w: CleanWord | undefined) => !!w && !isSingle(w) && w.text.replace(/[^\p{L}]/gu, '').length >= 3
   const out: CleanWord[] = []
   for (let i = 0; i < line.length; ) {
     if (!isSingle(line[i])) { out.push(line[i++]); continue }
@@ -161,14 +211,17 @@ function fuseLetters(line: CleanWord[]): CleanWord[] {
     while (j < line.length && isSingle(line[j])) j++
     const run = line.slice(i, j)
     if (run.length >= 3) {
-      const text = run.map(w => w.text.replace(/[^\p{L}\p{N}]/gu, '')).join('')
+      const text = run.map(letters).join('')
       const x0 = Math.min(...run.map(w => w.bbox.x0))
       const x1 = Math.max(...run.map(w => w.bbox.x1))
       const y0 = Math.min(...run.map(w => w.bbox.y0))
       const y1 = Math.max(...run.map(w => w.bbox.y1))
       out.push({ text, confidence: run.reduce((a, w) => a + w.confidence, 0) / run.length, bbox: { x0, y0, x1, y1 }, cy: (y0 + y1) / 2, h: y1 - y0, w: x1 - x0 })
     } else {
-      for (const w of run) if (/^[aAiI&]$/.test(w.text) && w.confidence >= 70) out.push(w)
+      run.forEach((w, r) => {
+        if (/^[aAiI&]$/.test(w.text) && w.confidence >= 70) out.push(w)
+        else if (/^\d$/.test(w.text) && w.confidence >= 40 && ((r === 0 && isWord(line[i - 1])) || (r === run.length - 1 && isWord(line[j])))) out.push(w)
+      })
     }
     i = j
   }
@@ -186,8 +239,12 @@ function build(ws: CleanWord[], kind: 'line' | 'join' | 'part', dropped: number,
   const text = ws.map(w => w.text).join(' ').replace(/\s+/g, ' ').trim()
   const key = keyOf(text)
   if (key.length < o.minChars || key.length > o.maxChars) return null
-  if (/^\d+$/.test(key)) return null
-  if (UI_PHRASES.has(text.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, '').replace(/\s+/g, ' ').trim())) return null
+  if (isUiText(text)) return null
+  // A bare number is a title only when it is a 4-digit one ("1899", "1917") printed large; a recent year is a release badge.
+  if (/^\d+$/.test(key)) {
+    if (key.length !== 4 || Number(key) >= 2018) return null
+    if (o.imageHeight > 0 && ws[0].h < 0.5 * o.titleHeightFrac * o.imageHeight) return null
+  }
   const chars = ws.reduce((s, w) => s + keyOf(w.text).length, 0)
   const confidence = ws.reduce((s, w) => s + w.confidence * keyOf(w.text).length, 0) / Math.max(1, chars)
   const real = ws.filter(w => wordlike(w.text) || /^\d+$/.test(w.text))

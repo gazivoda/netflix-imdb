@@ -45,9 +45,9 @@ describe('AutoLabeler', () => {
   })
 
   it('tries the next OCR candidate when the first is not in the catalogue', async () => {
-    const { labeler, lookups } = setup({ 'squid game': 'Squid Game' }, { 10: ['NEW', 'Squid Game'] })
+    const { labeler, lookups } = setup({ 'squid game': 'Squid Game' }, { 10: ['Nexus Arc', 'Squid Game'] })
     expect((await labeler.next([card(10)]))?.title).toBe('Squid Game')
-    expect(lookups).toEqual(['NEW', 'Squid Game'])
+    expect(lookups).toEqual(['Nexus Arc', 'Squid Game'])
   })
 
   it('does not look up text too short to be a title', async () => {

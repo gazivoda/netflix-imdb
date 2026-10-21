@@ -15,6 +15,9 @@ export interface UserRecord {
   paddle_subscription_id: string | null
   paddle_customer_id: string | null
   created_at: string
+  // occurred_at of the newest Paddle webhook applied to this user; older events are ignored (see handleWebhook).
+  // Optional so rows and fixtures written before the column existed stay valid; the database returns null for them.
+  last_event_at?: string | null
 }
 
 export interface PublicUser {

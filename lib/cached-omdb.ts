@@ -23,6 +23,15 @@ async function refresh(title: string): Promise<OmdbTitle | null> {
 }
 
 /**
+ * Cache-only lookup (used when the daily OMDb budget is spent): any stored answer counts, fresh or stale, because an
+ * old score beats no score. `hit: false` means the title was never looked up, i.e. we cannot answer at all.
+ */
+export function getCachedRating(title: string): { hit: true; result: OmdbTitle | null } | { hit: false } {
+  const doc = getRatingsStore().get(title)
+  return doc ? { hit: true, result: doc.result } : { hit: false }
+}
+
+/**
  * Rating for a title: from the store when it is fresh (7 days, 1 day for
  * "not found"), otherwise from OMDb and written back to the store.
  */

@@ -171,6 +171,11 @@
   margin: 0 0 24px;
   font-size: clamp(34px, 5vw, 56px);
 }
+.aboutTitle { margin: 0 0 10px; font-size: clamp(26px, 4vw, 36px); }
+.aboutBody { margin: 0 0 16px; max-width: 68ch; font-size: 16px; line-height: 1.6; }
+.aboutBody a { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.aboutList { margin: 0 0 16px; padding-left: 22px; max-width: 68ch; display: grid; gap: 6px; font-size: 16px; line-height: 1.6; }
+.panel section + section { margin-top: 24px; }
 .features {
   display: grid;
   grid-template-columns: 1fr;

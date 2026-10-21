@@ -47,14 +47,19 @@ describe('Google Analytics tag', () => {
     }
   })
 
-  it('the banner has equal-weight Accept and Decline buttons, no Escape handling, and the required copy', () => {
+  it('the banner has equal-weight Accept and Decline buttons, Escape only for the reopened banner, and the required copy', () => {
     const banner = read('components/ConsentBanner.tsx')
     expect(banner).toContain('role="region"')
     expect(banner).toContain('aria-label="Cookie consent"')
     expect(banner).toContain('Accept analytics')
     expect(banner).toContain('>Decline<')
     expect(banner).toContain('href="/privacy#website-analytics"')
-    expect(banner).not.toMatch(/Escape|keydown|keyup/)
+    // The first-visit banner asks for a decision and cannot be dismissed with Escape. The only key handling is the
+    // listener that exists while a previously made choice is being reviewed (see components/consent-focus.ts).
+    expect(banner).not.toMatch(/keyup/)
+    expect(banner.match(/keydown/g)).toHaveLength(2) // addEventListener + removeEventListener
+    expect(banner).toMatch(/if \(!open \|\| !reopened\) return/)
+    expect(banner).toMatch(/escapeDismissesBanner\(reopened, readConsent\(browserStorage\(\)\)\)/)
     expect(banner).toContain('Nothing is sent to Google')
     const buttons = banner.match(/<button[^>]*>/g) ?? []
     expect(buttons).toHaveLength(2)

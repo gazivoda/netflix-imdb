@@ -111,3 +111,34 @@ describe('design tokens', () => {
     });
   });
 });
+
+describe('text on --signal fills is white, never ink', () => {
+  const read = (f: string) => readFileSync(join(__dirname, '..', f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  /** The declarations of every rule whose selector list contains `selector`, joined. */
+  const rule = (css: string, selector: string): string => {
+    const found = [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+      .filter((m) => m[1].split(',').some((sel) => sel.trim() === selector))
+      .map((m) => m[2]);
+    expect(found.length).toBeGreaterThan(0);
+    return found.join(';');
+  };
+
+  it('ink on --signal is below AA (4.14:1), white is above it (4.57:1)', () => {
+    expect(ratio(tok('--ink'), tok('--signal'))).toBeLessThan(4.5);
+    expect(ratio('#ffffff', tok('--signal'))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it.each([
+    ['components/ScoreChip.module.css', '.rt'], // RT chips on the home page, compare and how-to tables
+    ['app/compare/imdb-vs-rotten-tomatoes/compare.module.css', '.whenMarkRt'],
+    ['app/globals.css', '.ds-chip-rt'],
+    ['app/globals.css', '.ds-btn-signal'], // Download zip, Install, Sign in
+  ])('%s %s sets a white colour', (file, selector) => {
+    expect(rule(read(file), selector)).toMatch(/color:\s*#fff\b/);
+  });
+
+  it('the signal button wins over a later module rule that sets a colour (two-class selector)', () => {
+    expect(read('app/globals.css')).toMatch(/\.ds-btn\.ds-btn-signal/);
+  });
+});
+

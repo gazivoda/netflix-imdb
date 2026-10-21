@@ -1,5 +1,6 @@
 // Abuse guards for POST /api/ratings: per-IP token bucket, request/title limits and the one-time missing-key log.
 // In-memory and single-process on purpose (the ratings store is single-process too).
+import { resetOmdbBudgetForTests } from './omdb-budget'
 
 export const MAX_BODY_BYTES = 16 * 1024 // 20 titles x 120 chars, even if every character is JSON-escaped, fits
 export const MAX_TITLES = 20
@@ -43,10 +44,18 @@ export function createLimiter(cfg: BucketConfig, maxKeys = MAX_TRACKED_IPS): Lim
   }
 }
 
-/** First hop of X-Forwarded-For (the client as the proxy saw it), else a shared constant. */
+/**
+ * Client IP for rate limiting: the RIGHTMOST X-Forwarded-For entry, else a shared constant.
+ * The app runs behind Traefik (Coolify), which appends the address of the peer it accepted the connection from to
+ * whatever X-Forwarded-For the client sent. Everything to the left of that last entry is client-controlled and can
+ * be rotated per request to get a fresh bucket, so only the last hop (the one our own proxy wrote) is trusted.
+ * If the app is ever put behind a second proxy that also appends, the last entry becomes that proxy's address and
+ * all clients share one bucket: that fails closed (stricter), never open.
+ */
 export function clientIp(headers: Headers): string {
-  const first = headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-  return first ? first.slice(0, 64) : 'unknown'
+  const hops = headers.get('x-forwarded-for')?.split(',') ?? []
+  const last = hops[hops.length - 1]?.trim()
+  return last ? last.slice(0, 64) : 'unknown'
 }
 
 let ipLimiter = createLimiter(IP_BUCKET)
@@ -89,6 +98,7 @@ export function omdbKeyPresent(key: string | undefined = process.env.OMDB_API_KE
 }
 
 export function resetRatingsGuardForTests(): void {
+  resetOmdbBudgetForTests()
   ipLimiter = createLimiter(IP_BUCKET)
   globalLimiter = createLimiter(GLOBAL_BUCKET, 1)
   warnedMissingKey = false

@@ -117,8 +117,9 @@ export default function ComparePage() {
         disagreement between the two.
       </p>
 
-      <div className={g.tableWrap}>
+      <div className={g.tableWrap} role="region" aria-label="IMDb and Rotten Tomatoes compared, scrolls sideways on small screens" tabIndex={0}>
         <table className={g.table}>
+          <caption className="sr-only">How IMDb and Rotten Tomatoes scores differ, aspect by aspect</caption>
           <thead>
             <tr>
               <th scope="col">&nbsp;</th>

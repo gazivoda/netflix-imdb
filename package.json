@@ -18,6 +18,7 @@
     "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run",
     "seo:links": "node scripts/check-links.mjs",
     "seo:validate": "node scripts/validate-seo.mjs",
+    "billing:readiness": "node scripts/billing-readiness.mjs",
     "zip:check": "node scripts/check-extension-zip.mjs"
   },
   "dependencies": {

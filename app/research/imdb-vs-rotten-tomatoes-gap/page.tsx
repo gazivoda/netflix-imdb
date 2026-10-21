@@ -2,7 +2,7 @@ import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
 import s from '../research.module.css';
 import { AUTHOR_NAME, SITE_URL } from '../../../lib/content';
-import { authorRef, pageMetadata } from '../../../lib/seo';
+import { authorNode, isoDateTime, licenseNode, pageMetadata, publisherNode } from '../../../lib/seo';
 import { getPage } from '../../../lib/pages';
 import { summarize, toGapRow } from '../../../lib/research-stats';
 import { articlePathForImdbId, isBlogHubReady } from '../../../lib/blog/inbound';
@@ -88,9 +88,12 @@ const datasetNode = {
   name: raw.name,
   description: `${raw.description} ${stats.n} films, snapshot of ${fetchedDate}.`,
   url: `${SITE_URL}${PATH}`,
-  creator: { '@type': 'Person', '@id': authorRef['@id'], name: AUTHOR_NAME, url: `${SITE_URL}/about` },
-  datePublished: page.published ?? isoDate,
-  dateModified: isoDate,
+  creator: authorNode(),
+  publisher: publisherNode(),
+  // The data file's own licence statement (public/data/imdb-rt-gap.json "license").
+  license: licenseNode(raw.license),
+  datePublished: isoDateTime(page.published ?? isoDate),
+  dateModified: raw.fetchedAt, // already a full ISO 8601 date-time with Z
   inLanguage: 'en',
   isAccessibleForFree: true,
   keywords: ['IMDb', 'Rotten Tomatoes', 'Netflix', 'ratings', 'critics vs audience', 'OMDb'],
@@ -261,6 +264,7 @@ export default function Page() {
         aria-label={`IMDb and Rotten Tomatoes scores for ${stats.n} Netflix Original films`}
       >
         <table className={s.dataTable} aria-label={`IMDb and Rotten Tomatoes scores for ${stats.n} Netflix Original films`}>
+          <caption className="sr-only">{`IMDb and Rotten Tomatoes scores and the gap between them for ${stats.n} Netflix Original films`}</caption>
           <thead>
             <tr>
               <th scope="col">Film</th>

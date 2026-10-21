@@ -45,7 +45,7 @@ export function tileLabel(status: TileStatus, ctx: TileLabelContext): { full: st
     case 'reading':
       return { full: 'reading…', short: 'read…' }
     case 'no-text':
-      return { full: 'no text found', short: 'no text' }
+      return { full: 'no readable title', short: 'no title' }
     case 'not-in-catalogue':
       return { full: 'not in catalogue', short: 'no match' }
     case 'lookup-failed':
@@ -117,7 +117,10 @@ export interface DebugReportInput {
 
 export interface DebugReportTile {
   box: Box // sample px
-  boxImage: Box // px in the saved PNG
+  boxImage: Box // px in the saved PNG (= native camera pixels: the PNG is the video region itself)
+  /** Native camera pixels across / down the tile: what OCR actually has to work with (a title wants ~220+ across). */
+  nativeWidth: number
+  nativeHeight: number
   status: TileStatus
   candidates: string[]
   raw: string
@@ -133,6 +136,8 @@ export interface DebugReportTile {
 
 export interface DebugReport {
   version: 1
+  /** Median native width of the tiles in this frame and whether it is below the readable minimum. */
+  pixels: { medianTileWidth: number; minReadable: number; tooSmall: boolean }
   timestamp: string
   video: { width: number; height: number }
   stage: { w: number; h: number }
@@ -147,6 +152,7 @@ export interface DebugReport {
 }
 
 const RAW_MAX = 2000
+const MIN_READABLE_PX = 220 // same as sharpness.MIN_READABLE_TILE_PX; kept here so this file stays dependency-free
 const CANDIDATES_MAX = 10
 
 // JSON has no NaN/Infinity; a report must always be serialisable and parseable.
@@ -158,17 +164,13 @@ const clip = (s: string, max: number): string => (s.length > max ? `${s.slice(0,
 export function buildDebugReport(input: DebugReportInput): DebugReport {
   const sx = input.sample.w > 0 ? input.image.width / input.sample.w : 1
   const sy = input.sample.h > 0 ? input.image.height / input.sample.h : 1
-  return {
-    version: 1,
-    timestamp: input.now.toISOString(),
-    video: { width: input.video.width, height: input.video.height },
-    stage: { w: num(input.stage.w), h: num(input.stage.h) },
-    guide: { stage: box(input.guideStage), source: box(input.guideSrc) },
-    sample: { ...input.sample },
-    image: { ...input.image },
-    tiles: input.tiles.map(t => ({
+  const tiles: DebugReportTile[] = input.tiles.map(t => {
+    const bi = box({ x: t.box.x * sx, y: t.box.y * sy, w: t.box.w * sx, h: t.box.h * sy })
+    return {
       box: box(t.box),
-      boxImage: box({ x: t.box.x * sx, y: t.box.y * sy, w: t.box.w * sx, h: t.box.h * sy }),
+      boxImage: bi,
+      nativeWidth: Math.round(bi.w),
+      nativeHeight: Math.round(bi.h),
       status: t.info.status,
       candidates: t.info.candidates.slice(0, CANDIDATES_MAX).map(c => clip(c, 200)),
       raw: clip(t.info.raw, RAW_MAX),
@@ -180,7 +182,20 @@ export function buildDebugReport(input: DebugReportInput): DebugReport {
       trackTitle: t.track?.title ?? null,
       missed: t.track?.missed ?? null,
       ratingStatus: t.ratingStatus ?? null,
-    })),
+    }
+  })
+  const widths = tiles.map(t => t.nativeWidth).sort((p, q) => p - q)
+  const medianTileWidth = widths.length ? widths[widths.length >> 1] : 0
+  return {
+    version: 1,
+    pixels: { medianTileWidth, minReadable: MIN_READABLE_PX, tooSmall: widths.length > 0 && medianTileWidth < MIN_READABLE_PX },
+    timestamp: input.now.toISOString(),
+    video: { width: input.video.width, height: input.video.height },
+    stage: { w: num(input.stage.w), h: num(input.stage.h) },
+    guide: { stage: box(input.guideStage), source: box(input.guideSrc) },
+    sample: { ...input.sample },
+    image: { ...input.image },
+    tiles,
     timings: { fps: num(input.timings.fps), findMs: num(input.timings.findMs), hashMs: num(input.timings.hashMs) },
     reader: { ...input.reader },
     learnedCards: input.learnedCards,

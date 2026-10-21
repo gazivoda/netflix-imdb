@@ -92,3 +92,9 @@ Goal: never call OMDb for a title we already hold a fresh (<7 days) rating for. 
 
 ## Review (2026-10-19)
 Phase 1 done and verified: `tsc` clean, `jest` 24 suites / 428 passed, `next build` OK. Not yet exercised against the real OMDb API or on Qualify (needs the OMDb key and a persistent `RATINGS_DB_PATH`). Scoreless titles use the 1-day TTL like the extension. Uncommitted, awaiting user approval. T9 (extension through server) deferred by user decision.
+
+## Review: grill fix batch (2026-10-21)
+- A security/billing: AR paywall enforced in `app/camera-vision/ar/layout.tsx` (fail closed); webhook binds only by Paddle ids or an email-verified userId; `last_event_at` ordering; refund/chargeback revoke; verify-subscription rate limits; paused expires with the paid period; rightmost X-Forwarded-For, daily OMDb budget (`OMDB_DAILY_BUDGET`, default 900), OMDb timeout.
+- B SEO: every JSON-LD date is a full date-time (`jsonld-date` rule in `lib/html-seo.ts`); ProfilePage embeds the Person; Pro wording gated on `lib/billing/flag.ts` (build-time); SoftwareApplication only on product pages; camera pages have real copy, debug behind `?debug=1`; Dataset licence and publisher.
+- C UX: compact cookie banner, skip link first, Escape only for the reopened banner, white text on signal red, table captions and regions, tap targets, AR label stacking, `/favicon.ico`.
+- D/E: honest copy, SVODEX in the comparison, `npm run billing:readiness`, SETUP.md updated. Details: `.superpowers/audit/fix-grill-report.md`.

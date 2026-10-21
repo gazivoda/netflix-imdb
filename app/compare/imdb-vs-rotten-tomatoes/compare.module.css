@@ -124,7 +124,7 @@
   line-height: 1;
 }
 .whenMarkImdb { background: var(--gold); color: var(--ink); }
-.whenMarkRt { background: var(--signal); }
+.whenMarkRt { background: var(--signal); color: #fff; }
 .whenCard ul { margin-bottom: 0; }
 .whenCard li { font-size: 16px; }
 

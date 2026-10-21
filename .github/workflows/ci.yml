@@ -19,5 +19,9 @@ jobs:
       - run: npx tsc --noEmit
       - run: npx jest
       - run: npx next build
-      - run: npm run seo:validate
+      - name: seo:validate (prerendered pages plus pages rendered per request, via next start)
+        run: |
+          npx next start -p 3100 > next-start.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://localhost:3100/ > /dev/null && break; sleep 1; done
+          SEO_BASE_URL=http://localhost:3100 npm run seo:validate
       - run: npm run zip:check

@@ -1,4 +1,15 @@
+import { takeOmdbCall } from './omdb-budget'
+
 const OMDB_API_BASE = 'https://www.omdbapi.com'
+// A slow upstream must not pin a request (and its in-flight cache slot) indefinitely.
+export const OMDB_TIMEOUT_MS = 8_000
+
+// Every OMDb request goes through here: it spends the daily budget and gives up after the timeout.
+// A refused or timed-out call is an 'error' for the caller, which never caches it and serves a stale rating instead.
+function omdbFetch(url: string): Promise<Response> {
+  if (!takeOmdbCall()) return Promise.reject(new Error('OMDb daily budget spent'))
+  return fetch(url, { signal: AbortSignal.timeout(OMDB_TIMEOUT_MS) })
+}
 
 export interface OmdbTitle {
   imdbId: string
@@ -75,7 +86,7 @@ function classifyDetail(data: OmdbDetailResponse): LookupResult {
 async function fetchDetail(url: string): Promise<LookupResult> {
   let res: Response
   try {
-    res = await fetch(url)
+    res = await omdbFetch(url)
   } catch {
     return { status: 'error' }
   }
@@ -104,7 +115,7 @@ export async function lookupTitle(
   // multiple titles share the same name (e.g. Cover-Up 1991 vs Cover-Up 2025).
   // Search for a newer exact-title match that has RT data.
   try {
-    const searchRes = await fetch(`${OMDB_API_BASE}/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
+    const searchRes = await omdbFetch(`${OMDB_API_BASE}/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
     if (!searchRes.ok) return result
     const searchData: OmdbSearchResponse = await searchRes.json()
     if (searchData.Response !== 'True' || !searchData.Search?.length) return result

@@ -167,8 +167,8 @@ export default function PrivacyPage() {
             the recognised title text is sent to our server to look up ratings (see below). AR mode
             also keeps small fingerprints of the title cards you teach it, with their titles, in your
             browser&apos;s local storage under <code>ar-card-index-v1</code>. That stays on your
-            device. The &quot;Save debug frame&quot; button, if you use it, only saves a file to
-            your own device.
+            device. A debug tool that is hidden from normal visitors can save a frame to your own
+            device; it never uploads it.
           </p>
           <p>
             You can ask us to delete your account by emailing{' '}

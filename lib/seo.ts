@@ -14,6 +14,7 @@ import {
 import { BLOG_HUB_PAGE, getPage, HOME_DESCRIPTION, type SitePage } from './pages';
 import manifest from '../extension/manifest.json';
 import { OG_SIZE, OG_ALT, OG_VERSION } from './og';
+import { PRO_ON_SALE } from './billing/flag';
 import { displayTitle } from './blog/format';
 import type { Film } from './blog/types';
 import { PROMO_VIDEO } from './promo-video';
@@ -23,6 +24,15 @@ export const TITLE_SUFFIX = ' · Rating Watch';
 
 // Root has no trailing slash so sitemap, canonical and JSON-LD agree with what Next emits.
 export const absoluteUrl = (path: string): string => (path === '/' ? SITE_URL : `${SITE_URL}${path}`);
+
+/**
+ * A registry date (YYYY-MM-DD) as a full ISO 8601 date-time with a time zone. Google's ProfilePage check
+ * rejects bare dates in dateModified/datePublished ("Invalid datetime value") and recommends a time zone on every
+ * date, so EVERY date emitted into JSON-LD goes through this (lib/html-seo.ts fails the build check otherwise).
+ */
+export function isoDateTime(date: string): string {
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? `${date}T00:00:00+00:00` : date;
+}
 
 /** Title as it will actually render in the SERP, suffix included. */
 export const renderedTitle = (page: SitePage): string =>
@@ -66,6 +76,29 @@ type JsonLdNode = Record<string, unknown>;
 export const authorRef = { '@id': `${SITE_URL}/#author` };
 export const orgRef = { '@id': `${SITE_URL}/#org` };
 
+/**
+ * The author Person, with the same fields wherever it appears. Google resolves `@id` references reliably only inside
+ * one JSON-LD block, and the root layout's Person lives in another one, so nodes that need the author's name (the
+ * /about ProfilePage, Dataset creator) embed this instead of a bare `{ "@id" }`.
+ */
+export const authorNode = (): JsonLdNode => ({
+  '@type': 'Person',
+  '@id': authorRef['@id'],
+  name: AUTHOR_NAME,
+  url: absoluteUrl('/about'),
+});
+
+/** The publisher Organization, same reason: embedded where Google needs its name (Dataset publisher). */
+export const publisherNode = (): JsonLdNode => ({
+  '@type': 'Organization',
+  '@id': orgRef['@id'],
+  name: SITE_NAME,
+  url: SITE_URL,
+});
+
+/** A data file's licence statement as a CreativeWork (the files carry prose, not a SPDX id or URL). */
+export const licenseNode = (statement: string): JsonLdNode => ({ '@type': 'CreativeWork', name: statement });
+
 export function breadcrumbList(trail: { name: string; path: string }[]): JsonLdNode {
   return {
     '@type': 'BreadcrumbList',
@@ -97,7 +130,7 @@ export function videoObject(): JsonLdNode {
     description: PROMO_VIDEO.caption,
     thumbnailUrl: absoluteUrl(PROMO_VIDEO.poster),
     contentUrl: absoluteUrl(PROMO_VIDEO.src),
-    uploadDate: PROMO_VIDEO.uploadDate,
+    uploadDate: isoDateTime(PROMO_VIDEO.uploadDate),
     duration: PROMO_VIDEO.duration,
     inLanguage: 'en',
   };
@@ -131,8 +164,8 @@ export function article(path: string): JsonLdNode {
     headline: page.title,
     description: page.description,
     mainEntityOfPage: absoluteUrl(page.path),
-    datePublished: page.published ?? PUBLISHED_DATE,
-    dateModified: page.updated,
+    datePublished: isoDateTime(page.published ?? PUBLISHED_DATE),
+    dateModified: isoDateTime(page.updated),
     author: authorRef,
     publisher: orgRef,
     inLanguage: 'en',
@@ -170,8 +203,8 @@ export function webPage(path: string, opts: { type?: string; about?: { '@id': st
     isPartOf: websiteRef,
     about: opts.about ?? appRef,
     inLanguage: 'en',
-    datePublished: page.published ?? PUBLISHED_DATE,
-    dateModified: page.updated,
+    datePublished: isoDateTime(page.published ?? PUBLISHED_DATE),
+    dateModified: isoDateTime(page.updated),
     breadcrumb: { '@id': nodeId(path, 'breadcrumb') },
   };
 }
@@ -225,8 +258,8 @@ export function blogPosting(path: string, input: BlogPostingInput): JsonLdNode {
     headline: input.headline,
     description: input.description,
     mainEntityOfPage: { '@id': nodeId(path, 'webpage') },
-    datePublished: input.published,
-    dateModified: input.updated,
+    datePublished: isoDateTime(input.published),
+    dateModified: isoDateTime(input.updated),
     author: authorRef,
     publisher: orgRef,
     about: { '@id': nodeId(path, 'film') },
@@ -262,7 +295,7 @@ export function movie(film: Film, path: string = `/blog/${film.slug}`): JsonLdNo
     '@type': 'Movie',
     '@id': nodeId(path, 'film'),
     name: displayTitle(omdb.title),
-    ...(omdb.released ? { datePublished: omdb.released } : {}),
+    ...(omdb.released ? { datePublished: isoDateTime(omdb.released) } : {}),
     ...(omdb.runtimeMin > 0 ? { duration: `PT${omdb.runtimeMin}M` } : {}),
     ...(genres.length ? { genre: genres } : {}),
     ...(directors.length ? { director: directors.map(person) } : {}),
@@ -288,17 +321,13 @@ const proOffer = (name: string, price: string, billingDuration: string, unitCode
 });
 
 /**
- * Site-wide entity graph rendered by the root layout on every page: Person, WebSite,
- * Organization, SoftwareApplication. Per-page nodes (WebPage, Article, ...) reference these by `@id`.
+ * Site-wide entity graph rendered by the root layout on every page: Person, WebSite, Organization.
+ * Per-page nodes (WebPage, Article, ...) reference these by `@id`. The SoftwareApplication is NOT here: it describes the
+ * product, so only product pages emit it (home, pricing and every GuideLayout page), never the legal pages or /account.
  */
 export function siteGraph(): JsonLdNode {
   return graph(
-    {
-      '@type': 'Person',
-      '@id': `${SITE_URL}/#author`,
-      name: AUTHOR_NAME,
-      url: absoluteUrl('/about'),
-    },
+    authorNode(),
     {
       '@type': 'WebSite',
       '@id': `${SITE_URL}/#website`,
@@ -306,7 +335,6 @@ export function siteGraph(): JsonLdNode {
       name: SITE_NAME,
       description: HOME_DESCRIPTION,
       publisher: orgRef,
-      about: appRef,
       inLanguage: 'en',
     },
     {
@@ -325,45 +353,60 @@ export function siteGraph(): JsonLdNode {
       },
       founder: authorRef,
     },
-    {
-      '@type': 'SoftwareApplication',
-      '@id': `${SITE_URL}/#app`,
-      name: SITE_NAME,
-      applicationCategory: 'BrowserApplication',
-      applicationSubCategory: 'Browser extension',
-      operatingSystem: 'Any (runs in Chromium-based browsers: Chrome, Edge, Brave)',
-      browserRequirements:
-        'Requires a Chromium-based desktop browser with Manifest V3 extension support; installed via Load unpacked in Developer mode.',
-      description: HOME_DESCRIPTION,
-      url: SITE_URL,
-      installUrl: absoluteUrl('/install'),
-      downloadUrl: absoluteUrl(EXTENSION_ZIP_PATH),
-      softwareVersion: manifest.version,
-      datePublished: PUBLISHED_DATE,
-      dateModified: LAST_UPDATED,
-      isAccessibleForFree: true,
-      inLanguage: 'en',
-      author: authorRef,
-      publisher: orgRef,
-      offers: [
-        {
-          '@type': 'Offer',
-          name: 'Rating Watch browser extension',
-          price: '0',
-          priceCurrency: PRO_PRICING.currency,
-          url: absoluteUrl('/install'),
-        },
-        proOffer('Pro AR mode, monthly', PRO_PRICING.monthly, 'P1M', 'MON'),
-        proOffer('Pro AR mode, yearly', PRO_PRICING.yearly, 'P1Y', 'ANN'),
-      ],
-      featureList: [
-        'IMDb ratings on Netflix title cards',
-        'Rotten Tomatoes critic scores where OMDb has them (mostly films)',
-        'Parallel loading of all visible cards',
-        'Extension needs no account or login',
-        'Extension has no analytics or tracking',
-        `Pro AR mode: ratings over a TV screen through a phone camera (${PRO_PRICING.trialDays}-day free trial)`,
-      ],
-    },
   );
+}
+
+/**
+ * SoftwareApplication for the extension. `proOnSale` (build-time flag, lib/billing/flag.ts) decides whether the Pro AR mode
+ * Offers and the trial wording exist: markup must match what the page shows, and /pricing says Pro is not on sale until
+ * billing is on. isAccessibleForFree is only claimed while there is no paid Offer in the same node (the two contradict).
+ */
+export function softwareApplication(proOnSale: boolean = PRO_ON_SALE): JsonLdNode {
+  return {
+    '@type': 'SoftwareApplication',
+    '@id': appRef['@id'],
+    name: SITE_NAME,
+    applicationCategory: 'BrowserApplication',
+    applicationSubCategory: 'Browser extension',
+    // Short platform names, not a sentence; the long form lives in browserRequirements.
+    operatingSystem: 'Chrome, Web browser',
+    browserRequirements:
+      'Requires a Chromium-based desktop browser (Chrome, Edge, Brave) with Manifest V3 extension support; installed via Load unpacked in Developer mode.',
+    description: HOME_DESCRIPTION,
+    url: SITE_URL,
+    installUrl: absoluteUrl('/install'),
+    downloadUrl: absoluteUrl(EXTENSION_ZIP_PATH),
+    softwareVersion: manifest.version,
+    datePublished: isoDateTime(PUBLISHED_DATE),
+    dateModified: isoDateTime(LAST_UPDATED),
+    ...(proOnSale ? {} : { isAccessibleForFree: true }),
+    inLanguage: 'en',
+    author: authorRef,
+    publisher: orgRef,
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Rating Watch browser extension',
+        price: '0',
+        priceCurrency: PRO_PRICING.currency,
+        url: absoluteUrl('/install'),
+      },
+      ...(proOnSale
+        ? [
+            proOffer('Pro AR mode, monthly', PRO_PRICING.monthly, 'P1M', 'MON'),
+            proOffer('Pro AR mode, yearly', PRO_PRICING.yearly, 'P1Y', 'ANN'),
+          ]
+        : []),
+    ],
+    featureList: [
+      'IMDb ratings on Netflix title cards',
+      'Rotten Tomatoes critic scores where OMDb has them (mostly films)',
+      'Parallel loading of all visible cards',
+      'Extension needs no account or login',
+      'Extension has no analytics',
+      proOnSale
+        ? `Pro AR mode: ratings over a TV screen through a phone camera (${PRO_PRICING.trialDays}-day free trial)`
+        : 'Experimental AR mode: ratings over a TV screen through a phone camera (free to try)',
+    ],
+  };
 }

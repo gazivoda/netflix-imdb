@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import { pageMetadata, faqPage, videoObject, graph } from '../lib/seo';
+import { pageMetadata, faqPage, videoObject, graph, softwareApplication } from '../lib/seo';
 import JsonLd from '../components/JsonLd';
 import { FAQS } from '../lib/content';
 import HomeNav from '../components/home/HomeNav';
@@ -21,10 +21,10 @@ export const metadata = pageMetadata('/');
 export default function Page() {
   return (
     <div className={styles.page}>
-      <a className="skip-link" href="#main">Skip to main content</a>
       {/* FAQPage schema lives only here — it must match the visible FAQ on this page.
-          VideoObject describes the promo video section (components/home/PromoVideo). */}
-      <JsonLd data={graph(faqPage(FAQS), videoObject())} />
+          VideoObject describes the promo video section (components/home/PromoVideo).
+          SoftwareApplication is page-level now (the root layout no longer emits it on every page). */}
+      <JsonLd data={graph(faqPage(FAQS), videoObject(), softwareApplication())} />
       <HomeNav />
 
       <main id="main" tabIndex={-1}>

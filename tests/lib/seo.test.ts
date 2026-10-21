@@ -138,8 +138,9 @@ describe('JSON-LD builders', () => {
     const a = article('/compare/imdb-vs-rotten-tomatoes') as any;
     expect(a.author).toEqual({ '@id': `${SITE_URL}/#author` });
     expect(a.publisher).toEqual({ '@id': `${SITE_URL}/#org` });
-    expect(a.datePublished).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(a.dateModified).toBe(getPage('/compare/imdb-vs-rotten-tomatoes').updated);
+    // Full date-times with a zone, like every date in the JSON-LD (see isoDateTime).
+    expect(a.datePublished).toBe('2026-06-16T00:00:00+00:00');
+    expect(a.dateModified).toBe(`${getPage('/compare/imdb-vs-rotten-tomatoes').updated}T00:00:00+00:00`);
   });
 
   it('graph wraps nodes in a schema.org @graph', () => {
@@ -169,11 +170,12 @@ describe('/about page', () => {
     expect(src).toContain("pagesInGroup('about')");
   });
 
-  it('declares AboutPage schema that references (not redefines) the shared author', () => {
+  it('declares AboutPage + ProfilePage schema whose mainEntity is the full author Person (inlined, not a bare @id)', () => {
     const src = readFileSync(join(__dirname, '../../app/about/page.tsx'), 'utf8');
     expect(src).toContain("'AboutPage'");
-    expect(src).toContain('authorRef');
-    expect(src).not.toContain("'Person'");
+    expect(src).toContain("'ProfilePage'");
+    expect(src).toContain('mainEntity: authorNode()');
+    expect(src).not.toContain('mainEntity: authorRef');
   });
 });
 
@@ -272,8 +274,8 @@ describe('blog JSON-LD builders (spec 4.5)', () => {
     expect(post.about).toEqual({ '@id': `${SITE_URL}${path}#film` });
     expect(post.author).toEqual({ '@id': `${SITE_URL}/#author` });
     expect(post.publisher).toEqual({ '@id': `${SITE_URL}/#org` });
-    expect(post.datePublished).toBe('2026-10-20');
-    expect(post.dateModified).toBe('2026-10-22');
+    expect(post.datePublished).toBe('2026-10-20T00:00:00+00:00');
+    expect(post.dateModified).toBe('2026-10-22T00:00:00+00:00');
     expect(post.wordCount).toBe(712);
     expect(post.inLanguage).toBe('en');
     expect(post.isPartOf).toMatchObject({ '@type': 'CollectionPage', '@id': `${SITE_URL}/blog#webpage`, url: `${SITE_URL}/blog` });

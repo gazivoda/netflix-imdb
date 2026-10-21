@@ -18,6 +18,7 @@
 //   5. boxes      snapped to the real edges per tile at full resolution (tilt and keystone follow the line slopes)
 import { RgbaImage } from '../card-hash'
 import { Box } from '../card-tracker'
+import type { Pt } from './rectify'
 
 export interface CardCandidate {
   box: Box
@@ -27,6 +28,8 @@ export interface CardCandidate {
   kind: 'landscape' | 'portrait'
   /** Index of the row of tiles this box belongs to (boxes of one row share it). */
   row: number
+  /** The tile's corners [tl, tr, br, bl] in image pixels (tilt and keystone included), for a rectified crop. `box` is its bounding box. */
+  quad: [Pt, Pt, Pt, Pt]
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -64,6 +67,17 @@ const PITCH_PEAK = 0.7 // the page pitch is the smallest autocorrelation peak th
 const PITCH_BONUS = 0.5 // rank of a row hypothesis built from the pitch, in line-strength units of the frame width
 const PITCH_TILE = [0.9, 0.96, 1.02] // tile width as a share of the pitch (the rest is gap)
 const MAX_TILE_W = 0.38 // share of the frame width: a landscape tile wider than this is a hero banner, not a tile
+
+// Fragments: bright logo text on a card whose own edges are faint produces rows of "tiles" that are really letter groups. A tile of a
+// real screen is a tenth of the screen's width or more, has the 16:9 or 2:3 shape of its layout, and is not far smaller than the others.
+const FRAG_MIN_W = 0.075 // share of the frame width below which a box is no tile
+const FRAG_MIN_W_CUT = 0.03 // the same for a box cut by the frame edge
+const FRAG_ASPECT: Record<CardCandidate['kind'], [number, number]> = { landscape: [1.1, 2.7], portrait: [0.5, 0.9] }
+const FRAG_EDGE = 0.015 // a box this close to the frame edge (share of the short side) is a tile cut by it: kept to size rules only
+const FRAG_REL_AREA = 0.4 // smaller than this share of the typical (85th percentile) box area of the frame
+const FRAG_PORTRAIT_H: [number, number] = [1.25, 2.1] // a Top-10 poster is 1.5-2x as tall as the landscape tiles of its screen; below that it is a letter group, above it two rows merged
+const FRAG_PORTRAIT_ROWS = 2 // a screen shows at most this many Top-10 style rows; more portrait rows are letter groups explained as posters
+const SUPPRESS_R = 2 // cells: strokes up to 2 * SUPPRESS_R cells wide are removed by the text-suppressing retry
 
 const BUSY_SAMPLES = 8
 const SUB_ROWS = 12 // scanlines for the full-resolution side refinement
@@ -802,6 +816,7 @@ interface Tile {
   y0: number
   y1: number
   confidence: number
+  quad: [Pt, Pt, Pt, Pt] // grid cells
 }
 
 // Final boxes (grid coordinates): sides from the raw edge columns and then the full-resolution gradient, top and bottom from the
@@ -828,28 +843,100 @@ function refineTiles(e: Edges, b: BandResult, full: Full): Tile[] {
     let x1 = -1e9
     let y0 = 1e9
     let y1 = -1e9
-    for (const u of [uL, uR]) {
-      for (let k = 0; k < 2; k++) {
-        const ln = k === 0 ? b.top : b.bot
-        const y = ln.rho + ln.s * (u - cx) + (k === 0 ? dTop : dBot)
-        const x = u - b.lean * (y - mid)
-        if (x < x0) x0 = x
-        if (x > x1) x1 = x
-        if (y < y0) y0 = y
-        if (y > y1) y1 = y
-      }
+    const corner = (u: number, top: boolean): Pt => {
+      const ln = top ? b.top : b.bot
+      const y = ln.rho + ln.s * (u - cx) + (top ? dTop : dBot)
+      return { x: u - b.lean * (y - mid), y }
     }
-    out.push({ x0, x1, y0, y1, confidence: Math.min((s.evL + s.evR) / 2, support) })
+    const quad: [Pt, Pt, Pt, Pt] = [corner(uL, true), corner(uR, true), corner(uR, false), corner(uL, false)]
+    for (const p of quad) {
+      if (p.x < x0) x0 = p.x
+      if (p.x > x1) x1 = p.x
+      if (p.y < y0) y0 = p.y
+      if (p.y > y1) y1 = p.y
+    }
+    out.push({ x0, x1, y0, y1, confidence: Math.min((s.evL + s.evR) / 2, support), quad })
   }
   return out
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
+// Opening then closing with a (2r+1) square: removes bright and dark strokes narrower than the window (letters of a logo, caption
+// text) and keeps the broad shapes (tiles, their gaps) with their edges.
+function suppressText(g: Grid): Grid {
+  const { w, h } = g
+  const pass = (src: Uint8Array, dst: Uint8Array, horizontal: boolean, useMax: boolean): void => {
+    const n = horizontal ? w : h
+    const m = horizontal ? h : w
+    for (let j = 0; j < m; j++) {
+      for (let i = 0; i < n; i++) {
+        let v = useMax ? 0 : 255
+        for (let d = -SUPPRESS_R; d <= SUPPRESS_R; d++) {
+          const t = i + d < 0 ? 0 : i + d >= n ? n - 1 : i + d
+          const x = src[horizontal ? j * w + t : t * w + j]
+          if (useMax ? x > v : x < v) v = x
+        }
+        dst[horizontal ? j * w + i : i * w + j] = v
+      }
+    }
+  }
+  const a = new Uint8Array(w * h)
+  const b = new Uint8Array(w * h)
+  let cur = g.y
+  for (const useMax of [false, true, true, false]) { // erode, dilate (opening), dilate, erode (closing)
+    pass(cur, a, true, useMax)
+    pass(a, b, false, useMax)
+    cur = Uint8Array.from(b)
+  }
+  return { ...g, y: cur }
+}
+
+const touchesEdge = (b: Box, img: RgbaImage): boolean => {
+  const e = Math.max(1, FRAG_EDGE * Math.min(img.width, img.height))
+  return b.x <= e || b.y <= e || b.x + b.w >= img.width - e || b.y + b.h >= img.height - e
+}
+
+function isFragment(c: CardCandidate, img: RgbaImage, refArea: number): boolean {
+  const b = c.box
+  const cut = touchesEdge(b, img)
+  if (b.w < (cut ? FRAG_MIN_W_CUT : FRAG_MIN_W) * img.width) return true
+  if (!cut) {
+    const [lo, hi] = FRAG_ASPECT[c.kind]
+    const aspect = b.w / Math.max(1, b.h)
+    if (aspect < lo || aspect > hi) return true
+    if (refArea > 0 && b.w * b.h < FRAG_REL_AREA * refArea) return true
+  }
+  return false
+}
+
+/** Boxes that are whole tiles, and how many were dropped as fragments. Sizes are judged against the frame and against the other boxes. */
+function dropFragments(found: CardCandidate[], img: RgbaImage): { kept: CardCandidate[]; dropped: number } {
+  const areas = found.filter((c) => !touchesEdge(c.box, img)).map((c) => c.box.w * c.box.h).sort((x, y) => x - y)
+  const ref = areas.length >= 3 ? areas[Math.floor(0.85 * (areas.length - 1))] : 0
+  // a portrait box is a poster only if it is clearly taller than the landscape tiles beside it
+  const landH = found.filter((c) => c.kind === 'landscape').map((c) => c.box.h).sort((x, y) => x - y)
+  const medLand = landH.length >= 3 ? landH[landH.length >> 1] : 0
+  const portraitRows = new Set(found.filter((c) => c.kind === 'portrait').map((c) => c.row)).size
+  const kept = found.filter(
+    (c) => !isFragment(c, img, ref) && !(c.kind === 'portrait' && (portraitRows > FRAG_PORTRAIT_ROWS || (medLand > 0 && (c.box.h < FRAG_PORTRAIT_H[0] * medLand || c.box.h > FRAG_PORTRAIT_H[1] * medLand)))),
+  )
+  return { kept, dropped: found.length - kept.length }
+}
+
 /** Tiles found in `img` (any size; analysed on a ~320 px grid), in image pixels, in no particular order. [] for a blank frame. */
 export function detectCards(img: RgbaImage): CardCandidate[] {
   if (img.width < 32 || img.height < 32) return []
   const g = lumaGrid(img)
+  const first = dropFragments(detectOnGrid(img, g), img)
+  if (first.dropped < Math.max(2, first.kept.length / 2)) return first.kept // a stray odd box is not worth a second look
+  // Fragments mean logo / caption text drowned the faint tile edges. Look again with the text smoothed away and keep the reading
+  // that explains the frame with more whole tiles.
+  const again = dropFragments(detectOnGrid(img, suppressText(g)), img)
+  return again.kept.length > first.kept.length ? again.kept : first.kept
+}
+
+function detectOnGrid(img: RgbaImage, g: Grid): CardCandidate[] {
   const e = edgePoints(g)
   const bands: BandResult[] = []
   for (const c of rowCandidates(e, N_CANDIDATES)) {
@@ -894,7 +981,10 @@ export function detectCards(img: RgbaImage): CardCandidate[] {
       const y0 = Math.max(0, t.y0) * g.k
       const y1 = Math.min(g.h, t.y1) * g.k
       if (x1 - x0 < 2 || y1 - y0 < 2) continue
-      out.push({ box: { x: Math.round(x0), y: Math.round(y0), w: Math.round(x1 - x0), h: Math.round(y1 - y0) }, confidence: t.confidence, kind: b.hyp.kind, row })
+      const clampX = (v: number) => Math.min(g.w * g.k, Math.max(0, v * g.k))
+      const clampY = (v: number) => Math.min(g.h * g.k, Math.max(0, v * g.k))
+      const q = t.quad.map((p) => ({ x: clampX(p.x), y: clampY(p.y) })) as CardCandidate['quad']
+      out.push({ box: { x: Math.round(x0), y: Math.round(y0), w: Math.round(x1 - x0), h: Math.round(y1 - y0) }, confidence: t.confidence, kind: b.hyp.kind, row, quad: q })
     }
   })
   return out

@@ -38,7 +38,7 @@ const ALLOWLIST: ReadonlyArray<{ file: string; substring: string }> = [
   },
   {
     file: 'app/compare/alternatives/page.tsx',
-    substring: 'I have not verified its source code or how it fetches ratings',
+    substring: 'I have not verified the source code of either or how they fetch ratings',
   },
 ];
 

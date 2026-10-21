@@ -41,8 +41,10 @@ export function describeSubscription(u: PublicUser): SubscriptionSummary {
       // Not "Renews": Paddle can hold a scheduled cancellation while the status is still active, and we do not store that flag.
       return { headline: u.subscription_plan === 'yearly' ? 'Yearly' : 'Monthly', detail: end ? `Current period ends ${end}` : 'Active', canManage, canSubscribe: false }
     case 'paused':
-      // Ruling R: the gate keeps AR mode open while paused, so the copy must say so.
-      return { headline: 'Paused', detail: 'AR mode stays available while the subscription is paused.', canManage, canSubscribe: false }
+      // Ruling R: a pause keeps AR mode open only until the paid period ends (access.ts), so the copy says exactly that.
+      return u.access === 'subscribed'
+        ? { headline: 'Paused', detail: end ? `AR mode stays available until ${end}.` : 'AR mode stays available for now.', canManage, canSubscribe: false }
+        : { headline: 'Paused', detail: 'AR mode is off while the subscription is paused. Resume it from your billing portal.', canManage, canSubscribe: false }
     case 'cancelled':
       // Set only by the final subscription.canceled event, so access has already ended.
       return { headline: 'Subscription ended', detail: 'Subscribe again to use AR mode.', canManage, canSubscribe: true }

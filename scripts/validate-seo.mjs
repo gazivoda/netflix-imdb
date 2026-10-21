@@ -1,6 +1,9 @@
 // Validates the prerendered pages from `next build` against lib/html-seo.ts, and every
 // prerendered /blog/{slug} article plus the /blog hub against lib/blog-html.ts.
 // Usage: next build && npm run seo:validate   (exits 1 on any finding)
+// Registry pages that are rendered per request (no prerendered file; /camera-vision/ar reads the session cookie for
+// its server-side paywall) are fetched from SEO_BASE_URL, e.g. a `next start` of the same build. Without it they are
+// listed as skipped, never silently passed.
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -50,10 +53,31 @@ const loadBlogData = () => {
 
 const articlePages = [];
 let hubBytes = null;
+const DYNAMIC_PAGES = new Set(['/camera-vision/ar']);
+const baseUrl = (process.env.SEO_BASE_URL || '').replace(/\/$/, '');
+const skipped = [];
 
 for (const page of PAGES) {
   const file = join(appDir, htmlFileForPath(page.path));
   if (!existsSync(file)) {
+    if (DYNAMIC_PAGES.has(page.path)) {
+      if (!baseUrl) {
+        skipped.push(page.path);
+      } else {
+        try {
+          const res = await fetch(baseUrl + page.path, { redirect: 'manual' });
+          if (res.status !== 200) {
+            findings.push({ path: page.path, rule: 'build', message: `${baseUrl}${page.path} answered ${res.status}` });
+          } else {
+            findings.push(...checkPage({ path: page.path, html: await res.text() }));
+            checked.add(page.path);
+          }
+        } catch (err) {
+          findings.push({ path: page.path, rule: 'build', message: `cannot fetch ${baseUrl}${page.path}: ${err.message}` });
+        }
+      }
+      continue;
+    }
     findings.push({ path: page.path, rule: 'build', message: `no prerendered HTML at ${relative(root, file)}` });
     continue;
   }
@@ -109,6 +133,7 @@ if (findings.length) {
   process.exit(1);
 }
 console.log(`seo:validate: ${checked.size} pages OK`);
+if (skipped.length) console.log(`seo:validate: skipped (rendered per request, set SEO_BASE_URL to check): ${skipped.join(', ')}`);
 if (articlePages.length) {
   const hub = hubBytes === null ? 'no hub page' : `hub ${(hubBytes / 1024).toFixed(1)} KB of ${HUB_MAX_BYTES / 1024} KB`;
   let titles = '';

@@ -9,7 +9,10 @@
  * AR_BENCH_LEVEL, AR_BENCH_LAYOUT, AR_BENCH_WORKERS=6, AR_BENCH_CAPTION=0 (do not extend caption-layout crops to include the
  * caption line under the tile), AR_BENCH_BASELINE=0 (skip the old reader), AR_BENCH_VOCAB=even|odd (give the reader the popular-title
  * vocabulary minus the benchmark titles plus HALF of the benchmark titles, so results are split into titles the vocabulary knows (IN) and
- * does not (OUT): an honest read of what the vocabulary adds and whether it invents wrong titles).
+ * does not (OUT): an honest read of what the vocabulary adds and whether it invents wrong titles). The vocabulary is also what the
+ * AutoLabeler repairs typos against before it asks the catalogue, exactly as the page does. Without AR_BENCH_VOCAB there is none.
+ * The catalogue is the EXACT stub of tests/helpers/ar-real-scene.ts (like OMDb ?t=: no fuzzy repair), and the dataset has a fourth
+ * layout, 'plain' (no caption, no overlay text, a share of tiles with no legible title). Rows are "<level> <layout>".
  * Prints numbers and asserts nothing about them (a baseline to beat, not a gate).
  */
 import { createWorker, Worker } from 'tesseract.js'
@@ -84,7 +87,7 @@ maybe('title reading on ground-truth tile crops', () => {
         if (!s) return
         const t = Date.now()
         let passes = 0
-        const labeler = new AutoLabeler({ readTitles: async () => { const r = await read(worker, s.crop); passes = r.passes; return r.titles }, lookup }, { minGapMs: 0 })
+        const labeler = new AutoLabeler({ readTitles: async () => { const r = await read(worker, s.crop); passes = r.passes; return r.titles }, lookup, repair: c => vocabulary?.repair(c) ?? null }, { minGapMs: 0 })
         const hit = await labeler.next([{ box: { x: 0, y: 0, w: s.crop.width, h: s.crop.height } }])
         const ms = Date.now() - t
         const vocabTag = vocabHalf ? [`${s.level} ${vocabHalf.has(canon(s.title)) ? 'IN ' : 'OUT'}`] : []

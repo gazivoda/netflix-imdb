@@ -24,7 +24,8 @@ const SCHEMA = `
     subscription_end_date TEXT,
     paddle_subscription_id TEXT,
     paddle_customer_id TEXT,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    last_event_at TEXT
   );
   CREATE INDEX IF NOT EXISTS users_email ON users (lower(email));
   CREATE INDEX IF NOT EXISTS users_sub ON users (paddle_subscription_id);
@@ -36,6 +37,9 @@ export function openUsersDb(file: string, now: () => number = Date.now): UsersDb
   const db = new Database(file)
   if (file !== ':memory:') db.pragma('journal_mode = WAL')
   db.exec(SCHEMA)
+  // Databases created before last_event_at existed: add the column in place (CREATE TABLE IF NOT EXISTS skips them).
+  const columns = db.prepare('PRAGMA table_info(users)').all() as { name: string }[]
+  if (!columns.some((c) => c.name === 'last_event_at')) db.exec('ALTER TABLE users ADD COLUMN last_event_at TEXT')
 
   const byId = db.prepare('SELECT * FROM users WHERE id = ?')
   const byEmail = db.prepare('SELECT * FROM users WHERE lower(email) = lower(?) LIMIT 1')
@@ -43,18 +47,18 @@ export function openUsersDb(file: string, now: () => number = Date.now): UsersDb
   const byCustomer = db.prepare('SELECT * FROM users WHERE paddle_customer_id = ? LIMIT 1')
   const upsert = db.prepare(`
     INSERT INTO users (id, email, name, avatar, trial_end_date, subscription_status, subscription_plan,
-      subscription_end_date, paddle_subscription_id, paddle_customer_id, created_at)
+      subscription_end_date, paddle_subscription_id, paddle_customer_id, created_at, last_event_at)
     VALUES (@id, @email, @name, @avatar, @trial_end_date, @subscription_status, @subscription_plan,
-      @subscription_end_date, @paddle_subscription_id, @paddle_customer_id, @created_at)
+      @subscription_end_date, @paddle_subscription_id, @paddle_customer_id, @created_at, @last_event_at)
     ON CONFLICT(id) DO UPDATE SET
       email = excluded.email, name = excluded.name, avatar = excluded.avatar,
       trial_end_date = excluded.trial_end_date, subscription_status = excluded.subscription_status,
       subscription_plan = excluded.subscription_plan, subscription_end_date = excluded.subscription_end_date,
-      paddle_subscription_id = excluded.paddle_subscription_id, paddle_customer_id = excluded.paddle_customer_id
+      paddle_subscription_id = excluded.paddle_subscription_id, paddle_customer_id = excluded.paddle_customer_id, last_event_at = excluded.last_event_at
   `)
 
   const save = (u: UserRecord): UserRecord => {
-    upsert.run(u)
+    upsert.run({ ...u, last_event_at: u.last_event_at ?? null })
     return byId.get(u.id) as UserRecord
   }
   const get = (id: string): UserRecord | null => {
