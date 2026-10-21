@@ -2,7 +2,7 @@
 
 _Prepared 2026-10-15. Companion to `LAUNCH-KIT.md` and `GEO-PLATFORM-OPTIMIZATION.md`. Covers the entity signals AI engines and knowledge graphs read: Wikidata, curated "awesome" lists, the Chrome Web Store listing and LinkedIn. Every step needs **you (Igor)**; none can be done by an agent. Tags: `[YOU]` your account or decision, `[ASSET]` something to create first, `[CHECK]` verify live._
 
-**Prerequisites shared with the launch kit** (see `LAUNCH-KIT.md`, section 0): fix or rotate the hard-coded OMDb key; verify or remove homepage testimonials. Nothing below names a license or links a code repository: the project is positioned as a free extension with a paid Pro AR mode.
+**Prerequisites shared with the launch kit** (see `LAUNCH-KIT.md`, section 0): fix or rotate the hard-coded OMDb key; homepage testimonials (removed 2026-10-21). Nothing below names a license or links a code repository: the project is positioned as a free extension with a paid Pro AR mode.
 
 ---
 

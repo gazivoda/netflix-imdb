@@ -1,0 +1,41 @@
+Rating Watch - Proprietary Licence
+
+Copyright (c) 2026 Rating Watch. All rights reserved.
+
+No licence or other right is granted to you in this repository or in anything
+it contains, except as stated below. In particular, nothing here is released
+under an open-source or "source-available" licence. You may not copy, modify,
+merge, publish, distribute, sublicense, sell, host, or create derivative works
+of the website, the browser extension, the scripts, the documentation, the
+design, the text or any other material in this repository, in whole or in part,
+without the prior written permission of the copyright holder.
+
+Viewing this repository on a public hosting service does not grant any of
+those rights.
+
+Browser extension
+-----------------
+The Rating Watch browser extension is distributed free of charge, for personal
+use only, through the website (https://rating.watch) and the Chrome Web Store.
+You may install and use it for your own personal, non-commercial purposes.
+Redistribution, modification, repackaging and resale of the extension, or of
+any part of it, are not permitted without written permission.
+
+Third-party data and marks
+--------------------------
+This licence does not cover third-party data, services or trademarks. Ratings
+data comes from the OMDb API and remains subject to OMDb's own terms. Netflix,
+IMDb and Rotten Tomatoes are trademarks of their respective owners; Rating
+Watch is not affiliated with, endorsed by or sponsored by them. Netflix Top 10
+data remains subject to Netflix's terms. Third-party open-source components
+used by the project remain under their own licences.
+
+No warranty
+-----------
+THE SOFTWARE AND THE SERVICE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+To request permission, write to hello@rating.watch.

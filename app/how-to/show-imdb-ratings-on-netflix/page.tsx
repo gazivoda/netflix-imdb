@@ -28,7 +28,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Is it free, and what does it send?',
-    a: 'It is free, with no account needed. To fetch a rating it sends only the title name to OMDb, the database that supplies the scores. It requests access to just netflix.com and omdbapi.com, and the privacy policy lists exactly what it does.',
+    a: 'It is free, with no account needed, and works out of the box on a shared OMDb lookup allowance that can run out on a busy day (you can add a free personal OMDb key in the extension options). To fetch a rating it sends only the title name to OMDb, the database that supplies the scores. It requests access to just netflix.com and omdbapi.com, and the privacy policy lists exactly what it does.',
   },
 ];
 
@@ -41,7 +41,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
         <>
           <strong>
             To show IMDb ratings on Netflix, install the free Rating Watch browser extension,
-            open netflix.com and read the badge in the top-right corner of each title card.
+            open netflix.com and read the badge in the top-right corner of title cards.
           </strong>{' '}
           The number beside the star is the IMDb rating out of 10. It works in Chrome, Edge and
           Brave and needs no account.

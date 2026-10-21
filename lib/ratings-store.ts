@@ -8,6 +8,9 @@ import type { OmdbTitle } from '@/lib/omdb'
 export const FRESH_FOUND_MS = 7 * 24 * 3600 * 1000
 export const FRESH_NOT_FOUND_MS = 24 * 3600 * 1000
 
+/** Hard cap on cached titles (RAM and file size); the oldest entries are evicted first. */
+export const MAX_ENTRIES = 5000
+
 const FLUSH_DELAY_MS = 200
 const FILE_VERSION = 1
 
@@ -43,7 +46,17 @@ function isDoc(value: unknown): value is RatingDoc {
   )
 }
 
-function loadDocs(file: string): Map<string, RatingDoc> {
+// Oldest first, so evicting from the front of the Map's insertion order drops the stalest entries.
+function trimOldest(docs: Map<string, RatingDoc>, max: number): void {
+  if (docs.size <= max) return
+  const newest = [...docs.entries()]
+    .sort((a, b) => (Date.parse(a[1].updatedAt) || 0) - (Date.parse(b[1].updatedAt) || 0))
+    .slice(-max)
+  docs.clear()
+  for (const [k, v] of newest) docs.set(k, v)
+}
+
+function loadDocs(file: string, max: number): Map<string, RatingDoc> {
   const docs = new Map<string, RatingDoc>()
   let raw: string
   try {
@@ -82,21 +95,23 @@ function loadDocs(file: string): Map<string, RatingDoc> {
   for (const [key, doc] of Object.entries(entries)) {
     if (isDoc(doc)) docs.set(key, doc)
   }
+  trimOldest(docs, max)
   return docs
 }
 
-export function createRatingsStore(opts: { path?: string } = {}): RatingsStore {
+export function createRatingsStore(opts: { path?: string; maxEntries?: number } = {}): RatingsStore {
   const file = path.resolve(
     process.cwd(),
     opts.path ?? process.env.RATINGS_DB_PATH ?? '.data/ratings.json'
   )
+  const maxEntries = Math.max(1, opts.maxEntries ?? MAX_ENTRIES)
   let docs: Map<string, RatingDoc> | null = null
   let timer: ReturnType<typeof setTimeout> | null = null
   let dirty = false
   let writing: Promise<void> = Promise.resolve()
 
   function ensureLoaded(): Map<string, RatingDoc> {
-    if (docs === null) docs = loadDocs(file)
+    if (docs === null) docs = loadDocs(file, maxEntries)
     return docs
   }
 
@@ -104,13 +119,22 @@ export function createRatingsStore(opts: { path?: string } = {}): RatingsStore {
     if (!dirty || docs === null) return
     dirty = false
     const payload = JSON.stringify({ version: FILE_VERSION, docs: Object.fromEntries(docs) })
-    const tmp = `${file}.tmp`
+    // Atomic replace: write a complete temp file next to the target, flush it to disk, then rename over the
+    // target. A crash or a full disk leaves the previous file intact, never a half-written one.
+    const tmp = `${file}.${process.pid}.tmp`
     try {
       await fs.promises.mkdir(path.dirname(file), { recursive: true })
-      await fs.promises.writeFile(tmp, payload, 'utf8')
+      const handle = await fs.promises.open(tmp, 'w')
+      try {
+        await handle.writeFile(payload, 'utf8')
+        await handle.sync()
+      } finally {
+        await handle.close()
+      }
       await fs.promises.rename(tmp, file)
     } catch (err) {
       dirty = true // keep the data eligible for the next flush
+      await fs.promises.rm(tmp, { force: true }).catch(() => {})
       console.error('ratings-store: failed to write', file, err)
     }
   }
@@ -150,12 +174,15 @@ export function createRatingsStore(opts: { path?: string } = {}): RatingsStore {
 
     set(title, result, now = Date.now()) {
       const key = normalizeKey(title)
-      ensureLoaded().set(key, {
+      const map = ensureLoaded()
+      map.delete(key) // re-insert so a refreshed title moves to the newest end
+      map.set(key, {
         key,
         query: title,
         result,
         updatedAt: new Date(now).toISOString(),
       })
+      while (map.size > maxEntries) map.delete(map.keys().next().value as string)
       dirty = true
       schedule()
     },

@@ -1,0 +1,96 @@
+/* Cookie consent bar: fixed to the bottom, mobile first. Tokens only; both buttons share one style. */
+.banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  padding: 16px clamp(16px, 4vw, 32px) calc(16px + env(safe-area-inset-bottom));
+  background: var(--card);
+  color: var(--ink);
+  border-top: 3px solid var(--ink);
+  outline: none;
+  animation: bannerIn 0.2s ease-out;
+}
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.text {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.text a {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--signal);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 3px;
+  /* 44px+ tap area without moving the surrounding text */
+  display: inline-block;
+  padding: 13px 6px;
+  margin: -13px -6px;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+}
+.btn {
+  flex: 1 1 0;
+  min-height: 48px;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard-sm);
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--gold);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+}
+
+@keyframes bannerIn {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .banner { animation: none; }
+  .btn:hover, .btn:active { transform: none; }
+}
+
+@media (min-width: 720px) {
+  .inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .text { max-width: 70ch; }
+  .actions { flex: 0 0 auto; }
+  .btn { flex: 0 0 auto; min-width: 170px; }
+}
+
+/* Compact phone layout: shorter bar, full-width stacked buttons, 44px+ targets. */
+@media (max-width: 480px) {
+  .banner { padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .inner { gap: 8px; }
+  .text { font-size: 14px; line-height: 1.45; }
+  .actions { flex-direction: column; gap: 8px; }
+  .btn { flex: 0 0 auto; width: 100%; min-height: 44px; padding: 8px 16px; }
+}

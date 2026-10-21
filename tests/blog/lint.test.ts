@@ -276,3 +276,150 @@ describe('rendered display titles', () => {
     expect(lintDisplayTitle(g).map((i) => i.rule)).toContain('forbidden-char');
   });
 });
+
+// ---------------------------------------------------------------------------------------------
+// The OMDb Awards text holds ". " itself ("Won 2 Oscars. 112 wins & 52 nominations total"). It is
+// quoted verbatim, kept whole inside one sentence, and counts as why-split evidence.
+
+describe('OMDb Awards string that contains ". " (verbatim restatement)', () => {
+  const AWARDS = 'Won 2 Oscars. 112 wins & 52 nominations total';
+  const base = get('crimson-static-2022');
+  const filmWith = (awards: string | null) => ({ ...filmBySlug(base.slug), omdb: { ...filmBySlug(base.slug).omdb, awards } });
+  const lintWith = (a: Article, awards: string | null = AWARDS) => lintCopy(a, { film: filmWith(awards), stats: stats[a.slug] });
+  const textIn = (text: string): Article => {
+    const a = clone(base);
+    a.sections.find((s) => s.id === 'the-film')!.paragraphs[0] += ` ${text}`;
+    return a;
+  };
+  const claimRules = (a: Article, awards: string | null = AWARDS) =>
+    lintWith(a, awards).filter((i) => i.rule === 'must-cite' || i.rule === 'number-literal').map((i) => i.rule);
+
+  it('the fixture film itself has no awards, so the baseline is clean', () => {
+    expect(lintWith(base, null)).toEqual([]);
+  });
+
+  it('quoted exactly, the string passes: no must-cite and no number-literal', () => {
+    expect(claimRules(textIn(`OMDb records the awards as: ${AWARDS}.`))).toEqual([]);
+    expect(claimRules(textIn(`${AWARDS}.`))).toEqual([]);
+  });
+
+  it('the exemption survives case and extra whitespace', () => {
+    expect(claimRules(textIn('OMDb lists WON 2 OSCARS.  112 wins & 52 nominations TOTAL.'))).toEqual([]);
+  });
+
+  it('the exemption covers the whole sentence, as before, but only that sentence', () => {
+    const a = textIn(`The record reads ${AWARDS}. Critics say it won a festival prize.`);
+    const found = lintWith(a).filter((i) => i.rule === 'must-cite');
+    expect(found.length).toBeGreaterThan(0);
+    expect(found.every((i) => /festival prize/.test(i.message))).toBe(true);
+  });
+
+  it('works when the Awards string itself ends with a full stop', () => {
+    const awards = 'Won 1 Oscar. 5 wins.';
+    const a = textIn('The record reads Won 1 Oscar. 5 wins. Another sentence says it was nominated for a prize.');
+    const found = lintWith(a, awards).filter((i) => i.rule === 'must-cite');
+    expect(found.map((i) => i.message).join('|')).toMatch(/nominated/);
+    expect(found.map((i) => i.message).join('|')).not.toMatch(/Won 1 Oscar|5 wins/);
+    expect(lintWith(a, awards).filter((i) => i.rule === 'number-literal')).toEqual([]);
+  });
+
+  it('a partial or altered quote still needs a cite', () => {
+    expect(claimRules(textIn('It Won 2 Oscars.'))).toEqual(expect.arrayContaining(['must-cite', 'number-literal']));
+    expect(claimRules(textIn('Won 3 Oscars. 112 wins & 52 nominations total.'))).toEqual(expect.arrayContaining(['must-cite', 'number-literal']));
+  });
+
+  it('a cite on the sentence works as before', () => {
+    const a = textIn('The film won an award at a festival.{{cite:tudum}}');
+    a.sources = [{ id: 'tudum', url: 'https://www.netflix.com/tudum/top10', title: 'Top 10', publisher: 'Netflix Tudum', accessed: '2026-10-16', supports: 'Chart.' }];
+    expect(lintWith(a).filter((i) => i.rule === 'must-cite')).toEqual([]);
+  });
+
+  describe('as why-split evidence', () => {
+    const whySplit = (paragraphs: string[]): Article => {
+      const a = clone(base);
+      a.sections.find((s) => s.id === 'why-split')!.paragraphs = paragraphs;
+      return a;
+    };
+    const direction = 'Audiences rate it sharply higher than critics, a wide gap of {{gapAbs}} points.';
+    const evidence = (a: Article, awards: string | null = AWARDS) => lintWith(a, awards).filter((i) => i.rule === 'why-split').map((i) => i.message);
+
+    it('counts as one of the two required evidence fields', () => {
+      const without = whySplit([direction, 'The vote pool is {{votes}} strong.']);
+      expect(evidence(without).join('|')).toMatch(/has 1/);
+      const withAwards = whySplit([direction, 'The vote pool is {{votes}} strong.', `OMDb lists the awards as ${AWARDS}.`]);
+      expect(evidence(withAwards)).toEqual([]);
+    });
+
+    it('is the second field even when it is the only quoted text next to the direction sentence', () => {
+      expect(evidence(whySplit([direction, `The record reads ${AWARDS}, and the Metascore is {{metascore}}.`]))).toEqual([]);
+    });
+
+    it('does not count when altered or invented', () => {
+      expect(evidence(whySplit([direction, 'The vote pool is {{votes}} strong.', 'OMDb lists Won 3 Oscars. 112 wins & 52 nominations total.'])).join('|')).toMatch(/has 1/);
+      expect(evidence(whySplit([direction, 'The vote pool is {{votes}} strong.', 'The film won two festival awards.'])).join('|')).toMatch(/has 1/);
+    });
+
+    it('does not count when the film has no Awards string', () => {
+      expect(evidence(whySplit([direction, 'The vote pool is {{votes}} strong.', `The record reads ${AWARDS}.`]), null).join('|')).toMatch(/has 1/);
+    });
+  });
+});
+
+describe('splitSentences with verbatim spans', () => {
+  const { splitSentences } = jest.requireActual('../../lib/blog/sentences') as typeof import('../../lib/blog/sentences');
+  const A = 'Won 2 Oscars. 112 wins & 52 nominations total';
+  it('does not cut inside the span, and returns it as written', () => {
+    expect(splitSentences(`It says ${A}. Next one.`, [A])).toEqual([`It says ${A}.`, 'Next one.']);
+    expect(splitSentences(`It says won 2 oscars. 112 wins & 52 nominations total. Next.`, [A])).toEqual(['It says won 2 oscars. 112 wins & 52 nominations total.', 'Next.']);
+  });
+  it('without a span the old splitting applies', () => {
+    expect(splitSentences(`It says ${A}. Next one.`)).toEqual(['It says Won 2 Oscars.', '112 wins & 52 nominations total.', 'Next one.']);
+  });
+  it('keeps a cite marker with the sentence the span ends', () => {
+    expect(splitSentences(`It says ${A}.{{cite:x}} Next.`, [A])).toEqual([`It says ${A}.{{cite:x}}`, 'Next.']);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Wordings the writer brief recommends must pass the lint (tests keep the brief honest).
+
+describe('brief-recommended wordings pass the lint', () => {
+  const inWhySplit = (slug: string, text: string): Article => {
+    const a = clone(get(slug));
+    a.sections.find((s) => s.id === 'why-split')!.paragraphs[0] += ` ${text}`;
+    return a;
+  };
+  const inMore = (slug: string, text: string): Article => {
+    const a = clone(get(slug));
+    a.sections.find((s) => s.id === 'the-film')!.paragraphs[0] += ` ${text}`;
+    return a;
+  };
+  const slugs = ['harbor-lights-2021', 'crimson-static-2022', 'salt-and-iron-2019', 'the-quiet-orchard-2023'];
+
+  it.each(slugs)('hours window in words only (%s)', (slug) => {
+    const a = inMore(slug, 'It logged {{hours}} hours viewed in its opening weeks on the chart.');
+    expect(lint(a)).toEqual([]);
+  });
+  it('the digit version of the window fails (why the brief gives the digit-free wording)', () => {
+    expect(rules(inMore('harbor-lights-2021', 'It logged {{hours}} hours viewed in its first 91 days on the chart.'))).toContain('number-literal');
+  });
+
+  it.each(slugs)('naming other films qualitatively is allowed, numbers for them are not (%s)', (slug) => {
+    expect(lint(inMore(slug, 'Films such as The Gray Man and Back in Action lean the same way among the genre peers.'))).toEqual([]);
+    expect(rules(inMore(slug, 'The Gray Man scores 6.1 on IMDb.'))).toContain('score-literal');
+    expect(rules(inMore(slug, 'The Gray Man ranks 12 in the set.'))).toContain('number-literal');
+  });
+
+  it.each([
+    ['harbor-lights-2021', 'critics-higher'],
+    ['crimson-static-2022', 'audience-higher'],
+  ])('Metascore near the audience score while RT is far (%s)', (slug) => {
+    const a = inWhySplit(slug, 'At {{metascore}}, the Metascore lands nearer the audience figure than the Rotten Tomatoes percentage does.');
+    expect(lint(a)).toEqual([]);
+  });
+
+  it.each(slugs.slice(0, 2))('genre median opposes the film (%s)', (slug) => {
+    const a = inWhySplit(slug, 'The median difference for the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so the typical title in the genre leans the opposite way from this one.');
+    expect(lint(a)).toEqual([]);
+  });
+});

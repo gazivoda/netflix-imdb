@@ -6,7 +6,7 @@ import CheckoutButtons from './CheckoutButtons'
 import s from './billing.module.css'
 
 export default function ArGate({ children }: { children: ReactNode }) {
-  const { loading, user, access, billingEnabled, refresh } = useAccount()
+  const { loading, failed, user, access, billingEnabled, refresh } = useAccount()
   const decision = gateDecision({ loading, billingEnabled, user, access })
   // The prerendered HTML is this loading state, so it carries the page's one h1 and an indexable summary.
   if (decision === 'loading') {
@@ -18,6 +18,15 @@ export default function ArGate({ children }: { children: ReactNode }) {
           AR mode is a Pro feature with a 3-day free trial, then {PRICES.monthly.label} or {PRICES.yearly.label}.
         </p>
         <p className={s.notice} role="status">Checking your account...</p>
+      </main>
+    )
+  }
+  if (failed) {
+    return (
+      <main id="main" tabIndex={-1} className={s.gate}>
+        <h1 className={`ds-display ${s.title}`}>AR Ratings</h1>
+        <p className={s.notice} role="alert">We could not check your account.</p>
+        <button type="button" className={`ds-btn ${s.cta}`} onClick={() => void refresh()}>Try again</button>
       </main>
     )
   }

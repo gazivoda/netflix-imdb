@@ -1,5 +1,6 @@
 import { toPublicUser } from './access'
 import type { Deps } from './deps'
+import { readCappedText } from '../body-limit'
 import { applyEvent, eventTarget, planFromSubscription, verifyWebhookSignature, type PaddleEvent } from './paddle'
 import { eventPriceIds } from './prices'
 import { readSessionUserId } from './session'
@@ -59,8 +60,15 @@ function isActivation(e: PaddleEvent): boolean {
   return ACTIVATION_EVENTS.has(e.event_type) && (status === 'active' || status === 'trialing')
 }
 
+// SEC-6: Paddle events are a few KB; anything near this size is not one. The cap is enforced from the declared
+// content-length first and again while streaming, so an undeclared or lying body is never buffered whole.
+export const MAX_WEBHOOK_BYTES = 256 * 1024
+
 export async function handleWebhook(req: Request, deps: Deps): Promise<Response> {
-  const raw = await req.text() // raw body: the signature covers the exact bytes
+  // Unsigned or unconfigured requests are refused before any body is read.
+  if (!deps.webhookSecret || !req.headers.get('paddle-signature')) return json({ error: 'Invalid signature' }, 401)
+  const raw = await readCappedText(req, MAX_WEBHOOK_BYTES) // raw body: the signature covers the exact bytes
+  if (raw === null) return json({ error: 'Payload too large' }, 413)
   if (!verifyWebhookSignature(raw, req.headers.get('paddle-signature'), deps.webhookSecret, deps.now())) {
     return json({ error: 'Invalid signature' }, 401)
   }
@@ -93,6 +101,16 @@ export async function handleWebhook(req: Request, deps: Deps): Promise<Response>
   }
 }
 
+const sameEmail = (a: unknown, b: unknown): boolean =>
+  typeof a === 'string' && typeof b === 'string' && a.trim() !== '' && a.trim().toLowerCase() === b.trim().toLowerCase()
+
+// One Paddle call. Errors propagate so the caller answers 502 (a transient failure must not look like a mismatch).
+async function customerMatchesUser(deps: Deps, customerId: string, user: UserRecord): Promise<boolean> {
+  if (!deps.paddle) return false
+  const customer = await deps.paddle.getCustomer(customerId)
+  return sameEmail(customer?.email, user.email)
+}
+
 export async function handleVerifySubscription(req: Request, deps: Deps): Promise<Response> {
   const userId = readSessionUserId(req)
   const user = userId ? deps.db.get(userId) : null
@@ -113,6 +131,12 @@ export async function handleVerifySubscription(req: Request, deps: Deps): Promis
   }
   try {
     const txn = await deps.paddle.getTransaction(transactionId)
+    // A transaction tagged for another account cannot be claimed here either (the buyer sets custom_data, so this
+    // only stops honest mix-ups; ownership of the subscription is checked below).
+    const txnTag = txn?.custom_data?.userId
+    if (typeof txnTag === 'string' && txnTag !== '' && txnTag !== user.id) {
+      return json({ error: 'Subscription belongs to another account' }, 409)
+    }
     if (!txn?.subscription_id) return json({ error: 'Subscription not yet created, webhook will handle it' }, 202)
     const sub = await deps.paddle.getSubscription(txn.subscription_id)
     if (sub?.status !== 'active' && sub?.status !== 'trialing') return json({ error: `Subscription is ${sub?.status}` }, 402)
@@ -126,6 +150,12 @@ export async function handleVerifySubscription(req: Request, deps: Deps): Promis
     const taggedFor = sub.custom_data?.userId
     if ((owner && owner.id !== user.id) || (typeof taggedFor === 'string' && taggedFor !== '' && taggedFor !== user.id)) {
       return json({ error: 'Subscription belongs to another account' }, 409)
+    }
+    // SEC-1: the Paddle account is shared and Paddle reuses one customer per email, so a customer id on the
+    // subscription is not proof that the customer is this user. Store it (and so open the billing portal) only when
+    // the Paddle customer's email is the signed-in user's Google-verified email; otherwise refuse without writing.
+    if (sub.customer_id && !(await customerMatchesUser(deps, sub.customer_id, user))) {
+      return json({ error: 'Paddle customer does not match this account' }, 409)
     }
     const saved = deps.db.save({
       ...user,
@@ -149,6 +179,11 @@ export async function handlePortalSession(req: Request, deps: Deps): Promise<Res
   if (!user.paddle_customer_id) return json({ error: 'No billing account on record' }, 400)
   if (!deps.paddle) return json({ error: 'Billing is not configured' }, 503)
   try {
+    // SEC-1/SEC-10: a customer id can also arrive through a webhook match, so the portal re-proves ownership
+    // before opening anything: the Paddle customer's email must be this user's verified email.
+    if (!(await customerMatchesUser(deps, user.paddle_customer_id, user))) {
+      return json({ error: 'Paddle customer does not match this account' }, 409)
+    }
     const subs = user.paddle_subscription_id ? [user.paddle_subscription_id] : undefined
     return json({ url: await deps.paddle.createPortalSession(user.paddle_customer_id, subs) })
   } catch (err) {

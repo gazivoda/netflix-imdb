@@ -86,7 +86,6 @@
 @media (max-width: 640px) {
   .nav { padding: 4px 12px 8px; }
   :global(html):has(.nav) { scroll-padding-top: 116px; }
-  .navLogo { min-height: 40px; }
   .navLinks {
     flex-basis: 100%;
     justify-content: space-between;

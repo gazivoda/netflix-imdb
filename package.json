@@ -2,6 +2,9 @@
   "name": "rating-watch",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9 <23"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +17,8 @@
     "seo:indexnow": "node scripts/ping-indexnow.mjs",
     "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run",
     "seo:links": "node scripts/check-links.mjs",
-    "seo:validate": "node scripts/validate-seo.mjs"
+    "seo:validate": "node scripts/validate-seo.mjs",
+    "zip:check": "node scripts/check-extension-zip.mjs"
   },
   "dependencies": {
     "@paddle/paddle-js": "^1.6.5",

@@ -20,3 +20,5 @@
 .label { margin: 0 0 8px; }
 .notice { margin: 12px 0; padding: 10px 12px; border: 2px solid var(--ink); background: var(--gold); color: var(--ink); }
 .card .cta { margin: 8px 12px 8px 0; }
+/* Reserved height for the account-dependent slot so the card does not jump when the account check resolves. */
+.action { min-height: 96px; }

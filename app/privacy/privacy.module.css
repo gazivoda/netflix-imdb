@@ -33,6 +33,7 @@
 
 /* each policy section is a hard-bordered slip */
 .slip {
+  scroll-margin-top: 88px; /* anchor links (#website-analytics) clear the sticky masthead */
   margin: 0 0 28px;
   padding: clamp(20px, 4vw, 32px);
   background: var(--card);

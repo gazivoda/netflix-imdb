@@ -30,11 +30,11 @@ This text is already set in `extension/manifest.json`. The store uses it as the 
 Rating Watch shows IMDb and Rotten Tomatoes ratings directly on Netflix title cards, so you can decide what to watch without opening another tab.
 
 WHAT YOU GET
-- A small badge in the top-right corner of every title card on netflix.com
+- A small badge in the top-right corner of title cards on netflix.com: IMDb on titles OMDb can match, plus Rotten Tomatoes where OMDb has a score (mostly films, usually not TV series)
 - The IMDb rating (out of 10) and the Rotten Tomatoes critic score (a percentage) side by side
 - Ratings for new rows, search results and "More Like This" suggestions as they load
 - Whichever score exists if a title has only one of the two; no badge if it has neither
-- No account, no sign-in, and no API key required (an optional personal OMDb key removes the shared daily limit)
+- No account or sign-in; works out of the box on a shared OMDb lookup allowance that can run out on busy days (an optional free personal OMDb key in the extension options gives you your own daily allowance)
 
 HOW IT WORKS
 The extension reads the title from each card's accessible label on netflix.com (and from the hover pop-up artwork). A background service worker looks each title up on the OMDb API, then the badge is drawn. Results are remembered on your device for a week, so each title is looked up about once a week. The shared lookup limit is 1,000 a day; if it runs out, click the toolbar icon to add your own free OMDb key.
@@ -47,7 +47,7 @@ PRIVACY
 - Privacy policy: https://rating.watch/privacy
 
 FREE, NO ACCOUNT
-The extension is free and needs no account or API key.
+The extension is free and needs no account. It starts on a shared OMDb allowance; you can add a free personal OMDb key in its options.
 Website and install help: https://rating.watch
 
 TIPS

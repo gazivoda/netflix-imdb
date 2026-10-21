@@ -1,7 +1,7 @@
 // Text of `npm run blog:brief {slug}` (spec 7.1): everything a writer needs for one
 // film, with every number taken from films.json. Pure: returns a string.
 
-import { displayTitle } from './format';
+import { displayTitle, formatHours } from './format';
 import { computeRelated } from './related';
 import { FIELD_LIMITS, SECTION_WORDS, r15Required } from './schema';
 import { LIMITS } from './similarity';
@@ -18,6 +18,12 @@ export interface BriefInputs {
   /** The existing article file, when one is already on disk. */
   existing?: Article;
 }
+
+/**
+ * Pilot films: the controller sends these through the Rotten Tomatoes hand check (R15) whatever
+ * their gap and vote count are. The check is done by the fact-checker, not the writer.
+ */
+export const PILOT_SLUGS: readonly string[] = ['kpop-demon-hunters-2025', 'red-notice-2021', 'carry-on-2024'];
 
 const list = (items: string[]): string => (items.length ? items.join(', ') : '(none)');
 const h = (title: string): string => `\n== ${title} ==`;
@@ -55,7 +61,10 @@ export function buildBrief({ film, films, stats, existing }: BriefInputs): strin
 
   lines.push(h('NETFLIX TOP 10 DATA'));
   lines.push(
-    `category ${n.category}    popularity rank ${film.popularityRank} of ${s.setSize}    hours ${n.popularityHours} (${n.hoursSource})`,
+    `category ${n.category}    popularity rank ${film.popularityRank} of ${s.setSize}    hours ${n.popularityHours} = "${n.popularityHours > 0 ? formatHours(n.popularityHours) : 'none'}" as {{hours}} (${n.hoursSource})`,
+    n.hoursSource === 'first-91-days'
+      ? 'hours covers: Netflix hours viewed in the first 91 days after release (Netflix Most Popular list). Digits never go in prose, so "91" cannot be written: say "in its opening weeks on the chart" and write the figure as "{{hours}} hours".'
+      : 'hours covers: the sum of Netflix weekly hours viewed across the weeks the film was in the global Top 10. Write the figure as "{{hours}} hours"; say "across its weeks on the chart", never a typed week count (use {{weeksInTop10}}).',
     `weeks in Top 10 ${n.weeksInTop10}    peak rank ${n.peakRank ?? 'N/A'}    first week ${n.firstWeek ?? 'N/A'}    last week ${n.lastWeek ?? 'N/A'}`,
     `Most Popular list rank: ${n.mostPopularRank ?? 'not on the list'}    runtime per Netflix: ${n.runtimeMin ?? 'not published'}`,
   );
@@ -84,11 +93,17 @@ export function buildBrief({ film, films, stats, existing }: BriefInputs): strin
   );
 
   lines.push(h('TITLE AND HEADINGS'));
+  const needsShortTitle = titlesNeedingShortTitle([film]).length > 0;
+  lines.push(
+    needsShortTitle
+      ? `this film needs a shortTitle: yes (neither full title form fits in 50 chars). Set "shortTitle" (<= 29 chars, a recognisable form of "${name}").`
+      : 'this film needs a shortTitle: no (omit the field unless the title below is wrong for you; it must stay a recognisable form of the title).',
+  );
   try {
     const g = generatedTitle(film, existing?.shortTitle);
     lines.push(`generated <title> (${g.variant}): ${g.title} (${g.title.length} chars)`);
   } catch {
-    lines.push(`generated <title>: NO FORM FITS IN 50 CHARS. Set "shortTitle" (<= 29 chars, a recognisable form of "${name}").`);
+    lines.push(`generated <title>: NO FORM FITS IN 50 CHARS with the current shortTitle. Set "shortTitle" (<= 29 chars, a recognisable form of "${name}").`);
   }
   lines.push(
     `h1: ${FIELD_LIMITS.h1[0]}-${FIELD_LIMITS.h1[1]} chars, contains the film name, differs from the title above`,
@@ -97,15 +112,19 @@ export function buildBrief({ film, films, stats, existing }: BriefInputs): strin
   );
 
   lines.push(h('R15 RT HAND CHECK'));
+  const pilot = PILOT_SLUGS.includes(film.slug);
   lines.push(
+    `pilot film: ${pilot ? 'yes (R15 hand check required whatever the gap)' : 'no'}`,
     r15Required(film, s)
       ? `REQUIRED: abs gap ${s.absGap} or ${o.imdbVotes} votes triggers the check (the fact-checker records review.rtCheck).`
-      : 'not required (abs gap under 30 and 25,000+ votes), unless this film is a pilot film.',
+      : `${pilot ? 'not triggered by the numbers (abs gap under 30 and 25,000+ votes), but required because this is a pilot film' : 'not required (abs gap under 30 and 25,000+ votes)'}.`,
+    'The fact-checker does the check, not you. If it ends in "note", you may be asked to add a data-note section with no digits.',
   );
 
   lines.push(h('WORD BUDGETS'));
   lines.push(
     `prose (summary + paragraphs + FAQ answers): ${LIMITS.minProseWords}-${LIMITS.maxProseWords} words, at least ${LIMITS.minUniqueWords} unique`,
+    `aim for 750-850 words: below ${LIMITS.aimProseWords} words blog:check prints a WARN (prose-aim) and still passes; below ${LIMITS.minProseWords} it fails`,
     `summary 45-75 words; faq 2-3 items (q 25-100 chars with the film name, a 35-90 words)`,
     ...Object.entries(SECTION_WORDS).map(([id, [lo, hi]]) => `section ${id}: ${lo}-${hi} words`),
   );
@@ -119,15 +138,27 @@ export function buildBrief({ film, films, stats, existing }: BriefInputs): strin
   const rel = computeRelated(film, { films, stats, published: films.map((f) => f.slug), picks: existing?.related });
   for (const r of rel) lines.push(`${r.kind.padEnd(14)} ${r.slug}${r.reason ? `  (${r.reason})` : ''}`);
   lines.push(`nearest by gap: ${nearestByGap(film, films, stats, 3).map((f) => f.slug).join(', ')}`);
-  lines.push('your own picks go in `related` (max 2, shared director or actor, or a cited link)');
+  lines.push(
+    'your own picks go in `related` (max 2, shared director or actor, or a cited link)',
+    'if no film shares a director or actor with this one, OMIT the `related` key entirely; the build computes the links itself (an empty or invented pick is worse than none)',
+  );
 
   lines.push(h('BANNED PHRASES'));
   lines.push(labels(BANNED_PHRASES));
 
   const need = titlesNeedingShortTitle(films);
+  lines.push(h('WRITING NOTES (each wording below passes the lint)'));
+  lines.push(
+    'plot: plot-overlap flags a sentence that reuses the OMDb plot\'s distinctive nouns and verbs in the same order (four or more content words, even with small swaps), not only a copied 6-word run. Do not reuse those nouns at all: describe the premise with different nouns, or in broader terms (genre, setting type, relationship).',
+    'hours: the figure comes only from {{hours}} (see the Netflix section for what window it covers). Never type digits, so never write "91 days" or "262 million". Safe: "It logged {{hours}} hours viewed in its opening weeks on the chart."',
+    'other films: you may name other films (the genre peers, the related list) in plain words: "Films such as The Gray Man and Back in Action lean the same way among the genre peers." You may NOT give numbers for them: no scores, gaps or ranks (there are no tokens for other films, and typed digits fail).',
+    'Metascore near the audience score while RT is far: "At {{metascore}}, the Metascore lands nearer the audience figure than the Rotten Tomatoes percentage does." (Use "nearer" or "closer", not "higher" or "lower", so no side is read as the one ahead.)',
+    'genre median opposes this film: "The median difference for the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so the typical title in the genre leans the opposite way from this one." (Say "difference" if your tier bans "gap".)',
+    'awards: if you quote the OMDb Awards string, copy it exactly (it may contain ". " inside; that is fine). Otherwise write "OMDb lists a long run of award wins and nominations" with no digits.',
+  );
   lines.push(h('NOTES'));
   lines.push(
-    `films in this set that need a shortTitle: ${need.length}${need.includes(film.slug) ? ' (including this one)' : ''}`,
+    `set-wide (for the controller): ${need.length} film${need.length === 1 ? '' : 's'} in the set ${need.length === 1 ? 'needs' : 'need'} a shortTitle${need.includes(film.slug) ? '; THIS one is among them' : '; this one is not among them'}`,
     'finish with: npm run blog:check -- ' + film.slug,
   );
   return lines.join('\n') + '\n';

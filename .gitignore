@@ -43,3 +43,14 @@ node_modules
 # Benchmark dataset (posters + rendered scenes), regenerate with scripts/ar-bench
 .cache/
 data/blog/source/raw/
+
+# Local env files (plain .env / .env.production etc.); keep the example tracked
+.env
+.env.*
+!.env.example
+
+# tesseract.js caches language data in the working directory when tests/benchmarks run
+*.traineddata
+
+# Local agent/audit scratch space
+.superpowers/

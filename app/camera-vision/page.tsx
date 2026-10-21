@@ -6,6 +6,8 @@ import { createWorker } from 'tesseract.js'
 import { extractMovieTitles, wordsFromBlocks } from '@/lib/extract-titles'
 import { binarizeForOcr } from '@/lib/ocr-preprocess'
 import { ImdbChip, RtChip } from '@/components/ScoreChip'
+import { useAccount } from '@/components/billing/useAccount'
+import { arLinkLabel, billingView } from '@/components/billing/pricing-state'
 import s from './camera.module.css'
 
 interface DetectedContent {
@@ -53,6 +55,8 @@ export default function CameraVision() {
   const [ocrReady, setOcrReady] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [ocrFailureCount, setOcrFailureCount] = useState(0)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const account = useAccount()
 
   useEffect(() => {
     let cancelled = false
@@ -75,6 +79,7 @@ export default function CameraVision() {
   }, [])
 
   const startCamera = async () => {
+    setErrorMessage(null)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -91,7 +96,7 @@ export default function CameraVision() {
       }
     } catch (err) {
       console.error('Error accessing camera:', err)
-      alert('Camera access denied. Please allow camera permissions and try again.')
+      setErrorMessage('Camera access denied. Please allow camera permissions and try again.')
     }
   }
 
@@ -159,7 +164,6 @@ export default function CameraVision() {
       ocrFailureCountRef.current = 0
 
       const detectedTitles = extractMovieTitles(words, OCR_SCALE)
-      console.log('Extracted titles:', detectedTitles)
 
       const newContent: DetectedContent[] = detectedTitles.map((title, index) => ({
         id: `detected-${Date.now()}-${index}`,
@@ -196,7 +200,7 @@ export default function CameraVision() {
       if (ocrFailureCountRef.current >= 5) {
         console.error('Too many OCR failures, stopping processing')
         stopCamera()
-        alert('OCR processing failed too many times. Please check your camera and try again.')
+        setErrorMessage('OCR processing failed too many times. Please check your camera and try again.')
         return
       }
     } finally {
@@ -248,7 +252,7 @@ export default function CameraVision() {
 
         <div className={s.actions}>
           <Link href="/camera-vision/ar" className={`ds-btn ${s.btn}`}>
-            Try AR mode (Pro, 3-day trial)
+            {arLinkLabel(billingView(account))}
           </Link>
           {!isStreaming ? (
             <button
@@ -275,6 +279,8 @@ export default function CameraVision() {
         </div>
       </div>
 
+      {errorMessage && <p className={s.error} role="alert">{errorMessage}</p>}
+
       {/* Camera View */}
       <div className={s.stage}>
         <video
@@ -284,7 +290,6 @@ export default function CameraVision() {
           muted
           className={s.video}
           onLoadedData={() => {
-            console.log('Video loaded and ready')
             setVideoLoaded(true)
           }}
         />
@@ -344,10 +349,10 @@ export default function CameraVision() {
 
       {/* Info Panel */}
       <div className={`ds-card ${s.panel}`}>
-        <h3 className={`ds-display ${s.panelTitle}`}>Real-Time OCR Processing</h3>
+        <h2 className={`ds-display ${s.panelTitle}`}>Real-Time OCR Processing</h2>
         <div className={s.features}>
           <div className={s.feature}>
-            <h4 className={s.featureHead}>Text Detection</h4>
+            <h3 className={s.featureHead}>Text Detection</h3>
             <p className={s.featureBody}>
               Uses Tesseract.js OCR to detect and read text from your camera feed.
               Processes video frames every 3 seconds for optimal performance.
@@ -355,7 +360,7 @@ export default function CameraVision() {
           </div>
 
           <div className={s.feature}>
-            <h4 className={s.featureHead}>Title Recognition</h4>
+            <h3 className={s.featureHead}>Title Recognition</h3>
             <p className={s.featureBody}>
               Identifies potential movie/TV show titles using pattern matching.
               Filters out UI elements and focuses on capitalized title patterns.
@@ -363,7 +368,7 @@ export default function CameraVision() {
           </div>
 
           <div className={s.feature}>
-            <h4 className={s.featureHead}>Live Ratings</h4>
+            <h3 className={s.featureHead}>Live Ratings</h3>
             <p className={s.featureBody}>
               Automatically fetches IMDb ratings for detected titles.
               Shows confidence scores and vote counts for transparency.
@@ -371,7 +376,7 @@ export default function CameraVision() {
           </div>
 
           <div className={s.feature}>
-            <h4 className={s.featureHead}>Point & Scan</h4>
+            <h3 className={s.featureHead}>Point & Scan</h3>
             <p className={s.featureBody}>
               Point your camera at Netflix (or any streaming service) and watch
               ratings appear in real-time as titles are detected.
@@ -381,12 +386,12 @@ export default function CameraVision() {
 
         {/* Testing Instructions */}
         <div className={s.test}>
-          <h4 className={s.testHead}>How to Test OCR</h4>
+          <h3 className={s.testHead}>How to Test OCR</h3>
           <div className={s.testBody}>
             <p><strong>1.</strong> Point your camera at a computer screen or printed text</p>
             <p><strong>2.</strong> Make sure text is clear, well-lit, and in focus</p>
             <p><strong>3.</strong> Hold steady for 3-5 seconds while OCR processes</p>
-            <p><strong>4.</strong> Check browser console (F12) for detected text output</p>
+            <p><strong>4.</strong> Detected titles appear over the camera view</p>
             <p><strong>5.</strong> Try with movie posters, Netflix interface, or title cards</p>
           </div>
         </div>
@@ -394,7 +399,7 @@ export default function CameraVision() {
 
       {/* Debug Info */}
       <div className={`ds-card ${s.debug}`}>
-        <h4 className={s.debugHead}>Debug Information</h4>
+        <h3 className={s.debugHead}>Debug Information</h3>
         <div className={s.debugRows}>
           <div><span className={`${s.dot} ${isStreaming ? s.dotLive : ''}`} aria-hidden />Status: {isStreaming ? 'Camera Active' : 'Camera Inactive'}</div>
           <div><span className={`${s.dot} ${ocrReady ? s.dotReady : ''}`} aria-hidden />OCR Worker: {ocrReady ? 'Ready' : 'Loading...'}</div>

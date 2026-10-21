@@ -6,13 +6,15 @@
 // Pure functions, no I/O.
 
 import { displayTitle } from './format';
-import { issue, type Issue } from './issue';
+import { issue, warning, type Issue } from './issue';
 import type { FilmStats } from './stats';
 import { renderTokens } from './tokens';
 import type { Article, Film } from './types';
 
 export const LIMITS = {
   minProseWords: 600,
+  /** Aim: below this many prose words the check warns (it does not fail). */
+  aimProseWords: 700,
   maxProseWords: 900,
   minUniqueWords: 450,
   /** Pairwise word-5-gram Jaccard on prose. */
@@ -110,8 +112,12 @@ export const proseWordCount = (a: Article): number => proseChunks(a).reduce((n, 
 /** Prose must be 600 to 900 words (R12). */
 export function proseLengthIssues(a: Article): Issue[] {
   const words = proseWordCount(a);
-  return words < LIMITS.minProseWords || words > LIMITS.maxProseWords
-    ? [issue('prose-length', `${a.slug}: prose is ${words} words; allowed ${LIMITS.minProseWords} to ${LIMITS.maxProseWords}`)]
+  if (words < LIMITS.minProseWords || words > LIMITS.maxProseWords) {
+    return [issue('prose-length', `${a.slug}: prose is ${words} words; allowed ${LIMITS.minProseWords} to ${LIMITS.maxProseWords}`)];
+  }
+  // 600-699 passes, but the target is 750-850: say so without failing the article
+  return words < LIMITS.aimProseWords
+    ? [warning('prose-aim', `${a.slug}: prose is ${words} words; passes, but the aim is 750-850 (warns below ${LIMITS.aimProseWords})`)]
     : [];
 }
 

@@ -160,6 +160,14 @@ describe('createPaddleApi', () => {
     await createPaddleApi({ apiKey: 'k', env: 'production', fetch: g as any })!.getSubscription('sub_1')
     expect((g.mock.calls[0] as any[])[0]).toBe('https://api.paddle.com/subscriptions/sub_1')
   })
+  it('looks a customer up by id and refuses ids that are not ctm_ shaped', async () => {
+    const f = jest.fn(async () => new Response(JSON.stringify({ data: { id: 'ctm_1', email: 'a@b.co' } }), { status: 200 }))
+    const p = createPaddleApi({ apiKey: 'k', env: 'production', fetch: f as any })!
+    expect(await p.getCustomer('ctm_1')).toEqual({ id: 'ctm_1', email: 'a@b.co' })
+    expect((f.mock.calls[0] as any[])[0]).toBe('https://api.paddle.com/customers/ctm_1')
+    for (const bad of ['../x', 'sub_1', 'ctm_1/portal-sessions', '']) await expect(p.getCustomer(bad)).rejects.toThrow(/invalid paddle id/i)
+    expect(f).toHaveBeenCalledTimes(1)
+  })
   it('returns the portal overview URL and throws PaddleHttpError on failures', async () => {
     const ok = jest.fn(async () => new Response(JSON.stringify({ data: { urls: { general: { overview: 'https://portal/x' } } } }), { status: 201 }))
     expect(await createPaddleApi({ apiKey: 'k', env: 'production', fetch: ok as any })!.createPortalSession('ctm_1', ['sub_1'])).toBe('https://portal/x')

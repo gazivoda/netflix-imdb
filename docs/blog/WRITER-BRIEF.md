@@ -19,7 +19,7 @@ Source of truth: `docs/superpowers/specs/2026-10-20-blog-top-100-design.md` (Sec
 Run from the repo root, `/Users/igorgazivoda/netflix-imdb`.
 
 1. `npm run blog:brief -- {slug}` (the `--` passes the slug through npm)
-   Prints: the film record, Netflix data, derived values (gap, tier, archetype, gap rank, genre median and position, the section order for this archetype), every token with its rendered value (a value shown as NULL means that token cannot be used for this film), the tier wording to use and avoid, the direction you must state, whether the generated title fits or you must set `shortTitle`, whether an R15 Rotten Tomatoes hand check will be required, word budgets, genre peers, a related-links preview and the banned phrase list. Exit 2 means unknown slug or missing `films.json`.
+   Prints: the film record, Netflix data, derived values (gap, tier, archetype, gap rank, genre median and position, the section order for this archetype), every token with its rendered value (a value shown as NULL means that token cannot be used for this film), the tier wording to use and avoid, the direction you must state, a line `this film needs a shortTitle: yes/no`, whether an R15 Rotten Tomatoes hand check will be required and whether this film is a pilot film (`pilot film: yes/no`), what the hours figure covers, word budgets, genre peers, a related-links preview and the banned phrase list. Exit 2 means unknown slug or missing `films.json`.
 2. Write `data/blog/articles/{slug}.json` with `"status": "draft"` while you work.
 3. `npm run blog:check -- {slug}`
    Prints seven sections (schema, tokens, copy, plot-overlap, lengths, links, similarity), each PASS or FAIL with findings in the form `[rule-id] where: message`, then `RESULT: PASS` or `RESULT: FAIL (n findings)`. Exit codes: 0 = pass, 1 = findings, 2 = usage or I/O error.
@@ -50,7 +50,7 @@ File: `data/blog/articles/{slug}.json`. Unknown keys fail. Prose fields allow pl
 | `sections` | `{ id, heading, paragraphs: string[] }[]` | see Section 6 |
 | `faq` | `{ q, a }[]` | 2 or 3 items; `q` 25-100 chars and contains the film title; `a` 35-90 words |
 | `sources` | `{ id, url, title, publisher, accessed, supports }[]` | 0 to 6 items; `id` lowercase letters, digits, hyphens; `url` https; `accessed` `YYYY-MM-DD`; `supports` = the exact claim, at most 200 chars. Every source must be cited at least once with `{{cite:id}}`; every cite must resolve |
-| `related` | `{ slug, reason }[]`, optional | 0 to 2 picks of other films in `films.json` (shared director or actor, or a cited link). Computed links fill the rest; leaving this out is fine |
+| `related` | `{ slug, reason }[]`, optional | 0 to 2 picks of other films in `films.json` (shared director or actor, or a cited link). Computed links fill the rest. When the brief's related list shows no film that shares a director or actor with yours, omit the `related` key entirely (do not write `[]` and do not invent a pick) |
 | `review` | object | `{ writer, writtenOn, factChecker, factCheckedOn, cuts: string[], rtCheck: null \| {...} }`. You fill `writer` and `writtenOn`; the rest stays `null` or `[]` |
 
 Not written by you (the page template generates them from data): the score table, the "Where it sits" facts, the sources list, related links, method and disclaimer lines, the page `<title>`.
@@ -81,13 +81,15 @@ Example values below are for the fixture film Crimson Static (2022) in `tests/bl
 | `{{popularityRank}}` | rank by Netflix hours viewed | 2nd |
 | `{{weeksInTop10}}` | weeks in Netflix's global Top 10 | 8 |
 | `{{peakRank}}` | best weekly rank (can be NULL) | 1 |
-| `{{hours}}` | Netflix hours viewed | 262 million |
+| `{{hours}}` | Netflix hours viewed (see "The hours figure" below) | 262 million |
 | `{{runtime}}` | runtime | 118 minutes |
 | `{{director}}` | director (can be NULL) | Dario Kessel |
 | `{{asOf}}` | date the scores were fetched | October 15, 2026 |
 | `{{cite:id}}` | citation marker for source `id` | [1] (position in `sources`) |
 
 Token grammar: exactly `{{name}}` (optional spaces inside are tolerated), `{{cite:id}}` for citations. Do not put arguments on other tokens. Tokens already include their units where shown: `{{rt}}` renders with the percent sign, `{{runtime}}` with "minutes", `{{hours}}` with "million". Do not add them again ("{{rt}}%" is wrong). Write "{{gapAbs}} points" (the word "points" next to a token is fine; only a literal digit next to it fails).
+
+The hours figure. `{{hours}}` is the larger of two Netflix numbers, and the brief says which one this film has: either the sum of the weekly hours viewed across the weeks the film was in Netflix's global Top 10 (`weekly-sum`), or the hours viewed in the film's first 91 days on the Netflix chart (`first-91-days`, from the Most Popular list). The digits of that window ("91") can never be written in prose, because every digit outside a token fails [number-literal]. The digit-free wording that passes the lint is "in its opening weeks on the chart", for example: "It logged {{hours}} hours viewed in its opening weeks on the chart." Write the figure only as `{{hours}} hours`; for the number of weeks use `{{weeksInTop10}}`, never a typed count.
 
 Names of actors, writers and other directors are not tokens. Use them exactly as they appear in `omdb` in the brief (spelling, order). The director is always `{{director}}`; a sentence with "directed" and no `{{director}}` token fails unless it is cited.
 
@@ -127,7 +129,7 @@ Always forbidden words (any tier): polarizing/polarising, overrated, underrated,
 
 ## 6. Sections, ids and word budgets
 
-Prose total (summary + all section paragraphs + FAQ answers; headings, h1 and FAQ questions excluded; a token counts as one word): 600-900 words. Aim for 750 or more (750-850 is the target). At least 450 words must be unique (not inside a 5-word run shared with another article).
+Prose total (summary + all section paragraphs + FAQ answers; headings, h1 and FAQ questions excluded; a token counts as one word): 600-900 words. Aim for 750 or more (750-850 is the target). The lint fails below 600 and above 900 words, and prints a `WARN [prose-aim]` line (the article still passes, exit code 0) when the total is under 700. Treat the warning as work to do: add a useful paragraph, not filler. At least 450 words must be unique (not inside a 5-word run shared with another article).
 
 | Section id | Required | Words | Purpose |
 |---|---|---|---|
@@ -139,7 +141,12 @@ Prose total (summary + all section paragraphs + FAQ answers; headings, h1 and FA
 
 Rules for every section: `id` is one of these five; no duplicate ids; at least one non-empty paragraph; short paragraphs (2-4 sentences); the `heading` is phrased as a question, ends with "?", is 20-80 characters, and is your own wording about this film.
 
-`why-split` needs at least two of these evidence points: Metascore vs RT (`{{metascore}}`), vote volume (`{{votes}}` or `{{votesShort}}`), genre median gap (`{{genreMedianGap}}`), gap rank (`{{gapRank}}`), the OMDb `Awards` text quoted exactly as the brief prints it (an award described in your own words does not count), or a cited reception fact (`{{cite:id}}`). It must also contain `{{gapAbs}}` or `{{gap}}` and the direction sentence for the archetype.
+`why-split` needs at least two of these evidence points: Metascore vs RT (`{{metascore}}`), vote volume (`{{votes}}` or `{{votesShort}}`), genre median gap (`{{genreMedianGap}}`), gap rank (`{{gapRank}}`), the OMDb `Awards` text quoted exactly as the brief prints it, including any full stop inside it such as "Won 2 Oscars. 112 wins & 52 nominations total" (an award described in your own words does not count; the string is never split, so quoting it whole also satisfies the must-cite rule for that sentence), or a cited reception fact (`{{cite:id}}`). It must also contain `{{gapAbs}}` or `{{gap}}` and the direction sentence for the archetype.
+
+Safe wordings for two awkward cases (both pass the lint at every tier and are covered by tests):
+
+- Metascore close to the audience score while Rotten Tomatoes is far from it: "At {{metascore}}, the Metascore lands nearer the audience figure than the Rotten Tomatoes percentage does." Use "nearer" or "closer"; do not use "higher" or "lower" here, because the Metascore is a critic-side term and a comparative next to it can read as a claim about the wrong side.
+- The genre median points the other way from this film: "The median difference for the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so the typical title in the genre leans the opposite way from this one." Say "difference" instead of "gap" if your tier bans "gap".
 
 Order: the template reorders sections by archetype for display. You can write them in any order; the file order has no effect.
 
@@ -147,10 +154,11 @@ Voice: plain, specific, neutral US English (US spelling). Lead with the answer. 
 
 ## 7. Content rules
 
-- **Plot**: at most one own-words sentence (30 words or fewer), based only on `omdb.plot`. No 6-word run copied from it. Nothing beyond it: no twists, endings, scenes, character arcs.
+- **Plot**: at most one own-words sentence (30 words or fewer), based only on `omdb.plot`. No 6-word run copied from it, and [plot-overlap] also flags a loose paraphrase that reuses the plot's distinctive nouns and verbs in the same order (four or more content words of the plot, in plot order, inside one sentence). Avoid those nouns altogether: describe the premise with different nouns or in broader terms (genre, setting, the relationship between the leads). Nothing beyond it: no twists, endings, scenes, character arcs.
 - **Allowed facts**: any film record field (use tokens or exact names), and claims from a cited source on the allowed list (Section 8), with `{{cite:id}}` at the end of the sentence the source supports.
 - **Must cite**: release events, festival premieres, award wins or nominations beyond the OMDb `Awards` string, source material (book or comic adaptation), production facts. The lint enforces this per sentence: a sentence containing premiere, festival, based on, adapted, novel, won, nominated, Oscar, BAFTA, Golden Globe, Emmy, filmed or shot in must carry `{{cite:id}}` unless it restates the OMDb `Awards` text exactly. A sentence with "directed" must use `{{director}}` (or a cite).
 - **Numbers**: every number is a token. After tokens are removed, body prose (summary, paragraphs, FAQ answers, data-note) may contain digits only inside the film's own title, in a 4-digit year, in "Top 10", in a rating code (PG-13, TV-MA) and in the exact OMDb `Awards` text. "26-point gap", "38 percent", "8 weeks" and "262 million hours" all fail; use `{{gapAbs}} points`, `{{rt}}`, `{{weeksInTop10}} weeks`, `{{hours}} hours`.
+- **Other films**: you may name other films qualitatively ("Films such as The Gray Man and Back in Action lean the same way among the genre peers"), for example the genre peers and related films in the brief. You may not attach numbers to them: no scores, gaps, ranks or percentages (there are no tokens for other films, and any typed digit fails [number-literal] or [score-literal]).
 - **Forbidden**: availability, region, "on Netflix now", "stream it on Netflix", "watch it on Netflix"; affiliation or endorsement; box office, grosses, budgets or production cost; viewing figures other than the Netflix tokens; quotes from critics or users (any double quotation mark in prose fails); audience demographics; trivia; personal taste ("I", "my", "we think", "we found", "we recommend" ...); any statement about why critics or audiences felt something, written as fact.
 - **Gap analysis**: state direction and size with the tier wording, then explain with hedged, data-tied reasons ("The Metascore of {{metascore}} lines up with the critics' side, which suggests ..."). Allowed reason types: Metascore agreement, vote volume, the genre pattern in this set (`{{genreMedianGap}}`), awards text, and the measurement difference (one sentence, link `/compare/imdb-vs-rotten-tomatoes`). Label interpretations as interpretations ("suggests", "may", "one reading").
 - **Never claim** "Netflix Original", "available on Netflix", "streaming now", "official", "partnered". Chart facts are worded as "ranked in Netflix's global Top 10" or "in Netflix's Top 10 data".
@@ -277,9 +285,9 @@ Commentary, field by field:
 
 ## 10. Fields the brief fills in for you
 
-Do not guess these; read them from `npm run blog:brief -- {slug}`: the exact title and tier, the archetype, which tokens are NULL, whether `shortTitle` is needed, whether R15 will apply, the genre peers (useful for the "genre pattern" evidence), the section order, and the list of banned phrases.
+Do not guess these; read them from `npm run blog:brief -- {slug}`: the exact title and tier, the archetype, which tokens are NULL, whether `shortTitle` is needed (the line `this film needs a shortTitle: yes/no`; the set-wide count in the NOTES section is for the controller), whether R15 will apply, the genre peers (useful for the "genre pattern" evidence), the section order, and the list of banned phrases.
 
-R15 (a Rotten Tomatoes hand check) applies when abs(gap) >= 30, when IMDb votes are under 25,000, or for pilot films. You do not perform it; the fact-checker does. If a check results in `note`, the controller will send the article back to you to add a `data-note` section.
+R15 (a Rotten Tomatoes hand check) applies when abs(gap) >= 30, when IMDb votes are under 25,000, or for pilot films. The brief states `pilot film: yes/no` (the pilot films are kpop-demon-hunters-2025, red-notice-2021 and carry-on-2024). You do not perform it; the fact-checker does. If a check results in `note`, the controller will send the article back to you to add a `data-note` section.
 
 ## 11. Banned phrases
 
@@ -299,7 +307,7 @@ Each item is a real lint rule. The rule id appears in brackets in the `blog:chec
 4. **Forbidden claims** [forbidden-claim]: "official" (also "official trailer": a documented false failure, kept on purpose), "partnered", "box office", "budget", "grossed", "Netflix Original", "available on Netflix", "streaming now", "stream it on Netflix", "we watched", "I", "my", "we think", a double quotation mark.
 5. **Wrong tier word** [tier-word]. For example "huge" below the very wide tier, "gap", "split" or "far higher" on an agree-tier film, "a clear gap" or "noticeably" on a slight gap, "wide", "large" or "sharply" below the wide tier, "very wide" at the wide tier, "widest" outside gap rank 10 or better. Use the table in Section 5.
 6. **Dashes, arrows and glyphs** [forbidden-char]. No em dash, en dash, figure dash, horizontal bar or minus sign (U+2212) (use a comma, colon or hyphen with spaces), no arrows (ASCII ones made of a hyphen or equals sign plus an angle bracket, or arrow glyphs), no bullet or middle dot, no emoji, no hex colors like `#fff` or `#1a2b3c`, no invisible characters (soft hyphen, zero-width space). This applies to every string in the file, including `sources` titles and `review` text. Copy-pasting text from web pages is the usual cause.
-7. **Plot copying** [plot-overlap]. Any 6-word run (ignoring case and punctuation) that also appears in `omdb.plot`, or a sentence that follows the plot word for word with small swaps (four or more of its content words, in the plot's order). Paraphrase fully, and keep to one sentence of 30 words or fewer.
+7. **Plot copying** [plot-overlap]. Any 6-word run (ignoring case and punctuation) that also appears in `omdb.plot`, or a sentence that follows the plot with small swaps (four or more of its content words, in the plot's order, even if the sentence reads as your own). Drop the plot's distinctive nouns instead of swapping synonyms around them, and keep to one sentence of 30 words or fewer.
 8. **Markup** [markup]. HTML tags, `**bold**`, `__x__`, backticks, markdown headings (`#`), list items starting with `-`, `*` or `+`, images. Only plain text, tokens and `[anchor](/path)` links.
 9. **Missing cite for a source, or a stray cite** [source-unused], [cite]. A source never cited with `{{cite:id}}`, or a `{{cite:id}}` whose id is not in `sources`.
 10. **Unsupported claims** [must-cite]. Any claim beyond the film record that is not from a cited allowed source: release events, awards beyond the OMDb string, source material, production facts, anything about reception stated as fact. The lint catches the marker words listed in Section 7 ("Must cite") and a "directed" sentence without `{{director}}`; the fact-checker deletes the rest. Do not write them.
@@ -310,7 +318,7 @@ Each item is a real lint rule. The rule id appears in brackets in the `blog:chec
 15. **`why-split` too thin** [why-split]. It needs at least two evidence points, a `{{gapAbs}}` or `{{gap}}`, and the direction sentence.
 16. **`who-it-suits` not conditional** [who-it-suits]. Include an if, when, whether, "anyone who" or "for viewers" construction.
 17. **Headings that are not questions or are the wrong length** [heading]. Must end with "?" and be 20-80 characters after tokens render.
-18. **Length misses** [section-length], [prose-length], [unique-words]. Check each section budget (Section 6), the 45-75 word summary, 35-90 word FAQ answers, and the 600-900 word prose total.
+18. **Length misses** [section-length], [prose-length], [unique-words]. Check each section budget (Section 6), the 45-75 word summary, 35-90 word FAQ answers, and the 600-900 word prose total. Under 700 words is only a `WARN [prose-aim]` (it passes); under 600 or over 900 fails.
 19. **Templated sameness** [shared-ratio], [jaccard], [content-jaccard], [summary-jaccard], [h1-unique], [description-unique]. [content-jaccard] compares 5-word runs with filler and function words removed, so inserting "also" or "indeed" into copied text does not hide it. Different openers, different sentence frames and different heading wording per film. Tokens count as words, so a frame like "{{title}} earns {{imdb}} on IMDb but only {{rt}}" repeated across articles is treated as shared text.
 20. **Null token** [token]. Using `{{metascore}}`, `{{peakRank}}`, `{{genreMedianGap}}` or `{{director}}` when the brief shows NULL. Write that sentence without the token or choose another evidence point.
 21. **`shortTitle` problems** [short-title]. Missing when the generated title would exceed 50 characters, more than 29 characters, or not recognizably the OMDb title: it must be an ordered subset of the title's words with at least two content words ("Glass Onion", "Rebel Moon Part Two"), or one distinctive first word of 5 letters or more ("Avengers"). "The", "Man" or "Part Two" alone fail.

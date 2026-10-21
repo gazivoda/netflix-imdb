@@ -116,3 +116,9 @@
     box-sizing: content-box;
   }
 }
+
+.howLead a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

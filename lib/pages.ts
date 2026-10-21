@@ -32,9 +32,34 @@ export interface SitePage {
   scores?: BlogArticlePage['scores'];
 }
 
+/**
+ * Real last content change per static page (ISO date). This is the only place to bump a page's
+ * date: the sitemap <lastmod>, the visible "Updated" byline, Article/WebPage dateModified and
+ * llms-full.txt all read it through the registry below. Change it only when the page's visible
+ * copy really changes, never to look fresh. tests/lib/pages-dates.test.ts ties LAST_UPDATED
+ * (lib/content.ts) to the newest date here.
+ */
+export const PAGE_UPDATED: Record<string, string> = {
+  '/': '2026-10-21', // testimonials removed, rating-source and download wording corrected
+  '/install': '2026-10-21', // shared-allowance and personal-key notes added
+  '/how-to/show-imdb-ratings-on-netflix': '2026-10-21',
+  '/how-to/show-rotten-tomatoes-on-netflix': '2026-10-21', // description corrected (not every card has RT)
+  '/how-to/find-what-to-watch-on-netflix': '2026-10-21',
+  '/research/imdb-vs-rotten-tomatoes-gap': '2026-10-20',
+  '/compare/imdb-vs-rotten-tomatoes': '2026-10-21',
+  '/compare/alternatives': '2026-10-21',
+  '/about': '2026-10-21',
+  '/camera-vision': '2026-10-20',
+  '/camera-vision/ar': '2026-10-20',
+  '/privacy': '2026-10-21',
+  '/pricing': '2026-10-21', // edited on 2026-10-21 by the pricing fixer
+  '/terms': '2026-10-21',
+  '/refund-policy': '2026-10-21',
+};
+
 export const HOME_TITLE = 'Rating Watch: IMDb & Rotten Tomatoes on Netflix Cards';
 export const HOME_DESCRIPTION =
-  'Free Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. The extension needs no account.';
+  'Free Chrome extension that shows IMDb ratings, and Rotten Tomatoes scores where available, on Netflix title cards as you browse. The extension needs no account.';
 
 /**
  * The /blog hub. Registered (sitemap, footer, llms.txt) only when the generated registry says the
@@ -63,7 +88,7 @@ export const STATIC_PAGES: SitePage[] = [
     path: '/',
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/'],
     changeFrequency: 'weekly',
     priority: 1,
     ogType: 'website',
@@ -75,7 +100,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Install the free Rating Watch extension in about a minute: download the zip, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/install'],
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'guide',
@@ -88,7 +113,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Show IMDb ratings on Netflix cards with the free Rating Watch extension: install, open Netflix, read the top-right badge. What the score means, and limits.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/how-to/show-imdb-ratings-on-netflix'],
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'guide',
@@ -99,9 +124,9 @@ export const STATIC_PAGES: SitePage[] = [
     path: '/how-to/show-rotten-tomatoes-on-netflix',
     title: 'Show Rotten Tomatoes Scores on Netflix',
     description:
-      'Netflix has no Rotten Tomatoes scores. Install the free Rating Watch extension to see the Tomatometer on every title card, and what the percentage means.',
+      'Netflix has no Rotten Tomatoes scores. Install the free Rating Watch extension to see the Tomatometer where OMDb has one, and what the percentage means.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/how-to/show-rotten-tomatoes-on-netflix'],
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'guide',
@@ -114,7 +139,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'A 60-second routine for choosing what to watch on Netflix: read IMDb and Rotten Tomatoes together, spot split scores, and know when ratings mislead.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/how-to/find-what-to-watch-on-netflix'],
     changeFrequency: 'monthly',
     priority: 0.8,
     group: 'guide',
@@ -127,7 +152,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'We compared IMDb and Rotten Tomatoes scores for 44 Netflix Original films: the average gap is 18.7 points and 61% differ by 15+. Method and raw data included.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/research/imdb-vs-rotten-tomatoes-gap'],
     changeFrequency: 'yearly',
     priority: 0.8,
     group: 'guide',
@@ -140,7 +165,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'IMDb is an audience score out of 10; Rotten Tomatoes is the share of critics who liked it. How the two differ, why they disagree, and when to trust each.',
     published: '2026-06-16',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/compare/imdb-vs-rotten-tomatoes'],
     changeFrequency: 'monthly',
     priority: 0.9,
     group: 'compare',
@@ -153,7 +178,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Rating Watch vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/compare/alternatives'],
     changeFrequency: 'monthly',
     priority: 0.8,
     group: 'compare',
@@ -166,7 +191,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Rating Watch is a free browser extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker.',
     published: '2026-10-15',
-    updated: '2026-10-15',
+    updated: PAGE_UPDATED['/about'],
     changeFrequency: 'yearly',
     priority: 0.6,
     group: 'about',
@@ -179,7 +204,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Experimental demo that reads movie and show titles from your camera with on-device OCR, then looks up their IMDb and Rotten Tomatoes scores.',
     published: '2026-05-07',
-    updated: '2026-06-17',
+    updated: PAGE_UPDATED['/camera-vision'],
     changeFrequency: 'monthly',
     priority: 0.5,
     group: 'about',
@@ -192,7 +217,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'AR mode for Rating Watch Pro: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. 3-day free trial.',
     published: '2026-10-20',
-    updated: '2026-10-20',
+    updated: PAGE_UPDATED['/camera-vision/ar'],
     changeFrequency: 'monthly',
     priority: 0.4,
     ogType: 'website',
@@ -201,8 +226,8 @@ export const STATIC_PAGES: SitePage[] = [
     path: '/privacy',
     title: 'Privacy Policy',
     description:
-      'What the Rating Watch extension sends (only title names, to OMDb) and never collects. The extension needs no account; AR mode uses Google sign-in.',
-    updated: '2026-10-20',
+      'What the Rating Watch extension sends to OMDb, what the website stores for AR mode accounts (Google sign-in, Paddle payments) and how opt-in analytics works.',
+    updated: PAGE_UPDATED['/privacy'],
     changeFrequency: 'yearly',
     priority: 0.3,
     group: 'legal',
@@ -215,7 +240,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Rating Watch is free as a Chrome extension. Pro adds AR mode for $2.99 a month or $29 a year, with a 3-day free trial and a 14-day refund window.',
     published: '2026-10-20',
-    updated: '2026-10-20',
+    updated: PAGE_UPDATED['/pricing'],
     changeFrequency: 'monthly',
     priority: 0.6,
     group: 'about',
@@ -228,7 +253,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'The terms for using Rating Watch: the free Chrome extension, the Pro AR mode subscription, billing through Paddle, cancellation and acceptable use.',
     published: '2026-10-20',
-    updated: '2026-10-20',
+    updated: PAGE_UPDATED['/terms'],
     changeFrequency: 'yearly',
     priority: 0.3,
     group: 'legal',
@@ -241,7 +266,7 @@ export const STATIC_PAGES: SitePage[] = [
     description:
       'Request a full refund within 14 days of your first Rating Watch Pro payment. How to ask, how long it takes and what happens to your access afterwards.',
     published: '2026-10-20',
-    updated: '2026-10-20',
+    updated: PAGE_UPDATED['/refund-policy'],
     changeFrequency: 'yearly',
     priority: 0.3,
     group: 'legal',

@@ -13,7 +13,7 @@
 //   --refresh   with --scores: re-fetch the OMDb record (`?i=`) of every film the walk reaches, even if cached
 //   --help
 //
-// Needs Node 20.6+ (--env-file). OMDB_API_KEY comes from the environment; the script never prints the key,
+// Needs Node 20.6+ (--env-file). BLOG_OMDB_API_KEY (preferred) or OMDB_API_KEY comes from the environment; the script never prints the key,
 // a request URL or process.env.
 //
 // Files
@@ -180,8 +180,9 @@ async function listPhase() {
 class BudgetStop extends Error {}
 
 async function scoresPhase(candidatesFile, listSource) {
-  const key = process.env.OMDB_API_KEY;
-  if (!key) fail('OMDB_API_KEY is not set; run with `node --env-file=.env.local scripts/blog/refresh.mjs ...`');
+  // A dedicated key for the blog run keeps it off the quota that the extension shares (BLOG_OMDB_API_KEY wins).
+  const key = process.env.BLOG_OMDB_API_KEY || process.env.OMDB_API_KEY;
+  if (!key) fail('BLOG_OMDB_API_KEY (or OMDB_API_KEY) is not set; run with `node --env-file=.env.local scripts/blog/refresh.mjs ...`');
 
   const pool = candidatesFile.pool;
   const overrides = readJson(OVERRIDES_FILE, []);

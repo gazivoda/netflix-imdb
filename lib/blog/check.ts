@@ -2,7 +2,7 @@
 // schema, tokens, copy lint, plot overlap, lengths, links, and similarity against
 // every other review-or-later article. Pure: callers load the data.
 
-import { formatIssue, issue, type Issue } from './issue';
+import { formatIssue, isWarning, issue, type Issue } from './issue';
 import { checkLinks } from './links';
 import { lintCopy, allStrings, isProsePath } from './lint';
 import { validateArticleSchema } from './schema';
@@ -75,8 +75,12 @@ export interface CheckReport {
   slug: string;
   status: string;
   sections: CheckSection[];
+  /** True when there are no errors; warnings do not fail. */
   ok: boolean;
+  /** Number of errors (warnings excluded). */
   total: number;
+  /** Number of warnings. */
+  warnings: number;
 }
 
 const SECTION_ORDER = ['schema', 'tokens', 'copy', 'plot-overlap', 'lengths', 'links', 'similarity'] as const;
@@ -118,21 +122,27 @@ export function checkArticle(article: Article, inputs: CheckInputs): CheckReport
     add('links', checkLinks(article, { registeredPaths: inputs.registeredPaths, filmSlugs: inputs.films.map((f) => f.slug) }));
 
     const others = comparisonEntries(article, inputs);
-    const sim = checkSimilarity({ article, film, stats }, others).filter((i) => i.rule !== 'prose-length');
+    const sim = checkSimilarity({ article, film, stats }, others).filter((i) => i.rule !== 'prose-length' && i.rule !== 'prose-aim');
     add('similarity', sim);
   }
 
-  const total = sections.reduce((n, s) => n + s.issues.length, 0);
-  return { slug: article.slug, status: article.status, sections, ok: total === 0, total };
+  const all = sections.flatMap((s) => s.issues);
+  const warnings = all.filter(isWarning).length;
+  const total = all.length - warnings;
+  return { slug: article.slug, status: article.status, sections, ok: total === 0, total, warnings };
 }
 
 /** Plain-text report for the terminal. */
 export function formatReport(r: CheckReport, comparedWith: number, scope = 'review+'): string {
   const lines = [`blog:check ${r.slug}  (status: ${r.status}; similarity compared with ${comparedWith} other ${scope} article${comparedWith === 1 ? '' : 's'})`];
   for (const s of r.sections) {
-    lines.push(`  ${s.issues.length ? 'FAIL' : 'PASS'}  ${s.name}${s.issues.length ? ` (${s.issues.length})` : ''}`);
+    const errors = s.issues.filter((i) => !isWarning(i)).length;
+    const warns = s.issues.length - errors;
+    const note = [errors ? `${errors}` : '', warns ? `${warns} warning${warns === 1 ? '' : 's'}` : ''].filter(Boolean).join(', ');
+    lines.push(`  ${errors ? 'FAIL' : 'PASS'}  ${s.name}${note ? ` (${note})` : ''}`);
     for (const i of s.issues) lines.push(`        ${formatIssue(i)}`);
   }
-  lines.push(r.ok ? 'RESULT: PASS' : `RESULT: FAIL (${r.total} finding${r.total === 1 ? '' : 's'})`);
+  const warnNote = r.warnings ? ` (${r.warnings} warning${r.warnings === 1 ? '' : 's'}, not failures)` : '';
+  lines.push(r.ok ? `RESULT: PASS${warnNote}` : `RESULT: FAIL (${r.total} finding${r.total === 1 ? '' : 's'})${warnNote}`);
   return lines.join('\n');
 }

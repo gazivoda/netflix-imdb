@@ -6,7 +6,7 @@ const ROOT = join(__dirname, '..');
 // Order matters: this is the order the sections render in <main>.
 const SECTIONS = [
   'HomeNav', 'Hero', 'Stats', 'Marquee', 'Story', 'PromoVideo', 'BeforeAfter', 'Features',
-  'HowItWorks', 'Testimonials', 'CompareCta', 'Faq', 'FinalCta', 'HomeFooter',
+  'HowItWorks', 'CompareCta', 'Faq', 'FinalCta', 'HomeFooter',
 ];
 
 describe('home page structure', () => {
@@ -23,7 +23,7 @@ describe('home page structure', () => {
     expect(existsSync(join(ROOT, 'components/ScoreChip.module.css'))).toBe(true);
   });
 
-  it('app/page.tsx imports and renders all 14 sections', () => {
+  it('app/page.tsx imports and renders all 13 sections', () => {
     for (const name of SECTIONS) {
       expect(page).toContain(`from '../components/home/${name}'`);
       expect(page).toContain(`<${name} />`);
@@ -41,6 +41,12 @@ describe('home page structure', () => {
     const css = readFileSync(join(ROOT, 'app/page.module.css'), 'utf8');
     const selectors = css.match(/^[.#][^{]*(?=\{)/gm)?.map((s) => s.trim());
     expect(selectors).toEqual(['.page']);
+  });
+
+  it('has no testimonials section (the invented quotes were removed and nothing fake replaced them)', () => {
+    expect(existsSync(join(ROOT, 'components/home/Testimonials.tsx'))).toBe(false);
+    expect(page).not.toMatch(/Testimonials/);
+    expect(readFileSync(join(ROOT, 'lib/content.ts'), 'utf8')).not.toMatch(/TESTIMONIALS|Loved by binge/);
   });
 
   it('uses no emoji in the home components', () => {

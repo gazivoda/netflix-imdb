@@ -2,6 +2,7 @@
 import { initializePaddle, type Paddle } from '@paddle/paddle-js'
 import { useEffect, useRef, useState } from 'react'
 import { paddleConfig, PRICES } from '@/lib/billing/client'
+import { SUPPORT_EMAIL } from '@/lib/content'
 import type { PublicUser } from '@/lib/billing/types'
 import s from './billing.module.css'
 
@@ -15,7 +16,7 @@ const CONFIG = paddleConfig({
 
 export default function CheckoutButtons({ user, onActivated }: { user: PublicUser; onActivated: () => void }) {
   const [paddle, setPaddle] = useState<Paddle | null>(null)
-  const [state, setState] = useState<'idle' | 'activating' | 'blocked' | 'pending'>('idle')
+  const [state, setState] = useState<'idle' | 'activating' | 'blocked' | 'pending' | 'failed'>('idle')
   const opening = useRef(false)
 
   useEffect(() => {
@@ -34,7 +35,9 @@ export default function CheckoutButtons({ user, onActivated }: { user: PublicUse
           })
           // 202 means Paddle has not created the subscription yet; the webhook will finish it, so poll once more shortly.
           if (res.status === 202) setTimeout(onActivated, 4000)
-          setState(res.ok ? 'idle' : 'pending')
+          // 502 is Paddle being unreachable, so the webhook may still finish the job. Any other refusal (409 other
+          // account or other product, 402, 503, 401...) will not fix itself, so it must not read as "payment received".
+          setState(res.ok ? 'idle' : res.status === 502 ? 'pending' : 'failed')
         } catch {
           setState('pending')
         }
@@ -65,6 +68,7 @@ export default function CheckoutButtons({ user, onActivated }: { user: PublicUse
       </button>
       {state === 'activating' && <p className={s.notice} role="status">Activating your subscription...</p>}
       {state === 'pending' && <p className={s.notice} role="status">Payment received. Your subscription can take a minute to activate; reload this page shortly.</p>}
+      {state === 'failed' && <p className={s.notice} role="alert">We could not confirm your subscription automatically. If you were charged, email {SUPPORT_EMAIL} and we will sort it out.</p>}
       {state === 'blocked' && <p className={s.notice} role="alert">Checkout could not load. If you use an ad blocker, allow paddle.com for this site and reload.</p>}
     </div>
   )

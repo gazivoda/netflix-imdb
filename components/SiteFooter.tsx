@@ -1,6 +1,7 @@
 import c from './site-chrome.module.css';
 import { PAGES, pagesInGroup } from '../lib/pages';
 import { AUTHOR_NAME } from '../lib/content';
+import CookieSettings from './CookieSettings';
 
 // Links are generated from the page registry, so every registered guide is
 // linked sitewide and can never become an orphan.
@@ -34,6 +35,7 @@ export default function SiteFooter({ updated }: { updated?: { iso: string; label
             {legal.map((p) => (
               <a key={p.path} href={p.path}>{p.label ?? p.title}</a>
             ))}
+            <CookieSettings />
           </nav>
         </div>
         <p className={c.footerMeta}>

@@ -1,5 +1,7 @@
 import fs from 'fs'
 import path from 'path'
+import { FAQS, PRO_PRICING } from '../../lib/content'
+import { PRICES } from '../../lib/billing/client'
 
 const ROOT = path.join(__dirname, '..', '..')
 const read = (f: string) => fs.readFileSync(path.join(ROOT, f), 'utf8')
@@ -19,14 +21,15 @@ describe('copy stays accurate with a paid tier', () => {
     expect(hits(/no subscription/i)).toEqual([])
   })
   it('the "Is Rating Watch free?" answer separates the free extension from Pro AR mode', () => {
-    const src = read('lib/content.ts')
-    const i = src.indexOf('Is Rating Watch free?')
-    expect(i).toBeGreaterThan(-1)
-    const answer = src.slice(i, i + 700)
+    const answer = FAQS.find((f) => f.q === 'Is Rating Watch free?')?.a ?? ''
     expect(answer).toMatch(/extension is free/i)
     expect(answer).toMatch(/Pro/)
     expect(answer).toMatch(/\$2\.99/)
     expect(answer).toMatch(/\$29/)
+  })
+  it('PRO_PRICING (FAQ, JSON-LD, llms) equals the prices the pricing page and checkout use', () => {
+    expect(PRO_PRICING.monthly).toBe(PRICES.monthly.amount)
+    expect(PRO_PRICING.yearly).toBe(PRICES.yearly.amount)
   })
   it('llms.txt copy mentions Pro and the pricing page', () => {
     const src = read('lib/llms.ts')
@@ -72,6 +75,6 @@ describe('copy stays accurate with a paid tier', () => {
     expect(src).not.toMatch(/mailto:(?!\$\{SUPPORT_EMAIL\})/)
     const contact = src.slice(src.indexOf('>Contact<'))
     expect(contact).toMatch(/SUPPORT_EMAIL/)
-    expect(src).toMatch(/Last updated: October 20, 2026/)
+    expect(src).toMatch(/Last updated: October 21, 2026/)
   })
 })

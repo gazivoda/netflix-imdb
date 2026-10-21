@@ -1,26 +1,30 @@
 import styles from './Hero.module.css';
 import shared from './shared.module.css';
 import { ImdbChip, RtChip } from '../ScoreChip';
+import { SHOWCASE } from '../../lib/content';
 
+// Scores come from the shared SHOWCASE table so one title never shows two different numbers.
+// Stranger Things is a series: like the real extension, its card shows IMDb only.
 const CARDS = [
-  { label: 'Stranger Things', color: '#241a2e', imdb: '8.7', rt: '86%' },
-  { label: 'The Crown', color: '#16213e', imdb: '8.6', rt: '80%' },
-  { label: 'Squid Game', color: '#2a0f0f', imdb: '8.0', rt: '95%' },
-  { label: 'Ozark', color: '#0a1f2e', imdb: '8.4', rt: '92%' },
+  { label: 'Roma', color: '#241a2e' },
+  { label: 'The Irishman', color: '#16213e' },
+  { label: 'Klaus', color: '#2a0f0f' },
+  { label: 'Stranger Things', color: '#0a1f2e' },
 ];
 
 const CARDS2 = [
-  { label: 'Wednesday', color: '#16162a', imdb: '8.1', rt: '67%' },
-  { label: 'The Witcher', color: '#10240f', imdb: '8.2', rt: '82%' },
-  { label: 'Bridgerton', color: '#2a0f24', imdb: '7.3', rt: '69%' },
-  { label: 'Narcos', color: '#2a1d00', imdb: '8.8', rt: '89%' },
+  { label: 'Enola Holmes', color: '#16162a' },
+  { label: 'Extraction', color: '#10240f' },
+  { label: 'Bird Box', color: '#2a0f24' },
+  { label: 'Red Notice', color: '#2a1d00' },
 ];
 
-function ScoreBadge({ imdb, rt }: { imdb: string; rt: string }) {
+function ScoreBadge({ title }: { title: string }) {
+  const { imdb, rt } = SHOWCASE[title];
   return (
     <div className={styles.cardBadge}>
       <ImdbChip value={imdb} />
-      <RtChip value={rt} />
+      {rt && <RtChip value={rt} />}
     </div>
   );
 }
@@ -40,20 +44,20 @@ export default function Hero() {
       <div className={styles.heroCopy}>
         <p className={`${styles.heroSubtitle} ${shared.reveal} ${shared.d2}`}>
           Rating Watch is a free Chrome extension that shows the{' '}
-          <strong>IMDb</strong> rating and the <strong>Rotten Tomatoes</strong> score on every
-          Netflix title card as you browse. The extension needs no account, no second tab, no
-          searching. Just scroll and decide.
+          <strong>IMDb</strong> rating on Netflix title cards as you browse, plus the{' '}
+          <strong>Rotten Tomatoes</strong> score where one exists (mostly films).
+          {' '}The extension needs no account, no second tab, no searching. Just scroll and decide.
         </p>
         <div className={`${styles.heroCta} ${shared.reveal} ${shared.d3}`}>
           <a href="/install" className="ds-btn ds-btn-signal">
-            Install free <span aria-hidden>→</span>
+            Download free <span aria-hidden>→</span>
           </a>
           <a href="#how" className={`ds-btn ${styles.btnSecondary}`}>
             See how it works
           </a>
         </div>
         <ul className={`${styles.heroNote} ${shared.reveal} ${shared.d4}`}>
-          <li>IMDb + Rotten Tomatoes</li>
+          <li>Free download, added in Chrome in a minute</li>
           <li>Chrome, Edge &amp; Brave</li>
           <li>Extension needs no account</li>
         </ul>
@@ -65,7 +69,7 @@ export default function Hero() {
           <div
             className={styles.mockup}
             role="img"
-            aria-label="Illustration of the Netflix browse page with an IMDb rating and a Rotten Tomatoes score badge in the corner of each title card. Scores shown are illustrative."
+            aria-label="Illustration of the Netflix browse page with an IMDb rating and, for films, a Rotten Tomatoes score badge in the corner of each title card. Scores shown are illustrative."
           >
             <div className={styles.mockupBar} aria-hidden>
               <span className={styles.mockupDot} />
@@ -85,7 +89,7 @@ export default function Hero() {
               {CARDS.map((c) => (
                 <div key={c.label} className={styles.card}>
                   <div className={styles.cardBg} style={{ background: c.color }}>{c.label}</div>
-                  <ScoreBadge imdb={c.imdb} rt={c.rt} />
+                  <ScoreBadge title={c.label} />
                 </div>
               ))}
             </div>
@@ -95,14 +99,14 @@ export default function Hero() {
               {CARDS2.map((c) => (
                 <div key={c.label} className={styles.card}>
                   <div className={styles.cardBg} style={{ background: c.color }}>{c.label}</div>
-                  <ScoreBadge imdb={c.imdb} rt={c.rt} />
+                  <ScoreBadge title={c.label} />
                 </div>
               ))}
             </div>
           </div>
           <div className={styles.glow} aria-hidden />
         </div>
-        <p className={styles.illustrative}>Illustrative scores. The extension fetches real ratings as you browse.</p>
+        <p className={styles.illustrative}>Illustrative scores. The extension fetches real ratings as you browse. TV series usually show IMDb only.</p>
       </div>
     </section>
   );

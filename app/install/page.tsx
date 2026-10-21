@@ -26,7 +26,7 @@ const STEPS = [
   },
   {
     name: 'Open Netflix',
-    text: 'Visit netflix.com and browse. IMDb and Rotten Tomatoes badges appear in the top-right corner of each title card; reload the Netflix tab if you already had it open.',
+    text: 'Visit netflix.com and browse. IMDb badges, with Rotten Tomatoes beside them where available, appear in the top-right corner of each title card; reload the Netflix tab if you already had it open.',
   },
 ];
 
@@ -37,15 +37,15 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Is it safe to load an unpacked extension?',
-    a: 'It asks for access to only two sites: netflix.com (to read title cards and show badges) and omdbapi.com (to look up ratings). It requests no tabs, history or storage permissions, needs no account, and sends only title names to OMDb. After loading it, chrome://extensions shows exactly which sites it can access.',
+    a: 'It asks for access to only two sites: netflix.com (to read title cards and show badges) and omdbapi.com (to look up ratings). It requests no tabs, history or storage permissions, needs no account, and sends only title text (and an OMDb API key) to OMDb. After loading it, chrome://extensions shows exactly which sites it can access.',
   },
   {
     q: 'Do I need an API key or an account?',
-    a: 'No. There is nothing to sign up for and no key to enter. Install it, open Netflix, and the badges appear.',
+    a: 'You need neither to start: there is no account, and the extension works out of the box on a shared OMDb lookup allowance. That allowance is limited per day across all users, so on a busy day ratings can pause and the toolbar icon shows a red exclamation mark. Open the extension options and add a free personal OMDb key to use your own allowance.',
   },
   {
     q: 'Why is there no badge on some titles?',
-    a: 'Ratings come from the OMDb database. If OMDb has no IMDb or Rotten Tomatoes score for a title, such as a very new release or a Netflix original with no critic reviews yet, the card shows only the score it could find, or none.',
+    a: 'Ratings come from the OMDb database. Rotten Tomatoes scores are mostly available for films: OMDb usually has none for TV series, so series cards show IMDb only. A very new release, or a title whose Netflix name differs from the database listing, can show only one score or none.',
   },
   {
     q: 'How do I update or uninstall it?',
@@ -68,8 +68,9 @@ export default function InstallPage() {
             Rating Watch installs in about a minute: download the zip from this site, unzip it, turn on
             Developer mode at chrome://extensions, click Load unpacked and pick the folder.
           </strong>{' '}
-          It is not on the Chrome Web Store yet, so this is the install method for Chrome, Edge and
-          Brave. The extension is free and needs no account.
+          It is a free download that you add to Chrome yourself, because it is not on the Chrome Web
+          Store yet; this is the install method for Chrome, Edge and Brave. The extension needs no
+          account.
         </>
       }
       faqs={FAQS}
@@ -110,9 +111,9 @@ export default function InstallPage() {
       <h2 className={g.h2}>What you will see after installing</h2>
       <p className={g.p}>
         Each Netflix title card gets a small badge in its top-right corner showing the IMDb rating
-        (out of 10) and the Rotten Tomatoes critic score (a percentage). New rows, search results
-        and &ldquo;More Like This&rdquo; suggestions are rated automatically as they load. If a
-        title has only one of the two scores in the OMDb database, you see just that one.
+        (out of 10) and, where OMDb has one, the Rotten Tomatoes critic score (a percentage). Films
+        usually have both; TV series usually show IMDb only. New rows, search results and
+        &ldquo;More Like This&rdquo; suggestions are rated automatically as they load.
       </p>
 
       <h2 className={g.h2}>If the badges do not appear</h2>
@@ -123,6 +124,15 @@ export default function InstallPage() {
           selected the folder containing <code>manifest.json</code>, not its parent.
         </li>
         <li>Make sure you are on <code>www.netflix.com</code>; the extension only runs there.</li>
+        <li>
+          Seeing a red exclamation mark on the toolbar icon, or a notice that ratings are paused?
+          The shared daily lookup allowance is used up. It resets daily, or open the extension
+          options (click the icon) and add a free personal key from{' '}
+          <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener noreferrer">
+            omdbapi.com
+          </a>
+          .
+        </li>
         <li>
           Still stuck? Email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
         </li>

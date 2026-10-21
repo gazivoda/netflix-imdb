@@ -5,6 +5,7 @@
 import { checkArticle, type CheckInputs } from '../../lib/blog/check';
 import { loadWorkedExampleEntry } from '../../lib/blog/check-inputs';
 import { validateArticleSchema } from '../../lib/blog/schema';
+import { isWarning } from '../../lib/blog/issue';
 import { lintCopy } from '../../lib/blog/lint';
 import { buildStats } from '../../lib/blog/stats';
 import type { Article, Film } from '../../lib/blog/types';
@@ -21,7 +22,7 @@ const sec = (a: Article, id: string) => a.sections.find((s) => s.id === id)!;
 function findings(article: Article, opts: Partial<CheckInputs> & { only?: Article[] } = {}): string[] {
   const list = opts.only ?? [...Object.values(base).filter((o) => o.slug !== article.slug), ...(opts.articles ?? []), article];
   const r = checkArticle(article, { films, stats, registeredPaths, ...opts, articles: list });
-  return r.sections.flatMap((s) => s.issues.map((i) => `${s.name}:${i.rule}`));
+  return r.sections.flatMap((s) => s.issues.filter((i) => !isWarning(i)).map((i) => `${s.name}:${i.rule}`));
 }
 
 /** Append a sentence to the optional "more" section (0-150 words). */

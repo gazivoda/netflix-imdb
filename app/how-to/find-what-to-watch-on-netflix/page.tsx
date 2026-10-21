@@ -13,7 +13,7 @@ export const metadata = pageMetadata(PATH);
 const STEPS = [
   {
     name: 'Scan the row and read the badges',
-    text: 'Browse a Netflix row and glance at the badge in the top-right corner of each card. It shows the IMDb rating out of 10 and the Rotten Tomatoes percentage. A badge that still shows a loading placeholder fills in within a moment.',
+    text: 'Browse a Netflix row and glance at the badge in the top-right corner of each card. It shows the IMDb rating out of 10 and, where OMDb has one, the Rotten Tomatoes percentage (mostly films, not TV series). A badge that still shows a loading placeholder fills in within a moment.',
   },
   {
     name: 'Drop anything where both scores are low',
@@ -88,7 +88,7 @@ const TABLE: { seen: string; tone?: 'go' | 'skip'; marks: { imdb?: string; rt?: 
 const FAQS: Faq[] = [
   {
     q: 'How do I choose what to watch on Netflix quickly?',
-    a: 'Compare the IMDb rating and the Rotten Tomatoes percentage together. If both are high, it is a safe pick; if both are low, skip it; if they split, choose by mood. The Rating Watch extension puts both numbers on every title card, so you can decide while browsing instead of opening other sites.',
+    a: 'Compare the IMDb rating and the Rotten Tomatoes percentage together. If both are high, it is a safe pick; if both are low, skip it; if they split, choose by mood. The Rating Watch extension adds the IMDb rating to title cards, plus the Rotten Tomatoes percentage where OMDb has one (mostly films, not TV series), so you can decide while browsing instead of opening other sites.',
   },
   {
     q: 'What IMDb and Rotten Tomatoes scores count as good?',
@@ -173,8 +173,8 @@ export default function FindWhatToWatchPage() {
       <p className={g.p}>
         This routine assumes you have{' '}
         <a href="/install">installed the Rating Watch extension</a>, which adds a badge to the
-        top-right corner of each title card showing the IMDb rating and the Rotten Tomatoes
-        percentage. Without it, you would be opening two other sites for every title.
+        top-right corner of title cards showing the IMDb rating and, where OMDb has one, the
+        Rotten Tomatoes percentage. Without it, you would be opening two other sites for every title.
       </p>
       <div className={h.stubs}>
         <ol className={g.steps}>
@@ -262,7 +262,7 @@ export default function FindWhatToWatchPage() {
       </aside>
 
       <aside className={g.callout}>
-        <h2 className={g.calloutTitle}>Put both scores on every Netflix card</h2>
+        <h2 className={g.calloutTitle}>Put both scores on your Netflix cards</h2>
         <p>
           The routine above takes seconds when the ratings are already in front of you. The Rating
           Watch extension is free, needs no account, and takes about a minute to set up.

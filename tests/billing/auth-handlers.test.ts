@@ -6,8 +6,15 @@ import type { GoogleAuth } from '../../lib/billing/google'
 import type { PaddleApi } from '../../lib/billing/paddle'
 
 const NOW = Date.parse('2026-10-20T12:00:00Z')
-beforeEach(() => { process.env.JWT_SECRET = 'k'.repeat(40); process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN = 'live_clienttoken' })
-afterAll(() => { delete process.env.JWT_SECRET; delete process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN })
+const BILLING_ENV = ['NEXT_PUBLIC_PADDLE_CLIENT_TOKEN', 'NEXT_PUBLIC_PADDLE_PRICE_ID_MONTHLY', 'NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY', 'BILLING_DATA_PERSISTENT']
+beforeEach(() => {
+  process.env.JWT_SECRET = 'k'.repeat(40)
+  process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN = 'live_clienttoken'
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_MONTHLY = 'pri_m'
+  process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY = 'pri_y'
+  process.env.BILLING_DATA_PERSISTENT = 'true'
+})
+afterAll(() => { delete process.env.JWT_SECRET; BILLING_ENV.forEach((k) => delete process.env[k]) })
 
 function deps(over: Partial<Deps> = {}): Deps {
   const google: GoogleAuth = {
@@ -20,7 +27,7 @@ function deps(over: Partial<Deps> = {}): Deps {
   return { db: openUsersDb(':memory:', () => NOW), paddle: null, google, appUrl: 'https://rating.watch', priceIds: [], now: () => NOW, ...over }
 }
 // Everything Ruling V requires for the paywall to be on (JWT_SECRET is set by beforeEach).
-const paddleStub: PaddleApi = { getTransaction: async () => ({}), getSubscription: async () => ({}), createPortalSession: async () => 'https://p/x' }
+const paddleStub: PaddleApi = { getTransaction: async () => ({}), getSubscription: async () => ({}), getCustomer: async () => ({}), createPortalSession: async () => 'https://p/x' }
 const configured = (over: Partial<Deps> = {}): Deps => deps({ paddle: paddleStub, webhookSecret: 'pdl_ntfset_x', priceIds: ['pri_m', 'pri_y'], ...over })
 const setCookies = (r: Response) => r.headers.getSetCookie()
 const cookieValue = (r: Response, name: string) => {
@@ -165,6 +172,14 @@ describe('handleMe / handleSignout', () => {
     })
     it('is false when the checkout client token is missing (Ruling X)', async () => {
       delete process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN
+      expect((await me(configured())).body.billingEnabled).toBe(false)
+    })
+    it('is false when the build lacked a NEXT_PUBLIC price id (OPS-7) or persistence is not asserted (SEC-4)', async () => {
+      delete process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY
+      expect((await me(configured())).body.billingEnabled).toBe(false)
+      process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY = 'pri_y'
+      expect((await me(configured())).body.billingEnabled).toBe(true)
+      delete process.env.BILLING_DATA_PERSISTENT
       expect((await me(configured())).body.billingEnabled).toBe(false)
     })
     it('never touches the database when billing is not configured (Ruling W)', async () => {

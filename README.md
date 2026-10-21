@@ -2,7 +2,7 @@
 
 **Rating Watch is a free Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards.**
 
-It adds a small badge to the top-right corner of every title card on netflix.com, so you can see the IMDb score (out of 10) and the Rotten Tomatoes critic score (a percentage) without opening another tab. The extension needs no account, no API key and does no tracking.
+It adds a small badge to the top-right corner of title cards on netflix.com, so you can see the IMDb score (out of 10) and, where OMDb has one, the Rotten Tomatoes critic score (a percentage, mostly for films, not TV series) without opening another tab. The extension needs no account and does no tracking. It works out of the box on a shared OMDb lookup allowance that can run out on a busy day; an optional free personal OMDb key in the extension options lifts it.
 
 Website: [rating.watch](https://rating.watch) · [Install guide](https://rating.watch/install) · [Privacy policy](https://rating.watch/privacy) · [IMDb vs Rotten Tomatoes](https://rating.watch/compare/imdb-vs-rotten-tomatoes)
 
@@ -11,7 +11,7 @@ Website: [rating.watch](https://rating.watch) · [Install guide](https://rating.
 - Shows the IMDb rating (shown as `⭐ <score>`) and the Rotten Tomatoes score (shown as `🍅 <percent>%`) in a badge on each Netflix title card.
 - Rates new rows, search results and "More Like This" suggestions automatically as Netflix loads them.
 - Shows whichever score is available if a title has only one of the two, and no badge if it has neither.
-- The extension needs no account, no sign-in and no API key from you (an optional personal OMDb key lifts the shared daily limit).
+- The extension needs no account or sign-in. It uses a shared OMDb lookup allowance (1,000 requests a day across all users), so ratings can pause on a busy day and the toolbar icon shows a red exclamation mark; an optional free personal OMDb key in the extension options lifts the limit.
 - Works on Chromium browsers (Chrome, Edge, Brave). It is a Manifest V3 extension and has not been tested in Firefox or Safari.
 
 ## Install
@@ -36,7 +36,7 @@ The extension has two parts, both in [`extension/`](extension):
 ## Privacy
 
 - Requests only two host permissions: `https://www.netflix.com/*` (to read title cards and show badges) and `https://www.omdbapi.com/*` (to look up ratings). The manifest declares no other permissions, so it does not request tabs, history or storage access.
-- The only data the extension sends out of your browser is the title name of each card, sent to OMDb to fetch its rating.
+- The only data the extension sends out of your browser is the title name of each card, plus the OMDb key (shared or your own), sent to OMDb to fetch its rating. OMDb also sees your IP address.
 - The extension has no account, no analytics, no telemetry and runs no backend server. The website offers an optional Pro AR mode with sign-in; see /pricing. Looked-up ratings are cached locally in the extension's own IndexedDB for up to 7 days (1 day when OMDb has no score yet); nothing is synced or sent anywhere. An optional OMDb key you add on the settings page is stored the same way.
 
 Full details: [rating.watch/privacy](https://rating.watch/privacy).
@@ -68,11 +68,18 @@ The website's server-side OMDb lookups read an `OMDB_API_KEY` environment variab
 
 ```bash
 bash scripts/package-extension.sh
+npm run zip:check   # verifies extension.zip and the site download match extension/
 ```
 
 ## Not affiliated
 
 Rating Watch is an independent project. It is not affiliated with, endorsed by or sponsored by Netflix, Inc., IMDb or Rotten Tomatoes. Netflix, IMDb and Rotten Tomatoes are trademarks of their respective owners and are used here only to describe what the extension does.
+
+## Licence
+
+Copyright (c) 2026 Rating Watch. All rights reserved. This repository is published so you can read it; it is not licensed for reuse, and no permissive or community licence applies. The browser extension is distributed free of charge for personal use through [rating.watch](https://rating.watch) and the Chrome Web Store. Copying, redistributing, modifying or reselling it, or any other part of this repository, requires written permission. See [`LICENSE`](LICENSE).
+
+OMDb data, Netflix Top 10 data, and the Netflix, IMDb and Rotten Tomatoes names and marks are not covered by this licence and remain subject to their owners' terms.
 
 ## Credits
 

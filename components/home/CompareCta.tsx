@@ -1,5 +1,10 @@
 import styles from './CompareCta.module.css';
 import { ImdbChip, RtChip } from '../ScoreChip';
+import { SHOWCASE } from '../../lib/content';
+
+const EXAMPLE = 'Roma';
+const SCORES = SHOWCASE[EXAMPLE];
+const pct = (v: string) => `${Math.round(parseFloat(v) * (v.endsWith('%') ? 1 : 10))}%`;
 
 export default function CompareCta() {
   return (
@@ -11,8 +16,10 @@ export default function CompareCta() {
           <em className="ds-serif">critics</em> think.
         </h2>
         <p className={styles.compareDesc}>
-          They often disagree — and that gap is exactly what helps you pick. We break down how
-          the two systems work and when to trust each.
+          They often disagree, and that gap is exactly what helps you pick. In our{' '}
+          <a href="/research/imdb-vs-rotten-tomatoes-gap">data study of 44 Netflix films</a> the two
+          scores differed by 18.7 points on average. We also break down how the two systems work
+          and when to trust each.
         </p>
         <a href="/compare/imdb-vs-rotten-tomatoes" className={`ds-btn ${styles.btnGhost}`}>
           Read: IMDb vs Rotten Tomatoes <span aria-hidden>→</span>
@@ -21,17 +28,17 @@ export default function CompareCta() {
       <div className={styles.scoreboard}>
         <div className={styles.board}>
           <div className={`${styles.cell} ${styles.cellImdb}`}>
-            <span className={styles.dialName}><ImdbChip value="8.7" text="IMDb" /></span>
-            <span className={styles.dialNum}>8.7</span>
-            <span className={styles.dialBarTrack}><span className={styles.dialBarImdb} style={{ width: '87%' }} /></span>
+            <span className={styles.dialName}><ImdbChip value={SCORES.imdb} text="IMDb" /></span>
+            <span className={styles.dialNum}>{SCORES.imdb}</span>
+            <span className={styles.dialBarTrack}><span className={styles.dialBarImdb} style={{ width: pct(SCORES.imdb) }} /></span>
           </div>
           <div className={`${styles.cell} ${styles.cellRt}`}>
-            <span className={styles.dialName}><RtChip value="86%" text="RT" /></span>
-            <span className={styles.dialNum}>86%</span>
-            <span className={styles.dialBarTrack}><span className={styles.dialBarRt} style={{ width: '86%' }} /></span>
+            <span className={styles.dialName}><RtChip value={SCORES.rt!} text="RT" /></span>
+            <span className={styles.dialNum}>{SCORES.rt}</span>
+            <span className={styles.dialBarTrack}><span className={styles.dialBarRt} style={{ width: pct(SCORES.rt!) }} /></span>
           </div>
         </div>
-        <div className={styles.dialCaption}>Illustrative example: Stranger Things</div>
+        <div className={styles.dialCaption}>Illustrative example: Roma (film)</div>
       </div>
     </section>
   );

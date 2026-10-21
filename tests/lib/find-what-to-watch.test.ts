@@ -9,7 +9,7 @@ const src = readFileSync(join(__dirname, '../../app/how-to/find-what-to-watch-on
 describe('find-what-to-watch page', () => {
   it('is registered as a guide with the agreed priority and dates', () => {
     const p = getPage(PATH);
-    expect(p).toMatchObject({ group: 'guide', priority: 0.8, published: '2026-10-15', updated: '2026-10-15' });
+    expect(p).toMatchObject({ group: 'guide', priority: 0.8, published: '2026-10-15', updated: '2026-10-21' });
     expect(renderedTitle(p).length).toBeLessThanOrEqual(65);
   });
 

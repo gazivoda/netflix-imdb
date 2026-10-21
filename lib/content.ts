@@ -6,6 +6,27 @@ export const SITE_URL =
 
 export const SUPPORT_EMAIL = 'hello@rating.watch';
 
+// ---------------------------------------------------------------------------------------------
+// LEGAL IDENTITY. FILL THESE IN BEFORE LAUNCH (privacy policy, terms and the Paddle review all
+// want a named seller). Each block renders on /privacy and /terms ONLY when its constant is a
+// non-empty string, so leaving them empty never prints a blank line or a placeholder.
+//   LEGAL_ENTITY   legal name of the operator or sole proprietor, e.g. 'Jane Doe' or 'Acme d.o.o.'
+//   LEGAL_ADDRESS  postal address of that operator, one line, e.g. '1 Main St, 11000 Belgrade, Serbia'
+//   GOVERNING_LAW  governing law and venue sentence, e.g. 'the laws of Serbia' (rendered after "governed by")
+// ---------------------------------------------------------------------------------------------
+export const LEGAL_ENTITY: string = '';
+export const LEGAL_ADDRESS: string = '';
+export const GOVERNING_LAW: string = '';
+
+// Pro (AR mode) pricing in one place. The FAQ, the SoftwareApplication offers in JSON-LD and
+// llms.txt read it; tests/billing/copy-accuracy.test.ts checks it against lib/billing/client.ts PRICES.
+export const PRO_PRICING = {
+  monthly: '2.99',
+  yearly: '29',
+  currency: 'USD',
+  trialDays: 3,
+} as const;
+
 // Hosted on this site (public/downloads); scripts/package-extension.sh refreshes it.
 export const EXTENSION_ZIP_PATH = '/downloads/rating-watch-extension.zip';
 
@@ -14,29 +35,31 @@ export const EXTENSION_ZIP_PATH = '/downloads/rating-watch-extension.zip';
 // and AI Overviews can attribute and date the content.
 export const AUTHOR_NAME = 'Igor Gazivoda';
 export const PUBLISHED_DATE = '2026-05-01'; // first public release
-export const LAST_UPDATED = '2026-10-15'; // ISO; keep in sync with real edits
-export const LAST_UPDATED_LABEL = 'October 15, 2026';
+// Date of the newest real content change on any static page. tests/lib/pages-dates.test.ts fails
+// when it falls behind the per-page dates in lib/pages.ts (PAGE_UPDATED), so it cannot drift.
+export const LAST_UPDATED = '2026-10-21'; // ISO
+export const LAST_UPDATED_LABEL = 'October 21, 2026';
 
 export const FEATURES = [
   {
     icon: '01',
-    title: 'Live IMDb scores',
-    desc: 'Every title card shows its current IMDb rating, pulled straight from the database. No guessing, no leaving Netflix.',
+    title: 'IMDb scores on title cards',
+    desc: 'Title cards show the IMDb rating from the OMDb database, refreshed up to weekly. No guessing, no leaving Netflix.',
   },
   {
     icon: '02',
-    title: 'Rotten Tomatoes too',
-    desc: 'Critic scores sit right beside the IMDb number, so you get both the crowd and the critics before you commit.',
+    title: 'Rotten Tomatoes where available',
+    desc: 'When OMDb has a Tomatometer score for a title, it sits right beside the IMDb number. Films usually have one; TV series often do not.',
   },
   {
     icon: '03',
     title: 'Loads in parallel',
-    desc: 'Every visible card fetches its rating at once. Scroll, and the next batch fires automatically — no waiting card by card.',
+    desc: 'Every visible card fetches its rating at once. Scroll, and the next batch fires automatically, with no waiting card by card.',
   },
   {
     icon: '04',
     title: 'Private by default',
-    desc: 'The extension needs no account or login and does no tracking. It only talks to the ratings source, so your watch history stays yours.',
+    desc: 'The extension needs no account or login and does no tracking. It only talks to the ratings source, OMDb, so your watch history stays yours.',
   },
   {
     icon: '05',
@@ -45,73 +68,70 @@ export const FEATURES = [
   },
   {
     icon: '06',
-    title: 'Always current',
-    desc: 'Ratings refresh as you browse — new rows, search results, “More Like This.” Everything stays covered.',
+    title: 'Covers new rows',
+    desc: 'Badges follow you as you browse: new rows, search results, “More Like This.” Looked-up scores are cached on your device for up to a week.',
   },
 ];
 
 export const STATS = [
-  { value: '2', label: 'rating sources on every card', sub: 'IMDb + Rotten Tomatoes' },
+  { value: '2', label: 'rating sources', sub: 'IMDb, plus Rotten Tomatoes where OMDb has it' },
   { value: '0', label: 'accounts needed for the extension', sub: 'no login needed' },
   { value: '2', label: 'sites it can access', sub: 'netflix.com + omdbapi.com' },
   { value: '$0', label: 'cost of the extension', sub: 'free, no card needed' },
 ];
 
-export const TESTIMONIALS = [
-  {
-    quote:
-      'I used to keep IMDb open in a second tab the whole time I browsed Netflix. Now the score is just… there. I can’t go back.',
-    name: 'Maya R.',
-    role: 'Designer & serial binger',
-    rating: 'IMDb 9.2',
-  },
-  {
-    quote:
-      'The Rotten Tomatoes number next to IMDb is the killer feature. Saves my movie nights from a lot of regret.',
-    name: 'Devin O.',
-    role: 'Film club organizer',
-    rating: 'RT 94%',
-  },
-  {
-    quote:
-      'Installed it in under a minute and it just works. No account, no popups asking me to upgrade. Refreshing.',
-    name: 'Priya S.',
-    role: 'Software engineer',
-    rating: 'IMDb 8.8',
-  },
-  {
-    quote:
-      'It’s the first thing I install on a new laptop now. Browsing Netflix without ratings feels broken.',
-    name: 'Tomás L.',
-    role: 'Documentary nerd',
-    rating: 'RT 88%',
-  },
-];
+// One table of illustrative scores for every mock-up on the home page (hero cards, marquee,
+// before/after, compare box), so the same title never shows two different numbers. The values
+// for films are the OMDb figures in public/data/imdb-rt-gap.json (fetched 2026-10-15). OMDb
+// returned no Rotten Tomatoes score for any TV series in that study, so a series carries IMDb only.
+export interface ShowcaseScore {
+  imdb: string;
+  /** Absent when OMDb has no Rotten Tomatoes score, which is the usual case for TV series. */
+  rt?: string;
+}
+
+export const SHOWCASE: Record<string, ShowcaseScore> = {
+  Roma: { imdb: '7.6', rt: '96%' },
+  'The Irishman': { imdb: '7.8', rt: '95%' },
+  'Marriage Story': { imdb: '7.9', rt: '95%' },
+  Klaus: { imdb: '8.2', rt: '95%' },
+  Okja: { imdb: '7.3', rt: '87%' },
+  Mudbound: { imdb: '7.4', rt: '97%' },
+  'Enola Holmes': { imdb: '6.7', rt: '91%' },
+  Extraction: { imdb: '6.8', rt: '67%' },
+  'Bird Box': { imdb: '6.6', rt: '64%' },
+  'Red Notice': { imdb: '6.3', rt: '36%' },
+  Hustle: { imdb: '7.3', rt: '94%' },
+  Nimona: { imdb: '7.5', rt: '92%' },
+  // A series: IMDb only, as the extension would show it.
+  'Stranger Things': { imdb: '8.7' },
+};
 
 // Titles for the auto-scrolling marquee strip. Scores are illustrative.
-export const MARQUEE = [
-  { title: 'Breaking Bad', imdb: '9.5', rt: '96%' },
-  { title: 'The Queen’s Gambit', imdb: '8.5', rt: '97%' },
-  { title: 'Dark', imdb: '8.7', rt: '95%' },
-  { title: 'Black Mirror', imdb: '8.7', rt: '83%' },
-  { title: 'Money Heist', imdb: '8.2', rt: '90%' },
-  { title: 'Arcane', imdb: '9.0', rt: '100%' },
-  { title: 'The Witcher', imdb: '8.0', rt: '68%' },
-  { title: 'Stranger Things', imdb: '8.7', rt: '86%' },
-  { title: 'Wednesday', imdb: '8.1', rt: '67%' },
-  { title: 'BoJack Horseman', imdb: '8.8', rt: '93%' },
-  { title: 'Squid Game', imdb: '8.0', rt: '95%' },
-  { title: 'Narcos', imdb: '8.8', rt: '89%' },
-];
+export const MARQUEE: Array<{ title: string } & ShowcaseScore> = [
+  'Roma',
+  'The Irishman',
+  'Klaus',
+  'Stranger Things',
+  'Okja',
+  'Mudbound',
+  'Enola Holmes',
+  'Extraction',
+  'Marriage Story',
+  'Bird Box',
+  'Hustle',
+  'Red Notice',
+  'Nimona',
+].map((title) => ({ title, ...SHOWCASE[title] }));
 
 export const FAQS = [
   {
     q: 'What is Rating Watch?',
-    a: 'Rating Watch is a free Chrome extension that shows the IMDb rating and the Rotten Tomatoes score in a small badge on each Netflix title card as you browse. You see both scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave. There is also an optional Pro AR mode that shows the same scores over a TV screen through your phone camera.',
+    a: 'Rating Watch is a free Chrome extension that shows the IMDb rating, and the Rotten Tomatoes score where one exists, in a small badge on each Netflix title card as you browse. You see the scores without opening another tab or searching anything. It runs on netflix.com in Chromium browsers such as Chrome, Edge and Brave. There is also an optional Pro AR mode that shows scores over a TV screen through your phone camera.',
   },
   {
     q: 'Is Rating Watch free?',
-    a: 'The Chrome extension is free: no account and nothing to subscribe to. AR mode, which draws ratings over your TV through your phone camera, is Pro: $2.99 a month or $29 a year, with a 3-day free trial that needs no card. You can cancel any time from your account page.',
+    a: `The Chrome extension is free: no account and nothing to subscribe to. AR mode, which draws ratings over your TV through your phone camera, is Pro: $${PRO_PRICING.monthly} a month or $${PRO_PRICING.yearly} a year, with a ${PRO_PRICING.trialDays}-day free trial that needs no card. You can cancel any time from your account page.`,
   },
   {
     q: 'Where do the ratings come from?',
@@ -123,11 +143,15 @@ export const FAQS = [
   },
   {
     q: 'Does it show ratings for every title?',
-    a: 'No. If OMDb has no match for a title, or has an IMDb rating but no Rotten Tomatoes score, the badge shows only the score it found, or nothing. This is most common with very new releases, some Netflix originals and titles whose Netflix name differs from the database listing.',
+    a: 'No. A title OMDb can match gets its IMDb rating, but the Rotten Tomatoes score is mostly available for films. In our own data study, OMDb returned no Rotten Tomatoes score for any Netflix series, so series cards usually show IMDb only. Very new releases and titles whose Netflix name differs from the database listing can show no badge at all.',
+  },
+  {
+    q: 'Do I need an API key?',
+    a: 'No key is needed to start. The extension works out of the box using a shared OMDb lookup allowance (1,000 requests a day across all users), so on a busy day ratings can pause and the toolbar icon shows a red exclamation mark. You can add a free personal OMDb key in the extension options page to use your own daily allowance instead.',
   },
   {
     q: 'Does it work on the Netflix mobile app or TV?',
-    a: 'No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there.',
+    a: 'No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there. AR mode (Pro) is the way to get scores for a TV, through your phone camera.',
   },
   {
     q: 'Does it slow Netflix down?',
@@ -139,10 +163,10 @@ export const FAQS = [
   },
   {
     q: 'Does the extension collect my data?',
-    a: 'No. The extension needs no account or login and does not track your viewing history. The only data it sends is the movie or show title, to OMDb, so it can look up the scores. Its permissions are limited to netflix.com and omdbapi.com. Nothing about you is stored or shared by the extension.',
+    a: 'It has no account, no analytics and does not read your viewing history. To look up a rating it sends the title text and the OMDb API key to omdbapi.com, so OMDb can see your IP address like any site you connect to. Looked-up scores are cached in the extension’s private browser database on your device. Its permissions are limited to netflix.com and omdbapi.com.',
   },
   {
     q: 'How do I install Rating Watch?',
-    a: 'It is not on the Chrome Web Store yet, so you install it from this site. Download the zip from the install page, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the unzipped folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
+    a: 'It is a free download that you add to Chrome yourself, because it is not on the Chrome Web Store yet. Download the zip from the install page, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the unzipped folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
   },
 ];

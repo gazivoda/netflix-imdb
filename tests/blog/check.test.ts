@@ -4,7 +4,8 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { PAGES } from '../../lib/pages';
 import { checkArticle, formatReport, SIMILARITY_STATUSES } from '../../lib/blog/check';
-import { buildBrief } from '../../lib/blog/brief';
+import { buildBrief, PILOT_SLUGS } from '../../lib/blog/brief';
+import { isWarning } from '../../lib/blog/issue';
 import { buildStats } from '../../lib/blog/stats';
 import type { Article } from '../../lib/blog/types';
 import { clone, filmBySlug, FIXTURE_ARTICLES_DIR, FIXTURE_FILMS_PATH, loadFixtureArticles, loadFixtureFilms } from './fixtures';
@@ -21,7 +22,8 @@ describe('checkArticle', () => {
   it.each(articles.map((a) => [a.slug, a] as const))('%s passes every section', (_s, a) => {
     const r = checkArticle(a, { ...inputs(), fileName: `${a.slug}.json` });
     expect(r.sections.map((s) => s.name)).toEqual(['schema', 'tokens', 'copy', 'plot-overlap', 'lengths', 'links', 'similarity']);
-    expect({ total: r.total, issues: r.sections.flatMap((s) => s.issues) }).toEqual({ total: 0, issues: [] });
+    // warnings (the 750-word aim) are allowed; errors are not
+    expect({ total: r.total, issues: r.sections.flatMap((s) => s.issues).filter((i) => !isWarning(i)) }).toEqual({ total: 0, issues: [] });
     expect(r.ok).toBe(true);
   });
 
@@ -78,6 +80,45 @@ describe('checkArticle', () => {
   });
 });
 
+describe('prose length: fail below 600 or above 900, warn (not fail) below 700', () => {
+  it('a 600-699 word article passes with a prose-aim warning that is printed', () => {
+    const a = get('salt-and-iron-2019');
+    const r = checkArticle(a, inputs());
+    const words = section(r, 'lengths').issues;
+    expect(words.map((i) => `${i.rule}:${i.severity}`)).toEqual(['prose-aim:warn']);
+    expect(r.ok).toBe(true);
+    expect(r.total).toBe(0);
+    expect(r.warnings).toBe(1);
+    const text = formatReport(r, 3);
+    expect(text).toMatch(/PASS {2}lengths \(1 warning\)/);
+    expect(text).toContain('WARN [prose-aim]');
+    expect(text).toMatch(/RESULT: PASS \(1 warning, not failures\)/);
+  });
+
+  it('a 700+ word article has no warning', () => {
+    const r = checkArticle(get('crimson-static-2022'), inputs());
+    expect(section(r, 'lengths').issues).toEqual([]);
+    expect(r.warnings).toBe(0);
+    expect(formatReport(r, 3)).toMatch(/RESULT: PASS$/);
+  });
+
+  it('below 600 is still a failure, and the warning is not added on top', () => {
+    const a = clone(get('harbor-lights-2021'));
+    a.faq = a.faq.slice(0, 2);
+    a.sections = a.sections.map((s) => (s.id === 'who-it-suits' ? { ...s, paragraphs: s.paragraphs.slice(0, 1) } : s));
+    a.sections[0].paragraphs = a.sections[0].paragraphs.slice(0, 3);
+    const r = checkArticle(a, inputs());
+    expect(section(r, 'lengths').issues.map((i) => i.rule)).toEqual(['prose-length']);
+    expect(r.ok).toBe(false);
+  });
+
+  it('the CLI exits 0 for a warning-only article', () => {
+    const r = spawnSync(process.execPath, [join(__dirname, '../../scripts/blog/check.mjs'), 'salt-and-iron-2019', '--films', FIXTURE_FILMS_PATH, '--articles', FIXTURE_ARTICLES_DIR], { encoding: 'utf8' });
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain('WARN [prose-aim]');
+  });
+});
+
 describe('buildBrief', () => {
   const brief = (slug: string) => buildBrief({ film: films.find((f) => f.slug === slug)!, films, stats, existing: articles.find((a) => a.slug === slug) });
 
@@ -105,6 +146,46 @@ describe('buildBrief', () => {
   it('flags null-valued tokens and an R15 requirement', () => {
     expect(brief('midnight-ferry-2025')).toMatch(/\{\{metascore\}\}\s+NULL/);
     expect(brief('velvet-orbit-2023')).toContain('REQUIRED: abs gap 33');
+  });
+
+  it('says whether this film needs a shortTitle (yes or no) and whether it is a pilot film', () => {
+    expect(brief('harbor-lights-2021')).toContain('this film needs a shortTitle: no');
+    const long = clone(films);
+    long.find((f) => f.slug === 'harbor-lights-2021')!.omdb.title = 'Harbor Lights of the Northern Coast and Beyond';
+    const b = buildBrief({ film: long.find((f) => f.slug === 'harbor-lights-2021')!, films: long, stats: buildStats(long) });
+    expect(b).toContain('this film needs a shortTitle: yes');
+    expect(brief('harbor-lights-2021')).toContain('pilot film: no');
+    const pilot = clone(films);
+    pilot.find((f) => f.slug === 'harbor-lights-2021')!.slug = PILOT_SLUGS[1];
+    const pb = buildBrief({ film: pilot.find((f) => f.slug === PILOT_SLUGS[1])!, films: pilot, stats: buildStats(pilot) });
+    expect(pb).toContain('pilot film: yes (R15 hand check required whatever the gap)');
+    expect(pb).toContain('required because this is a pilot film');
+  });
+
+  it('explains the hours figure and its digit-free wording', () => {
+    const b = brief('harbor-lights-2021');
+    expect(b).toContain('as {{hours}} (weekly-sum)');
+    expect(b).toContain('hours covers: the sum of Netflix weekly hours');
+    const f = clone(films);
+    f.find((x) => x.slug === 'harbor-lights-2021')!.netflix.hoursSource = 'first-91-days';
+    const nb = buildBrief({ film: f.find((x) => x.slug === 'harbor-lights-2021')!, films: f, stats: buildStats(f) });
+    expect(nb).toContain('first 91 days after release');
+    expect(nb).toContain('in its opening weeks on the chart');
+  });
+
+  it('carries the writing notes: plot nouns, other films, Metascore and genre wording, related, 750 aim', () => {
+    const b = brief('harbor-lights-2021');
+    for (const part of [
+      'distinctive nouns and verbs in the same order',
+      'name other films',
+      'You may NOT give numbers for them',
+      'the Metascore lands nearer the audience figure',
+      'leans the opposite way from this one',
+      'OMIT the `related` key entirely',
+      'aim for 750-850 words: below 700 words blog:check prints a WARN (prose-aim) and still passes; below 600 it fails',
+    ]) {
+      expect(b).toContain(part);
+    }
   });
 
   it('shows the Netflix runtime as not published when null', () => {

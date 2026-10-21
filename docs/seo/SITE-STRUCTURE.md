@@ -6,7 +6,7 @@ _Last updated: 2026-06-17_
 
 ```
 /
-├── /                                       Homepage (features, how-it-works, testimonials, FAQ)
+├── /                                       Homepage (features, how-it-works, FAQ)
 ├── /compare/imdb-vs-rotten-tomatoes        Comparison / informational
 ├── /camera-vision                          Experimental demo (low priority)
 └── /privacy                                Privacy policy

@@ -12,13 +12,13 @@ export default function Marquee() {
               <span className={styles.marqueeTitle}>{m.title}</span>
               <span className={styles.marqueeScores}>
                 <ImdbChip value={m.imdb} />
-                <RtChip value={m.rt} />
+                {m.rt && <RtChip value={m.rt} />}
               </span>
             </span>
           ))}
         </div>
       </section>
-      <p className={`${styles.marqueeCaption} ds-label`}>Illustrative scores, for demonstration only.</p>
+      <p className={`${styles.marqueeCaption} ds-label`}>Illustrative scores, for demonstration only. TV series usually show IMDb only.</p>
     </>
   );
 }

@@ -1,10 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { readCappedText } from '@/lib/body-limit'
 import { getRating } from '@/lib/cached-omdb'
+import { checkRateLimit, MAX_BODY_BYTES, omdbKeyPresent, validateTitles } from '@/lib/ratings-guard'
 
 export async function POST(req: NextRequest) {
+  const limit = checkRateLimit(req.headers)
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: 'too many requests' },
+      { status: 429, headers: { 'Retry-After': String(limit.retryAfterS) } }
+    )
+  }
+
+  const raw = await readCappedText(req, MAX_BODY_BYTES)
+  if (raw === null) {
+    return NextResponse.json({ error: 'request body too large' }, { status: 413 })
+  }
+
   let body: unknown
   try {
-    body = await req.json()
+    body = JSON.parse(raw)
   } catch {
     return NextResponse.json(
       { error: 'invalid JSON body' },
@@ -12,26 +27,19 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const titles = (body !== null && typeof body === 'object' && !Array.isArray(body))
+  const candidate = (body !== null && typeof body === 'object' && !Array.isArray(body))
     ? (body as Record<string, unknown>).titles
     : undefined
 
-  if (
-    !Array.isArray(titles) ||
-    titles.length === 0 ||
-    titles.some((t) => typeof t !== 'string')
-  ) {
-    return NextResponse.json(
-      { error: 'titles must be a non-empty array of strings' },
-      { status: 400 }
-    )
+  const checked = validateTitles(candidate)
+  if (!checked.ok) {
+    return NextResponse.json({ error: checked.error }, { status: 400 })
   }
+  const { titles } = checked
 
-  if (titles.length > 20) {
-    return NextResponse.json(
-      { error: 'maximum 20 titles per request' },
-      { status: 400 }
-    )
+  // A missing key would make every lookup fail quietly as "not found"; say so instead.
+  if (!omdbKeyPresent()) {
+    return NextResponse.json({ error: 'ratings unavailable' }, { status: 503 })
   }
 
   const settled = await Promise.allSettled(

@@ -1,11 +1,10 @@
 import './globals.css';
-import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import { SITE_URL } from '../lib/content';
 import { HOME_TITLE, HOME_DESCRIPTION } from '../lib/pages';
 import { TITLE_SUFFIX, jsonLdString, siteGraph } from '../lib/seo';
-import { ANALYTICS_ENABLED, GA_MEASUREMENT_ID, GTAG_INIT } from '../lib/analytics';
+import ConsentBanner from '../components/ConsentBanner';
 
 // Variable Archivo with the width axis: `font-stretch: 62%` + weight 900 gives the
 // condensed display face; normal width (100%) is the body text.
@@ -107,14 +106,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/* First in the body so assistive tech reaches it early. Google Analytics loads only after Accept. */}
+        <ConsentBanner />
         {children}
-        {ANALYTICS_ENABLED && (
-          <>
-            {/* Google tag (gtag.js) */}
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
-            <Script id="gtag-init" strategy="afterInteractive">{GTAG_INIT}</Script>
-          </>
-        )}
       </body>
     </html>
   );

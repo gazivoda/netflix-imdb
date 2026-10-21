@@ -43,15 +43,40 @@ export const namesFilm = (text: string, names: readonly string[]): boolean => {
 };
 
 /**
+ * Case-insensitive, global regex for `quoted` as it may appear in prose: apostrophes normalised
+ * and any run of whitespace in `quoted` matching any run of whitespace in the text. Used for text
+ * that must be recognised verbatim (the OMDb Awards string).
+ */
+export const verbatimRegex = (quoted: string): RegExp =>
+  new RegExp(escapeRe(normalizeApostrophes(quoted).trim()).replace(/\s+/g, '\\s+'), 'gi');
+
+/**
  * Split prose into sentences. A sentence ends at ".", "!" or "?" (optionally followed by
  * `{{cite:id}}` markers, which belong to the sentence they end) and then whitespace.
  * Call on masked text so a dotted title does not split.
+ *
+ * `verbatim` lists strings that must never be cut, even though they contain ". " themselves
+ * (the OMDb Awards text, for example "Won 2 Oscars. 112 wins & 52 nominations total"). Each
+ * occurrence stays inside one sentence and is returned exactly as written.
  */
-export function splitSentences(text: string): string[] {
-  return text
+export function splitSentences(text: string, verbatim: readonly string[] = []): string[] {
+  const spans = verbatim.map((v) => v.trim()).filter(Boolean);
+  const kept: string[] = [];
+  let t = spans.length ? normalizeApostrophes(text) : text;
+  if (spans.length) {
+    for (const span of spans) {
+      t = t.replace(verbatimRegex(span), (m) => {
+        kept.push(m);
+        // a span that ends a sentence keeps its terminator outside the placeholder
+        return /[.!?]$/.test(m) ? `PSPAN${kept.length - 1}E.` : `PSPAN${kept.length - 1}N`;
+      });
+    }
+  }
+  const parts = t
     .split(/(?<=[.!?](?:\{\{[^{}]*\}\})*)\s+/)
     .map((s) => s.trim())
     .filter(Boolean);
+  return spans.length ? parts.map((s) => s.replace(/PSPAN(\d+)(?:E\.|N)/g, (_m, i: string) => kept[Number(i)])) : parts;
 }
 
 /** Mask the names, then split. */

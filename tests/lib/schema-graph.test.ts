@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { PAGES } from '../../lib/pages';
-import { SITE_URL, EXTENSION_ZIP_PATH } from '../../lib/content';
+import { SITE_URL, EXTENSION_ZIP_PATH, SUPPORT_EMAIL, PRO_PRICING } from '../../lib/content';
 import { siteGraph, webPage, breadcrumbList, nodeId, jsonLdString, blogPosting, movie } from '../../lib/seo';
 import { filmBySlug } from '../blog/fixtures';
 import manifest from '../../extension/manifest.json';
@@ -88,7 +88,26 @@ describe('siteGraph (root layout JSON-LD)', () => {
   it('keeps the free-price facts of the extension', () => {
     const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
     expect(app.isAccessibleForFree).toBe(true);
-    expect(app.offers).toMatchObject({ price: '0', priceCurrency: 'USD' });
+    const offers = app.offers as Array<Record<string, any>>;
+    expect(offers[0]).toMatchObject({ price: '0', priceCurrency: 'USD' });
+  });
+
+  it('lists Pro AR mode as paid offers that match the pricing page', () => {
+    const app = nodes.find((n) => n['@type'] === 'SoftwareApplication')!;
+    const offers = app.offers as Array<Record<string, any>>;
+    const pro = offers.slice(1);
+    expect(pro.map((o) => [o.price, o.priceCurrency, o.priceSpecification.billingDuration])).toEqual([
+      [PRO_PRICING.monthly, 'USD', 'P1M'],
+      [PRO_PRICING.yearly, 'USD', 'P1Y'],
+    ]);
+    expect(pro.every((o) => o.priceSpecification['@type'] === 'UnitPriceSpecification')).toBe(true);
+    expect((app.featureList as string[]).join(' ')).toMatch(/AR mode/);
+  });
+
+  it('gives the Organization a logo and a support contactPoint', () => {
+    const org = nodes.find((n) => n['@type'] === 'Organization')!;
+    expect(org.logo).toMatchObject({ '@type': 'ImageObject', url: `${SITE_URL}/icon` });
+    expect(org.contactPoint).toMatchObject({ '@type': 'ContactPoint', email: SUPPORT_EMAIL });
   });
 
   it('WebSite has no SearchAction (the site has no search)', () => {

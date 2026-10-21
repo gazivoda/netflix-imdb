@@ -18,6 +18,10 @@ const ROOT = join(__dirname, '../..');
 const films = loadFixtureFilms();
 const articles = loadFixtureArticles();
 
+// registry.generated.ts is a build artifact of data/blog (films.json, published articles). These
+// tests hold for ANY data on disk: absent, partial (drafts only), or complete. Real data moving
+// (a films.json refresh, a newly published article) makes the first test fail on purpose until
+// `npm run blog:registry` is re-run, which is the invariant this file protects.
 describe('registry.generated.ts', () => {
   it('equals an in-memory regeneration from data/blog (run `npm run blog:registry` if this fails)', () => {
     const onDisk = readFileSync(registryFilePath(ROOT), 'utf8');
@@ -26,6 +30,12 @@ describe('registry.generated.ts', () => {
 
   it('is a valid, importable array', () => {
     expect(Array.isArray(BLOG_ARTICLE_PAGES)).toBe(true);
+  });
+
+  it('hub state equals what data/blog/films.json says (ready only with exactly the expected film count)', () => {
+    const file = join(ROOT, 'data/blog/films.json');
+    const onDisk = existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as { films: { dataChangedAt: string }[] }).films : null;
+    expect(BLOG_HUB).toEqual(hubState(onDisk as never, expectedFilmCount()));
   });
 
   it('holds only published articles', () => {

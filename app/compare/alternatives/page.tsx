@@ -98,7 +98,7 @@ const ROWS: Row[] = [
 const FAQS: Faq[] = [
   {
     q: 'What is the easiest way to see IMDb and Rotten Tomatoes ratings on Netflix?',
-    a: 'Use a browser extension that puts the scores on the Netflix title cards, so you do not leave the page. Rating Watch does this for Chrome, Edge and Brave: it adds IMDb and Rotten Tomatoes badges to cards on netflix.com, needs no account and asks for no API key. Sites like IMDb require a separate tab per title.',
+    a: 'Use a browser extension that puts the scores on the Netflix title cards, so you do not leave the page. Rating Watch does this for Chrome, Edge and Brave: it adds IMDb and Rotten Tomatoes badges to cards on netflix.com, needs no account and no key to start (a shared lookup allowance can run out, and a free personal OMDb key lifts it). Rotten Tomatoes appears where OMDb has a score, mostly for films. Sites like IMDb require a separate tab per title.',
   },
   {
     q: 'Is Reelgood or JustWatch better than a ratings extension?',
@@ -188,8 +188,9 @@ export default function AlternativesPage() {
       <h2 className={`ds-display ${s.h2}`}>When is Rating Watch the <em className="ds-serif">right choice</em>?</h2>
       <p className={s.p}>
         When you mostly browse Netflix and want the audience score (IMDb, out of 10) and the critic
-        score (Rotten Tomatoes, a percentage) on every card without opening anything else. It has no
-        account and no key to enter, it asks for access to only netflix.com and omdbapi.com, and
+        score (Rotten Tomatoes, a percentage) on title cards without opening anything else (Rotten Tomatoes is mostly available for films, not
+        TV series). It has no account, needs no key to start (an optional free personal OMDb key lifts the
+        shared daily limit), it asks for access to only netflix.com and omdbapi.com, and
         it sends nothing but title names to OMDb. There is also an optional Pro AR mode that shows
         the same scores over a TV screen through your phone camera. Not sure
         how the two scores differ? See{' '}

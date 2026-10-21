@@ -55,6 +55,7 @@
   object-fit: cover;
   background: var(--ink);
 }
+.frame .video:focus-visible { outline: 3px solid var(--signal); outline-offset: -6px; }
 
 /* The whole frame is the button; the visible play control sits bottom right. */
 .play {

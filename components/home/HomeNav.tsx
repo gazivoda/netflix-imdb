@@ -13,7 +13,7 @@ export default function HomeNav() {
         </a>
         <a href="#faq" className={styles.navLink}>FAQ</a>
         <a href="/install" className={`ds-btn ds-btn-signal ${styles.navInstall}`}>
-          Get the extension
+          Download free
         </a>
       </div>
     </nav>

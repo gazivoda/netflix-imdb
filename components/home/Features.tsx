@@ -6,7 +6,7 @@ export default function Features() {
     <section className={styles.features} aria-labelledby="features-title">
       <p className={`ds-label ${styles.label}`}>Features</p>
       <h2 id="features-title" className={`ds-display ${styles.title}`}>
-        What can Netflix <em className="ds-serif">Ratings</em> do?
+        What can <em className="ds-serif">Rating Watch</em> do?
       </h2>
       <div className={styles.featureGrid}>
         {FEATURES.map((f) => (

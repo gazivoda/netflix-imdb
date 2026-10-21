@@ -29,8 +29,12 @@ describe('emoji-free content', () => {
     });
   });
 
-  it('TESTIMONIALS ratings are plain text with the source name', () => {
-    for (const t of content.TESTIMONIALS) expect(t.rating).toMatch(/^(IMDb \d\.\d|RT \d+%)$/);
+  it('SHOWCASE scores are plain text, and series carry no Rotten Tomatoes value', () => {
+    for (const [title, s] of Object.entries(content.SHOWCASE)) {
+      expect(s.imdb).toMatch(/^\d\.\d$/);
+      if (s.rt !== undefined) expect(s.rt).toMatch(/^\d+%$/);
+      if (title === 'Stranger Things') expect(s.rt).toBeUndefined();
+    }
   });
 
   it('generated llms files contain no emoji', () => {

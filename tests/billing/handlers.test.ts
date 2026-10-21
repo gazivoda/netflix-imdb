@@ -1,5 +1,5 @@
 import { createHmac } from 'node:crypto'
-import { handlePortalSession, handleVerifySubscription, handleWebhook } from '../../lib/billing/handlers'
+import { handlePortalSession, handleVerifySubscription, handleWebhook, MAX_WEBHOOK_BYTES } from '../../lib/billing/handlers'
 import { openUsersDb } from '../../lib/billing/db'
 import { SESSION_COOKIE, signSession } from '../../lib/billing/session'
 import type { Deps } from '../../lib/billing/deps'
@@ -159,6 +159,7 @@ const authed = (path: string, init: RequestInit = {}) => new Request(`https://ra
 const api = (over: Partial<PaddleApi> = {}): PaddleApi => ({
   getTransaction: async () => ({ subscription_id: 'sub_1' }),
   getSubscription: async () => ({ id: 'sub_1', customer_id: 'ctm_1', status: 'active', items: RW_MONTHLY_ITEMS, current_billing_period: { ends_at: '2026-11-20T00:00:00Z' } }),
+  getCustomer: async () => ({ id: 'ctm_1', email: 'igor@example.com' }), // the signed-in user's own email, so SEC-1 passes by default
   createPortalSession: async () => 'https://portal/x', ...over,
 })
 
@@ -211,6 +212,67 @@ describe('handleVerifySubscription', () => {
       expect(ok.db.get('g1')!.subscription_status).toBe('active')
     }
   })
+  describe('SEC-1: the Paddle customer must be the signed-in user (shared Paddle account, one customer per email)', () => {
+    const customer = (email: unknown) => ({ getCustomer: jest.fn(async () => ({ id: 'ctm_1', email })) })
+    it('stores the customer id when the customer email matches the signed-in email case-insensitively', async () => {
+      const paddle = api(customer(' IGOR@Example.com '))
+      const d = deps({ paddle })
+      const r = await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)
+      expect(r.status).toBe(200)
+      expect(paddle.getCustomer).toHaveBeenCalledWith('ctm_1')
+      expect(d.db.get('g1')).toMatchObject({ subscription_status: 'active', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1' })
+    })
+    it('409s and writes nothing when the customer belongs to someone else (the victim customer id is never stored)', async () => {
+      const d = deps({ paddle: api(customer('victim@example.com')) })
+      const r = await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)
+      expect(r.status).toBe(409)
+      expect(await r.json()).toEqual({ error: 'Paddle customer does not match this account' })
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it.each([['missing', undefined], ['empty', ''], ['not a string', 42]])('409s when the Paddle customer email is %s', async (_n, email) => {
+      const d = deps({ paddle: api(customer(email)) })
+      expect((await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)).status).toBe(409)
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it('409s when the signed-in user has no verified email on record', async () => {
+      const d = deps({ paddle: api(customer('igor@example.com')) }, [baseUser({ email: null })])
+      expect((await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)).status).toBe(409)
+      expect(d.db.get('g1')).toEqual(baseUser({ email: null }))
+    })
+    it('a failing customer lookup is a 502 (transient), not a mismatch, and writes nothing', async () => {
+      const d = deps({ paddle: api({ getCustomer: async () => { throw new Error('boom') } }) })
+      expect((await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)).status).toBe(502)
+      expect(d.db.get('g1')).toEqual(baseUser())
+    })
+    it('does not look the customer up when the subscription has no customer id (nothing to store)', async () => {
+      const paddle = api({ getSubscription: async () => ({ id: 'sub_1', status: 'active', items: RW_MONTHLY_ITEMS }), getCustomer: jest.fn(async () => ({})) })
+      const d = deps({ paddle })
+      expect((await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)).status).toBe(200)
+      expect(paddle.getCustomer).not.toHaveBeenCalled()
+      expect(d.db.get('g1')!.paddle_customer_id).toBeNull()
+    })
+    it('already-owned: a subscription bound to another user stays unclaimable even when the customer email matches, with no customer lookup', async () => {
+      const owner = baseUser({ id: 'g2', email: 'owner@example.com', subscription_status: 'active', paddle_subscription_id: 'sub_1', paddle_customer_id: 'ctm_1' })
+      const paddle = api(customer('igor@example.com'))
+      const d = deps({ paddle }, [baseUser(), owner])
+      expect((await handleVerifySubscription(post({ transactionId: 'txn_1' }), d)).status).toBe(409)
+      expect(paddle.getCustomer).not.toHaveBeenCalled()
+      expect(d.db.get('g1')).toEqual(baseUser())
+      expect(d.db.get('g2')).toEqual(owner)
+    })
+    it('a transaction tagged for a different user cannot be claimed (409, no subscription or customer lookups); a missing tag is allowed', async () => {
+      const getSubscription = jest.fn(async () => ({ id: 'sub_1', customer_id: 'ctm_1', status: 'active', items: RW_MONTHLY_ITEMS }))
+      const tagged = deps({ paddle: api({ getTransaction: async () => ({ subscription_id: 'sub_1', custom_data: { userId: 'someone-else' } }), getSubscription }) })
+      const r = await handleVerifySubscription(post({ transactionId: 'txn_1' }), tagged)
+      expect(r.status).toBe(409)
+      expect(getSubscription).not.toHaveBeenCalled()
+      expect(tagged.db.get('g1')).toEqual(baseUser())
+      for (const cd of [undefined, {}, { userId: '' }, { userId: 'g1' }]) {
+        const ok = deps({ paddle: api({ getTransaction: async () => ({ subscription_id: 'sub_1', custom_data: cd }) }) })
+        expect((await handleVerifySubscription(post({ transactionId: 'txn_1' }), ok)).status).toBe(200)
+      }
+    })
+  })
   it('does not leak Paddle ids in the response', async () => {
     const r = await handleVerifySubscription(post({ transactionId: 'txn_t' }), deps({ paddle: api() }))
     expect(JSON.stringify(await r.json())).not.toMatch(/ctm_1|sub_1/)
@@ -225,6 +287,22 @@ describe('handlePortalSession', () => {
     const d = deps({ paddle: api() }, [baseUser({ paddle_customer_id: 'ctm_1', paddle_subscription_id: 'sub_1' })])
     const r = await handlePortalSession(authed('/api/paddle/portal-session'), d)
     expect(await r.json()).toEqual({ url: 'https://portal/x' })
+  })
+  it('SEC-1: opens the portal only when the Paddle customer email is the signed-in email (case-insensitive); otherwise 409 and no session is created', async () => {
+    const user = baseUser({ paddle_customer_id: 'ctm_victim', paddle_subscription_id: 'sub_1' })
+    const createPortalSession = jest.fn(async () => 'https://portal/x')
+    const victim = deps({ paddle: api({ createPortalSession, getCustomer: async () => ({ id: 'ctm_victim', email: 'victim@example.com' }) }) }, [user])
+    const r = await handlePortalSession(authed('/api/paddle/portal-session'), victim)
+    expect(r.status).toBe(409)
+    expect(createPortalSession).not.toHaveBeenCalled()
+    const mine = deps({ paddle: api({ createPortalSession, getCustomer: async () => ({ email: '  IGOR@Example.COM ' }) }) }, [user])
+    expect((await handlePortalSession(authed('/api/paddle/portal-session'), mine)).status).toBe(200)
+    expect(createPortalSession).toHaveBeenCalledTimes(1)
+    const noEmail = deps({ paddle: api({ createPortalSession, getCustomer: async () => ({ id: 'ctm_x' }) }) }, [user])
+    expect((await handlePortalSession(authed('/api/paddle/portal-session'), noEmail)).status).toBe(409)
+    const noUserEmail = deps({ paddle: api({ createPortalSession }) }, [baseUser({ email: null, paddle_customer_id: 'ctm_1' })])
+    expect((await handlePortalSession(authed('/api/paddle/portal-session'), noUserEmail)).status).toBe(409)
+    expect(createPortalSession).toHaveBeenCalledTimes(1)
   })
   it('401 / 400 / 503 / 502', async () => {
     expect((await handlePortalSession(new Request('https://x'), deps({ paddle: api() }))).status).toBe(401)
@@ -425,5 +503,54 @@ describe('Ruling U: price-filter misconfiguration is visible in the logs', () =>
     } finally {
       errSpy.mockRestore()
     }
+  })
+})
+
+describe('SEC-6: the webhook refuses oversized bodies before reading them', () => {
+  const signedHeader = (body: string) => {
+    const ts = Math.floor(NOW / 1000)
+    return `ts=${ts};h1=${createHmac('sha256', SECRET).update(`${ts}:${body}`).digest('hex')}`
+  }
+  const big = 'x'.repeat(MAX_WEBHOOK_BYTES + 1)
+  const streamOf = (chunks: string[], onPull: () => void) =>
+    new ReadableStream<Uint8Array>({ pull(c) { onPull(); const next = chunks.shift(); if (next === undefined) c.close(); else c.enqueue(new TextEncoder().encode(next)) } })
+
+  it('413s on a declared content-length above the cap without touching the body', async () => {
+    const text = jest.fn(async () => '')
+    const req = { headers: new Headers({ 'content-length': String(MAX_WEBHOOK_BYTES + 1), 'paddle-signature': 'ts=1;h1=ab' }), body: { getReader: () => { throw new Error('body must not be read') } }, text } as unknown as Request
+    const d = deps()
+    expect((await handleWebhook(req, d)).status).toBe(413)
+    expect(text).not.toHaveBeenCalled()
+  })
+  it('413s a body that exceeds the cap while streaming even when no length was declared, and stops pulling', async () => {
+    let pulls = 0
+    const chunk = 'y'.repeat(64 * 1024)
+    const body = streamOf(Array.from({ length: 50 }, () => chunk), () => { pulls++ })
+    const req = new Request('https://x/api/paddle/webhook', { method: 'POST', headers: { 'paddle-signature': signedHeader(chunk) }, body, duplex: 'half' } as RequestInit)
+    expect((await handleWebhook(req, deps())).status).toBe(413)
+    expect(pulls).toBeLessThan(10) // 5 chunks reach the cap; nowhere near all 50
+  })
+  it('413s a real oversized request', async () => {
+    const req = new Request('https://x/api/paddle/webhook', { method: 'POST', headers: { 'paddle-signature': signedHeader(big) }, body: big })
+    expect((await handleWebhook(req, deps())).status).toBe(413)
+  })
+  it('401s a missing signature header or missing secret before reading any body', async () => {
+    const getReader = jest.fn()
+    const noHeader = { headers: new Headers(), body: { getReader } } as unknown as Request
+    expect((await handleWebhook(noHeader, deps())).status).toBe(401)
+    const noSecret = { headers: new Headers({ 'paddle-signature': 'ts=1;h1=ab' }), body: { getReader } } as unknown as Request
+    expect((await handleWebhook(noSecret, deps({ webhookSecret: undefined }))).status).toBe(401)
+    expect(getReader).not.toHaveBeenCalled()
+  })
+  it('keeps the signature check before JSON parsing: an unsigned body just under the cap is 401, not 400', async () => {
+    const body = '{'.repeat(MAX_WEBHOOK_BYTES - 10) // not JSON; a parse error would be 400
+    const req = new Request('https://x/api/paddle/webhook', { method: 'POST', headers: { 'paddle-signature': 'ts=1;h1=deadbeef' }, body })
+    expect((await handleWebhook(req, deps())).status).toBe(401)
+  })
+  it('still accepts a validly signed event at normal size (multi-byte UTF-8 survives the capped read)', async () => {
+    const d = deps()
+    const r = await handleWebhook(signedReq(subEvent('subscription.created', { custom_data: { userId: 'g1', note: 'č ž 日本' } })), d)
+    expect(r.status).toBe(200)
+    expect(d.db.get('g1')!.subscription_status).toBe('active')
   })
 })

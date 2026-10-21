@@ -1,5 +1,9 @@
 import styles from './BeforeAfter.module.css';
 import { ImdbChip, RtChip } from '../ScoreChip';
+import { SHOWCASE } from '../../lib/content';
+
+const EXAMPLE = 'Roma';
+const SCORES = SHOWCASE[EXAMPLE];
 
 export default function BeforeAfter() {
   return (
@@ -12,7 +16,7 @@ export default function BeforeAfter() {
         <div className={styles.baCol}>
           <span className={`${styles.baTag} ${styles.baTagOff}`}>Without the extension</span>
           <div className={styles.baCard} aria-hidden>
-            <div className={styles.baArt}>Stranger Things</div>
+            <div className={styles.baArt}>{EXAMPLE}</div>
           </div>
           <p className={styles.baNote}>Great artwork. Zero idea if it&apos;s actually good.</p>
         </div>
@@ -21,14 +25,14 @@ export default function BeforeAfter() {
           <span className={`${styles.baTag} ${styles.baTagOn}`}>With Rating Watch</span>
           <div className={styles.baCard} aria-hidden>
             <div className={styles.baArt}>
-              Stranger Things
+              {EXAMPLE}
               <span className={styles.baBadge}>
-                <ImdbChip value="8.7" />
-                <RtChip value="86%" />
+                <ImdbChip value={SCORES.imdb} />
+                <RtChip value={SCORES.rt!} />
               </span>
             </div>
           </div>
-          <p className={styles.baNote}>Audience <strong>8.7</strong>, critics <strong>86%</strong> (illustrative). Press play.</p>
+          <p className={styles.baNote}>Audience <strong>{SCORES.imdb}</strong>, critics <strong>{SCORES.rt}</strong> (illustrative). Press play.</p>
         </div>
       </div>
     </section>

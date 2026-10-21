@@ -74,6 +74,8 @@ body {
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Set on <html> by the cookie banner while it is visible, so it never covers the page bottom. */
+  padding-bottom: var(--consent-h, 0px);
 }
 
 ::selection {

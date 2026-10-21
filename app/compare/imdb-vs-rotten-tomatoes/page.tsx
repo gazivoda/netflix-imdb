@@ -17,18 +17,18 @@ const ROWS = [
   },
   {
     aspect: 'Who votes',
-    imdb: 'The general public — anyone with an IMDb account.',
+    imdb: 'The general public, meaning anyone with an IMDb account.',
     rt: 'Professional film and TV critics (audiences get a separate score, the Popcornmeter).',
   },
   {
     aspect: 'Scale',
     imdb: '1 to 10, shown as a weighted average. IMDb does not disclose the exact weighting.',
-    rt: '0% to 100%, a positive-or-not tally — not an average of how good reviews were. 60% or more is Fresh.',
+    rt: '0% to 100%, a positive-or-not tally, not an average of how good reviews were. 60% or more is Fresh.',
   },
   {
     aspect: 'What a high score means',
     imdb: 'Lots of people enjoyed it.',
-    rt: 'Most critics thought it was at least good — not necessarily great.',
+    rt: 'Most critics thought it was at least good, not necessarily great.',
   },
   {
     aspect: 'Best at spotting',
@@ -69,7 +69,7 @@ const FAQS = [
   },
   {
     q: 'Can I see both scores while browsing Netflix?',
-    a: 'Yes, on a computer. The free Rating Watch extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title, so a few titles show one score or none.',
+    a: 'Yes, on a computer. The free Rating Watch extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title. Rotten Tomatoes scores are mostly available for films, so TV series usually show IMDb only.',
   },
 ];
 
@@ -80,7 +80,7 @@ export default function ComparePage() {
       h1="IMDb vs Rotten Tomatoes"
       lede={
         <>
-          Two of the most-quoted ratings in film disagree all the time — because they measure
+          Two of the most-quoted ratings in film disagree all the time, because they measure
           different things.{' '}
           <strong>
             IMDb is an average audience score out of 10. Rotten Tomatoes is the percentage of
@@ -149,7 +149,7 @@ export default function ComparePage() {
           <h3 className={styles.whenTitle}><span className={`${styles.whenMark} ${styles.whenMarkImdb}`} aria-hidden>★</span> Lean on IMDb when…</h3>
           <ul className={g.list}>
             <li>You want to know if regular viewers actually enjoyed it.</li>
-            <li>The title is older — fan ratings have settled over years.</li>
+            <li>The title is older: fan ratings have settled over years.</li>
             <li>You&apos;re choosing a comfort rewatch or a crowd-pleaser.</li>
           </ul>
         </div>
@@ -157,7 +157,7 @@ export default function ComparePage() {
           <h3 className={styles.whenTitle}><span className={`${styles.whenMark} ${styles.whenMarkRt}`} aria-hidden /> Lean on Rotten Tomatoes when…</h3>
           <ul className={g.list}>
             <li>It&apos;s a new release and you want the critical read.</li>
-            <li>You care about craft — direction, writing, performances.</li>
+            <li>You care about craft: direction, writing, performances.</li>
             <li>You want to avoid a film critics broadly panned.</li>
           </ul>
         </div>
@@ -170,9 +170,9 @@ export default function ComparePage() {
         <strong>split</strong>, the direction tells you what kind of film it is:
       </p>
       <ul className={g.list}>
-        <li><strong>High IMDb, lower RT</strong> — a crowd-pleaser critics were cool on. Great for a fun night in.</li>
-        <li><strong>High RT, lower IMDb</strong> — a critics&apos; darling that didn&apos;t land with everyone. Worth it if you&apos;re in the mood for something ambitious.</li>
-        <li><strong>Both low</strong> — usually safe to skip.</li>
+        <li><strong>High IMDb, lower RT</strong>: a crowd-pleaser critics were cool on. Great for a fun night in.</li>
+        <li><strong>High RT, lower IMDb</strong>: a critics&apos; darling that didn&apos;t land with everyone. Worth it if you&apos;re in the mood for something ambitious.</li>
+        <li><strong>Both low</strong>: usually safe to skip.</li>
       </ul>
       {isBlogHubReady() && (
         <p className={g.p}>

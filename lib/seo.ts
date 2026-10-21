@@ -2,7 +2,15 @@
 // testable in a node environment (see tests/lib/seo.test.ts).
 
 import type { Metadata } from 'next';
-import { SITE_URL, AUTHOR_NAME, PUBLISHED_DATE, LAST_UPDATED, EXTENSION_ZIP_PATH } from './content';
+import {
+  SITE_URL,
+  AUTHOR_NAME,
+  PUBLISHED_DATE,
+  LAST_UPDATED,
+  EXTENSION_ZIP_PATH,
+  SUPPORT_EMAIL,
+  PRO_PRICING,
+} from './content';
 import { BLOG_HUB_PAGE, getPage, HOME_DESCRIPTION, type SitePage } from './pages';
 import manifest from '../extension/manifest.json';
 import { OG_SIZE, OG_ALT, OG_VERSION } from './og';
@@ -263,6 +271,22 @@ export function movie(film: Film, path: string = `/blog/${film.slug}`): JsonLdNo
   };
 }
 
+/** A Pro AR mode subscription offer. The extension itself stays free (separate Offer, price 0). */
+const proOffer = (name: string, price: string, billingDuration: string, unitCode: string): JsonLdNode => ({
+  '@type': 'Offer',
+  name,
+  price,
+  priceCurrency: PRO_PRICING.currency,
+  url: absoluteUrl('/pricing'),
+  priceSpecification: {
+    '@type': 'UnitPriceSpecification',
+    price,
+    priceCurrency: PRO_PRICING.currency,
+    billingDuration,
+    unitCode,
+  },
+});
+
 /**
  * Site-wide entity graph rendered by the root layout on every page: Person, WebSite,
  * Organization, SoftwareApplication. Per-page nodes (WebPage, Article, ...) reference these by `@id`.
@@ -292,6 +316,13 @@ export function siteGraph(): JsonLdNode {
       url: SITE_URL,
       description:
         'Maker of Rating Watch, a free browser extension that adds IMDb and Rotten Tomatoes scores to Netflix.',
+      logo: { '@type': 'ImageObject', url: absoluteUrl('/icon'), width: 512, height: 512 },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer support',
+        email: SUPPORT_EMAIL,
+        availableLanguage: 'English',
+      },
       founder: authorRef,
     },
     {
@@ -314,13 +345,24 @@ export function siteGraph(): JsonLdNode {
       inLanguage: 'en',
       author: authorRef,
       publisher: orgRef,
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      offers: [
+        {
+          '@type': 'Offer',
+          name: 'Rating Watch browser extension',
+          price: '0',
+          priceCurrency: PRO_PRICING.currency,
+          url: absoluteUrl('/install'),
+        },
+        proOffer('Pro AR mode, monthly', PRO_PRICING.monthly, 'P1M', 'MON'),
+        proOffer('Pro AR mode, yearly', PRO_PRICING.yearly, 'P1Y', 'ANN'),
+      ],
       featureList: [
-        'IMDb ratings on every Netflix title card',
-        'Rotten Tomatoes critic scores',
+        'IMDb ratings on Netflix title cards',
+        'Rotten Tomatoes critic scores where OMDb has them (mostly films)',
         'Parallel loading of all visible cards',
         'Extension needs no account or login',
-        'Extension is privacy-friendly with no tracking',
+        'Extension has no analytics or tracking',
+        `Pro AR mode: ratings over a TV screen through a phone camera (${PRO_PRICING.trialDays}-day free trial)`,
       ],
     },
   );

@@ -23,6 +23,9 @@ const nextConfig = {
   compress: true,
   reactStrictMode: true,
   experimental: { serverComponentsExternalPackages: ['better-sqlite3'] },
+  // Next 14.2 has open advisories in the image optimizer (/_next/image). The site only serves static assets
+  // and never uses next/image, so the optimizer endpoint is switched off. Remove after the Next upgrade.
+  images: { unoptimized: true },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },

@@ -3,7 +3,7 @@
 // llms.txt is an unofficial convention that some AI tools read; Google Search
 // does not use it. It is cheap to generate, so we keep it accurate and small.
 
-import { SITE_URL, AUTHOR_NAME, FAQS } from './content';
+import { SITE_URL, AUTHOR_NAME, FAQS, PRO_PRICING } from './content';
 import { absoluteUrl } from './seo';
 import manifest from '../extension/manifest.json';
 import { PAGES, type SitePage } from './pages';
@@ -12,14 +12,14 @@ import { formatAsOf, formatImdb, formatSigned } from './blog/format';
 const SITE_NAME = 'Rating Watch';
 
 const SUMMARY =
-  'Rating Watch is a free Chrome extension that shows IMDb and Rotten Tomatoes ratings on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
+  'Rating Watch is a free Chrome extension that shows IMDb ratings, and Rotten Tomatoes scores where available, on Netflix title cards as you browse. Not affiliated with Netflix, IMDb or Rotten Tomatoes.';
 
 // Verified against extension/ (manifest.json, content.js, background.js).
 const KEY_FACTS = [
-  'Shows the IMDb rating (out of 10) and the Rotten Tomatoes percentage in a badge at the top-right of each title card on www.netflix.com.',
-  'Ratings are fetched from OMDb by the extension background worker.',
+  'Shows the IMDb rating (out of 10) and, where OMDb has one, the Rotten Tomatoes percentage in a badge at the top-right of each title card on www.netflix.com. OMDb usually has no Rotten Tomatoes score for TV series, so series cards mostly show IMDb only.',
+  'Ratings are fetched from OMDb by the extension background worker. It works out of the box on a shared daily OMDb allowance that can run out on busy days; users can add a free personal OMDb key on the extension options page.',
   `Manifest V3 extension, version ${manifest.version}. Permissions are limited to netflix.com and omdbapi.com.`,
-  'The Chrome extension is free and needs no account. AR mode is Pro ($2.99/month or $29/year, 3-day free trial); see /pricing.',
+  `The Chrome extension is free and needs no account. AR mode is Pro ($${PRO_PRICING.monthly}/month or $${PRO_PRICING.yearly}/year, ${PRO_PRICING.trialDays}-day free trial); see /pricing.`,
   'Not on the Chrome Web Store yet: install by downloading the zip from this site and using "Load unpacked" in chrome://extensions.',
   'Works in Chromium browsers (Chrome, Edge, Brave). Not tested in Firefox or Safari.',
   `Author: ${AUTHOR_NAME}.`,

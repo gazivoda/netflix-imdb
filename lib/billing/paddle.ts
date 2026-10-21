@@ -94,13 +94,15 @@ export class PaddleHttpError extends Error {
 export interface PaddleApi {
   getTransaction(id: string): Promise<any>
   getSubscription(id: string): Promise<any>
+  getCustomer(id: string): Promise<any>
   createPortalSession(customerId: string, subscriptionIds?: string[]): Promise<string>
 }
 
 // Ids end up in API paths: only Paddle's own id shape is allowed, so `..`, `/`, `?` or `%` can never
 // redirect a call to another endpoint of the live API (encodeURIComponent alone does not stop `..`).
-function paddleId(id: unknown): string {
-  if (typeof id !== 'string' || !/^(txn|sub|ctm)_[a-z0-9]+$/i.test(id)) throw new Error('Invalid Paddle id')
+function paddleId(id: unknown, prefix: 'txn' | 'sub' | 'ctm' | 'any' = 'any'): string {
+  const re = prefix === 'any' ? /^(txn|sub|ctm)_[a-z0-9]+$/i : new RegExp(`^${prefix}_[a-z0-9]+$`, 'i')
+  if (typeof id !== 'string' || !re.test(id)) throw new Error('Invalid Paddle id')
   return id
 }
 
@@ -118,8 +120,9 @@ export function createPaddleApi(opts: { apiKey?: string; env?: string; fetch?: t
   return {
     getTransaction: async (id) => call(`/transactions/${paddleId(id)}`, 'transaction lookup'),
     getSubscription: async (id) => call(`/subscriptions/${paddleId(id)}`, 'subscription lookup'),
+    getCustomer: async (id) => call(`/customers/${paddleId(id, 'ctm')}`, 'customer lookup'),
     async createPortalSession(customerId, subscriptionIds) {
-      subscriptionIds?.forEach(paddleId)
+      subscriptionIds?.forEach((sid) => paddleId(sid))
       const data = await call(`/customers/${paddleId(customerId)}/portal-sessions`, 'portal session', {
         method: 'POST',
         body: JSON.stringify(subscriptionIds?.length ? { subscription_ids: subscriptionIds } : {}),

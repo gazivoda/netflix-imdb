@@ -2,19 +2,25 @@
 import { useState } from 'react'
 import CheckoutButtons from '@/components/billing/CheckoutButtons'
 import { useAccount } from '@/components/billing/useAccount'
-import { BILLING_SOON, describeSubscription } from '@/lib/billing/client'
+import { describeSubscription } from '@/lib/billing/client'
+import { PRO_NOT_ON_SALE } from '@/components/billing/pricing-state'
+import { SUPPORT_EMAIL } from '@/lib/content'
 import s from '@/components/billing/billing.module.css'
 
 const PADDLE_SELF_SERVE = 'https://customer.paddle.com/' // Paddle's self-serve fallback, same as Name Habitat
 
+// Shown when /api/paddle/portal-session answers 409 (the subscription belongs to a different account).
+export const PORTAL_OTHER_ACCOUNT = `This subscription belongs to a different account. Contact support at ${SUPPORT_EMAIL}.`
+
 export default function AccountClient() {
-  const { loading, user, access, billingEnabled, refresh } = useAccount()
+  const { loading, failed, user, access, billingEnabled, refresh } = useAccount()
   const [busy, setBusy] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   if (loading) return <p className={s.notice} role="status">Loading...</p>
-  if (!billingEnabled) return <p className={s.notice}>{BILLING_SOON}</p>
+  if (failed) return <p className={s.notice} role="alert">We could not check your account. <button type="button" className={`ds-btn ${s.cta}`} onClick={() => void refresh()}>Try again</button></p>
+  if (!billingEnabled) return <p className={s.notice}>{PRO_NOT_ON_SALE}</p>
   if (!user) return <a className={`ds-btn ds-btn-signal ${s.cta}`} href="/api/auth/google?next=/account">Sign in with Google</a>
 
   const d = describeSubscription(user)
@@ -24,6 +30,8 @@ export default function AccountClient() {
     try {
       const res = await fetch('/api/paddle/portal-session', { credentials: 'same-origin' })
       if (res.status === 401) { setError('Please sign in again.'); return }
+      // 409: the Paddle customer behind this subscription is not this account. Self-serve would not help.
+      if (res.status === 409) { setError(PORTAL_OTHER_ACCOUNT); return }
       const body = await res.json().catch(() => null)
       window.location.assign(res.ok && body?.url ? body.url : PADDLE_SELF_SERVE)
     } catch {

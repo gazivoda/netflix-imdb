@@ -102,3 +102,9 @@
   /* Stacked: the board spans the full width, so the numerals can grow. */
   .dialNum { font-size: clamp(76px, 16vw, 150px); }
 }
+
+.compareDesc a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

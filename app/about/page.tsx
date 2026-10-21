@@ -1,7 +1,8 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
 import s from './about.module.css';
 import { AUTHOR_NAME, PUBLISHED_DATE, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
-import { absoluteUrl, authorRef, pageMetadata } from '../../lib/seo';
+import { getPage } from '../../lib/pages';
+import { absoluteUrl, authorRef, nodeId, pageMetadata } from '../../lib/seo';
 
 const PATH = '/about';
 export const metadata = pageMetadata(PATH);
@@ -25,18 +26,21 @@ const FAQS: Faq[] = [
   },
   {
     q: 'How can I contact the maker?',
-    a: `Email ${SUPPORT_EMAIL} for bugs, wrong ratings, feature ideas or anything else. The extension has no account system, so there is nothing to manage or delete there. Accounts for AR mode are covered by the privacy policy.`,
+    a: `Email ${SUPPORT_EMAIL} for bugs, wrong ratings, feature ideas or anything else. The extension has no account system, so there is nothing to manage or delete there. AR mode accounts and what happens to their data are covered by the privacy policy, and you can ask us to delete an account by email.`,
   },
 ];
 
-// References the layout's Person (#author) instead of redefining it.
+// References the layout's Person (#author) instead of redefining it. GuideLayout already emits the
+// page's WebPage node (#webpage), so this node gets its own @id and points at it.
+const page = getPage(PATH);
 const aboutPage = {
   '@type': ['AboutPage', 'ProfilePage'],
-  '@id': `${absoluteUrl(PATH)}#webpage`,
+  '@id': nodeId(PATH, 'about'),
   url: absoluteUrl(PATH),
   name: 'About Rating Watch',
-  datePublished: '2026-10-15',
-  dateModified: '2026-10-15',
+  datePublished: page.published ?? PUBLISHED_DATE,
+  dateModified: page.updated,
+  mainEntityOfPage: { '@id': nodeId(PATH, 'webpage') },
   inLanguage: 'en',
   isPartOf: { '@id': `${SITE_URL}/#website` },
   mainEntity: authorRef,
@@ -98,7 +102,7 @@ export default function AboutPage() {
       <p className={s.p}>
         Choosing what to watch on Netflix usually means leaving Netflix to look the title up on
         IMDb or Rotten Tomatoes. Rating Watch removes that step by putting both scores in a
-        small badge in the top-right corner of every title card, so the rating is there while you
+        small badge in the top-right corner of title cards, so the rating is there while you
         browse. It is deliberately small in scope: the extension does one job, needs no account, and asks for
         access to only two sites.
       </p>

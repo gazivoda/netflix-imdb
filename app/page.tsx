@@ -11,7 +11,6 @@ import PromoVideo from '../components/home/PromoVideo';
 import BeforeAfter from '../components/home/BeforeAfter';
 import Features from '../components/home/Features';
 import HowItWorks from '../components/home/HowItWorks';
-import Testimonials from '../components/home/Testimonials';
 import CompareCta from '../components/home/CompareCta';
 import Faq from '../components/home/Faq';
 import FinalCta from '../components/home/FinalCta';
@@ -37,7 +36,6 @@ export default function Page() {
         <BeforeAfter />
         <Features />
         <HowItWorks />
-        <Testimonials />
         <CompareCta />
         <Faq />
         <FinalCta />

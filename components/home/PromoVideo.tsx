@@ -1,27 +1,42 @@
 'use client';
 // Click-to-play promo video. preload="none" keeps the 4.6 MB mp4 off the page load entirely:
 // nothing but the poster is fetched until the visitor presses play.
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './PromoVideo.module.css';
 import { PROMO_VIDEO } from '../../lib/promo-video';
 
 export default function PromoVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playRef = useRef<HTMLButtonElement>(null);
+  const restorePlayFocus = useRef(false);
   const [started, setStarted] = useState(false);
+
+  // When the Play button comes back (clip ended or playback failed) put focus on it, so keyboard users keep their place.
+  useEffect(() => {
+    if (!started && restorePlayFocus.current) {
+      restorePlayFocus.current = false;
+      playRef.current?.focus();
+    }
+  }, [started]);
 
   const handlePlay = () => {
     const video = videoRef.current;
     if (!video) return;
     setStarted(true);
+    // The Play button unmounts on this render; hand focus to the video (tabIndex -1) so it is not lost to <body>.
+    // The native controls are on the video from the same render and are reachable with Tab.
+    video.focus({ preventScroll: true });
     // Called from a click, so the browser allows playback with sound.
     video.play().catch((error) => {
       console.error('Error playing video:', error);
+      restorePlayFocus.current = true;
       setStarted(false);
     });
   };
 
   const handleEnded = () => {
     if (videoRef.current) videoRef.current.currentTime = 0;
+    restorePlayFocus.current = true;
     setStarted(false);
   };
 
@@ -41,11 +56,13 @@ export default function PromoVideo() {
             preload="none"
             playsInline
             controls={started}
+            tabIndex={-1}
             onEnded={handleEnded}
             aria-label={PROMO_VIDEO.title}
           />
           {!started && (
             <button
+              ref={playRef}
               type="button"
               className={styles.play}
               onClick={handlePlay}

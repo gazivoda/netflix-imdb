@@ -20,6 +20,10 @@ describe('next.config.js', () => {
     expect(nextConfig.reactStrictMode).toBe(true)
   })
 
+  it('disables the image optimizer (open advisories on Next 14.2; no next/image in use)', () => {
+    expect(nextConfig.images).toEqual({ unoptimized: true })
+  })
+
   it('applies security headers to every route', async () => {
     const h = headersFor(await rules(), '/:path*')
     expect(h['X-Content-Type-Options']).toBe('nosniff')

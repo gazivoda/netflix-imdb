@@ -62,3 +62,9 @@
   .btn:hover,
   .btn:active { transform: none; }
 }
+
+.finalSub a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

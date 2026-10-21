@@ -15,7 +15,7 @@ import {
   withoutTierExemptions,
   wordingText,
 } from './wording';
-import { filmNames, maskTitles, namesFilm, splitSentences, TITLE_MASK } from './sentences';
+import { filmNames, maskTitles, namesFilm, splitSentences, TITLE_MASK, verbatimRegex } from './sentences';
 import type { Article, Film } from './types';
 
 export interface LintContext {
@@ -86,7 +86,8 @@ const BODY_PATH = /^(?:summary|sections\[\d+\]\.paragraphs\[\d+\]|faq\[\d+\]\.a)
 export const isBodyPath = (where: string): boolean => BODY_PATH.test(where);
 
 const RATING_CODES = /\b(?:PG-13|NC-17|TV-(?:Y7(?:-FV)?|Y|G|PG|14|MA))\b/g;
-const escapeRe = (t: string): string => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** True when `text` contains `quoted` exactly (case, apostrophe and whitespace-run tolerant). */
+const quotesVerbatim = (text: string, quoted: string): boolean => verbatimRegex(quoted).test(text);
 
 /**
  * R11 "numbers only as tokens": the digits left in body prose once tokens are removed and the
@@ -95,7 +96,7 @@ const escapeRe = (t: string): string => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
  */
 export function strayNumbers(text: string, ctx: { names: readonly string[]; awards: string | null }): string[] {
   let t = maskTitles(wordingText(text), ctx.names);
-  if (ctx.awards) t = t.replace(new RegExp(escapeRe(ctx.awards), 'gi'), ' ');
+  if (ctx.awards) t = t.replace(verbatimRegex(ctx.awards), ' ');
   t = t
     .replace(RATING_CODES, ' ')
     .replace(/\bTop 10\b/gi, ' ')
@@ -130,10 +131,12 @@ const hasDirectorToken = (sentence: string): boolean => /\{\{\s*director\s*\}\}/
 /** Must-cite findings per sentence of one body string (raw text, names masked). */
 export function uncitedClaims(text: string, ctx: { names: readonly string[]; awards: string | null }): string[] {
   const out: string[] = [];
-  for (const sentence of splitSentences(maskTitles(text, ctx.names))) {
+  // The Awards text ("Won 2 Oscars. 112 wins & 52 nominations total") holds ". " itself: it is
+  // kept whole inside one sentence, so quoting it exactly always satisfies the exemption below.
+  for (const sentence of splitSentences(maskTitles(text, ctx.names), ctx.awards ? [ctx.awards] : [])) {
     if (hasCite(sentence)) continue;
     const plain = stripTokens(sentence, ' T ');
-    const restatesAwards = ctx.awards !== null && plain.toLowerCase().includes(ctx.awards.toLowerCase());
+    const restatesAwards = ctx.awards !== null && quotesVerbatim(plain, ctx.awards);
     for (const m of MUST_CITE) {
       if (!m.re.test(plain)) continue;
       if (m.label.startsWith('directed') && hasDirectorToken(sentence)) continue;
@@ -233,7 +236,7 @@ const EVIDENCE: { label: string; test: (raw: string, awards: string | null) => b
   { label: 'genre median gap ({{genreMedianGap}})', test: (t) => /\{\{\s*genreMedianGap\s*\}\}/.test(t) },
   { label: 'gap rank ({{gapRank}})', test: (t) => /\{\{\s*gapRank\s*\}\}/.test(t) },
   // awards count only as the OMDb Awards text quoted verbatim (an invented award must not satisfy the rule)
-  { label: 'the OMDb awards text, quoted exactly', test: (t, awards) => awards !== null && t.toLowerCase().includes(awards.toLowerCase()) },
+  { label: 'the OMDb awards text, quoted exactly', test: (t, awards) => awards !== null && quotesVerbatim(t, awards) },
   { label: 'a cited reception fact ({{cite:id}})', test: (t) => /\{\{\s*cite:/.test(t) },
 ];
 

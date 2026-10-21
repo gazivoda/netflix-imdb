@@ -20,7 +20,7 @@ const STEPS = [
   },
   {
     name: 'Look for the badge in the top-right corner of a title card',
-    text: 'Browse any row, search results or More Like This. Each card gets a small dark badge in its top-right corner, with a tomato icon and a percentage for the Rotten Tomatoes score.',
+    text: 'Browse any row, search results or More Like This. Cards get a small dark badge in the top-right corner. Where OMDb has a Rotten Tomatoes score, the badge shows a tomato icon and a percentage.',
   },
   {
     name: 'Read the percentage as the share of critics who liked it',
@@ -43,7 +43,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Why does a Netflix title have no Rotten Tomatoes score?',
-    a: 'Ratings are fetched from OMDb, and OMDb does not return a Rotten Tomatoes value for every title. This is typical for brand-new releases, small titles and shows with few critic reviews. When that happens the card shows only the IMDb rating, or no badge at all if neither score exists.',
+    a: 'Ratings are fetched from OMDb, and OMDb does not return a Rotten Tomatoes value for every title. OMDb has Rotten Tomatoes scores mostly for films and usually none for TV series, and it can also lack them for brand-new releases and small titles. When that happens the card shows only the IMDb rating, or no badge at all if neither score exists.',
   },
   {
     q: 'Can I show Rotten Tomatoes scores on Netflix on my phone or TV?',
@@ -51,7 +51,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Does it cost anything or need a Rotten Tomatoes account?',
-    a: 'No. The Rating Watch extension is free, with no sign-up and no API key to enter. It requests access only to netflix.com and omdbapi.com. No Rotten Tomatoes login is needed, and the only thing the extension sends out is the title names it looks up on OMDb.',
+    a: 'No. The Rating Watch extension is free and needs no sign-up or Rotten Tomatoes login. It works out of the box on a shared OMDb lookup allowance that is limited per day, so on a busy day ratings can pause and the toolbar icon shows a red exclamation mark. You can add a free personal OMDb key in the extension options to use your own allowance. It requests access only to netflix.com and omdbapi.com.',
   },
 ];
 
@@ -65,9 +65,10 @@ export default function ShowRottenTomatoesOnNetflixPage() {
           <strong>
             Netflix does not show Rotten Tomatoes scores, but the free Rating Watch browser
             extension adds them: install it, open netflix.com, and a tomato percentage appears in
-            the top-right corner of every title card.
+            the top-right corner of title cards where OMDb has a score.
           </strong>{' '}
-          It works in Chrome, Edge and Brave, and needs no account. Not
+          It works in Chrome, Edge and Brave, and needs no account. Scores
+          are mostly available for films, not TV series. Not
           affiliated with Netflix or Rotten Tomatoes.
         </>
       }
@@ -146,8 +147,8 @@ export default function ShowRottenTomatoesOnNetflixPage() {
       <ul className={g.list}>
         <li>
           <strong>No Rotten Tomatoes score:</strong> OMDb does not return one for every title.
-          This is typical for very new releases, small titles and shows with few critic reviews.
-          The card then shows just the IMDb rating, or nothing.
+          OMDb has them mostly for films and usually not for TV series, and also lacks them for very new releases and small titles.
+          The card then shows just the IMDb rating, or nothing. TV series usually show IMDb only.
         </li>
         <li>
           <strong>Matching is by title name:</strong> if two titles share a name, the extension may

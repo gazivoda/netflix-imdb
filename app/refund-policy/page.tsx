@@ -13,14 +13,14 @@ export default function RefundPolicyPage() {
       <main id="main" tabIndex={-1} className={s.main}>
         <h1 className={`ds-display ${s.h1}`}>Refund Policy</h1>
         <p className={`ds-label ${s.updated}`}>
-          Last updated: October 20, 2026
+          Last updated: October 21, 2026
         </p>
 
         <section className={s.slip}>
           <h2 className={`ds-display ${s.h2}`}>Full refund within 14 days</h2>
           <p>
             If you ask within 14 days of your first Rating Watch Pro payment, we refund that payment
-            in full.
+            in full, including the tax charged on it.
           </p>
         </section>
 
@@ -29,7 +29,9 @@ export default function RefundPolicyPage() {
           <p>
             Email{' '}
             <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>{' '}
-            from the address on your account and say that you want a refund.
+            from the address on your account and say that you want a refund. Paddle, the merchant of
+            record that sold you the subscription, may also handle refund requests under its own
+            buyer terms; asking us is the quickest route.
           </p>
         </section>
 

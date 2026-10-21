@@ -1,6 +1,7 @@
 import styles from './HomeFooter.module.css';
 import { pagesInGroup } from '../../lib/pages';
 import { AUTHOR_NAME, LAST_UPDATED, LAST_UPDATED_LABEL } from '../../lib/content';
+import CookieSettings from '../CookieSettings';
 
 const external = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
@@ -8,7 +9,7 @@ export default function HomeFooter() {
   const columns = [
     { title: 'Guides', links: pagesInGroup('guide') },
     { title: 'Compare', links: pagesInGroup('compare') },
-    { title: 'About', links: [...pagesInGroup('about'), ...pagesInGroup('legal')] },
+    { title: 'About', links: [...pagesInGroup('about'), ...pagesInGroup('legal')], cookieSettings: true },
   ];
 
   return (
@@ -26,6 +27,7 @@ export default function HomeFooter() {
                 {col.links.map((p) => (
                   <li key={p.path}><a href={p.path}>{p.label ?? p.title}</a></li>
                 ))}
+                {col.cookieSettings && <li><CookieSettings /></li>}
               </ul>
             </div>
           ))}

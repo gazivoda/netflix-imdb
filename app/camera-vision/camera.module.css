@@ -242,3 +242,14 @@
 }
 
 .noDot { padding-left: 19px; }
+
+/* inline error (replaces blocking alert dialogs) */
+.error {
+  margin: 0 0 24px;
+  padding: 12px 14px;
+  border: 3px solid var(--ink);
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
+}

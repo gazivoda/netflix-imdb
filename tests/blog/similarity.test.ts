@@ -15,6 +15,7 @@ import {
   uniqueWordCount,
   type SimEntry,
 } from '../../lib/blog/similarity';
+import { isWarning } from '../../lib/blog/issue';
 import { buildStats } from '../../lib/blog/stats';
 import { clone, loadFixtureArticles, loadFixtureFilms } from './fixtures';
 import { loadCorpus } from './fixtures/corpus';
@@ -87,11 +88,11 @@ describe('fixture articles satisfy the similarity rules', () => {
   });
 
   it.each(entries.map((e) => [e.article.slug, e] as const))('%s passes every pairwise check', (_slug, e) => {
-    expect(checkSimilarity(e, entries.filter((o) => o !== e))).toEqual([]);
+    expect(checkSimilarity(e, entries.filter((o) => o !== e)).filter((i) => !isWarning(i))).toEqual([]);
   });
 
   it('the corpus check passes as a whole', () => {
-    expect(checkCorpusSimilarity(entries)).toEqual([]);
+    expect(checkCorpusSimilarity(entries).filter((i) => !isWarning(i))).toEqual([]);
   });
 
   it('pairwise Jaccard on prose stays far under the 0.10 ceiling', () => {
