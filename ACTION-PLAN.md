@@ -39,4 +39,4 @@ No critical canonical-host indexing blocker was confirmed.
 3. Preserve pre-existing changes. Stage only the audit file list; inspect the staged diff before commit/push. Do not regenerate or stage the untracked blog corpus.
 4. After deployment, repeat the hosting checks and confirm `/robots.txt` no longer excludes `/account`, while `/account` still emits noindex and remains absent from the sitemap. Recheck changed page copy and meaningful lastmod values.
 
-Repository fixes are implemented locally. Hosting fixes and live deployment verification remain open; this document does not claim they shipped.
+Repository fixes and audit evidence were committed and pushed to `main` as `7dc1d55`. Hosting fixes and live deployment verification remain open; a successful push does not establish that deployment or indexing finished.

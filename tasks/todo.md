@@ -11,7 +11,7 @@ Constraints: preserve all pre-existing tracked and untracked changes; use explic
 - [x] Consolidate FULL-AUDIT-REPORT.md and ACTION-PLAN.md with evidence, weighted score, priorities, fixes and external limitations.
 - [x] Review integrated diff; run relevant tests, typecheck, production build, rendered SEO/link checks, and browser verification.
 - [x] Verify an index-only release snapshot, excluding pre-existing untracked blog/camera work.
-- [ ] Commit only authorized audit files, push the current branch, and verify the remote commit.
+- [x] Commit only authorized audit files, push the current branch, and verify the remote commit.
 
 ## Review
 
@@ -22,6 +22,8 @@ Live crawl: 15 public pages returned 200; all passed rendered SEO checks. Workin
 Index-only release snapshot `/private/tmp/rating-watch-seo-release-20261023`: **1948 tests pass, 19 skipped, zero failures (102 passing suites, four skipped)**. Optional benchmarks and tests for the absent generated film corpus account for the skipped suites. Tests use Node24.15.0 to match the already installed native SQLite binary; the production build, TypeScript check, CLI/date checks and both rendered SEO commands also pass on supported Node22.20.0. Font/model first-download failures were resolved with approved network access. Clean release SEO and link audits each include all15 pages, zero findings; shared first-load JS87.4kB. Independent scoped final review found no blocking or important findings. Only explicit audit paths are staged; none of the pre-existing user code or untracked corpus is included.
 
 Open external items: configure valid www TLS/redirect router (current Traefik default certificate/503); make HTTP-to-HTTPS redirect permanent (302 today). PSI returned429; no field CWV/Lighthouse score claimed. Deployment and indexing require subsequent live verification.
+
+Audit implementation/evidence committed as `7dc1d55` and pushed to `origin/main`. Verified with `git ls-remote origin refs/heads/main` matching `7dc1d553caa2926d330a2b522e115da557f7c625`. This final documentation update records the completed handoff; unrelated tracked/untracked work remains uncommitted.
 
 ---
 
