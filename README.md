@@ -62,6 +62,10 @@ npm test        # run the Jest test suite
 npm run build   # production build of the website
 ```
 
+The camera grid detector's 25 ms timing budget is an opt-in benchmark for a controlled machine.
+Run `AR_PERF=1 npx jest tests/lib/ar/detect-grid.test.ts --runInBand` to enforce it.
+Normal test runs check detection correctness without depending on shared CI runner speed.
+
 The website's server-side OMDb lookups read an `OMDB_API_KEY` environment variable. For extension development only, open your browser's extensions page, enable Developer mode, choose Load unpacked and select the repository's `extension/` folder. Visitors should use the store installation above. To rebuild the maintainer packages after changing the extension, run:
 
 ```bash

@@ -4,6 +4,10 @@ import { detectCards } from '../../../lib/ar/detect-grid'
 import { findCards, findCardsDetailed } from '../../../lib/ar/card-finder'
 import { mulberry32 } from '../../helpers/ar-scene'
 
+// Wall-clock budgets depend on hardware and load. Run on a controlled machine:
+// AR_PERF=1 npx jest tests/lib/ar/detect-grid.test.ts --runInBand
+const performanceTest = process.env.AR_PERF === '1' ? it : it.skip
+
 // Hand-built frames for the failure modes the real Netflix screen has and the procedural scenes of ar-scene.ts do not: DARK art
 // (the tile is hardly brighter than the screen, some tiles are black, the only bright thing is a logo), row labels, a hero
 // banner, big-numeral Top-10 rows with portrait posters, an enlarged focus tile, rows scrolled to different offsets.
@@ -379,7 +383,7 @@ describe('detectCards on hand-built Netflix-like frames', () => {
     }
   })
 
-  it('stays within ~25 ms on a 640x360 frame', () => {
+  performanceTest('stays within ~25 ms on a 640x360 frame', () => {
     const img = blank(640, 360)
     for (let r = 0; r < 3; r++) rowOfTiles(img, 70 + r, 18, 40 + r * 110, 96, 54, 8, [60, 90, 70, 100, 80, 65], { logo: true })
     detectCards(img)

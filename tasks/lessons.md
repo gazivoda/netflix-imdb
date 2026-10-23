@@ -1,5 +1,7 @@
 # Lessons
 
+- **Keep hardware timing budgets out of the default correctness suite.** A25ms camera benchmark failed at26.2ms on GitHub despite passing on the preceding identical application code. Retain such budgets as documented opt-in benchmarks, with deterministic accuracy checks in normal CI.
+
 - **Run the standalone typecheck after Next.js builds finish.** `next build` replaces `.next/types`; concurrent `tsc --noEmit` can fail with missing generated files even when source types are valid.
 
 - **Distribution changes must update the whole install flow.** When the extension becomes store-listed, use one shared store URL for CTAs, install guides, SoftwareApplication and llms text. Replace tests that enforce pre-launch ZIP claims, and search every public page for stale Developer mode or “not on the store” wording.
