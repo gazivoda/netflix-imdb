@@ -4,11 +4,11 @@ Evidence: failed run39960753643 on documentation commit978b093; camera grid benc
 
 - [x] Inspect failed workflow logs and identify the exact failing assertion.
 - [x] Retain the timing benchmark as an explicit opt-in check; keep deterministic detector tests in normal CI.
-- [ ] Verify targeted/full tests, commit and push the correction, then inspect the resulting GitHub Actions run.
+- [x] Verify targeted/full tests, commit and push the correction, then inspect the resulting GitHub Actions run.
 
 ## Review
 
-The unchanged25ms budget is retained behind `AR_PERF=1`, with its command documented in README. All detector correctness tests remain in the default suite. Local verification: the explicit benchmark passes all25 detector tests; the full default suite passes2073 tests with six intentional skips, zero failures; Node22 typecheck and diff checks pass. This is a test/documentation change only. Remote CI verification follows the push.
+The unchanged25ms budget is retained behind `AR_PERF=1`, with its command documented in README. All detector correctness tests remain in the default suite. Local verification: the explicit benchmark passes all25 detector tests; the full default suite passes2073 tests with six intentional skips, zero failures; Node22 typecheck and diff checks pass. This is a test/documentation change only. Fix committed and pushed as `b8cca8a`; inspected the newly triggered [GitHub Actions run39962389402](https://github.com/gazivoda/netflix-imdb/actions/runs/39962389402), which was in progress at this record's creation. Final remote outcome is reported in the user handoff.
 
 ---
 
