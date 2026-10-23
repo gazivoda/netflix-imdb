@@ -1,7 +1,7 @@
 import styles from './HowItWorks.module.css';
 
 const STEPS = [
-  { n: '1', title: 'Install the extension', desc: 'Download the free zip from this site and add it to Chrome through Developer mode. It takes about a minute and needs no account.' },
+  { n: '1', title: 'Install the extension', desc: 'Open Rating Watch on the Chrome Web Store, choose Add to Chrome and confirm Add extension. It takes about a minute and needs no Rating Watch account.' },
   { n: '2', title: 'Open Netflix', desc: 'Browse like you always do. The extension activates automatically on netflix.com.' },
   { n: '3', title: 'See ratings everywhere', desc: 'IMDb scores appear on title cards, with Rotten Tomatoes beside them where OMDb has one, and on new rows as you scroll.' },
 ];

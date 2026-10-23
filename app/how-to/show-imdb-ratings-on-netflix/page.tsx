@@ -2,7 +2,7 @@ import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
 import { ImdbChip } from '../../../components/ScoreChip';
 import h from '../how-to.module.css';
-import { EXTENSION_ZIP_PATH } from '../../../lib/content';
+import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { howTo, pageMetadata } from '../../../lib/seo';
 import { STEPS } from './steps';
 
@@ -70,16 +70,13 @@ export default function ShowImdbRatingsOnNetflixPage() {
         </ol>
       </div>
       <p className={g.p}>
-        <a href={EXTENSION_ZIP_PATH} download className={g.btnPrimary}>
-          Download Rating Watch (zip) <span aria-hidden>→</span>
+        <a href={CHROME_WEB_STORE_URL} className={g.btnPrimary}>
+          Add to Chrome <span aria-hidden>→</span>
         </a>
       </p>
       <p className={g.p}>
-        The full walkthrough is on the <a href="/install">install page</a>.
-      </p>
-      <p className={g.p}>
-        Step-by-step install instructions, including how to turn on Developer mode, are on the{' '}
-        <a href="/install">install page</a>.
+        The <a href="/install">install guide</a> covers Chrome Web Store installation,
+        permissions and troubleshooting if badges do not appear.
       </p>
 
       <h2 className={g.h2}>What does the IMDb rating on the badge mean?</h2>

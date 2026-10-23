@@ -40,6 +40,12 @@ describe(PATH, () => {
     expect(source).toContain('https://www.rottentomatoes.com/about');
   });
 
+  it('offers the live store installation without manual download instructions', () => {
+    expect(source).toContain('href={CHROME_WEB_STORE_URL}');
+    expect(source).toContain('Add to Chrome');
+    expect(source).not.toMatch(/EXTENSION_ZIP_PATH|Load unpacked|Developer mode|unzip|download className/i);
+  });
+
   it('is honest about OMDb and missing scores, and disclaims affiliation', () => {
     expect(source).toMatch(/OMDb/);
     expect(source).toMatch(/does not return/);

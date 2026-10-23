@@ -4,6 +4,7 @@ import GuideLayout from '../../../components/GuideLayout';
 import { ImdbChip, RtChip } from '../../../components/ScoreChip';
 import { pageMetadata } from '../../../lib/seo';
 import { isBlogHubReady } from '../../../lib/blog/inbound';
+import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 
 const PATH = '/compare/imdb-vs-rotten-tomatoes';
 
@@ -216,11 +217,11 @@ export default function ComparePage() {
         <p>
           The free <strong>Rating Watch</strong> extension puts the IMDb rating and the Rotten
           Tomatoes score on Netflix title cards as you browse in Chrome, Edge or Brave, so you can
-          compare audience and critics at a glance. It is not on the Chrome Web Store yet; installing
-          from a zip on this site takes about a minute.
+          compare audience and critics at a glance. Install it free from the Chrome Web Store
+          in about a minute.
         </p>
-        <a href="/install" className={g.btnPrimary}>
-          Install free <span aria-hidden>→</span>
+        <a href={CHROME_WEB_STORE_URL} className={g.btnPrimary}>
+          Add to Chrome <span aria-hidden>→</span>
         </a>
       </aside>
     </GuideLayout>

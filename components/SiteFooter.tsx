@@ -1,6 +1,6 @@
 import c from './site-chrome.module.css';
 import { PAGES, pagesInGroup } from '../lib/pages';
-import { AUTHOR_NAME } from '../lib/content';
+import { AUTHOR_NAME, CHROME_WEB_STORE_URL } from '../lib/content';
 import CookieSettings from './CookieSettings';
 
 // Links are generated from the page registry, so every registered guide is
@@ -28,6 +28,7 @@ export default function SiteFooter({ updated }: { updated?: { iso: string; label
           <nav className={c.footerCol} aria-label="Project">
             <span className={c.footerHead}>Project</span>
             {home && <a href={home.path}>Home</a>}
+            <a href={CHROME_WEB_STORE_URL}>Chrome Web Store</a>
             <a href="https://www.omdbapi.com" target="_blank" rel="noopener noreferrer">Powered by OMDb</a>
             {about.map((p) => (
               <a key={p.path} href={p.path}>{p.label ?? p.title}</a>

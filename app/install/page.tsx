@@ -1,7 +1,7 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
 import g from '../../components/guide.module.css';
 import s from './install.module.css';
-import { EXTENSION_ZIP_PATH, SUPPORT_EMAIL } from '../../lib/content';
+import { CHROME_WEB_STORE_URL, SUPPORT_EMAIL } from '../../lib/content';
 import { howTo, pageMetadata } from '../../lib/seo';
 
 const PATH = '/install';
@@ -9,20 +9,12 @@ export const metadata = pageMetadata(PATH);
 
 const STEPS = [
   {
-    name: 'Download the extension',
-    text: 'Download the Rating Watch zip from this site with the Download Rating Watch (zip) button on this page.',
+    name: 'Open the Chrome Web Store listing',
+    text: 'Use the Add to Chrome button on this page to open the official Rating Watch listing in the Chrome Web Store.',
   },
   {
-    name: 'Unzip it to a folder you will keep',
-    text: 'Extract the zip somewhere permanent. Chrome loads the extension from that folder, so moving or deleting it later disables the extension.',
-  },
-  {
-    name: 'Open the extensions page and turn on Developer mode',
-    text: 'Go to chrome://extensions (edge://extensions in Edge, brave://extensions in Brave) and switch on Developer mode in the top-right corner.',
-  },
-  {
-    name: 'Click Load unpacked and choose the folder',
-    text: 'Click Load unpacked and select the unzipped folder, the one that contains manifest.json. Rating Watch now appears in your extensions list.',
+    name: 'Add Rating Watch to your browser',
+    text: 'Choose Add to Chrome, review the requested permissions and confirm Add extension. In Edge or Brave, the browser may first ask you to allow extensions from the Chrome Web Store; its install button wording may differ.',
   },
   {
     name: 'Open Netflix',
@@ -33,11 +25,11 @@ const STEPS = [
 const FAQS: Faq[] = [
   {
     q: 'Is Rating Watch on the Chrome Web Store?',
-    a: 'Not yet. For now it installs as an unpacked extension from a zip you download from this site, which takes about a minute and works in Chrome, Edge, Brave and other Chromium browsers. Chrome may show a reminder about developer-mode extensions when it starts; that is normal for unpacked extensions.',
+    a: 'Yes. Rating Watch is available on the Chrome Web Store. Open its listing with the Add to Chrome button on this page, review the permissions and confirm the installation in your browser. Then open Netflix, or reload an existing Netflix tab, to see ratings where available. The extension is free and needs no account.',
   },
   {
-    q: 'Is it safe to load an unpacked extension?',
-    a: 'It asks for access to only two sites: netflix.com (to read title cards and show badges) and omdbapi.com (to look up ratings). It requests no tabs, history or storage permissions, needs no account, and sends only title text (and an OMDb API key) to OMDb. After loading it, chrome://extensions shows exactly which sites it can access.',
+    q: 'What permissions does the extension need?',
+    a: 'It asks for access to only two sites: netflix.com (to read title cards and show badges) and omdbapi.com (to look up ratings). It requests no tabs, history or storage permissions and needs no account. Lookups send title text and an OMDb API key to OMDb, which also sees your IP address. Review the permissions before confirming installation.',
   },
   {
     q: 'Do I need an API key or an account?',
@@ -49,7 +41,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'How do I update or uninstall it?',
-    a: 'To update, replace the folder contents with the latest download and click the reload icon on the extension card at chrome://extensions. To uninstall, click Remove on the same card.',
+    a: 'The extension updates automatically through your browser by default after installation from the Chrome Web Store. To uninstall it in Chrome, open chrome://extensions, find Rating Watch and click Remove. Edge and Brave provide the same controls on their own extensions pages. Removing the extension stops the badges from appearing on Netflix.',
   },
   {
     q: 'Does it work in Firefox or Safari?',
@@ -65,12 +57,11 @@ export default function InstallPage() {
       lede={
         <>
           <strong>
-            Rating Watch installs in about a minute: download the zip from this site, unzip it, turn on
-            Developer mode at chrome://extensions, click Load unpacked and pick the folder.
+            Install Rating Watch from the Chrome Web Store: open the listing, choose Add to Chrome
+            and confirm the permissions. Then open Netflix.
           </strong>{' '}
-          It is a free download that you add to Chrome yourself, because it is not on the Chrome Web
-          Store yet; this is the install method for Chrome, Edge and Brave. The extension needs no
-          account.
+          It takes about a minute and works in desktop Chrome, Edge and Brave. The extension is
+          free and needs no account.
         </>
       }
       faqs={FAQS}
@@ -78,7 +69,7 @@ export default function InstallPage() {
         howTo({
           name: 'How to install the Rating Watch Chrome extension',
           description:
-            'Install the free Rating Watch extension as an unpacked extension in Chrome, Edge or Brave.',
+            'Install the free Rating Watch extension from the Chrome Web Store in desktop Chrome, Edge or Brave.',
           totalTime: 'PT1M',
           steps: STEPS,
         }),
@@ -103,8 +94,8 @@ export default function InstallPage() {
       </ol>
 
       <p className={s.cta}>
-        <a href={EXTENSION_ZIP_PATH} download className={`ds-btn ds-btn-signal ${s.download}`}>
-          Download Rating Watch (zip) <span aria-hidden>→</span>
+        <a href={CHROME_WEB_STORE_URL} className={`ds-btn ds-btn-signal ${s.download}`}>
+          Add to Chrome <span aria-hidden>→</span>
         </a>
       </p>
 
@@ -120,8 +111,8 @@ export default function InstallPage() {
       <ul className={s.check}>
         <li>Reload the Netflix tab after installing, so the extension can attach to the page.</li>
         <li>
-          Confirm the extension is switched on at <code>chrome://extensions</code> and that you
-          selected the folder containing <code>manifest.json</code>, not its parent.
+          Confirm Rating Watch is switched on at <code>chrome://extensions</code> (or your
+          browser&rsquo;s extensions page) and is allowed to run on Netflix.
         </li>
         <li>Make sure you are on <code>www.netflix.com</code>; the extension only runs there.</li>
         <li>

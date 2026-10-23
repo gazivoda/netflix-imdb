@@ -18,6 +18,7 @@ import {
 import { getPage } from '../../../lib/pages';
 import { articleLabel } from '../../../lib/blog/title';
 import { blogPosting, movie, nodeId, pageMetadata } from '../../../lib/seo';
+import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 
 // Only published articles exist: unknown slugs are a 404, nothing renders on demand.
 export const dynamicParams = false;
@@ -184,7 +185,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
       <div className={s.cta}>
         <p>See both scores on every Netflix card while you browse.</p>
-        <a className={g.btnPrimary} href="/install">Install Rating Watch</a>
+        <a className={g.btnPrimary} href={CHROME_WEB_STORE_URL}>Add to Chrome</a>
       </div>
 
       <h2 className={s.subhead}>Where it sits</h2>

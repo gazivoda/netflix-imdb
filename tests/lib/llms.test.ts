@@ -1,7 +1,7 @@
 import { buildLlmsTxt, buildLlmsFullTxt, sectionsFor, LLMS_HEADERS } from '../../lib/llms';
 import { PAGES, buildPages, type SitePage } from '../../lib/pages';
 import type { BlogArticlePage } from '../../lib/blog/registry.generated';
-import { FAQS, SITE_URL } from '../../lib/content';
+import { FAQS, SITE_URL, CHROME_WEB_STORE_URL } from '../../lib/content';
 import { absoluteUrl } from '../../lib/seo';
 import manifest from '../../extension/manifest.json';
 
@@ -40,6 +40,14 @@ describe('llms.txt', () => {
 
   it('never uses the wrong brand name', () => {
     expect(txt + buildLlmsFullTxt()).not.toMatch(/Netflix IMDB Ratings/i);
+  });
+
+  it('describes the live store installation without the old manual ZIP flow', () => {
+    for (const text of [txt, buildLlmsFullTxt()]) {
+      expect(text).toContain(CHROME_WEB_STORE_URL);
+      expect(text).toContain('Add to Chrome');
+      expect(text).not.toMatch(/not (?:on|in) the Chrome Web Store|Load unpacked|Developer mode|download.{0,20}zip/i);
+    }
   });
 
   it('puts new pages in the right section automatically', () => {

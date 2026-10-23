@@ -3,7 +3,7 @@
 // llms.txt is an unofficial convention that some AI tools read; Google Search
 // does not use it. It is cheap to generate, so we keep it accurate and small.
 
-import { SITE_URL, AUTHOR_NAME, FAQS, PRO_PRICING } from './content';
+import { SITE_URL, AUTHOR_NAME, FAQS, PRO_PRICING, CHROME_WEB_STORE_URL } from './content';
 import { PRO_ON_SALE } from './billing/flag';
 import { absoluteUrl } from './seo';
 import manifest from '../extension/manifest.json';
@@ -25,7 +25,7 @@ export const keyFactsFor = (proOnSale: boolean): string[] => [
   proOnSale
     ? `The Chrome extension is free and needs no account. AR mode is Pro ($${PRO_PRICING.monthly}/month or $${PRO_PRICING.yearly}/year, ${PRO_PRICING.trialDays}-day free trial); see /pricing.`
     : 'The Chrome extension is free and needs no account. AR mode, which shows ratings over a TV screen through a phone camera, is experimental and free to try for now; paid plans are not on sale yet.',
-  'Not on the Chrome Web Store yet: install by downloading the zip from this site and using "Load unpacked" in chrome://extensions.',
+  `Install from the official [Chrome Web Store listing](${CHROME_WEB_STORE_URL}): choose Add to Chrome and confirm Add extension. Browser-managed updates are automatic; no Rating Watch account is required.`,
   'Works in Chromium browsers (Chrome, Edge, Brave). Not tested in Firefox or Safari.',
   `Author: ${AUTHOR_NAME}.`,
 ];

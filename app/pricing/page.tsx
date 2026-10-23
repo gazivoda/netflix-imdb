@@ -2,6 +2,7 @@ import SiteHeader from '../../components/SiteHeader';
 import SiteFooter from '../../components/SiteFooter';
 import JsonLd from '../../components/JsonLd';
 import { graph, pageMetadata, softwareApplication } from '../../lib/seo';
+import { CHROME_WEB_STORE_URL } from '../../lib/content';
 import { PricingLead, ProCard } from './PricingClient';
 import s from '../../components/billing/billing.module.css';
 
@@ -23,7 +24,7 @@ export default function PricingPage() {
               <li>IMDb and Rotten Tomatoes scores</li>
               <li>No account needed</li>
             </ul>
-            <a className={`ds-btn ${s.cta}`} href="/install">Install the extension</a>
+            <a className={`ds-btn ${s.cta}`} href={CHROME_WEB_STORE_URL}>Add to Chrome</a>
           </section>
           <ProCard />
         </div>

@@ -1,7 +1,7 @@
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
 import h from '../how-to.module.css';
-import { EXTENSION_ZIP_PATH } from '../../../lib/content';
+import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { howTo, pageMetadata } from '../../../lib/seo';
 
 const PATH = '/how-to/show-rotten-tomatoes-on-netflix';
@@ -12,7 +12,7 @@ const RT_ABOUT_URL = 'https://www.rottentomatoes.com/about';
 const STEPS = [
   {
     name: 'Install the Rating Watch extension',
-    text: 'Rating Watch is not on the Chrome Web Store yet, so download the Rating Watch zip from this site, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and select the unzipped folder. It works in Chrome, Edge or Brave and needs no account.',
+    text: 'Open the Rating Watch listing in the Chrome Web Store, choose Add to Chrome and confirm Add extension after reviewing the permissions. It works in desktop Chrome, Edge or Brave and needs no extension account.',
   },
   {
     name: 'Open Netflix in the same browser',
@@ -95,13 +95,13 @@ export default function ShowRottenTomatoesOnNetflixPage() {
         </ol>
       </div>
       <p className={g.p}>
-        <a href={EXTENSION_ZIP_PATH} download className={g.btnPrimary}>
-          Download Rating Watch (zip) <span aria-hidden>→</span>
+        <a href={CHROME_WEB_STORE_URL} className={g.btnPrimary}>
+          Add to Chrome <span aria-hidden>→</span>
         </a>
       </p>
       <p className={g.p}>
-        The full walkthrough, including the Developer mode toggle and what to do if nothing
-        appears, is on the <a href="/install">install page</a>.
+        The full walkthrough, including permissions and what to do if nothing appears, is on
+        the <a href="/install">install page</a>.
       </p>
       <p className={g.p}>
         Netflix explains its own thumbs-based recommendations in{' '}

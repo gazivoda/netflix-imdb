@@ -4,7 +4,7 @@
 
 It adds a small badge to the top-right corner of title cards on netflix.com, so you can see the IMDb score (out of 10) and, where OMDb has one, the Rotten Tomatoes critic score (a percentage, mostly for films, not TV series) without opening another tab. The extension needs no account and has no analytics; this website measures visits only if you accept analytics in its cookie banner. It works out of the box on a shared OMDb lookup allowance that can run out on a busy day; an optional free personal OMDb key in the extension options lifts it.
 
-Website: [rating.watch](https://rating.watch) · [Install guide](https://rating.watch/install) · [Privacy policy](https://rating.watch/privacy) · [IMDb vs Rotten Tomatoes](https://rating.watch/compare/imdb-vs-rotten-tomatoes)
+Website: [rating.watch](https://rating.watch) · [Chrome Web Store](https://chromewebstore.google.com/detail/rating-watch-imdb-rotten/kljplalofcjpjdhceicjhnibllghdlpa) · [Install guide](https://rating.watch/install) · [Privacy policy](https://rating.watch/privacy) · [IMDb vs Rotten Tomatoes](https://rating.watch/compare/imdb-vs-rotten-tomatoes)
 
 ## What it does
 
@@ -16,15 +16,13 @@ Website: [rating.watch](https://rating.watch) · [Install guide](https://rating.
 
 ## Install
 
-Rating Watch is not on the Chrome Web Store yet, so it installs as an unpacked extension. This takes about a minute and is the same procedure as the [install guide](https://rating.watch/install).
+Rating Watch is available free on the [Chrome Web Store](https://chromewebstore.google.com/detail/rating-watch-imdb-rotten/kljplalofcjpjdhceicjhnibllghdlpa). Installation takes about a minute; the [install guide](https://rating.watch/install) also covers troubleshooting.
 
-1. **Download the extension.** Download the zip from [rating.watch/downloads/rating-watch-extension.zip](https://rating.watch/downloads/rating-watch-extension.zip).
-2. **Unzip it to a folder you will keep.** Chrome loads the extension from that folder, so moving or deleting it later disables the extension.
-3. **Open the extensions page and turn on Developer mode.** Go to `chrome://extensions` (`edge://extensions` in Edge, `brave://extensions` in Brave) and switch on Developer mode in the top-right corner.
-4. **Click Load unpacked and choose the unzipped folder.** Select the folder that contains `manifest.json`.
-5. **Open Netflix.** Visit netflix.com and browse. Reload the Netflix tab if you already had it open.
+1. **Open the listing.** Visit [Rating Watch on the Chrome Web Store](https://chromewebstore.google.com/detail/rating-watch-imdb-rotten/kljplalofcjpjdhceicjhnibllghdlpa).
+2. **Add the extension.** Choose **Add to Chrome**, review the permissions and confirm **Add extension**. Compatible Chromium browsers such as Edge and Brave can also install from the listing.
+3. **Open Netflix.** Visit netflix.com and browse. Reload the Netflix tab if you already had it open.
 
-To update, replace the folder contents with the latest download and click the reload icon on the extension card at `chrome://extensions`. To uninstall, click Remove on the same card.
+Chrome installs store updates automatically. To uninstall, open your browser's extensions page and choose **Remove** on the Rating Watch card.
 
 ## How it works
 
@@ -50,8 +48,8 @@ Full details: [rating.watch/privacy](https://rating.watch/privacy).
 | [`lib/`](lib) | Shared site code: page registry, SEO/JSON-LD helpers, OMDb client, content constants |
 | [`components/`](components) | Shared React components for the site |
 | [`tests/`](tests) | Jest tests for the OMDb client, title extraction, ratings API and SEO helpers |
-| [`scripts/`](scripts) | `package-extension.sh` (builds `extension.zip` and refreshes the site download) and the IndexNow ping script |
-| `extension.zip` | Prebuilt package of `extension/`; `scripts/package-extension.sh` also copies it to `public/downloads/rating-watch-extension.zip`, the file the install guide links to |
+| [`scripts/`](scripts) | Maintainer extension packaging, validation and the IndexNow ping script |
+| `extension.zip` | Maintainer build of `extension/`, produced by `scripts/package-extension.sh`; visitors install from the Chrome Web Store |
 
 ## Development
 
@@ -64,11 +62,11 @@ npm test        # run the Jest test suite
 npm run build   # production build of the website
 ```
 
-The website's server-side OMDb lookups read an `OMDB_API_KEY` environment variable. To load the extension from source, follow the [Install](#install) steps and select the `extension` folder. To rebuild `extension.zip` (and the site download) after changing the extension, run:
+The website's server-side OMDb lookups read an `OMDB_API_KEY` environment variable. For extension development only, open your browser's extensions page, enable Developer mode, choose Load unpacked and select the repository's `extension/` folder. Visitors should use the store installation above. To rebuild the maintainer packages after changing the extension, run:
 
 ```bash
 bash scripts/package-extension.sh
-npm run zip:check   # verifies extension.zip and the site download match extension/
+npm run zip:check   # verifies the maintained packages match extension/
 ```
 
 ## Not affiliated

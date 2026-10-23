@@ -7,7 +7,7 @@ import {
   AUTHOR_NAME,
   PUBLISHED_DATE,
   LAST_UPDATED,
-  EXTENSION_ZIP_PATH,
+  CHROME_WEB_STORE_URL,
   SUPPORT_EMAIL,
   PRO_PRICING,
 } from './content';
@@ -371,11 +371,11 @@ export function softwareApplication(proOnSale: boolean = PRO_ON_SALE): JsonLdNod
     // Short platform names, not a sentence; the long form lives in browserRequirements.
     operatingSystem: 'Chrome, Web browser',
     browserRequirements:
-      'Requires a Chromium-based desktop browser (Chrome, Edge, Brave) with Manifest V3 extension support; installed via Load unpacked in Developer mode.',
+      'Requires a Chromium-based desktop browser (Chrome, Edge, Brave) with Manifest V3 extension support; install from the Chrome Web Store.',
     description: HOME_DESCRIPTION,
     url: SITE_URL,
-    installUrl: absoluteUrl('/install'),
-    downloadUrl: absoluteUrl(EXTENSION_ZIP_PATH),
+    installUrl: CHROME_WEB_STORE_URL,
+    downloadUrl: CHROME_WEB_STORE_URL,
     softwareVersion: manifest.version,
     datePublished: isoDateTime(PUBLISHED_DATE),
     dateModified: isoDateTime(LAST_UPDATED),
@@ -389,7 +389,7 @@ export function softwareApplication(proOnSale: boolean = PRO_ON_SALE): JsonLdNod
         name: 'Rating Watch browser extension',
         price: '0',
         priceCurrency: PRO_PRICING.currency,
-        url: absoluteUrl('/install'),
+        url: CHROME_WEB_STORE_URL,
       },
       ...(proOnSale
         ? [

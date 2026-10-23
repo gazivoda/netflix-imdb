@@ -33,8 +33,9 @@ export const PRO_PRICING = {
   trialDays: 3,
 } as const;
 
-// Hosted on this site (public/downloads); scripts/package-extension.sh refreshes it.
-export const EXTENSION_ZIP_PATH = '/downloads/rating-watch-extension.zip';
+// Official public install destination, shared by site CTAs, guides and metadata.
+export const CHROME_WEB_STORE_URL =
+  'https://chromewebstore.google.com/detail/rating-watch-imdb-rotten/kljplalofcjpjdhceicjhnibllghdlpa';
 
 // Author + freshness signals. Surfaced as a visible byline/date on pages and in
 // the JSON-LD graph (Person, datePublished/dateModified) so AI search engines
@@ -180,7 +181,7 @@ export function buildFaqs(onSale: boolean) {
   },
   {
     q: 'How do I install Rating Watch?',
-    a: 'It is a free download that you add to Chrome yourself, because it is not on the Chrome Web Store yet. Download the zip from the install page, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and choose the unzipped folder. Then open netflix.com and the badges appear on title cards. The whole process takes about a minute.',
+    a: 'Open the official Rating Watch listing in the Chrome Web Store, choose Add to Chrome and confirm Add extension after reviewing the permissions. Then open netflix.com, or reload an existing Netflix tab, and ratings appear on matching title cards. Installation is free, needs no Rating Watch account and takes about a minute. Chrome handles extension updates automatically.',
   },
   ];
 }

@@ -2,6 +2,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as content from '../lib/content';
 import { PAGES } from '../lib/pages';
+import { createElement } from 'react';
+const { renderToStaticMarkup } = require('react-dom/server') as { renderToStaticMarkup: (element: unknown) => string };
 
 const ROOT = join(__dirname, '..');
 const read = (f: string) => readFileSync(join(ROOT, f), 'utf8');
@@ -66,13 +68,36 @@ describe('API-key claims stay true (shared daily allowance, optional personal ke
   });
 });
 
-describe('install wording is honest about the manual add', () => {
-  it('says download, never implies a Chrome Web Store listing', () => {
-    expect(read('components/home/Hero.tsx')).toMatch(/Download free/);
-    expect(read('components/home/FinalCta.tsx')).toMatch(/not in the Chrome Web Store yet/);
-    for (const f of ['components/home/Hero.tsx', 'components/home/FinalCta.tsx', 'lib/content.ts']) {
-      expect(read(f)).not.toMatch(/Add to Chrome|available on the Chrome Web Store/);
+describe('installation links use the live Chrome Web Store listing', () => {
+  const installComponents = [
+    ['home hero', () => require('../components/home/Hero').default],
+    ['home navigation', () => require('../components/home/HomeNav').default],
+    ['final call to action', () => require('../components/home/FinalCta').default],
+    ['shared header', () => require('../components/SiteHeader').default],
+    ['shared footer', () => require('../components/SiteFooter').default],
+  ] as const;
+
+  it.each(installComponents)('%s links directly to the shared store URL', (_name, load) => {
+    const html = renderToStaticMarkup(createElement(load()));
+    expect(html).toContain(`href="${content.CHROME_WEB_STORE_URL}"`);
+    expect(html).not.toContain(' download=');
+  });
+
+  it('removes obsolete manual-install claims from marketing copy', () => {
+    for (const f of [
+      'components/home/Hero.tsx', 'components/home/HomeNav.tsx',
+      'components/home/FinalCta.tsx', 'components/home/HowItWorks.tsx',
+      'app/about/page.tsx', 'app/compare/alternatives/page.tsx',
+      'app/compare/imdb-vs-rotten-tomatoes/page.tsx',
+    ]) {
+      expect(read(f)).not.toMatch(/not (?:in|on) the Chrome Web Store yet|Load unpacked|Developer mode|unpacked extension|Download free/i);
     }
+  });
+
+  it('uses the store in README installation instructions', () => {
+    const install = read('README.md').split('## Install')[1].split('## How it works')[0];
+    expect(install).toContain(content.CHROME_WEB_STORE_URL);
+    expect(install).not.toMatch(/zip|Load unpacked|Developer mode/i);
   });
 });
 

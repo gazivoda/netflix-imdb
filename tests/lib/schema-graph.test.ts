@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { PAGES } from '../../lib/pages';
-import { SITE_URL, EXTENSION_ZIP_PATH, SUPPORT_EMAIL, PRO_PRICING } from '../../lib/content';
+import { SITE_URL, CHROME_WEB_STORE_URL, SUPPORT_EMAIL, PRO_PRICING } from '../../lib/content';
 import { siteGraph, softwareApplication, webPage, breadcrumbList, nodeId, jsonLdString, blogPosting, movie, isoDateTime } from '../../lib/seo';
 import { isFullDateTime } from '../../lib/html-seo';
 import { filmBySlug } from '../blog/fixtures';
@@ -102,10 +102,14 @@ describe('softwareApplication (product pages only)', () => {
     expect(JSON.parse(jsonLdString({ '@graph': [on] } as any))['@graph'][0]).toEqual(on);
   });
 
-  it('reads its version from the extension manifest and points at the install page and hosted zip', () => {
+  it('reads its version from the extension manifest and points at the live store for installation', () => {
     expect(off.softwareVersion).toBe(manifest.version);
-    expect(off.installUrl).toBe(`${SITE_URL}/install`);
-    expect(off.downloadUrl).toBe(`${SITE_URL}${EXTENSION_ZIP_PATH}`);
+    for (const app of [off, on]) {
+      expect(app.installUrl).toBe(CHROME_WEB_STORE_URL);
+      expect(app.downloadUrl).toBe(CHROME_WEB_STORE_URL);
+      expect((app.offers as Array<Record<string, unknown>>)[0].url).toBe(CHROME_WEB_STORE_URL);
+      expect(app.browserRequirements).not.toMatch(/Load unpacked|Developer mode/i);
+    }
     expect(off.applicationSubCategory).toBeTruthy();
     expect(off.browserRequirements).toBeTruthy();
   });

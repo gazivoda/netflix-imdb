@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import s from './alternatives.module.css';
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
-import { AR_MODE_NAME } from '../../../lib/content';
+import { AR_MODE_NAME, CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { absoluteUrl, pageMetadata } from '../../../lib/seo';
 
 const PATH = '/compare/alternatives';
@@ -46,7 +46,7 @@ const ROWS: Row[] = [
     what: 'Chrome extension that adds IMDb and Rotten Tomatoes scores to Netflix.',
     where: 'A badge on each title card on netflix.com.',
     tab: 'No.',
-    cost: 'Free, no account. Installs as an unpacked extension (not on the Chrome Web Store yet).',
+    cost: <>Free, no Rating Watch account. Install from the {ext(CHROME_WEB_STORE_URL, 'Chrome Web Store')}.</>,
   },
   {
     name: 'JustWatch',
@@ -121,7 +121,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Is Rating Watch on the Chrome Web Store?',
-    a: 'Not yet. It installs as an unpacked extension from a zip you download from this site, which takes about a minute in Chrome, Edge or Brave. If you want one-click installation from the store today, a store-listed alternative such as RateFlix or SVODEX is easier, though I have not verified the source code of either or how they fetch ratings.',
+    a: 'Yes. Rating Watch is available free on the Chrome Web Store. Open its listing, choose Add to Chrome and confirm the extension permissions, then open or reload Netflix to see the badges. It works in Chrome and compatible Chromium browsers such as Edge and Brave, and the extension needs no Rating Watch account. The install guide covers setup and troubleshooting.',
   },
   {
     q: 'Are these services affiliated with Rating Watch?',
@@ -168,7 +168,8 @@ export default function AlternativesPage() {
         Store listing as read on 2026-10-21. Where a page said nothing, the table says
         &quot;not stated&quot;. reelgood.com and imdb.com refused my automated requests, so Reelgood is
         described from its App Store listing and IMDb from its help page. Things change; check the
-        source before you decide.
+        source before you decide. Rating Watch&apos;s own Chrome Web Store availability was checked
+        on 2026-10-23.
       </p>
 
       <h2 className={`ds-display ${s.h2}`}>How do the options <em className="ds-serif">compare</em>?</h2>
@@ -222,11 +223,6 @@ export default function AlternativesPage() {
           pages: user ratings, critic reviews and the definitions behind each score.
         </li>
         <li>
-          <strong>You want a store install today.</strong> RateFlix is{' '}
-          {ext(SRC.rateflix, 'listed on the Chrome Web Store')}, while Rating Watch still needs
-          the <a href="/install">Load unpacked steps</a>.
-        </li>
-        <li>
           <strong>You want ratings on more than Netflix.</strong> {ext(SRC.svodex, 'SVODEX')} says in its listing that it
           covers Netflix, Disney+ and HBO Max. Rating Watch only works on netflix.com.
         </li>
@@ -250,9 +246,10 @@ export default function AlternativesPage() {
           The Rating Watch extension is free and installs in about a minute. It is independent and not
           affiliated with Netflix, IMDb or Rotten Tomatoes.
         </p>
-        <a href="/install" className="ds-btn ds-btn-signal">
-          How to install <span aria-hidden>→</span>
+        <a href={CHROME_WEB_STORE_URL} className="ds-btn ds-btn-signal">
+          Add to Chrome <span aria-hidden>→</span>
         </a>
+        <p>Need setup help? Read the <a href="/install">install guide</a>.</p>
       </aside>
     </GuideLayout>
   );

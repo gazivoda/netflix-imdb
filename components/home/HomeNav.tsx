@@ -1,4 +1,5 @@
 import styles from './HomeNav.module.css';
+import { CHROME_WEB_STORE_URL } from '../../lib/content';
 
 export default function HomeNav() {
   return (
@@ -12,8 +13,8 @@ export default function HomeNav() {
           IMDb vs Rotten Tomatoes
         </a>
         <a href="#faq" className={styles.navLink}>FAQ</a>
-        <a href="/install" className={`ds-btn ds-btn-signal ${styles.navInstall}`}>
-          Download free
+        <a href={CHROME_WEB_STORE_URL} className={`ds-btn ds-btn-signal ${styles.navInstall}`}>
+          Add to Chrome
         </a>
       </div>
     </nav>

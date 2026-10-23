@@ -1,4 +1,5 @@
 import c from './site-chrome.module.css';
+import { CHROME_WEB_STORE_URL } from '../lib/content';
 
 export default function SiteHeader() {
   return (
@@ -10,7 +11,7 @@ export default function SiteHeader() {
         </a>
         <div className={c.navRight}>
           <a href="/compare/imdb-vs-rotten-tomatoes" className={c.navLink}>IMDb vs Rotten Tomatoes</a>
-          <a href="/install" className={c.navInstall}>Install</a>
+          <a href={CHROME_WEB_STORE_URL} className={c.navInstall}>Add to Chrome</a>
         </div>
       </nav>
     </>

@@ -1,3 +1,26 @@
+# Chrome Web Store launch links (2026-10-23)
+
+Goal: replace visitor-facing ZIP/Developer mode installation with the live Chrome Web Store listing, consistently across pages, calls to action, structured data and AI-readable copy. Commit and push only this task's changes; preserve pre-existing work.
+
+Listing: https://chromewebstore.google.com/detail/rating-watch-imdb-rotten/kljplalofcjpjdhceicjhnibllghdlpa (omit the optional `pli` parameter).
+
+- [x] Verify listing and enumerate installation copy/link/schema dependencies.
+- [x] Centralize the store URL; update SoftwareApplication, registry metadata and llms copy.
+- [x] Update homepage/shared navigation, installation guides, comparisons, About and README; remove visitor ZIP instructions.
+- [x] Replace pre-launch test expectations with regression coverage for the live listing and consistent installation flow.
+- [x] Review the scoped diff, verify tests/typecheck/build and rendered SEO/links; smoke-test desktop/mobile.
+- [ ] Commit, push and verify the remote commit; document results below.
+
+## Review
+
+Verified listing HTTP200 and official title. One shared `CHROME_WEB_STORE_URL` now drives installation CTAs across home/navigation/footer, guides, comparisons, About, pricing, 404 and article templates, plus SoftwareApplication installation/download/free-offer URLs and generated llms copy. `/install` remains a linked help page with three store steps, permission review, automatic updates, removal and troubleshooting. Visitor ZIP/Developer mode instructions and obsolete store-absence/comparison claims are removed. Maintainer packaging artifacts and developer-only source instructions remain separate from visitor installation.
+
+Regression checks reproduced the old launch flow before implementation. Final clean index-only release at `/private/tmp/rating-watch-store-release-20261023`: **1959 tests pass, 19 skipped, zero failures (102 passing suites)**. Node22.20.0 production build and TypeScript check pass; full tests use the existing Node24-compatible native SQLite installation. SEO validation and link audit each cover all15 public pages with zero findings. Fifteen prerendered HTML files contain no stale manual-install/store-absence instructions. Test-only follow-up removed an obsolete competitor-copy allowlist entry and used the repository's existing typed ReactDOM server require convention.
+
+Browser smoke: home fits1440px and320px with three correct store buttons; install page fits320px with correct store links. Clicking the homepage CTA opens the exact live listing and official title. Internal `/install` help links remain reachable; no CSS changes or dependencies were needed. Existing camera/billing/ratings/untracked blog work is excluded from the release. Commit/push pending.
+
+---
+
 # SEO audit and fixes (2026-10-23)
 
 Goal: audit https://rating.watch and this Next.js source, fix verified findings with specialist agents, verify, commit and push only the audit changes.

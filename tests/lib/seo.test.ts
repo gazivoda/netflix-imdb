@@ -20,7 +20,7 @@ import { filmBySlug } from '../blog/fixtures';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import sitemap from '../../app/sitemap';
-import { SITE_URL, EXTENSION_ZIP_PATH } from '../../lib/content';
+import { SITE_URL, CHROME_WEB_STORE_URL } from '../../lib/content';
 
 describe('page registry', () => {
   it('has unique, well-formed paths', () => {
@@ -200,20 +200,19 @@ describe('author byline', () => {
   });
 });
 
-describe('extension download', () => {
-  it('is hosted on this site, is a real zip, and is a copy of extension.zip', () => {
-    expect(EXTENSION_ZIP_PATH).toBe('/downloads/rating-watch-extension.zip');
-    const hosted = readFileSync(join(__dirname, '../../public', EXTENSION_ZIP_PATH));
-    expect(hosted.subarray(0, 2).toString()).toBe('PK');
-    expect(hosted.equals(readFileSync(join(__dirname, '../../extension.zip')))).toBe(true);
+describe('extension installation', () => {
+  it('uses the live official listing without session-specific query parameters', () => {
+    expect(CHROME_WEB_STORE_URL).toBe('https://chromewebstore.google.com/detail/rating-watch-imdb-rotten/kljplalofcjpjdhceicjhnibllghdlpa');
+    expect(new URL(CHROME_WEB_STORE_URL).search).toBe('');
   });
 
-  it('the install page and both how-to pages link to it, not to a repository', () => {
+  it('the install page and both how-to pages use the shared listing rather than a ZIP download', () => {
     const install = readFileSync(join(__dirname, '../../app/install/page.tsx'), 'utf8');
-    expect(install).toContain('href={EXTENSION_ZIP_PATH}');
-    expect(install).toContain('Download Rating Watch (zip)');
-    for (const p of ['show-imdb-ratings-on-netflix', 'show-rotten-tomatoes-on-netflix']) {
-      expect(readFileSync(join(__dirname, '../../app/how-to', p, 'page.tsx'), 'utf8')).toContain('href={EXTENSION_ZIP_PATH}');
+    const pages = [install, ...['show-imdb-ratings-on-netflix', 'show-rotten-tomatoes-on-netflix'].map((p) =>
+      readFileSync(join(__dirname, '../../app/how-to', p, 'page.tsx'), 'utf8'))];
+    for (const page of pages) {
+      expect(page).toContain('href={CHROME_WEB_STORE_URL}');
+      expect(page).not.toMatch(/EXTENSION_ZIP_PATH|Load unpacked|Developer mode|Download Rating Watch \(zip\)/i);
     }
   });
 });

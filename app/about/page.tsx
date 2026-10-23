@@ -1,6 +1,6 @@
 import GuideLayout, { type Faq } from '../../components/GuideLayout';
 import s from './about.module.css';
-import { AR_MODE_NAME, AUTHOR_NAME, PUBLISHED_DATE, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
+import { AR_MODE_NAME, AUTHOR_NAME, CHROME_WEB_STORE_URL, PUBLISHED_DATE, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
 import { getPage } from '../../lib/pages';
 import { absoluteUrl, authorNode, isoDateTime, nodeId, pageMetadata } from '../../lib/seo';
 
@@ -112,8 +112,8 @@ export default function AboutPage() {
       <h2 className={s.h2}>How long has it been around?</h2>
       <p className={s.p}>
         The first public release was on <time dateTime={PUBLISHED_DATE}>May 1, 2026</time>. It is
-        currently installed as an unpacked extension from a zip on this site rather than from the
-        Chrome Web Store; the <a href="/install">install guide</a> walks through it in about a minute.
+        available on the <a href={CHROME_WEB_STORE_URL}>Chrome Web Store</a>; the{' '}
+        <a href="/install">install guide</a> walks through adding it in about a minute.
       </p>
 
       <h2 className={s.h2}>Where do the ratings come from?</h2>

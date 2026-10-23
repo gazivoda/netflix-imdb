@@ -1,7 +1,7 @@
 import styles from './Hero.module.css';
 import shared from './shared.module.css';
 import { ImdbChip, RtChip } from '../ScoreChip';
-import { SHOWCASE } from '../../lib/content';
+import { CHROME_WEB_STORE_URL, SHOWCASE } from '../../lib/content';
 
 // Scores come from the shared SHOWCASE table so one title never shows two different numbers.
 // Stranger Things is a series: like the real extension, its card shows IMDb only.
@@ -49,15 +49,15 @@ export default function Hero() {
           {' '}The extension needs no account, no second tab, no searching. Just scroll and decide.
         </p>
         <div className={`${styles.heroCta} ${shared.reveal} ${shared.d3}`}>
-          <a href="/install" className="ds-btn ds-btn-signal">
-            Download free <span aria-hidden>→</span>
+          <a href={CHROME_WEB_STORE_URL} className="ds-btn ds-btn-signal">
+            Add to Chrome <span aria-hidden>→</span>
           </a>
           <a href="#how" className={`ds-btn ${styles.btnSecondary}`}>
             See how it works
           </a>
         </div>
         <ul className={`${styles.heroNote} ${shared.reveal} ${shared.d4}`}>
-          <li>Free download, added in Chrome in a minute</li>
+          <li>Free on the Chrome Web Store</li>
           <li>Chrome, Edge &amp; Brave</li>
           <li>Extension needs no account</li>
         </ul>

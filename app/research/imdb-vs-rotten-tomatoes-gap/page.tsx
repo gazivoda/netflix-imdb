@@ -1,7 +1,7 @@
 import GuideLayout, { type Faq } from '../../../components/GuideLayout';
 import g from '../../../components/guide.module.css';
 import s from '../research.module.css';
-import { AUTHOR_NAME, SITE_URL } from '../../../lib/content';
+import { AUTHOR_NAME, CHROME_WEB_STORE_URL, SITE_URL } from '../../../lib/content';
 import { authorNode, isoDateTime, licenseNode, pageMetadata, publisherNode } from '../../../lib/seo';
 import { getPage } from '../../../lib/pages';
 import { summarize, toGapRow } from '../../../lib/research-stats';
@@ -320,7 +320,7 @@ export default function Page() {
         </a>
       </p>
       <p className={g.p}>
-        Want both scores while you browse? <a href="/install">Install Rating Watch</a>, a free
+        Want both scores while you browse? <a href={CHROME_WEB_STORE_URL}>Add Rating Watch to Chrome</a>, a free
         extension that shows IMDb ratings and, where available, Rotten Tomatoes scores on Netflix title cards. It
         is not affiliated with Netflix, IMDb or Rotten Tomatoes.
       </p>

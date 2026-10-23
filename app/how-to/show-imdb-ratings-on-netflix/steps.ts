@@ -3,7 +3,7 @@
 export const STEPS = [
   {
     name: 'Install the Rating Watch extension',
-    text: 'Rating Watch is not on the Chrome Web Store yet, so download the Rating Watch zip from this site, unzip it, open chrome://extensions, turn on Developer mode, click Load unpacked and select the unzipped folder. It works in Chrome, Edge or Brave, takes about a minute and needs no account or API key.',
+    text: 'Open the Rating Watch listing in the Chrome Web Store, choose Add to Chrome and confirm Add extension after reviewing the permissions. It works in desktop Chrome, Edge or Brave, takes about a minute and needs no extension account or personal API key to start.',
   },
   {
     name: 'Open Netflix in your browser',

@@ -3,6 +3,7 @@ import g from '../../../components/guide.module.css';
 import { ImdbChip, RtChip } from '../../../components/ScoreChip';
 import h from '../how-to.module.css';
 import { howTo, pageMetadata } from '../../../lib/seo';
+import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { isBlogHubReady } from '../../../lib/blog/inbound';
 
 const PATH = '/how-to/find-what-to-watch-on-netflix';
@@ -268,8 +269,8 @@ export default function FindWhatToWatchPage() {
           The routine above takes seconds when the ratings are already in front of you. The Rating
           Watch extension is free, needs no account, and takes about a minute to set up.
         </p>
-        <a href="/install" className={g.btnPrimary}>
-          How to install <span aria-hidden>→</span>
+        <a href={CHROME_WEB_STORE_URL} className={g.btnPrimary}>
+          Add to Chrome <span aria-hidden>→</span>
         </a>
       </aside>
 

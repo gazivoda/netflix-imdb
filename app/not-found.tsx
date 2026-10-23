@@ -3,6 +3,7 @@ import s from './not-found.module.css';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 import { pagesInGroup } from '../lib/pages';
+import { CHROME_WEB_STORE_URL } from '../lib/content';
 
 // A 404 must never be indexed or carry a canonical, so no pageMetadata() here.
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export default function NotFound() {
 
           <div className={s.actions}>
             <a className={`ds-btn ds-btn-signal ${s.bigBtn}`} href="/">Back to the home page</a>
-            <a className={`ds-btn ${s.bigBtn}`} href="/install">Install the extension</a>
+            <a className={`ds-btn ${s.bigBtn}`} href={CHROME_WEB_STORE_URL}>Add to Chrome</a>
           </div>
 
           <h2 className={`ds-display ${s.h2}`}>Guides</h2>

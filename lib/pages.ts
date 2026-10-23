@@ -41,19 +41,19 @@ export interface SitePage {
  * (lib/content.ts) to the newest date here.
  */
 export const PAGE_UPDATED: Record<string, string> = {
-  '/': '2026-10-23', // background-loading claim qualified
-  '/install': '2026-10-23', // installation duration aligned with visible copy
+  '/': '2026-10-23', // official Chrome Web Store installation
+  '/install': '2026-10-23', // Chrome Web Store steps replace ZIP installation
   '/how-to/show-imdb-ratings-on-netflix': '2026-10-23',
   '/how-to/show-rotten-tomatoes-on-netflix': '2026-10-23', // Netflix UI and missing-badge troubleshooting corrected
-  '/how-to/find-what-to-watch-on-netflix': '2026-10-21',
+  '/how-to/find-what-to-watch-on-netflix': '2026-10-23',
   '/research/imdb-vs-rotten-tomatoes-gap': '2026-10-23',
   '/compare/imdb-vs-rotten-tomatoes': '2026-10-23',
   '/compare/alternatives': '2026-10-23',
-  '/about': '2026-10-21',
+  '/about': '2026-10-23',
   '/camera-vision': '2026-10-20',
   '/camera-vision/ar': '2026-10-20',
   '/privacy': '2026-10-21',
-  '/pricing': '2026-10-21', // edited on 2026-10-21 by the pricing fixer
+  '/pricing': '2026-10-23', // official store installation link
   '/terms': '2026-10-21',
   '/refund-policy': '2026-10-21',
 };
@@ -101,9 +101,9 @@ export const staticPages = (proOnSale: boolean): SitePage[] => [
   },
   {
     path: '/install',
-    title: 'Install Rating Watch on Chrome, Edge, Brave',
+    title: 'Install Rating Watch from the Chrome Web Store',
     description:
-      'Install the free Rating Watch extension in about a minute: download the zip, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave.',
+      'Install the free Rating Watch extension from the Chrome Web Store. Add it to Chrome, Edge or Brave, review permissions and start seeing Netflix ratings.',
     published: '2026-10-15',
     updated: PAGE_UPDATED['/install'],
     changeFrequency: 'monthly',

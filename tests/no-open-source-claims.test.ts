@@ -36,10 +36,6 @@ const ALLOWLIST: ReadonlyArray<{ file: string; substring: string }> = [
     file: 'app/compare/alternatives/page.tsx',
     substring: 'Both listings were thin on details such as source code',
   },
-  {
-    file: 'app/compare/alternatives/page.tsx',
-    substring: 'I have not verified the source code of either or how they fetch ratings',
-  },
 ];
 
 const URL_RULES: ReadonlyArray<{ name: string; re: RegExp }> = [
