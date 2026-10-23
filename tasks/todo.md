@@ -1,3 +1,30 @@
+# SEO audit and fixes (2026-10-23)
+
+Goal: audit https://rating.watch and this Next.js source, fix verified findings with specialist agents, verify, commit and push only the audit changes.
+
+Constraints: preserve all pre-existing tracked and untracked changes; use explicit staging paths; do not fabricate content, endorsements, performance measurements, or indexing claims. Use the seo-audit category weights and distinguish the live deployment from local fixes.
+
+- [x] Record baseline, fetch homepage/robots/sitemap, and crawl permitted internal HTML (maximum 500 URLs, five concurrent requests, one-second delay between batches, 30-second timeout, three redirects).
+- [x] Agent A: audit technical SEO and sitemap/indexability; implement confirmed fixes in explicitly assigned files with regression coverage.
+- [x] Agent B: audit content/on-page SEO, E-E-A-T, AI readability and structured data; implement confirmed fixes in explicitly assigned files with regression coverage.
+- [x] Agent C: audit performance, images and desktop/mobile usability; capture screenshots and implement confirmed fixes in explicitly assigned files.
+- [x] Consolidate FULL-AUDIT-REPORT.md and ACTION-PLAN.md with evidence, weighted score, priorities, fixes and external limitations.
+- [x] Review integrated diff; run relevant tests, typecheck, production build, rendered SEO/link checks, and browser verification.
+- [x] Verify an index-only release snapshot, excluding pre-existing untracked blog/camera work.
+- [ ] Commit only authorized audit files, push the current branch, and verify the remote commit.
+
+## Review
+
+Implemented: account crawl/noindex fix; fact-checked Netflix/RT/IMDb and privacy copy; qualified loading/availability promises; install timing alignment; meaningful date updates; portable link checker with dynamic AR coverage, CLI regressions and CI integration; deployment documentation; audit evidence/reports/screenshots.
+
+Live crawl: 15 public pages returned 200; all passed rendered SEO checks. Working-tree `tsc` and production build pass. Final working-tree SEO validation and link audit each check all 15 pages with zero findings. Independent Node 22.20.0 CLI/date verification: 9 tests pass. Working-tree full suite before the last promo test: 2056 pass, 2 fail, 5 skipped; both failures are the pre-existing untracked blog corpus disagreeing with the tracked generated registry. The initial Node24 in-band baseline process exited139; Node22 full tests additionally encountered the pre-installed Node24 sqlite binary ABI mismatch. No dependencies or unrelated user files were changed to conceal these environment/baseline issues.
+
+Index-only release snapshot `/private/tmp/rating-watch-seo-release-20261023`: **1948 tests pass, 19 skipped, zero failures (102 passing suites, four skipped)**. Optional benchmarks and tests for the absent generated film corpus account for the skipped suites. Tests use Node24.15.0 to match the already installed native SQLite binary; the production build, TypeScript check, CLI/date checks and both rendered SEO commands also pass on supported Node22.20.0. Font/model first-download failures were resolved with approved network access. Clean release SEO and link audits each include all15 pages, zero findings; shared first-load JS87.4kB. Independent scoped final review found no blocking or important findings. Only explicit audit paths are staged; none of the pre-existing user code or untracked corpus is included.
+
+Open external items: configure valid www TLS/redirect router (current Traefik default certificate/503); make HTTP-to-HTTPS redirect permanent (302 today). PSI returned429; no field CWV/Lighthouse score claimed. Deployment and indexing require subsequent live verification.
+
+---
+
 # SEO + GEO improvement loop (20 iterations)
 
 Started 2026-10-15 via `/loop`. State: **iteration counter lives in this file** (see Progress). No git commits are made by the loop

@@ -9,12 +9,13 @@ const read = (f: string) => readFileSync(join(ROOT, f), 'utf8');
 describe('rating-source claims stay true (OMDb has no Rotten Tomatoes score for TV series)', () => {
   const claim = /(Rotten Tomatoes|Tomatometer)[^.]{0,60}\bevery (Netflix )?(title )?card|every (Netflix )?title card[^.]{0,80}(Rotten Tomatoes|Tomatometer)/i;
 
-  it('no home copy promises Rotten Tomatoes on every card', () => {
+  it('no public copy promises Rotten Tomatoes on every card', () => {
     const texts = [
       ...content.FAQS.map((f) => f.a),
       ...content.FEATURES.map((f) => f.desc),
       ...content.STATS.map((s) => `${s.label} ${s.sub}`),
       ...['Hero', 'Story', 'HowItWorks', 'FinalCta'].map((n) => read(`components/home/${n}.tsx`)),
+      read('app/research/imdb-vs-rotten-tomatoes-gap/page.tsx'),
       ...PAGES.map((p) => p.description),
     ];
     for (const t of texts) expect(t).not.toMatch(claim);
@@ -33,6 +34,18 @@ describe('rating-source claims stay true (OMDb has no Rotten Tomatoes score for 
       if (s) expect(s.rt).toBeUndefined();
     }
     for (const m of content.MARQUEE) expect(content.SHOWCASE[m.title]).toEqual({ imdb: m.imdb, ...(m.rt ? { rt: m.rt } : {}) });
+  });
+});
+
+describe('source-backed guide claims', () => {
+  it('describes Netflix recommendations without promising the retired percentage-match display', () => {
+    for (const name of ['show-imdb-ratings-on-netflix', 'show-rotten-tomatoes-on-netflix']) {
+      expect(read(`app/how-to/${name}/page.tsx`)).not.toMatch(/percentage match score|match percentage|percentage &ldquo;match&rdquo;/i);
+    }
+  });
+
+  it('does not promise unmeasured zero-latency ratings', () => {
+    expect(read('components/home/Story.tsx')).not.toMatch(/no lag|zero latency/i);
   });
 });
 

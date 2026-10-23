@@ -43,8 +43,8 @@ export const AUTHOR_NAME = 'Igor Gazivoda';
 export const PUBLISHED_DATE = '2026-05-01'; // first public release
 // Date of the newest real content change on any static page. tests/lib/pages-dates.test.ts fails
 // when it falls behind the per-page dates in lib/pages.ts (PAGE_UPDATED), so it cannot drift.
-export const LAST_UPDATED = '2026-10-21'; // ISO
-export const LAST_UPDATED_LABEL = 'October 21, 2026';
+export const LAST_UPDATED = '2026-10-23'; // ISO
+export const LAST_UPDATED_LABEL = 'October 23, 2026';
 
 export const FEATURES = [
   {

@@ -1,0 +1,775 @@
+{
+  "capturedAt": "2026-10-23T10:15:14.755Z",
+  "origin": "https://rating.watch",
+  "state": "live deployment before local audit fixes",
+  "settings": {
+    "maxPages": 500,
+    "concurrency": 5,
+    "batchDelaySeconds": 1,
+    "timeoutSeconds": 30,
+    "maxRedirects": 3,
+    "respectRobots": true
+  },
+  "robots": {
+    "status": 200,
+    "text": "User-Agent: *\nAllow: /\nDisallow: /account\nDisallow: /api/\n\nUser-Agent: Googlebot\nUser-Agent: Bingbot\nUser-Agent: Applebot\nUser-Agent: OAI-SearchBot\nUser-Agent: Claude-SearchBot\nUser-Agent: PerplexityBot\nAllow: /\nDisallow: /account\nDisallow: /api/\n\nUser-Agent: ChatGPT-User\nUser-Agent: Claude-User\nUser-Agent: Perplexity-User\nAllow: /\nDisallow: /account\nDisallow: /api/\n\nUser-Agent: GPTBot\nUser-Agent: ClaudeBot\nUser-Agent: CCBot\nUser-Agent: Google-Extended\nUser-Agent: Applebot-Extended\nUser-Agent: Bytespider\nUser-Agent: cohere-ai\nAllow: /\nDisallow: /account\nDisallow: /api/\n\nHost: https://rating.watch\nSitemap: https://rating.watch/sitemap.xml\n"
+  },
+  "sitemap": {
+    "status": 200,
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n<url>\n<loc>https://rating.watch</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>weekly</changefreq>\n<priority>1</priority>\n</url>\n<url>\n<loc>https://rating.watch/install</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.9</priority>\n</url>\n<url>\n<loc>https://rating.watch/how-to/show-imdb-ratings-on-netflix</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.9</priority>\n</url>\n<url>\n<loc>https://rating.watch/how-to/show-rotten-tomatoes-on-netflix</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.9</priority>\n</url>\n<url>\n<loc>https://rating.watch/how-to/find-what-to-watch-on-netflix</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://rating.watch/research/imdb-vs-rotten-tomatoes-gap</loc>\n<lastmod>2026-10-20T00:00:00.000Z</lastmod>\n<changefreq>yearly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://rating.watch/compare/imdb-vs-rotten-tomatoes</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.9</priority>\n</url>\n<url>\n<loc>https://rating.watch/compare/alternatives</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.8</priority>\n</url>\n<url>\n<loc>https://rating.watch/about</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>yearly</changefreq>\n<priority>0.6</priority>\n</url>\n<url>\n<loc>https://rating.watch/camera-vision</loc>\n<lastmod>2026-10-20T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.5</priority>\n</url>\n<url>\n<loc>https://rating.watch/camera-vision/ar</loc>\n<lastmod>2026-10-20T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.4</priority>\n</url>\n<url>\n<loc>https://rating.watch/privacy</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>yearly</changefreq>\n<priority>0.3</priority>\n</url>\n<url>\n<loc>https://rating.watch/pricing</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>monthly</changefreq>\n<priority>0.6</priority>\n</url>\n<url>\n<loc>https://rating.watch/terms</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>yearly</changefreq>\n<priority>0.3</priority>\n</url>\n<url>\n<loc>https://rating.watch/refund-policy</loc>\n<lastmod>2026-10-21T00:00:00.000Z</lastmod>\n<changefreq>yearly</changefreq>\n<priority>0.3</priority>\n</url>\n</urlset>\n"
+  },
+  "publicPages": [
+    {
+      "url": "https://rating.watch",
+      "finalUrl": "https://rating.watch/",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 132779,
+      "titles": [
+        "Rating Watch: IMDb & Rotten Tomatoes on Netflix Cards"
+      ],
+      "h1": [
+        "Know if it's worth watching before you press play."
+      ],
+      "canonicals": [
+        "https://rating.watch"
+      ],
+      "descriptions": [
+        "Free Chrome extension that shows IMDb ratings, and Rotten Tomatoes scores where available, on Netflix title cards as you browse. The extension needs no account."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "HomeNav_navLogoIcon__d50vY",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "30",
+          "height": "30"
+        },
+        {
+          "class": "HomeFooter_footerLogoIcon__D7VhS",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "30",
+          "height": "30"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/install",
+      "finalUrl": "https://rating.watch/install",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 62019,
+      "titles": [
+        "Install Rating Watch on Chrome, Edge, Brave · Rating Watch"
+      ],
+      "h1": [
+        "How to install Rating Watch"
+      ],
+      "canonicals": [
+        "https://rating.watch/install"
+      ],
+      "descriptions": [
+        "Install the free Rating Watch extension in about a minute: download the zip, enable Developer mode, click Load unpacked. Works in Chrome, Edge and Brave."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/how-to/show-imdb-ratings-on-netflix",
+      "finalUrl": "https://rating.watch/how-to/show-imdb-ratings-on-netflix",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 63248,
+      "titles": [
+        "How to Show IMDb Ratings on Netflix (Free) · Rating Watch"
+      ],
+      "h1": [
+        "How to show IMDb ratings on Netflix"
+      ],
+      "canonicals": [
+        "https://rating.watch/how-to/show-imdb-ratings-on-netflix"
+      ],
+      "descriptions": [
+        "Show IMDb ratings on Netflix cards with the free Rating Watch extension: install, open Netflix, read the top-right badge. What the score means, and limits."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/how-to/show-rotten-tomatoes-on-netflix",
+      "finalUrl": "https://rating.watch/how-to/show-rotten-tomatoes-on-netflix",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 64178,
+      "titles": [
+        "Show Rotten Tomatoes Scores on Netflix · Rating Watch"
+      ],
+      "h1": [
+        "How to show Rotten Tomatoes scores on Netflix"
+      ],
+      "canonicals": [
+        "https://rating.watch/how-to/show-rotten-tomatoes-on-netflix"
+      ],
+      "descriptions": [
+        "Netflix has no Rotten Tomatoes scores. Install the free Rating Watch extension to see the Tomatometer where OMDb has one, and what the percentage means."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/how-to/find-what-to-watch-on-netflix",
+      "finalUrl": "https://rating.watch/how-to/find-what-to-watch-on-netflix",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 76182,
+      "titles": [
+        "How to Find What to Watch on Netflix · Rating Watch"
+      ],
+      "h1": [
+        "How to find what to watch on Netflix"
+      ],
+      "canonicals": [
+        "https://rating.watch/how-to/find-what-to-watch-on-netflix"
+      ],
+      "descriptions": [
+        "A 60-second routine for choosing what to watch on Netflix: read IMDb and Rotten Tomatoes together, spot split scores, and know when ratings mislead."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/research/imdb-vs-rotten-tomatoes-gap",
+      "finalUrl": "https://rating.watch/research/imdb-vs-rotten-tomatoes-gap",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 127212,
+      "titles": [
+        "IMDb vs Rotten Tomatoes Gap: Netflix Data Study · Rating Watch"
+      ],
+      "h1": [
+        "IMDb vs Rotten Tomatoes: how far apart are the scores on Netflix?"
+      ],
+      "canonicals": [
+        "https://rating.watch/research/imdb-vs-rotten-tomatoes-gap"
+      ],
+      "descriptions": [
+        "We compared IMDb and Rotten Tomatoes scores for 44 Netflix Original films: the average gap is 18.7 points and 61% differ by 15+. Method and raw data included."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/compare/imdb-vs-rotten-tomatoes",
+      "finalUrl": "https://rating.watch/compare/imdb-vs-rotten-tomatoes",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 71459,
+      "titles": [
+        "IMDb vs Rotten Tomatoes: Which Rating to Trust · Rating Watch"
+      ],
+      "h1": [
+        "IMDb vs Rotten Tomatoes"
+      ],
+      "canonicals": [
+        "https://rating.watch/compare/imdb-vs-rotten-tomatoes"
+      ],
+      "descriptions": [
+        "IMDb is an audience score out of 10; Rotten Tomatoes is the share of critics who liked it. How the two differ, why they disagree, and when to trust each."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/compare/alternatives",
+      "finalUrl": "https://rating.watch/compare/alternatives",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 74038,
+      "titles": [
+        "Ratings on Netflix: Reelgood, JustWatch & More · Rating Watch"
+      ],
+      "h1": [
+        "Ways to See Ratings on Netflix: Alternatives Compared"
+      ],
+      "canonicals": [
+        "https://rating.watch/compare/alternatives"
+      ],
+      "descriptions": [
+        "Rating Watch vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/about",
+      "finalUrl": "https://rating.watch/about",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 55830,
+      "titles": [
+        "About Rating Watch and Its Maker · Rating Watch"
+      ],
+      "h1": [
+        "About Rating Watch"
+      ],
+      "canonicals": [
+        "https://rating.watch/about"
+      ],
+      "descriptions": [
+        "Rating Watch is a free browser extension made by Igor Gazivoda. Where the scores come from, how accuracy is handled, and how to reach the maker."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/camera-vision",
+      "finalUrl": "https://rating.watch/camera-vision",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 31429,
+      "titles": [
+        "Camera Vision Demo: Read Titles by Camera · Rating Watch"
+      ],
+      "h1": [
+        "Camera Vision Demo"
+      ],
+      "canonicals": [
+        "https://rating.watch/camera-vision"
+      ],
+      "descriptions": [
+        "Experimental demo that reads movie and show titles from your camera with on-device OCR, then looks up their IMDb and Rotten Tomatoes scores."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/camera-vision/ar",
+      "finalUrl": "https://rating.watch/camera-vision/ar",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 31176,
+      "titles": [
+        "AR Ratings: Netflix Scores Over the TV Screen"
+      ],
+      "h1": [
+        "AR Ratings"
+      ],
+      "canonicals": [
+        "https://rating.watch/camera-vision/ar"
+      ],
+      "descriptions": [
+        "AR mode for Rating Watch Pro: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. 3-day free trial."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/privacy",
+      "finalUrl": "https://rating.watch/privacy",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 58728,
+      "titles": [
+        "Privacy Policy · Rating Watch"
+      ],
+      "h1": [
+        "Privacy Policy"
+      ],
+      "canonicals": [
+        "https://rating.watch/privacy"
+      ],
+      "descriptions": [
+        "What the Rating Watch extension sends to OMDb, what the website stores for AR mode accounts (Google sign-in, Paddle payments) and how opt-in analytics works."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/pricing",
+      "finalUrl": "https://rating.watch/pricing",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 33848,
+      "titles": [
+        "Pricing: Free Extension and Pro AR Mode · Rating Watch"
+      ],
+      "h1": [
+        "Pricing"
+      ],
+      "canonicals": [
+        "https://rating.watch/pricing"
+      ],
+      "descriptions": [
+        "Rating Watch is free as a Chrome extension. Pro adds AR mode for $2.99 a month or $29 a year, with a 3-day free trial and a 14-day refund window."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/terms",
+      "finalUrl": "https://rating.watch/terms",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 34826,
+      "titles": [
+        "Terms of Service · Rating Watch"
+      ],
+      "h1": [
+        "Terms of Service"
+      ],
+      "canonicals": [
+        "https://rating.watch/terms"
+      ],
+      "descriptions": [
+        "The terms for using Rating Watch: the free Chrome extension, the Pro AR mode subscription, billing through Paddle, cancellation and acceptable use."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    },
+    {
+      "url": "https://rating.watch/refund-policy",
+      "finalUrl": "https://rating.watch/refund-policy",
+      "status": 200,
+      "redirects": 0,
+      "contentType": "text/html; charset=utf-8",
+      "bytes": 30160,
+      "titles": [
+        "Refund Policy · Rating Watch"
+      ],
+      "h1": [
+        "Refund Policy"
+      ],
+      "canonicals": [
+        "https://rating.watch/refund-policy"
+      ],
+      "descriptions": [
+        "Request a full refund within 14 days of your first Rating Watch Pro payment. How to ask, how long it takes and what happens to your access afterwards."
+      ],
+      "robots": [
+        {
+          "name": "robots",
+          "content": "index, follow"
+        },
+        {
+          "name": "googlebot",
+          "content": "index, follow, max-image-preview:large, max-snippet:-1"
+        }
+      ],
+      "images": [
+        {
+          "class": "site-chrome_navLogoIcon__Eo4qo",
+          "src": "/icon.svg",
+          "alt": "",
+          "width": "34",
+          "height": "34"
+        }
+      ],
+      "headers": [
+        "HTTP/2 200 ",
+        "content-type: text/html; charset=utf-8",
+        "permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(self \"https://*.paddle.com\"), usb=(), interest-cohort=()",
+        "referrer-policy: strict-origin-when-cross-origin",
+        "strict-transport-security: max-age=31536000; includeSubDomains",
+        "x-content-type-options: nosniff",
+        "x-frame-options: SAMEORIGIN"
+      ]
+    }
+  ],
+  "blocked": [],
+  "renderedHtmlFindings": [],
+  "hosting": {
+    "canonicalHttp": {
+      "status": 302,
+      "location": "https://rating.watch/"
+    },
+    "wwwHttps": {
+      "verifiedCurlExit": 60,
+      "certificateSubject": "CN=TRAEFIK DEFAULT CERT",
+      "certificateIssuer": "CN=TRAEFIK DEFAULT CERT",
+      "diagnosticUnverifiedHttpStatus": 503,
+      "note": "Unverified request used only to diagnose certificate/router; not trusted site content."
+    },
+    "wwwHttp": {
+      "status": 404
+    }
+  },
+  "limitations": [
+    "15 discovered public HTML pages; max 500, not a 500-page site.",
+    "Skill fetch_page.py unavailable because Python requests is absent; crawl used curl and Python standard library.",
+    "Crawl settings use one-second pauses between batches, with at most five requests in flight.",
+    "No authenticated Search Console/Bing indexing or backlink data.",
+    "PageSpeed Insights API returned HTTP 429; no field CWV or Lighthouse score."
+  ]
+}

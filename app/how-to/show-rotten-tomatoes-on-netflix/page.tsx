@@ -27,15 +27,15 @@ const STEPS = [
     text: 'The number is the Tomatometer: the percentage of professional critic reviews that are positive. Rotten Tomatoes treats 60% or higher as Fresh and anything below as Rotten.',
   },
   {
-    name: 'Check the card again if no tomato appears',
-    text: 'If a title shows only an IMDb rating, or no badge at all, the OMDb database had no Rotten Tomatoes score for it. That is a data gap, not a bug in your install.',
+    name: 'Check missing scores and troubleshoot missing badges',
+    text: 'An IMDb-only badge means no Rotten Tomatoes score was returned for that title. If no badge appears, the title may lack scores, or a network problem, exhausted daily allowance or installation issue may have stopped the lookup. Follow the install page troubleshooting steps if badges are missing throughout Netflix.',
   },
 ];
 
 const FAQS: Faq[] = [
   {
     q: 'Does Netflix show Rotten Tomatoes scores by itself?',
-    a: 'No. Netflix shows its own match percentage, maturity rating and thumbs-up votes, but not Rotten Tomatoes scores. To see them on title cards while you browse, you need a browser extension such as the free Rating Watch, which adds a small badge to each card as you scroll.',
+    a: 'No. Netflix uses its own thumbs-based recommendations and maturity ratings, rather than Rotten Tomatoes scores. Its help page explains how thumbs-up and double-thumbs-up ratings shape recommendations. To see Rotten Tomatoes scores on title cards while you browse, you need a browser extension such as Rating Watch, which adds a badge where OMDb has a score.',
   },
   {
     q: 'Which Rotten Tomatoes score does the extension show?',
@@ -102,6 +102,12 @@ export default function ShowRottenTomatoesOnNetflixPage() {
       <p className={g.p}>
         The full walkthrough, including the Developer mode toggle and what to do if nothing
         appears, is on the <a href="/install">install page</a>.
+      </p>
+      <p className={g.p}>
+        Netflix explains its own thumbs-based recommendations in{' '}
+        <a href="https://help.netflix.com/en/node/9898" target="_blank" rel="noopener noreferrer">
+          How to rate TV shows and movies
+        </a>. These are separate from the critic scores shown by the extension.
       </p>
 
       <h2 className={g.h2}>What does the Rotten Tomatoes percentage on Netflix mean?</h2>

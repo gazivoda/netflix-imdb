@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 // Internal-link + on-page SEO audit.
-//   node scripts/check-links.mjs                  # reads the build in .next/server/app (run `next build` first)
+//   SEO_BASE_URL=http://localhost:3214 node scripts/check-links.mjs  # build + server-rendered registry pages
 //   node scripts/check-links.mjs --url http://localhost:3214   # fetches every registry page from a running server
 // Exits 1 when any error-level finding exists. Analysis lives in lib/link-audit.ts.
-// (Node >= 22.18 / 23.6 strips TypeScript types natively, hence the .ts imports.)
+// TypeScript helpers load through ts-node, as in validate-seo.mjs (Node 20/22 compatible).
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Node warns that the .ts files have no package "type"; harmless, so keep output clean.
-process.removeAllListeners('warning');
-const { analyzePages, formatTable } = await import('../lib/link-audit.ts');
-const { PAGES } = await import('../lib/pages.ts');
+// Match seo:validate: support the declared Node 20/22 engines and extensionless
+// TypeScript imports in the page registry, without native type stripping.
+const require = createRequire(import.meta.url);
+require('ts-node').register({
+  transpileOnly: true,
+  compilerOptions: { module: 'commonjs', moduleResolution: 'node' },
+});
+const { analyzePages, formatTable } = require('../lib/link-audit.ts');
+const { PAGES } = require('../lib/pages.ts');
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -23,6 +29,7 @@ const argValue = (flag) => {
 
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rating.watch').replace(/\/$/, '');
 const baseUrl = argValue('--url')?.replace(/\/$/, '');
+const renderedBaseUrl = (process.env.SEO_BASE_URL || '').replace(/\/$/, '');
 const maxDepth = Number(argValue('--max-depth') ?? 2);
 const registry = PAGES.map((p) => p.path);
 
@@ -33,7 +40,7 @@ function walk(dir) {
 }
 
 /** Pages + valid non-page targets from the Next build output and /public. */
-function loadBuild() {
+async function loadBuild() {
   const appDir = join(root, '.next/server/app');
   if (!existsSync(appDir)) {
     console.error('No build found at .next/server/app. Run `npm run build` first, or pass --url.');
@@ -53,6 +60,20 @@ function loadBuild() {
   }
   const pub = join(root, 'public');
   if (existsSync(pub)) for (const f of walk(pub)) allow.add('/' + relative(pub, f).split('\\').join('/'));
+  // Cookie-aware routes may render only on request. Check missing registry
+  // pages against the same production build rather than skipping their HTML.
+  for (const path of registry.filter((p) => !pages.some((page) => page.path === p))) {
+    if (!renderedBaseUrl) {
+      console.error(`No prerendered HTML for ${path}; set SEO_BASE_URL to a running production build to check it.`);
+      continue;
+    }
+    const res = await fetch(renderedBaseUrl + path, { redirect: 'manual' });
+    if (res.status !== 200) {
+      console.error(`GET ${renderedBaseUrl}${path} -> ${res.status}`);
+      continue;
+    }
+    pages.push({ path, html: await res.text() });
+  }
   return { pages, allow: [...allow, /^\/api\//, /^\/_next\//] };
 }
 
@@ -69,7 +90,7 @@ async function loadLive() {
   return { pages, allow: [/^\/api\//, /^\/_next\//] };
 }
 
-const { pages, allow } = baseUrl ? await loadLive() : loadBuild();
+const { pages, allow } = baseUrl ? await loadLive() : await loadBuild();
 let { findings, depth, inbound } = analyzePages(pages, { siteUrl, registry, allowTargets: allow, maxDepth });
 
 // Live mode has no file listing, so confirm unknown link targets by requesting them.

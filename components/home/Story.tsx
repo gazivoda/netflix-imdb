@@ -26,8 +26,8 @@ export default function Story() {
           without a second thought.
         </p>
         <p>
-          Because ratings load in parallel as you browse, there&apos;s no lag and no
-          card-by-card waiting. New rows, search results and &ldquo;More Like This&rdquo;
+          Ratings load in parallel in a background worker as you browse, and repeat lookups use
+          a local cache. New rows, search results and &ldquo;More Like This&rdquo;
           suggestions are all covered automatically. Rating Watch is an independent project;{' '}
           <a href="/about">read about the maker and where the scores come from</a>.
         </p>

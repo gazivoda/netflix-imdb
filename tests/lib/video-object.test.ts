@@ -15,6 +15,12 @@ describe('videoObject (home page promo)', () => {
     expect(v.inLanguage).toBe('en');
   });
 
+  it('qualifies score availability in the shared visible and structured description', () => {
+    expect(PROMO_VIDEO.caption).toContain('where available');
+    expect(PROMO_VIDEO.caption).not.toContain('every Netflix title card');
+    expect(v.description).toBe(PROMO_VIDEO.caption);
+  });
+
   it('uses absolute https URLs on the site origin for thumbnail and content', () => {
     expect(v.thumbnailUrl).toBe(`${SITE_URL}/video/rating-watch-promo-poster.webp`);
     expect(v.contentUrl).toBe(`${SITE_URL}/video/rating-watch-promo.mp4`);

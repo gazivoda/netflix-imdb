@@ -10,5 +10,5 @@ export const PROMO_VIDEO = {
   playLabel: 'Watch the 30 second overview',
   // Two plain sentences, shown under the video and reused as the JSON-LD description.
   caption:
-    'The free Chrome extension puts IMDb and Rotten Tomatoes scores on every Netflix title card, so you can pick something before you press play. The optional AR mode points your phone camera at a TV and shows the same scores over the titles it finds.',
+    'The free Chrome extension puts IMDb and Rotten Tomatoes scores on Netflix title cards where available, so you can pick something before you press play. The optional AR mode points your phone camera at a TV and shows available scores over the titles it matches.',
 } as const;

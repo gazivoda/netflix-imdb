@@ -12,11 +12,11 @@ export const metadata = pageMetadata(PATH);
 const FAQS: Faq[] = [
   {
     q: 'Does Netflix show IMDb ratings?',
-    a: 'No. Netflix does not display IMDb ratings anywhere in its app or website. It shows its own signals instead, such as a percentage match score and its thumbs-up ratings. To see IMDb scores on Netflix, you need a browser extension like Rating Watch or a lookup on the IMDb site.',
+    a: 'No. Netflix uses its own thumbs-based recommendations rather than IMDb scores. Its help page describes thumbs-up and double-thumbs-up ratings, which help personalize what it recommends. To see IMDb scores on Netflix title cards, you need a browser extension like Rating Watch; otherwise, look the title up on IMDb separately.',
   },
   {
     q: 'What does the IMDb number on the badge mean?',
-    a: 'It is the title’s IMDb user rating, an average of votes from IMDb members on a scale of 1 to 10. A higher number means IMDb users rated it better. It reflects audience opinion, not critics, which is why it can differ from the Rotten Tomatoes percentage.',
+    a: 'It is the title’s IMDb user rating, a weighted average of votes from IMDb members on a scale of 1 to 10. A higher number means IMDb users rated it better. It reflects audience opinion, not critics, which is why it can differ from the Rotten Tomatoes percentage.',
   },
   {
     q: 'Why is there no rating on some Netflix titles?',
@@ -28,7 +28,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Is it free, and what does it send?',
-    a: 'It is free, with no account needed, and works out of the box on a shared OMDb lookup allowance that can run out on a busy day (you can add a free personal OMDb key in the extension options). To fetch a rating it sends only the title name to OMDb, the database that supplies the scores. It requests access to just netflix.com and omdbapi.com, and the privacy policy lists exactly what it does.',
+    a: 'It is free, with no account needed, and works out of the box on a shared OMDb lookup allowance that can run out on a busy day (you can add a free personal OMDb key in the extension options). To fetch a rating it sends the title name and OMDb API key to OMDb, the database that supplies the scores. It requests access to just netflix.com and omdbapi.com; the privacy policy lists the full details.',
   },
 ];
 
@@ -96,7 +96,7 @@ export default function ShowImdbRatingsOnNetflixPage() {
           </span>
         </div>
         <p className={`${g.p} ${h.ticketBody}`}>
-          The badge shows the title&rsquo;s IMDb user rating: the average of votes cast by IMDb
+          The badge shows the title&rsquo;s IMDb user rating: the weighted average of votes cast by IMDb
           members, on a scale from 1 to 10. A badge reading &ldquo;<ImdbChip value="8.1" />&rdquo;
           means IMDb users rate that title 8.1 out of 10 on average. It is an audience score, so it
           says how viewers felt, not what critics concluded. The badge does not show how many
@@ -118,16 +118,18 @@ export default function ShowImdbRatingsOnNetflixPage() {
         <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDb</a>, an
         open movie database that carries IMDb ratings and Rotten Tomatoes scores. Lookups run in
         parallel and repeat titles are served from a local cache, so scrolling stays fast. The
-        only thing sent is the title text. See the <a href="/privacy">privacy policy</a> for the
-        full detail.
+        lookup sends the title text and OMDb API key to OMDb, which also sees your IP address.
+        See the <a href="/privacy">privacy policy</a> for the full detail.
       </p>
 
       <h2 className={g.h2}>Can you see IMDb ratings on Netflix without an extension?</h2>
       <p className={g.p}>
-        Not on Netflix itself. Netflix does not show IMDb ratings. What it shows instead are its
-        own signals, such as a percentage &ldquo;match&rdquo; score tailored to your viewing
-        history and its thumbs-up ratings. Those are Netflix&rsquo;s measures, not IMDb&rsquo;s,
-        and the two can point in different directions.
+        Netflix uses its own recommendation signals. Its{' '}
+        <a href="https://help.netflix.com/en/node/9898" target="_blank" rel="noopener noreferrer">
+          guide to rating TV shows and movies
+        </a>{' '}
+        describes thumbs-up and double-thumbs-up ratings, which help personalize recommendations.
+        These are separate from IMDb user ratings, so they can point in different directions.
       </p>
       <p className={g.p}>
         Without an extension the workaround is manual: open a second tab, search for the title on

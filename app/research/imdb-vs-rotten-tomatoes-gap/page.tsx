@@ -321,7 +321,7 @@ export default function Page() {
       </p>
       <p className={g.p}>
         Want both scores while you browse? <a href="/install">Install Rating Watch</a>, a free
-        extension that shows IMDb and Rotten Tomatoes on every Netflix title card. It
+        extension that shows IMDb ratings and, where available, Rotten Tomatoes scores on Netflix title cards. It
         is not affiliated with Netflix, IMDb or Rotten Tomatoes.
       </p>
     </GuideLayout>

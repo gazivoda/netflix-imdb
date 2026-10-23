@@ -1,6 +1,6 @@
 // Pure on-page / internal-link analysis over rendered HTML. No fs, no network,
-// no imports: scripts/check-links.mjs loads this file directly with Node's
-// type stripping, and jest unit-tests it with small HTML fixtures.
+// no imports: scripts/check-links.mjs loads this file through ts-node, and jest
+// unit-tests it with small HTML fixtures.
 
 export interface AuditPage {
   /** Site path the HTML was served at, e.g. "/" or "/install". */

@@ -24,16 +24,22 @@ describe('robots.txt', () => {
     expect(group!.allow).toBe('/');
   });
 
-  it('has a generic group that allows / and disallows /account and /api/', () => {
+  it('has a generic group that allows / and disallows /api/', () => {
     const star = groupFor('*');
     expect(star?.allow).toBe('/');
-    expect(star?.disallow).toEqual(['/account', '/api/']);
+    expect(star?.disallow).toEqual(['/api/']);
   });
 
-  it('disallows /account and /api/ in every group (named groups do not inherit "*")', () => {
+  it('disallows /api/ in every group (named groups do not inherit "*")', () => {
     for (const r of rules) {
-      expect(r.disallow).toContain('/account');
       expect(r.disallow).toContain('/api/');
+    }
+  });
+
+  it('lets every crawler fetch /account so its noindex directive can be read', () => {
+    for (const r of rules) {
+      expect(r.allow).toBe('/');
+      expect(r.disallow).not.toContain('/account');
     }
   });
 

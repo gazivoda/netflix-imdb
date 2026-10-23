@@ -10,7 +10,7 @@ describe('/compare/alternatives', () => {
     const page = getPage(PATH);
     expect(page.priority).toBe(0.8);
     expect(page.group).toBe('compare');
-    expect(page.updated).toBe('2026-10-21');
+    expect(page.updated).toBe('2026-10-23');
     expect(pagesInGroup('compare').map((p) => p.path)).toContain(PATH);
   });
 

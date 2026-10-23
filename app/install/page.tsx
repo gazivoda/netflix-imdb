@@ -79,7 +79,7 @@ export default function InstallPage() {
           name: 'How to install the Rating Watch Chrome extension',
           description:
             'Install the free Rating Watch extension as an unpacked extension in Chrome, Edge or Brave.',
-          totalTime: 'PT2M',
+          totalTime: 'PT1M',
           steps: STEPS,
         }),
       ]}

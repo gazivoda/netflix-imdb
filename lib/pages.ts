@@ -41,14 +41,14 @@ export interface SitePage {
  * (lib/content.ts) to the newest date here.
  */
 export const PAGE_UPDATED: Record<string, string> = {
-  '/': '2026-10-21', // testimonials removed, rating-source and download wording corrected
-  '/install': '2026-10-21', // shared-allowance and personal-key notes added
-  '/how-to/show-imdb-ratings-on-netflix': '2026-10-21',
-  '/how-to/show-rotten-tomatoes-on-netflix': '2026-10-21', // description corrected (not every card has RT)
+  '/': '2026-10-23', // background-loading claim qualified
+  '/install': '2026-10-23', // installation duration aligned with visible copy
+  '/how-to/show-imdb-ratings-on-netflix': '2026-10-23',
+  '/how-to/show-rotten-tomatoes-on-netflix': '2026-10-23', // Netflix UI and missing-badge troubleshooting corrected
   '/how-to/find-what-to-watch-on-netflix': '2026-10-21',
-  '/research/imdb-vs-rotten-tomatoes-gap': '2026-10-20',
-  '/compare/imdb-vs-rotten-tomatoes': '2026-10-21',
-  '/compare/alternatives': '2026-10-21',
+  '/research/imdb-vs-rotten-tomatoes-gap': '2026-10-23',
+  '/compare/imdb-vs-rotten-tomatoes': '2026-10-23',
+  '/compare/alternatives': '2026-10-23',
   '/about': '2026-10-21',
   '/camera-vision': '2026-10-20',
   '/camera-vision/ar': '2026-10-20',

@@ -46,6 +46,12 @@ describe(PATH, () => {
     expect(source).toMatch(/Not\s+affiliated/);
   });
 
+  it('does not rule out installation failures when no badge appears', () => {
+    expect(source).not.toMatch(/not a bug in your install/);
+    expect(source).toMatch(/network|connection/i);
+    expect(source).toMatch(/install.*troubleshooting|troubleshooting.*install/i);
+  });
+
   it('never uses the wrong brand name', () => {
     expect(source).not.toMatch(/Netflix IMDB Ratings/i);
   });

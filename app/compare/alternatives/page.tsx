@@ -203,8 +203,9 @@ export default function AlternativesPage() {
         When you mostly browse Netflix and want the audience score (IMDb, out of 10) and the critic
         score (Rotten Tomatoes, a percentage) on title cards without opening anything else (Rotten Tomatoes is mostly available for films, not
         TV series). It has no account, needs no key to start (an optional free personal OMDb key lifts the
-        shared daily limit), it asks for access to only netflix.com and omdbapi.com, and
-        it sends nothing but title names to OMDb. There is also an optional {AR_MODE_NAME} that shows
+        shared daily limit), and asks for access to only netflix.com and omdbapi.com.
+        Rating lookups send title names and the OMDb API key to OMDb, which also sees your IP
+        address; the <a href="/privacy">privacy policy</a> explains the details. There is also an optional {AR_MODE_NAME} that shows
         the same scores over a TV screen through your phone camera. Not sure
         how the two scores differ? See{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.

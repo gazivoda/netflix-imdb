@@ -30,10 +30,11 @@ export const TRAINING_CRAWLERS = [
   'cohere-ai',
 ];
 
-// A crawler with its own group ignores the `*` group, so the private paths are
-// disallowed in each one: /api/ (JSON endpoints with nothing to index) and
-// /account (per-user, noindex).
-const PUBLIC = { allow: '/', disallow: ['/account', '/api/'] };
+// A crawler with its own group ignores the `*` group, so /api/ (JSON endpoints
+// with nothing to index) is disallowed in each one. Keep /account crawlable:
+// search engines must fetch it to read its noindex directive. Authentication
+// protects account data; robots.txt is not an access control.
+const PUBLIC = { allow: '/', disallow: ['/api/'] };
 
 export default function robots(): MetadataRoute.Robots {
   return {

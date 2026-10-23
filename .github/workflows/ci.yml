@@ -24,4 +24,5 @@ jobs:
           npx next start -p 3100 > next-start.log 2>&1 &
           for i in $(seq 1 30); do curl -sf http://localhost:3100/ > /dev/null && break; sleep 1; done
           SEO_BASE_URL=http://localhost:3100 npm run seo:validate
+          SEO_BASE_URL=http://localhost:3100 npm run seo:links
       - run: npm run zip:check

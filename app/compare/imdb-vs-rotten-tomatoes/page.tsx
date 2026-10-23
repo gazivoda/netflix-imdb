@@ -57,7 +57,7 @@ const FAQS = [
   },
   {
     q: 'How does Rotten Tomatoes calculate the Tomatometer?',
-    a: 'Rotten Tomatoes defines the Tomatometer as the percentage of professional critic reviews that are positive. A title with at least 60% positive reviews is Fresh, and one below 60% is Rotten. Certified Fresh needs 75% or higher with at least five Top Critics reviews. The separate audience score, the Popcornmeter, counts star ratings of 3.5 or higher as positive.',
+    a: 'The Tomatometer is the percentage of professional critic reviews that are positive: 60% or more is Fresh, and below 60% is Rotten. Certified Fresh also requires a minimum total-review count that varies by release type; streaming films need at least 40 reviews, including five Top Critics reviews, and a score of 75% or higher. The separate audience score, the Popcornmeter, counts star ratings of 3.5 or higher as positive.',
   },
   {
     q: 'Which rating is more reliable, IMDb or Rotten Tomatoes?',
@@ -199,12 +199,14 @@ export default function ComparePage() {
         <li>
           <strong>Rotten Tomatoes:</strong> the Tomatometer is the percentage of professional
           critic reviews that are positive. Titles at 60% or above are Fresh, below 60% are Rotten,
-          and Certified Fresh needs 75% or higher with at least five Top Critics reviews. Source:{' '}
+          and Certified Fresh requires more than a high score. Along with 75% or higher and at least
+          five Top Critics reviews, it has minimum total-review counts that vary by release type:
+          streaming films need at least 40 reviews, for example. Source:{' '}
           <a href="https://www.rottentomatoes.com/about" target="_blank" rel="noopener noreferrer">Rotten Tomatoes, About</a>.
         </li>
       </ul>
       <p className={g.note}>
-        Both pages were last checked on October 15, 2026. Either company can change its method or
+        Both pages were last checked on October 23, 2026. Either company can change its method or
         thresholds, so check the linked pages for the current rules. Rating Watch is not
         affiliated with IMDb or Rotten Tomatoes.
       </p>
