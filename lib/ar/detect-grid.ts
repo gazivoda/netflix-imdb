@@ -15,7 +15,9 @@
 //                 the aspect prior implies on it, so dark tiles with no visible sides are bridged, an enlarged focus tile
 //                 (wider, no gap) still fits and tiles cut by the frame edge are kept when most of them shows
 //   4. verify     a row is bounded by bare background above and below, its tiles are busier than the gaps between them
-//   5. boxes      snapped to the real edges per tile at full resolution (tilt and keystone follow the line slopes)
+//   5. focus      the selected tile that the TV enlarges in place (1.3x to 0.6 of the frame width) is looked for apart from the
+//                 rows, and flagged `focus`; it is told from a hero banner by standing among ordinary tiles (see pickFocus)
+//   6. boxes      snapped to the real edges per tile at full resolution (tilt and keystone follow the line slopes)
 import { RgbaImage } from '../card-hash'
 import { Box } from '../card-tracker'
 import type { Pt } from './rectify'
@@ -30,6 +32,8 @@ export interface CardCandidate {
   row: number
   /** The tile's corners [tl, tr, br, bl] in image pixels (tilt and keystone included), for a rectified crop. `box` is its bounding box. */
   quad: [Pt, Pt, Pt, Pt]
+  /** Set on the enlarged focus tile (the one the TV expanded in place), admitted by the focus rule instead of the ordinary tile size limit. */
+  focus?: true
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -67,6 +71,18 @@ const PITCH_PEAK = 0.7 // the page pitch is the smallest autocorrelation peak th
 const PITCH_BONUS = 0.5 // rank of a row hypothesis built from the pitch, in line-strength units of the frame width
 const PITCH_TILE = [0.9, 0.96, 1.02] // tile width as a share of the pitch (the rest is gap)
 const MAX_TILE_W = 0.38 // share of the frame width: a landscape tile wider than this is a hero banner, not a tile
+
+// Focus tile: the TV expands the selected tile in place, so one tile of a screen is much bigger than the rest. It is told from a hero
+// banner by its place (beside normal tiles of its own row, or inside the grid with rows above and below it), not by its size alone.
+const FOCUS_REL = 1.3 // at least this many times the median tile width of the frame's ordinary rows
+const FOCUS_MAX_W = 0.6 // share of the frame width: wider is a banner whatever its neighbours
+const FOCUS_Q = 0.6 // weakest quality of a lone-tile row accepted (its sides must also be seen, not inferred)
+const FOCUS_NEAR = 0.75 // a neighbour tile is at most this many median tile widths away from the focus tile
+const FOCUS_COVER = 0.5 // ordinary boxes with this share of their area under a focus tile are pieces of it
+const FOCUS_ASPECT = 0.16 // |ln(aspect / 16:9)| of the enlarged tile: about 15%
+const FOCUS_FLAT = 0.4 // share of the strips above and below the tile that is bare background
+const FOCUS_TILE = 0.8 // an ordinary tile has a top or bottom edge along at least this share of its width (art strokes stay below)
+const FOCUS_COV = 0.45 // share of the focus tile's width that each of its top and bottom edge must show as a long horizontal edge
 
 // Fragments: bright logo text on a card whose own edges are faint produces rows of "tiles" that are really letter groups. A tile of a
 // real screen is a tenth of the screen's width or more, has the 16:9 or 2:3 shape of its layout, and is not far smaller than the others.
@@ -912,7 +928,7 @@ function isFragment(c: CardCandidate, img: RgbaImage, refArea: number): boolean 
 
 /** Boxes that are whole tiles, and how many were dropped as fragments. Sizes are judged against the frame and against the other boxes. */
 function dropFragments(found: CardCandidate[], img: RgbaImage): { kept: CardCandidate[]; dropped: number } {
-  const areas = found.filter((c) => !touchesEdge(c.box, img)).map((c) => c.box.w * c.box.h).sort((x, y) => x - y)
+  const areas = found.filter((c) => !c.focus && !touchesEdge(c.box, img)).map((c) => c.box.w * c.box.h).sort((x, y) => x - y)
   const ref = areas.length >= 3 ? areas[Math.floor(0.85 * (areas.length - 1))] : 0
   // a portrait box is a poster only if it is clearly taller than the landscape tiles beside it
   const landH = found.filter((c) => c.kind === 'landscape').map((c) => c.box.h).sort((x, y) => x - y)
@@ -936,6 +952,156 @@ export function detectCards(img: RgbaImage): CardCandidate[] {
   return again.kept.length > first.kept.length ? again.kept : first.kept
 }
 
+const intersection = (a: Box, b: Box): number => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) * Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y))
+
+interface FocusCand {
+  band: BandResult
+  slot: Slot
+  score: number // 0..1+: how well the tile is confirmed as a rectangle
+}
+
+// Share of the columns x0..x1 (ends trimmed) along which a long horizontal edge runs next to the line `ln` (within 2 cells, the edge
+// may sit a little off the line; two rows are counted so that a shallow diagonal stroke, which crosses a line, does not look like it).
+function edgeCover(e: Edges, ln: Line, x0: number, x1: number): number {
+  const cx = e.w / 2
+  const w = x1 - x0
+  const reach = Math.abs(ln.s) * cx
+  const yA = Math.max(0, Math.floor(ln.rho - reach - 3))
+  const yB = Math.min(e.h, Math.ceil(ln.rho + reach + 3) + 1)
+  const cnt = new Float32Array(6)
+  for (let p = e.hrow[yA]; p < e.hrow[yB]; p++) {
+    const x = e.hx[p]
+    if (x < x0 + 0.1 * w || x > x1 - 0.1 * w || e.hl[p] < 0.25 * w) continue
+    const k = Math.round(e.hy[p] - ln.rho - ln.s * (x - cx)) + 2 // -2..2 around the line
+    if (k >= 0 && k < 5) cnt[k]++
+  }
+  let best = 0
+  for (let k = 0; k < 5; k++) if (cnt[k] + cnt[k + 1] > best) best = cnt[k] + cnt[k + 1]
+  return best / (0.8 * w)
+}
+
+// Top and bottom of an enlarged tile in the comb of the row `r`, its sides being `l` and `rt` (columns). The tile is taller than its
+// row, so the row lines say nothing about them: look for the two long horizontal edges, one tile height apart, that each cover most
+// of its width. Null when there are none.
+function focusBand(e: Edges, r: BandResult, l: number, rt: number): FocusCand | null {
+  const cx = e.w / 2
+  const slope = (r.top.s + r.bot.s) / 2
+  const w = rt - l
+  const hNom = w / r.hyp.aspect
+  const mid = (r.top.rho + r.bot.rho) / 2
+  const base = Math.floor(mid - 1.2 * hNom)
+  const n = Math.ceil(2.4 * hNom) + 4
+  const cnt = new Float32Array(n)
+  const reach = Math.abs(slope) * cx
+  const yA = Math.max(0, Math.floor(base - reach))
+  const yB = Math.min(e.h, Math.ceil(base + n + reach) + 1)
+  const xa = l + 0.1 * w
+  const xb = rt - 0.1 * w
+  const minChain = 0.25 * w
+  for (let p = e.hrow[yA]; p < e.hrow[yB]; p++) {
+    const x = e.hx[p]
+    if (x < xa || x > xb || e.hl[p] < minChain) continue
+    const i = Math.round(e.hy[p] - slope * (x - cx)) - base
+    if (i >= 0 && i < n) cnt[i]++
+  }
+  const cov = (i: number): number => (cnt[i - 1] + cnt[i] + cnt[i + 1]) / (0.8 * w)
+  let best = 0
+  let y0 = 0
+  let y1 = 0
+  for (let i = 1; i < n - 1; i++) {
+    for (const f of [0.92, 1, 1.08]) {
+      const j = Math.round(i + f * hNom)
+      if (j >= n - 1) continue
+      const v = Math.min(cov(i), cov(j))
+      if (v > best) {
+        best = v
+        y0 = i
+        y1 = j
+      }
+    }
+  }
+  if (best < FOCUS_COV) return null
+  const dev = Math.abs(Math.log(w / (y1 - y0) / r.hyp.aspect)) // a tile is 16:9; among nested rectangles on the same two edges the right one fits that best
+  if (dev > FOCUS_ASPECT) return null
+  const slot: Slot = { l, r: rt, evL: r.prof.ev[Math.round(l)], evR: r.prof.ev[Math.round(rt)] }
+  return { band: { ...r, top: { s: slope, rho: base + y0 }, bot: { s: slope, rho: base + y1 }, seg: { slots: [slot], total: r.seg.total } }, slot, score: best - dev }
+}
+
+// Pairs of tile sides of the row `r` that are an enlarged tile apart, as focusBand candidates. A tile side that is the near side of a
+// gap (the neighbour's side is a few cells further out) is the side of this tile, not the neighbour's.
+function wideCandidates(e: Edges, r: BandResult, med: number): FocusCand[] {
+  const ev = r.prof.ev
+  const peaks: number[] = []
+  for (let u = 1; u + 1 < ev.length; u++) if (ev[u] >= SPIKE && ev[u] >= ev[u - 1] && ev[u] > ev[u + 1]) peaks.push(u)
+  const lo: number[] = [] // first side of every cluster of sides (a tile's left side comes last, its right side first)
+  const hi: number[] = []
+  peaks.forEach((u, i) => {
+    if (i === 0 || u - peaks[i - 1] > 0.2 * med) {
+      lo.push(u)
+      hi.push(u)
+    } else hi[hi.length - 1] = u
+  })
+  const out: FocusCand[] = []
+  for (let i = 0; i < lo.length; i++) {
+    for (let j = i + 1; j < lo.length; j++) {
+      const w = lo[j] - hi[i]
+      if (w < FOCUS_REL * med) continue
+      if (w > FOCUS_MAX_W * e.w) break
+      const c = focusBand(e, r, hi[i], lo[j])
+      if (c) out.push(c)
+    }
+  }
+  return out
+}
+
+// The enlarged focus tile of the screen. It is wider than its row's tile width, so the row segmentation misses it or cuts it up; it
+// is found as a row of one big tile (its own top and bottom edge are strong lines: `lone`) or, beside its neighbours, as a pair of
+// tile sides a wide tile apart in the comb of an ordinary row. `regular` are the ordinary rows already chosen: they set the size a
+// normal tile has (median width) and show where the focus tile sits. Without them nothing tells a focus tile from a banner.
+function pickFocus(e: Edges, lone: BandResult[], regular: BandResult[]): BandResult[] {
+  const rows = regular.filter((b) => b.hyp.kind === 'landscape')
+  const widths = rows.flatMap((b) => b.seg.slots.map((s) => s.r - s.l)).sort((x, y) => x - y)
+  if (widths.length < 2) return []
+  const med = widths[widths.length >> 1]
+  const cands: FocusCand[] = lone.filter((b) => b.quality >= FOCUS_Q).map((b) => ({ band: b, slot: b.seg.slots[0], score: b.quality }))
+  const found: FocusCand[] = []
+  for (const r of rows) if (!r.top.frame && !r.bot.frame) found.push(...wideCandidates(e, r, med))
+  cands.push(...found.sort((a, b) => b.score - a.score))
+  const picked: BandResult[] = []
+  for (const { band: b, slot: s } of cands) {
+    const w = s.r - s.l
+    const y0 = b.top.rho
+    const y1 = b.bot.rho
+    if (s.evL < SPIKE || s.evR < SPIKE || w < FOCUS_REL * med || w > FOCUS_MAX_W * e.w) continue
+    // like a row, the tile is bounded by bare background above and below (not by the art of the rows it would be squeezed between)
+    if (Math.min(flatness(e, b.top, s.l, s.r, -1), flatness(e, b.bot, s.l, s.r, 1)) < FOCUS_FLAT) continue
+    if (picked.some((p) => Math.min(s.r, p.seg.slots[0].r) > Math.max(s.l, p.seg.slots[0].l) && Math.min(y1, p.bot.rho) > Math.max(y0, p.top.rho))) continue
+    // The box must be one tile. It is not if an ordinary tile lies inside it, top and bottom edge in place, or two rows do (where
+    // the focus tile covers the tiles of its own row the segmentation bridges them with guesses that have no such edges).
+    let spans = false
+    let beside = false
+    let above = false
+    let below = false
+    let inside = 0
+    for (const r of rows) {
+      const rh = r.bot.rho - r.top.rho
+      const inY = Math.min(y1, r.bot.rho) - Math.max(y0, r.top.rho)
+      if (inY > 0.7 * rh) inside++
+      if (r.bot.rho <= y0 + 0.1 * (y1 - y0)) above = true
+      if (r.top.rho >= y1 - 0.1 * (y1 - y0)) below = true
+      for (const t of r.seg.slots) {
+        const tw = t.r - t.l
+        const inX = Math.min(s.r, t.r) - Math.max(s.l, t.l)
+        if (inX > 0.7 * tw && inY > 0.7 * rh && Math.abs(tw - med) <= 0.15 * med && !spans && Math.max(edgeCover(e, r.top, t.l, t.r), edgeCover(e, r.bot, t.l, t.r)) >= FOCUS_TILE) spans = true
+        if (inY >= 0.5 * rh && inX < 0.3 * tw && (t.r <= s.l ? s.l - t.r : t.l - s.r) <= FOCUS_NEAR * med) beside = true
+      }
+    }
+    if (inside >= 2) spans = true
+    if (!spans && (beside || (above && below))) picked.push(b)
+  }
+  return picked
+}
+
 function detectOnGrid(img: RgbaImage, g: Grid): CardCandidate[] {
   const e = edgePoints(g)
   const bands: BandResult[] = []
@@ -946,8 +1112,11 @@ function detectOnGrid(img: RgbaImage, g: Grid): CardCandidate[] {
   // best rows first; a row that overlaps a better one is the same row seen through other lines
   bands.sort((a, b) => b.quality - a.quality)
   let chosen: BandResult[] = []
+  const lone: BandResult[] = [] // rows of one big tile: focus tile candidates
   for (const b of bands) {
-    if (b.seg.slots.length < 2 || b.quality < Q_MIN) continue
+    if (b.quality < Q_MIN) continue
+    if (b.seg.slots.length === 1 && b.hyp.kind === 'landscape' && !b.cand.implied) lone.push(b)
+    if (b.seg.slots.length < 2) continue
     const y0 = b.top.rho
     const y1 = b.bot.rho
     if (chosen.some((c) => Math.min(y1, c.bot.rho) - Math.max(y0, c.top.rho) > 0.25 * Math.min(y1 - y0, c.bot.rho - c.top.rho))) continue
@@ -964,6 +1133,7 @@ function detectOnGrid(img: RgbaImage, g: Grid): CardCandidate[] {
     if (rowH(b) * b.hyp.aspect > MAX_TILE_W * e.w || (med > 0 && rowH(b) > 1.5 * med)) hero.add(b)
   }
   chosen = chosen.filter((b) => !hero.has(b))
+  const focus = pickFocus(e, lone, chosen)
   // The vertical sides lean with the rotation; keystone changes that a little: re-segment the chosen rows with a lean a bit
   // either side of the row slope and keep the better.
   for (let i = 0; i < chosen.length; i++) {
@@ -974,7 +1144,7 @@ function detectOnGrid(img: RgbaImage, g: Grid): CardCandidate[] {
   }
   const out: CardCandidate[] = []
   const full: Full = { d: img.data, w: img.width, h: img.height, k: g.k }
-  chosen.forEach((b, row) => {
+  const emit = (b: BandResult, row: number, isFocus: boolean): void => {
     for (const t of refineTiles(e, b, full)) {
       const x0 = Math.max(0, t.x0) * g.k
       const x1 = Math.min(g.w, t.x1) * g.k
@@ -984,8 +1154,21 @@ function detectOnGrid(img: RgbaImage, g: Grid): CardCandidate[] {
       const clampX = (v: number) => Math.min(g.w * g.k, Math.max(0, v * g.k))
       const clampY = (v: number) => Math.min(g.h * g.k, Math.max(0, v * g.k))
       const q = t.quad.map((p) => ({ x: clampX(p.x), y: clampY(p.y) })) as CardCandidate['quad']
-      out.push({ box: { x: Math.round(x0), y: Math.round(y0), w: Math.round(x1 - x0), h: Math.round(y1 - y0) }, confidence: t.confidence, kind: b.hyp.kind, row, quad: q })
+      const c: CardCandidate = { box: { x: Math.round(x0), y: Math.round(y0), w: Math.round(x1 - x0), h: Math.round(y1 - y0) }, confidence: t.confidence, kind: b.hyp.kind, row, quad: q }
+      out.push(isFocus ? { ...c, focus: true } : c)
     }
+  }
+  chosen.forEach((b, row) => emit(b, row, false))
+  // a focus tile shares the row index of the ordinary tiles beside it; boxes the row segmentation cut out of it are not tiles
+  focus.forEach((b, i) => {
+    const mid = (b.top.rho + b.bot.rho) / 2
+    const beside = chosen.findIndex((r) => r.top.rho <= mid && mid <= r.bot.rho)
+    emit(b, beside >= 0 ? beside : chosen.length + i, true)
   })
+  if (focus.length) {
+    const covered = (c: CardCandidate): boolean =>
+      !c.focus && out.some((f) => f.focus && intersection(c.box, f.box) >= FOCUS_COVER * c.box.w * c.box.h)
+    return out.filter((c) => !covered(c))
+  }
   return out
 }

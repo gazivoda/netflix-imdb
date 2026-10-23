@@ -1,4 +1,4 @@
-import { RatingsCache, RatingItem, ratingKey, guideRect, stageToVideoRect, sampleToGuide } from '@/lib/ar/use-ratings'
+import { RatingsCache, RatingItem, RatingsServiceError, ratingKey, guideRect, stageToVideoRect, sampleToGuide, serviceKindForStatus, serviceMessage, classifyServiceError } from '@/lib/ar/use-ratings'
 
 function setup(respond?: (titles: string[]) => RatingItem[] | Promise<RatingItem[]>) {
   const calls: string[][] = []
@@ -158,5 +158,64 @@ describe('guide geometry', () => {
 
   it('sampleToGuide scales analysis pixels to guide CSS pixels', () => {
     expect(sampleToGuide({ x: 64, y: 36, w: 128, h: 72 }, { w: 640, h: 360 }, { w: 320, h: 180 })).toEqual({ x: 32, y: 18, w: 64, h: 36 })
+  })
+})
+
+
+describe('service limit and trouble', () => {
+  it('treats unavailable:true as its own "limit" state, retried after a short wait and never taken for "not found"', async () => {
+    const { cache, calls, run, clock } = setup(ts => ts.map(q => ({ query: q, found: false, unavailable: true })))
+    cache.request(['Dune'])
+    await run()
+    expect(cache.get('Dune').status).toBe('limit')
+    expect(cache.service()?.kind).toBe('limit')
+    cache.request(['Dune'])
+    await run()
+    expect(calls).toHaveLength(1) // still cooling down
+    clock.t += 31_000 // far shorter than the 60 s a real "not found" waits
+    cache.request(['Dune'])
+    await run()
+    expect(calls).toHaveLength(2)
+  })
+
+  it('records the kind of failure for one page-level message, and clears it after a good answer', async () => {
+    let fail: RatingsServiceError | null = new RatingsServiceError('busy', 429)
+    const { cache, run, clock } = setup()
+    const failing = new RatingsCache({
+      fetchBatch: async titles => { if (fail) throw fail; return titles.map(q => ({ query: q, found: true, rating: 7 })) },
+      now: () => clock.t,
+      schedule: () => undefined,
+    })
+    failing.request(['Dune'])
+    await failing.flush()
+    expect(failing.get('Dune').status).toBe('error')
+    expect(failing.service()?.kind).toBe('busy')
+    fail = null
+    clock.t += 16_000
+    failing.request(['Dune'])
+    await failing.flush()
+    expect(failing.get('Dune').status).toBe('ready')
+    expect(failing.service()).toBeNull()
+    void cache
+    void run
+  })
+
+  it('a whole-batch 503 (daily limit) marks the titles as limited', async () => {
+    const clock = { t: 0 }
+    const c = new RatingsCache({ fetchBatch: async () => { throw new RatingsServiceError('limit', 503) }, now: () => clock.t, schedule: () => undefined })
+    c.request(['A'])
+    await c.flush()
+    expect(c.get('A').status).toBe('limit')
+  })
+
+  it('maps HTTP statuses and offline to distinct messages', () => {
+    expect(serviceKindForStatus(503)).toBe('limit')
+    expect(serviceKindForStatus(429)).toBe('busy')
+    expect(serviceKindForStatus(500)).toBe('error')
+    expect(classifyServiceError(new TypeError('x'), false)).toBe('offline')
+    expect(classifyServiceError(new TypeError('x'), true)).toBe('error')
+    const texts = (['limit', 'busy', 'offline', 'error'] as const).map(serviceMessage)
+    expect(new Set(texts).size).toBe(4)
+    expect(texts.join(' ')).not.toMatch(/—|–/)
   })
 })

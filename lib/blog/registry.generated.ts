@@ -20,8 +20,8 @@ export interface BlogHubState {
 }
 
 export const BLOG_HUB: BlogHubState = {
-  "ready": false,
-  "dataUpdated": null
+  "ready": true,
+  "dataUpdated": "2026-10-21"
 };
 
 export const BLOG_ARTICLE_PAGES: readonly BlogArticlePage[] = [];

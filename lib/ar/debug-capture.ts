@@ -13,6 +13,10 @@ export type TileStatus =
   | 'no-text' // OCR ran and produced no title-like text
   | 'not-in-catalogue' // text was read but the catalogue has no near-identical title
   | 'lookup-failed' // text was read but the ratings service could not be reached
+  | 'limit' // text was read but the ratings service's lookup limit is reached (try again later)
+  | 'suggest' // a few known titles are close to what was read: one-tap "did you mean" chips
+  | 'unsure' // text was read but no known title is close enough: "tap to type"
+  | 'provisional' // the reader accepted a title; it becomes permanent when read a second time or when the user confirms it
   | 'learned' // title confirmed; the card is recognised by its artwork from now on
 
 export interface TileInfo {
@@ -23,6 +27,8 @@ export interface TileInfo {
   matchedTitle: string | null // what the catalogue answered (accepted or not)
   distance: number | null // 1 - similarity(tried, matchedTitle); 0 = identical
   ms: number | null // time spent reading this tile
+  /** What the decision layer thought: the top title and why it was not accepted ("family root", "number conflict" ...), for tuning. */
+  why?: string | null
 }
 
 export function emptyTileInfo(): TileInfo {
@@ -49,7 +55,15 @@ export function tileLabel(status: TileStatus, ctx: TileLabelContext): { full: st
     case 'not-in-catalogue':
       return { full: 'not in catalogue', short: 'no match' }
     case 'lookup-failed':
-      return { full: 'lookup failed', short: 'offline' }
+      return { full: 'lookup failed', short: 'retry' }
+    case 'limit':
+      return { full: 'ratings limit reached', short: 'limit' }
+    case 'suggest':
+      return { full: 'did you mean', short: 'maybe' }
+    case 'unsure':
+      return { full: 'not sure', short: 'unsure' }
+    case 'provisional':
+      return { full: 'read, not confirmed', short: 'read' }
     case 'learned':
       return { full: 'learned', short: 'learned' }
     case 'waiting':
@@ -81,9 +95,11 @@ export function ratingBadge(r: Pick<RatingState, 'status' | 'imdb' | 'rt'>): Rat
         : { imdb: null, rt: null, pill: { text: 'no score', title: 'The catalogue has this title but no IMDb or Rotten Tomatoes score for it', tone: 'na' } }
     }
     case 'missing':
-      return { imdb: null, rt: null, pill: { text: 'n/a', title: 'No ratings found for this title (or the ratings key is missing or out of quota)', tone: 'na' } }
+      return { imdb: null, rt: null, pill: { text: 'n/a', title: 'No ratings found for this title', tone: 'na' } }
+    case 'limit':
+      return { imdb: null, rt: null, pill: { text: 'limit', title: 'The ratings limit has been reached for now. Try again later.', tone: 'error' } }
     case 'error':
-      return { imdb: null, rt: null, pill: { text: 'offline', title: 'The ratings request failed; retrying shortly', tone: 'error' } }
+      return { imdb: null, rt: null, pill: { text: 'retrying', title: 'The ratings request failed; retrying shortly', tone: 'error' } }
     case 'idle':
     case 'loading':
     default:
@@ -128,6 +144,7 @@ export interface DebugReportTile {
   distance: number | null
   tried: string | null
   readMs: number | null
+  why: string | null
   trackId: number | null
   trackTitle: string | null
   missed: number | null
@@ -178,6 +195,7 @@ export function buildDebugReport(input: DebugReportInput): DebugReport {
       distance: numOrNull(t.info.distance),
       tried: t.info.tried,
       readMs: numOrNull(t.info.ms),
+      why: t.info.why ? clip(t.info.why, 300) : null,
       trackId: t.track?.trackId ?? null,
       trackTitle: t.track?.title ?? null,
       missed: t.track?.missed ?? null,

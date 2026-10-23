@@ -48,7 +48,7 @@ describe('ratingBadge', () => {
     expect(ratingBadge({ status: 'ready', imdb: undefined, rt: 0 }).rt).toBe('0%')
   })
 
-  it('gives loading, offline, not-found and no-score four different pills', () => {
+  it('gives loading, retrying, not-found and no-score four different pills', () => {
     const pills = [
       ratingBadge({ status: 'loading' }).pill,
       ratingBadge({ status: 'idle' }).pill,
@@ -57,9 +57,26 @@ describe('ratingBadge', () => {
       ratingBadge({ status: 'ready', imdb: undefined, rt: null }).pill,
     ]
     expect(pills.every(p => p && p.text && p.title)).toBe(true)
-    expect(pills.map(p => p!.text)).toEqual(['…', '…', 'offline', 'n/a', 'no score'])
+    expect(pills.map(p => p!.text)).toEqual(['…', '…', 'retrying', 'n/a', 'no score'])
     expect(pills[2]!.tone).toBe('error')
     expect(pills[0]!.tone).toBe('loading')
+  })
+})
+
+describe('service limit', () => {
+  it('shows the ratings limit as its own pill, never as "n/a" (not found)', () => {
+    const limit = ratingBadge({ status: 'limit' }).pill!
+    expect(limit.text).toBe('limit')
+    expect(limit.text).not.toBe(ratingBadge({ status: 'missing' }).pill!.text)
+    expect(limit.title).toMatch(/try again later/i)
+    expect(tileLabel('limit', { auto: true, ocrReady: true }).full).toBe('ratings limit reached')
+  })
+
+  it('labels the confirmation states', () => {
+    const ctx = { auto: true, ocrReady: true }
+    expect(tileLabel('suggest', ctx).full).toBe('did you mean')
+    expect(tileLabel('unsure', ctx).full).toBe('not sure')
+    expect(tileLabel('provisional', ctx).full).toBe('read, not confirmed')
   })
 })
 

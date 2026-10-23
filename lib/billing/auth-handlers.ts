@@ -1,8 +1,28 @@
 import { randomBytes } from 'node:crypto'
+import { clientIp, createLimiter, type BucketConfig, type Limiter } from '../ratings-guard'
 import { toPublicUser, TRIAL_DAYS } from './access'
 import { billingConfigured } from './config'
 import type { Deps } from './deps'
 import { clearCookie, parseCookies, readSessionUserId, SESSION_COOKIE, SESSION_MAX_AGE_S, setCookie, signSession } from './session'
+
+// Per-IP ceilings for the two unauthenticated GET endpoints (same in-memory token bucket as /api/ratings).
+// /api/user/me runs on every AR page load, so it is generous (a shared office or mobile NAT stays under it);
+// the Google start redirect is needed once per sign-in, so a handful of tries is plenty.
+export const ME_BUCKET: BucketConfig = { capacity: 120, refillPerSec: 2 }
+export const GOOGLE_START_BUCKET: BucketConfig = { capacity: 10, refillPerSec: 1 / 6 } // 10 burst, then 10 per minute
+let meLimiter: Limiter = createLimiter(ME_BUCKET)
+let googleStartLimiter: Limiter = createLimiter(GOOGLE_START_BUCKET)
+export function resetAuthLimitersForTests(): void {
+  meLimiter = createLimiter(ME_BUCKET)
+  googleStartLimiter = createLimiter(GOOGLE_START_BUCKET)
+}
+
+function tooManyRequests(retryAfterS: number): Response {
+  return new Response(JSON.stringify({ error: 'Too many requests' }), {
+    status: 429,
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Retry-After': String(retryAfterS) },
+  })
+}
 
 const STATE_COOKIE = 'rw_oauth_state'
 const NEXT_COOKIE = 'rw_next'
@@ -36,6 +56,8 @@ function nextFromCookie(raw: string | undefined): string {
 }
 
 export function handleGoogleStart(req: Request, deps: Deps): Response {
+  const limit = googleStartLimiter.take(clientIp(req.headers), deps.now())
+  if (!limit.allowed) return tooManyRequests(limit.retryAfterS)
   if (!deps.google) return authError(deps, 'not_configured')
   const state = randomBytes(16).toString('hex')
   const next = safeNextPath(new URL(req.url).searchParams.get('next'))
@@ -90,6 +112,8 @@ export function handleSignout(_req: Request, deps: Deps): Response {
 export function handleMe(req: Request, deps: Deps): Response {
   const json = (body: unknown, status = 200) =>
     new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } })
+  const limit = meLimiter.take(clientIp(req.headers), deps.now())
+  if (!limit.allowed) return tooManyRequests(limit.retryAfterS)
   // Ruling V/W: decide first, and never touch the database while billing is not configured (the paywall is off and AR mode is free).
   if (!billingConfigured(deps)) return json({ user: null, access: 'no_auth', billingEnabled: false })
   const id = readSessionUserId(req)

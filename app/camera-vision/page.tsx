@@ -365,7 +365,7 @@ export default function CameraVision() {
             <li>Detected titles appear over the video with their ratings. Use Hide Overlays to remove them.</li>
           </ol>
           <p className={s.aboutBody}>
-            For a TV showing the Netflix browse screen, with a frame to line up and ratings on every card, use <Link href="/camera-vision/ar">AR Ratings</Link>.
+            For a TV showing the Netflix browse screen, with a frame to line up and ratings on the cards whose title it can read, use <Link href="/camera-vision/ar">AR Ratings</Link>.
           </p>
         </section>
         <section aria-labelledby="cv-privacy">

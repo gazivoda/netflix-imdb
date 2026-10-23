@@ -195,6 +195,96 @@ describe('detectCards on hand-built Netflix-like frames', () => {
     }
   })
 
+  // Netflix's TV UI expands the selected tile in place. A scene of ordinary 16:9 tiles (width nw) with one tile scaled by `scale`,
+  // centred on its row; `row` lays the focus tile among 3 neighbours, `lone` leaves its row empty; normal rows above and below.
+  function focusFrame(W: number, H: number, nw: number, scale: number, where: 'row' | 'lone') {
+    const img = blank(W, H)
+    const nh = Math.round((nw * 9) / 16)
+    const fw = Math.round(nw * scale)
+    const fh = Math.round(nh * scale)
+    const gap = Math.round(nw * 0.08)
+    const cy = Math.round(H / 2)
+    const neighbours: Box[] = []
+    let focus: Box = { x: 16, y: cy - Math.round(fh / 2), w: fw, h: fh }
+    let x = 16
+    ;(where === 'row' ? ['n', 'F', 'n', 'n'] : ['F']).forEach((kind, i) => {
+      if (kind === 'n') {
+        const b = { x, y: cy - Math.round(nh / 2), w: nw, h: nh }
+        paint(img, b, art(200 + i, 60 + 15 * i, 22))
+        neighbours.push(b)
+        x += nw + gap
+      } else {
+        focus = { x, y: cy - Math.round(fh / 2), w: fw, h: fh }
+        paint(img, focus, art(300 + i, 85, 26, { logo: true }))
+        x += fw + gap
+      }
+    })
+    for (const y of [Math.round(cy - fh / 2 - nh - 28), Math.round(cy + fh / 2 + 28)]) {
+      neighbours.push(...rowOfTiles(img, y, 16, y, nw, nh, gap, [60, 90, 70, 100, 80, 65].slice(0, Math.floor((W - 16) / (nw + gap)))))
+    }
+    return { img, focus, neighbours, rowTiles: neighbours.slice(0, where === 'row' ? 3 : 0) }
+  }
+
+  it.each([
+    ['1.5x its neighbours', 640, 360, 80, 1.5],
+    ['2x its neighbours', 640, 360, 80, 2],
+    ['2x its neighbours, 0.45 of the frame wide', 960, 540, 150, 2],
+  ])('returns an enlarged focus tile together with its neighbours: %s', (_name, W, H, nw, scale) => {
+    const { img, focus, neighbours, rowTiles } = focusFrame(W, H, nw, scale, 'row')
+    const found = detectCards(img)
+    const flagged = found.filter((c) => c.focus)
+    expect(flagged.length).toBe(1)
+    expect(iou(flagged[0].box, focus)).toBeGreaterThanOrEqual(0.85)
+    // no other box is cut out of the focus tile, and every ordinary tile is still there
+    expect(found.filter((c) => !c.focus && iou(c.box, focus) > 0.1).length).toBe(0)
+    expect(score(found.map((c) => c.box), [focus, ...neighbours], 0.6).recall).toBeGreaterThanOrEqual(0.95)
+    // it belongs to the row of the tiles beside it
+    for (const t of rowTiles) expect(found.find((c) => iou(c.box, t) >= 0.6)!.row).toBe(flagged[0].row)
+  })
+
+  it.each([
+    ['half the frame wide', 640, 360, 72, 4.45],
+    ['0.56 of the frame wide', 640, 360, 72, 5],
+  ])('keeps a single big focus tile between normal rows: %s', (_name, W, H, nw, scale) => {
+    const { img, focus, neighbours } = focusFrame(W, H, nw, scale, 'lone')
+    const found = detectCards(img)
+    const flagged = found.filter((c) => c.focus)
+    expect(flagged.length).toBe(1)
+    expect(iou(flagged[0].box, focus)).toBeGreaterThanOrEqual(0.85)
+    expect(score(found.map((c) => c.box), [focus, ...neighbours], 0.6).recall).toBeGreaterThanOrEqual(0.95)
+    expect(found.filter((c) => c.focus === undefined && c.box.w > 0.3 * W).length).toBe(0)
+  })
+
+  it.each([
+    ['a hero banner above two rows', 150, 2],
+    ['a billboard just 2x as tall as the tiles above three rows', 100, 3],
+    ['a tall billboard on its own', 150, 0],
+  ])('never admits a hero banner as a focus tile: %s', (_name, heroH, rows) => {
+    const img = blank(640, 360)
+    paint(img, { x: 30, y: 12, w: 590, h: heroH }, art(9, 110, 38, { logo: true }))
+    const pitch = Math.round(1.78 * heroH)
+    for (let x = 40; x + 14 < 620; x += pitch) paint(img, { x, y: 12, w: 14, h: heroH }, () => [235, 235, 235])
+    for (let r = 0; r < rows; r++) rowOfTiles(img, 6 + r, 18, 12 + heroH + 30 + r * 80, 96, 54, 8, [60, 90, 70, 100, 80, 65])
+    const found = detectCards(img)
+    expect(found.filter((c) => c.focus).length).toBe(0)
+    expect(found.filter((c) => c.box.y + c.box.h <= 12 + heroH + 10).length).toBe(0)
+  })
+
+  it('rejects a tile wider than 0.6 of the frame, however well it stands among normal tiles', () => {
+    const lone = focusFrame(960, 540, 96, 6.9, 'lone') // 0.69 of the frame wide
+    expect(lone.focus.w / 960).toBeGreaterThan(0.65)
+    expect(detectCards(lone.img).filter((c) => c.box.w > 0.5 * 960 || c.focus).length).toBe(0)
+    const inRow = focusFrame(640, 360, 60, 7, 'row') // 0.66 of the frame wide, beside normal tiles
+    expect(inRow.focus.w / 640).toBeGreaterThan(0.63)
+    expect(detectCards(inRow.img).filter((c) => c.box.w > 0.5 * 640 || c.focus).length).toBe(0)
+  })
+
+  it('does not take a lone big tile for a focus tile when the frame shows no normal tile to compare it with', () => {
+    const img = blank(640, 360)
+    paint(img, { x: 160, y: 90, w: 320, h: 180 }, art(5, 85, 26, { logo: true }))
+    expect(detectCards(img).filter((c) => c.focus).length).toBe(0)
+  })
+
   it('bridges a tile whose art is the colour of the screen (no side to see) from the neighbouring tiles', () => {
     const img = blank(640, 360)
     const truth = [

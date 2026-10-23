@@ -32,8 +32,8 @@ export function findCardsDetailed(img: RgbaImage): CardCandidate[] {
 }
 
 /** Boxes with their corners, for callers that want to read a tile rectified (see rectify.warpQuad). */
-export function findCardsWithQuads(img: RgbaImage): { box: Box; quad: CardCandidate['quad'] }[] {
-  return findCardsDetailed(img).map((c) => ({ box: c.box, quad: c.quad }))
+export function findCardsWithQuads(img: RgbaImage): { box: Box; quad: CardCandidate['quad']; focus?: true }[] {
+  return findCardsDetailed(img).map((c) => ({ box: c.box, quad: c.quad, ...(c.focus ? { focus: true as const } : {}) }))
 }
 
 export function findCards(img: RgbaImage): Box[] {

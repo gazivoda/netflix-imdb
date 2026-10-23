@@ -25,6 +25,36 @@ export async function openCamera(md: { getUserMedia(c: MediaStreamConstraints): 
   throw last
 }
 
+const errName = (err: unknown): string => (typeof err === 'object' && err !== null ? ((err as { name?: string }).name ?? '') : '')
+
+/** What to tell the user when the camera could not be started, by the browser's error name. */
+export function cameraErrorMessage(err: unknown): string {
+  switch (errName(err)) {
+    case 'NotAllowedError':
+    case 'SecurityError':
+    case 'PermissionDeniedError':
+      return 'Camera access was denied. Allow it in your browser settings and try again.'
+    case 'NotFoundError':
+    case 'DevicesNotFoundError':
+      return 'No camera was found on this device.'
+    case 'NotReadableError':
+    case 'TrackStartError':
+    case 'AbortError':
+      return 'The camera is in use by another app or browser tab. Close it there and try again.'
+    case 'OverconstrainedError':
+    case 'ConstraintNotSatisfiedError':
+      return 'This camera could not deliver the video this page asks for. Try another browser.'
+    default:
+      return 'Could not start the camera.'
+  }
+}
+
+/** Shown when the camera was opened but no picture arrived (iOS Low Power Mode refuses autoplay, a stalled device). */
+export const NO_FRAMES_MESSAGE = 'The camera started but no picture is coming through. Tap Stop Camera, then Start Camera again. If it stays black, check that Low Power Mode is off.'
+export const PLAY_REFUSED_MESSAGE = 'Your browser did not start the video. Tap Start Camera again.'
+export const CAMERA_STOPPED_MESSAGE = 'The camera stopped. Tap Start Camera to continue.'
+export const NO_FRAMES_TIMEOUT_MS = 4000
+
 export interface ZoomRange {
   min: number
   max: number

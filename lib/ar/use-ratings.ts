@@ -12,13 +12,16 @@ export interface RatingItem {
   imdbId?: string
   title?: string
   year?: string
+  type?: string
   rating?: number
   voteCount?: number
   rtRating?: number | null
+  /** The service could not look this title up (its daily lookup budget is spent): NOT the same as "not found". */
+  unavailable?: boolean
 }
 
 export interface RatingState {
-  status: 'idle' | 'loading' | 'ready' | 'missing' | 'error'
+  status: 'idle' | 'loading' | 'ready' | 'missing' | 'error' | 'limit'
   imdb?: number
   votes?: number
   rt?: number | null
@@ -30,11 +33,45 @@ const IDLE: RatingState = Object.freeze({ status: 'idle' })
 const LOADING: RatingState = Object.freeze({ status: 'loading' })
 const MISSING: RatingState = Object.freeze({ status: 'missing' })
 const ERRORED: RatingState = Object.freeze({ status: 'error' })
+const LIMITED: RatingState = Object.freeze({ status: 'limit' })
+
+// ---------------------------------------------------------------- service trouble (pure)
+
+/** What went wrong with the ratings service, in the words the page uses for it. */
+export type ServiceKind = 'limit' | 'busy' | 'offline' | 'error'
+
+export class RatingsServiceError extends Error {
+  constructor(public kind: ServiceKind, public status?: number) {
+    super(`ratings ${kind}${status ? ` ${status}` : ''}`)
+    this.name = 'RatingsServiceError'
+  }
+}
+
+/** HTTP status -> kind: 503 is the daily lookup limit, 429 the per-minute rate limit; a network failure is "offline" only when the browser says so. */
+export function classifyServiceError(err: unknown, online = typeof navigator === 'undefined' ? true : navigator.onLine): ServiceKind {
+  if (err instanceof RatingsServiceError) return err.kind
+  return online ? 'error' : 'offline'
+}
+
+export function serviceKindForStatus(status: number): ServiceKind {
+  return status === 503 ? 'limit' : status === 429 ? 'busy' : 'error'
+}
+
+/** One line for the page banner. */
+export function serviceMessage(kind: ServiceKind): string {
+  switch (kind) {
+    case 'limit': return 'The ratings limit has been reached for now. Cards still show up, but scores need a try later.'
+    case 'busy': return 'The ratings service is busy. Retrying shortly.'
+    case 'offline': return 'You are offline. Scores will load when the connection is back.'
+    default: return 'The ratings service could not be reached. Retrying shortly.'
+  }
+}
 
 export interface RatingsCacheOptions {
   fetchBatch: (titles: string[]) => Promise<RatingItem[]>
   maxBatch?: number // API limit is 20 titles per request
   errorRetryMs?: number // network/server failure: try again after this
+  limitRetryMs?: number // the service said its lookup budget is spent: ask again after this (never treated as "not found")
   missingRetryMs?: number // "not found" may just be a quota blip server-side; re-ask rarely
   batchDelayMs?: number // collect titles requested within this window into one call
   now?: () => number
@@ -56,12 +93,14 @@ export class RatingsCache {
   private scheduled = false
   private version = 0
   private listeners = new Set<() => void>()
+  private serviceTrouble: { kind: ServiceKind; at: number } | null = null
   private o: Required<RatingsCacheOptions>
 
   constructor(opts: RatingsCacheOptions) {
     this.o = {
       maxBatch: 20,
       errorRetryMs: 15_000,
+      limitRetryMs: 30_000,
       missingRetryMs: 60_000,
       batchDelayMs: 40,
       now: Date.now,
@@ -78,6 +117,9 @@ export class RatingsCache {
   getVersion = (): number => this.version
 
   get = (title: string): RatingState => this.entries.get(ratingKey(title))?.state ?? IDLE
+
+  /** The last failure of the service (null once a request went through), for one page-level message instead of a label per card. */
+  service = (): { kind: ServiceKind; at: number } | null => this.serviceTrouble
 
   // Cheap enough to call every frame: known, in-flight and cooling-down titles are skipped.
   request = (titles: string[]): void => {
@@ -118,11 +160,13 @@ export class RatingsCache {
 
   private async runBatch(batch: [string, string][]): Promise<void> {
     let items: RatingItem[] | null = null
+    let failure: ServiceKind | null = null
     try {
       const res = await this.o.fetchBatch(batch.map(([, title]) => title))
       if (Array.isArray(res)) items = res
-    } catch {
-      /* falls through to the error state below */
+      else failure = 'error'
+    } catch (err) {
+      failure = classifyServiceError(err) // falls through to the error state below
     }
     const byKey = new Map<string, RatingItem>()
     for (const it of items ?? []) if (it && typeof it.query === 'string') byKey.set(ratingKey(it.query), it)
@@ -131,7 +175,10 @@ export class RatingsCache {
     for (const [key] of batch) {
       const it = byKey.get(key)
       if (!it) {
-        this.entries.set(key, { state: ERRORED, retryAt: now + this.o.errorRetryMs })
+        this.entries.set(key, failure === 'limit' ? { state: LIMITED, retryAt: now + this.o.limitRetryMs } : { state: ERRORED, retryAt: now + this.o.errorRetryMs })
+      } else if (!it.found && it.unavailable) {
+        this.entries.set(key, { state: LIMITED, retryAt: now + this.o.limitRetryMs })
+        failure = failure ?? 'limit'
       } else if (!it.found) {
         this.entries.set(key, { state: MISSING, retryAt: now + this.o.missingRetryMs })
       } else {
@@ -141,6 +188,7 @@ export class RatingsCache {
         })
       }
     }
+    this.serviceTrouble = failure ? { kind: failure, at: now } : null
     this.bump()
   }
 
@@ -150,21 +198,28 @@ export class RatingsCache {
   }
 }
 
-async function fetchRatingsBatch(titles: string[]): Promise<RatingItem[]> {
-  const res = await fetch('/api/ratings', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ titles }),
-  })
-  if (!res.ok) throw new Error(`ratings ${res.status}`)
+/** POST /api/ratings. Throws RatingsServiceError (with the HTTP status) when the service answers with an error or cannot be reached. */
+export async function postRatings(titles: string[], opts: { light?: boolean; signal?: AbortSignal } = {}): Promise<RatingItem[]> {
+  let res: Response
+  try {
+    res = await fetch('/api/ratings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(opts.light ? { titles, light: true } : { titles }),
+      signal: opts.signal,
+    })
+  } catch (err) {
+    throw new RatingsServiceError(classifyServiceError(err))
+  }
+  if (!res.ok) throw new RatingsServiceError(serviceKindForStatus(res.status), res.status)
   return res.json()
 }
 
-export function useRatings(): { get: (title: string) => RatingState; request: (titles: string[]) => void } {
-  const [cache] = useState(() => new RatingsCache({ fetchBatch: fetchRatingsBatch }))
+export function useRatings(): { get: (title: string) => RatingState; request: (titles: string[]) => void; service: () => { kind: ServiceKind; at: number } | null } {
+  const [cache] = useState(() => new RatingsCache({ fetchBatch: titles => postRatings(titles) }))
   // Re-render the host whenever any rating changes; the server snapshot is the same constant.
   useSyncExternalStore(cache.subscribe, cache.getVersion, cache.getVersion)
-  return useMemo(() => ({ get: cache.get, request: cache.request }), [cache])
+  return useMemo(() => ({ get: cache.get, request: cache.request, service: cache.service }), [cache])
 }
 
 // ---------------------------------------------------------------- guide-frame geometry (pure)

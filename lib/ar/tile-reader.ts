@@ -12,6 +12,7 @@ import { adaptiveBinarize, stretchContrast, unsharp, invertImage } from '../ocr-
 import { cropToRgba } from './rectify'
 import { candidatesFromWords, mergeCandidates, normaliseCase, TitleCandidate, OcrWordLike, CandidateOptions } from './title-candidates'
 import { tokensFromWords, VocabToken, Vocabulary } from './title-vocab'
+import type { PassWords } from './title-confidence'
 import { wordsFromBlocks } from '../extract-titles'
 
 export interface OcrImage {
@@ -40,6 +41,8 @@ export interface TileReading {
   raw: string
   /** OCR passes actually run (early exit keeps this small). */
   passes: number
+  /** The words (with boxes) of every pass, for the confidence-aware decision in title-confidence.ts. */
+  passWords: PassWords[]
   ms: number
 }
 
@@ -94,6 +97,11 @@ export interface TileReaderOptions {
   /** Score of a vocabulary title is vocabBase + (1 - vocabBase) * match quality. */
   vocabBase: number
   candidate: Partial<CandidateOptions>
+  /**
+   * Replaces the "leader is convincing" early exit: after every pass the words of all passes so far are offered and the plan stops
+   * when this returns true (the page passes "the decision layer would accept"). The plan always ends when it is spent.
+   */
+  stopWhen?: (passes: PassWords[]) => boolean
   now: () => number
 }
 
@@ -157,38 +165,76 @@ export function preparePass(crop: RgbaImage, pass: PassSpec): { img: RgbaImage; 
 const isConfident = (top: TitleCandidate | undefined, o: TileReaderOptions) =>
   !!top && (top.score >= o.certainScore || (top.score >= o.confidentScore && top.support >= o.confidentSupport))
 
+/** Options of one `run` of a session. */
+export interface RunOptions {
+  /** Replaces the reader's own stop rule for this run; receives the merged candidates and the words of all passes so far. */
+  until?: (merged: TitleCandidate[], passes: PassWords[]) => boolean
+}
+
+export interface TileSession {
+  /** Runs the passes in order, accumulating candidates and vocabulary tokens; true when the stop rule ended the plan early. */
+  run(plan: PassSpec[], opts?: RunOptions): Promise<boolean>
+  merged(): TitleCandidate[]
+  /** The candidates of the passes alone, without the vocabulary's snapped titles: what the card literally says. */
+  literal(): TitleCandidate[]
+  passWords(): PassWords[]
+  result(): TileReading
+}
+
+/**
+ * A reading of one card that can be extended: `run` as many plans as needed (on the card or on a re-crop of it) and every pass
+ * adds to the same candidate lists. `createTileReader().read` is a session with the default plan and the fallback.
+ */
+export function createTileSession(engine: OcrEngine, crop: RgbaImage, opts: Partial<TileReaderOptions> = {}): TileSession {
+  const o: TileReaderOptions = { ...DEFAULT_TILE_READER, ...opts }
+  const t0 = o.now()
+  const lists: TitleCandidate[][] = []
+  const tokens: VocabToken[] = []
+  const words: PassWords[] = []
+  let raw = ''
+  let passes = 0
+  let merged: TitleCandidate[] = []
+  const readable = crop.width >= 8 && crop.height >= 8 && lumaSpread(crop) >= MIN_SPREAD
+  const session: TileSession = {
+    async run(plan, ro = {}) {
+      if (!readable) return false
+      for (const pass of plan) {
+        const { img, grey } = preparePass(crop, pass)
+        const res = await engine.recognize(img, { psm: pass.psm, grey })
+        passes++
+        raw += (raw ? '\n' : '') + res.text.trim()
+        words.push({ words: res.words as OcrWordLike[], imageHeight: img.height })
+        lists.push(candidatesFromWords(res.words as OcrWordLike[], { imageHeight: img.height, ...o.candidate }))
+        let snapped: TitleCandidate[] = []
+        if (o.vocabulary) {
+          tokens.push(...tokensFromWords(res.words as OcrWordLike[], img.height, passes - 1))
+          snapped = o.vocabulary.match(tokens, 2).map(m => ({ text: m.title, score: o.vocabBase + (1 - o.vocabBase) * m.score, confidence: 90, words: 1, support: 1 }))
+        }
+        merged = mergeCandidates([...lists, snapped])
+        const stop = ro.until ? ro.until(merged, words) : o.stopWhen ? o.stopWhen(words) : isConfident(merged[0], o)
+        if (stop) return true
+      }
+      return false
+    },
+    merged: () => merged,
+    literal: () => mergeCandidates(lists),
+    passWords: () => words,
+    result() {
+      const top = merged.filter(c => c.score >= o.minScore).slice(0, o.maxCandidates)
+      return { candidates: top.map(c => normaliseCase(c.text)), scores: top.map(c => c.score), raw, passes, passWords: words, ms: o.now() - t0 }
+    },
+  }
+  return session
+}
+
 export function createTileReader(engine: OcrEngine, opts: Partial<TileReaderOptions> = {}): { read(crop: RgbaImage): Promise<TileReading> } {
   const o: TileReaderOptions = { ...DEFAULT_TILE_READER, ...opts }
   return {
     async read(crop: RgbaImage): Promise<TileReading> {
-      const t0 = o.now()
-      const lists: TitleCandidate[][] = []
-      const tokens: VocabToken[] = []
-      let raw = ''
-      let passes = 0
-      let merged: TitleCandidate[] = []
-      if (crop.width >= 8 && crop.height >= 8 && lumaSpread(crop) >= MIN_SPREAD) {
-        const run = async (plan: PassSpec[]): Promise<void> => {
-          for (const pass of plan) {
-            const { img, grey } = preparePass(crop, pass)
-            const res = await engine.recognize(img, { psm: pass.psm, grey })
-            passes++
-            raw += (raw ? '\n' : '') + res.text.trim()
-            lists.push(candidatesFromWords(res.words as OcrWordLike[], { imageHeight: img.height, ...o.candidate }))
-            let snapped: TitleCandidate[] = []
-            if (o.vocabulary) {
-              tokens.push(...tokensFromWords(res.words as OcrWordLike[], img.height, passes - 1))
-              snapped = o.vocabulary.match(tokens, 2).map(m => ({ text: m.title, score: o.vocabBase + (1 - o.vocabBase) * m.score, confidence: 90, words: 1, support: 1 }))
-            }
-            merged = mergeCandidates([...lists, snapped])
-            if (isConfident(merged[0], o)) return
-          }
-        }
-        await run(o.passes)
-        if (!merged.some(c => c.score >= o.minScore)) await run(o.fallbackPasses)
-      }
-      const top = merged.filter(c => c.score >= o.minScore).slice(0, o.maxCandidates)
-      return { candidates: top.map(c => normaliseCase(c.text)), scores: top.map(c => c.score), raw, passes, ms: o.now() - t0 }
+      const session = createTileSession(engine, crop, o)
+      await session.run(o.passes)
+      if (!session.merged().some(c => c.score >= o.minScore)) await session.run(o.fallbackPasses)
+      return session.result()
     },
   }
 }

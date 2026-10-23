@@ -1,4 +1,4 @@
-import { CAMERA_TRIES, openCamera, setZoom, tuneTrack } from '../../../lib/ar/camera-setup'
+import { CAMERA_TRIES, NO_FRAMES_MESSAGE, cameraErrorMessage, openCamera, setZoom, tuneTrack } from '../../../lib/ar/camera-setup'
 import { quadInCrop, quadIsSkewed, quadSize } from '../../../lib/ar/tile-capture'
 
 const stream = {} as MediaStream
@@ -80,5 +80,28 @@ describe('tile capture geometry', () => {
     const q = quadInCrop(straight, { x: 100, y: 50 }, 3, 3)
     expect(q[2]).toEqual({ x: 600, y: 336 })
     expect(quadSize(q)).toEqual({ w: 600, h: 336 })
+  })
+})
+
+describe('cameraErrorMessage', () => {
+  it('tells permission, missing camera and busy camera apart', () => {
+    const denied = cameraErrorMessage(err('NotAllowedError'))
+    const missing = cameraErrorMessage(err('NotFoundError'))
+    const busy = cameraErrorMessage(err('NotReadableError'))
+    expect(denied).toMatch(/denied/i)
+    expect(missing).toMatch(/no camera/i)
+    expect(busy).toMatch(/in use by another app/i)
+    expect(new Set([denied, missing, busy, cameraErrorMessage(err('OverconstrainedError')), cameraErrorMessage(new Error('x'))]).size).toBe(5)
+  })
+  it('is generic for anything else and never throws on odd input', () => {
+    expect(cameraErrorMessage(undefined)).toBe('Could not start the camera.')
+    expect(cameraErrorMessage('boom')).toBe('Could not start the camera.')
+    for (const m of [cameraErrorMessage(err('NotReadableError')), NO_FRAMES_MESSAGE]) expect(m).not.toMatch(/—|–/)
+  })
+  it('an OverconstrainedError on the 4K try is still silent: the 1080p try succeeds', async () => {
+    const stream = {} as MediaStream
+    let n = 0
+    const md = { getUserMedia: async () => { if (n++ === 0) throw err('OverconstrainedError'); return stream } }
+    expect(await openCamera(md)).toBe(stream)
   })
 })

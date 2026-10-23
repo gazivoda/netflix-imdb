@@ -199,11 +199,13 @@ function groupLines(words: CleanWord[]): CleanWord[][] {
 
 // Spaced-out logos come back as single letters ("D" "A" "R" "K"). Three or more in a row become one word; stray single letters
 // are dropped unless they are the real one-letter words A / I / &, or a single digit beside a word of 3+ letters (the sequel
-// number of "EXTRACTION 2", "ENOLA HOLMES 2" or the "3" of "3 BODY PROBLEM").
+// number of "EXTRACTION 2", "ENOLA HOLMES 2" or the "3" of "3 BODY PROBLEM"; beside a 2-letter word only when sure, "DESPICABLE ME 2").
 function fuseLetters(line: CleanWord[]): CleanWord[] {
   const letters = (w: CleanWord) => w.text.replace(/[^\p{L}\p{N}]/gu, '')
   const isSingle = (w: CleanWord) => letters(w).length < 2
-  const isWord = (w: CleanWord | undefined) => !!w && !isSingle(w) && w.text.replace(/[^\p{L}]/gu, '').length >= 3
+  const letterCount = (w: CleanWord | undefined) => (w ? w.text.replace(/[^\p{L}]/gu, '').length : 0)
+  // A sequel digit stands beside a word of 3+ letters ("EXTRACTION 2"), or beside a 2-letter one when it is read surely ("DESPICABLE ME 2").
+  const beside = (w: CleanWord | undefined, digit: CleanWord) => !!w && !isSingle(w) && (letterCount(w) >= 3 || (letterCount(w) === 2 && digit.confidence >= 60))
   const out: CleanWord[] = []
   for (let i = 0; i < line.length; ) {
     if (!isSingle(line[i])) { out.push(line[i++]); continue }
@@ -220,7 +222,7 @@ function fuseLetters(line: CleanWord[]): CleanWord[] {
     } else {
       run.forEach((w, r) => {
         if (/^[aAiI&]$/.test(w.text) && w.confidence >= 70) out.push(w)
-        else if (/^\d$/.test(w.text) && w.confidence >= 40 && ((r === 0 && isWord(line[i - 1])) || (r === run.length - 1 && isWord(line[j])))) out.push(w)
+        else if (/^\d$/.test(w.text) && w.confidence >= 40 && ((r === 0 && beside(line[i - 1], w)) || (r === run.length - 1 && beside(line[j], w)))) out.push(w)
       })
     }
     i = j

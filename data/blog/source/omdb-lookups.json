@@ -1,0 +1,775 @@
+{
+  "t|KPop Demon Hunters|2025": {
+    "fetchedAt": "2026-10-21T07:00:48.261Z",
+    "imdbId": "tt14205554"
+  },
+  "t|Red Notice|2021": {
+    "fetchedAt": "2026-10-21T07:00:48.829Z",
+    "imdbId": "tt7991608"
+  },
+  "t|Don't Look Up|2021": {
+    "fetchedAt": "2026-10-21T07:00:49.402Z",
+    "imdbId": "tt11286314"
+  },
+  "t|Carry-On|2024": {
+    "fetchedAt": "2026-10-21T07:00:49.971Z",
+    "imdbId": "tt21382296"
+  },
+  "t|Leave the World Behind|2023": {
+    "fetchedAt": "2026-10-21T07:00:50.541Z",
+    "imdbId": "tt12747748"
+  },
+  "t|Bird Box|": {
+    "fetchedAt": "2026-10-21T07:00:51.108Z",
+    "imdbId": "tt2737304"
+  },
+  "t|Glass Onion: A Knives Out Mystery|2022": {
+    "fetchedAt": "2026-10-21T07:00:51.676Z",
+    "imdbId": "tt23724524"
+  },
+  "t|Glass Onion: A Knives Out Mystery|2021": {
+    "fetchedAt": "2026-10-21T07:00:52.241Z",
+    "imdbId": null
+  },
+  "t|Glass Onion: A Knives Out Mystery|": {
+    "fetchedAt": "2026-10-21T07:00:52.807Z",
+    "imdbId": "tt23724524"
+  },
+  "s|Glass Onion: A Knives Out Mystery": {
+    "fetchedAt": "2026-10-21T07:00:53.374Z",
+    "hits": [
+      {
+        "imdbId": "tt23724524",
+        "title": "Netflix: The Glass Onion Cast Reacts to the Trailer for Glass Onion: A Knives Out Mystery",
+        "year": 2022,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt24734444",
+        "title": "Glass Onion: A Knives Out Mystery (2022)",
+        "year": 2022,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|The Adam Project|2022": {
+    "fetchedAt": "2026-10-21T07:00:53.942Z",
+    "imdbId": "tt2463208"
+  },
+  "t|Back in Action|2025": {
+    "fetchedAt": "2026-10-21T07:00:54.513Z",
+    "imdbId": "tt21191806"
+  },
+  "t|The Gray Man|2022": {
+    "fetchedAt": "2026-10-21T07:00:55.080Z",
+    "imdbId": "tt1649418"
+  },
+  "t|Extraction 2|2023": {
+    "fetchedAt": "2026-10-21T07:00:55.649Z",
+    "imdbId": "tt28363337"
+  },
+  "t|Extraction 2|2022": {
+    "fetchedAt": "2026-10-21T07:00:56.212Z",
+    "imdbId": null
+  },
+  "t|Extraction 2|": {
+    "fetchedAt": "2026-10-21T07:00:56.786Z",
+    "imdbId": "tt28363337"
+  },
+  "s|Extraction 2": {
+    "fetchedAt": "2026-10-21T07:00:57.352Z",
+    "hits": [
+      {
+        "imdbId": "tt28363337",
+        "title": "Damn You Hollywood: Extraction 2/Flamin Hot (2023)",
+        "year": 2023,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|War Machine|2026": {
+    "fetchedAt": "2026-10-21T07:00:57.919Z",
+    "imdbId": "tt15940132"
+  },
+  "t|Swapped|2026": {
+    "fetchedAt": "2026-10-21T07:00:58.483Z",
+    "imdbId": "tt29552248"
+  },
+  "t|The Mother|2023": {
+    "fetchedAt": "2026-10-21T07:00:59.055Z",
+    "imdbId": "tt6968614"
+  },
+  "t|Purple Hearts|2022": {
+    "fetchedAt": "2026-10-21T07:00:59.621Z",
+    "imdbId": "tt4614584"
+  },
+  "t|Society of the Snow|2024": {
+    "fetchedAt": "2026-10-21T07:01:00.189Z",
+    "imdbId": "tt16277242"
+  },
+  "t|Rebel Ridge|2024": {
+    "fetchedAt": "2026-10-21T07:01:00.754Z",
+    "imdbId": "tt11301886"
+  },
+  "t|Damsel|2024": {
+    "fetchedAt": "2026-10-21T07:01:01.319Z",
+    "imdbId": "tt13452446"
+  },
+  "t|Frankenstein|2025": {
+    "fetchedAt": "2026-10-21T07:01:01.887Z",
+    "imdbId": "tt1312221"
+  },
+  "t|Happy Gilmore 2|2025": {
+    "fetchedAt": "2026-10-21T07:01:02.454Z",
+    "imdbId": "tt31868189"
+  },
+  "t|The Unforgivable|2021": {
+    "fetchedAt": "2026-10-21T07:01:03.018Z",
+    "imdbId": "tt11233960"
+  },
+  "t|The Rip|2026": {
+    "fetchedAt": "2026-10-21T07:01:03.588Z",
+    "imdbId": "tt32642706"
+  },
+  "t|Leo|2023": {
+    "fetchedAt": "2026-10-21T07:01:04.154Z",
+    "imdbId": "tt15654328"
+  },
+  "t|Leo|2022": {
+    "fetchedAt": "2026-10-21T07:01:04.719Z",
+    "imdbId": "tt22059260"
+  },
+  "t|Leo|": {
+    "fetchedAt": "2026-10-21T07:01:05.295Z",
+    "imdbId": "tt15654328"
+  },
+  "s|Leo": {
+    "fetchedAt": "2026-10-21T07:01:05.874Z",
+    "hits": [
+      {
+        "imdbId": "tt15654328",
+        "title": "Leo",
+        "year": 2023,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt5755238",
+        "title": "Leo",
+        "year": 2023,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt13352968",
+        "title": "Good Luck to You, Leo Grande",
+        "year": 2022,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt1521870",
+        "title": "Johan Falk: Leo Gaut",
+        "year": 2009,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt0346039",
+        "title": "Close to Leo",
+        "year": 2002,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt0308496",
+        "title": "Leo",
+        "year": 2002,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt1108850",
+        "title": "Leo",
+        "year": 2007,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt7139246",
+        "title": "Leo Da Vinci: Mission Mona Lisa",
+        "year": 2019,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt0065974",
+        "title": "Leo the Last",
+        "year": 1970,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt0119406",
+        "title": "Jungle Emperor Leo",
+        "year": 2000,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|Hustle|2022": {
+    "fetchedAt": "2026-10-21T07:01:07.015Z",
+    "imdbId": "tt8009428"
+  },
+  "t|Troll|2022": {
+    "fetchedAt": "2026-10-21T07:01:07.580Z",
+    "imdbId": "tt11116912"
+  },
+  "t|Heart of Stone|2023": {
+    "fetchedAt": "2026-10-21T07:01:08.150Z",
+    "imdbId": "tt13603966"
+  },
+  "t|The Union|2024": {
+    "fetchedAt": "2026-10-21T07:01:08.719Z",
+    "imdbId": "tt12610390"
+  },
+  "t|Rebel Moon - Part One: A Child of Fire|2023": {
+    "fetchedAt": "2026-10-21T07:01:09.293Z",
+    "imdbId": "tt14998742"
+  },
+  "t|STRAW|2025": {
+    "fetchedAt": "2026-10-21T07:01:09.861Z",
+    "imdbId": "tt32550101"
+  },
+  "t|The Sea Beast|2022": {
+    "fetchedAt": "2026-10-21T07:01:10.426Z",
+    "imdbId": "tt9288046"
+  },
+  "t|Under Paris|2024": {
+    "fetchedAt": "2026-10-21T07:01:10.992Z",
+    "imdbId": "tt13964390"
+  },
+  "t|Apex|2026": {
+    "fetchedAt": "2026-10-21T07:01:11.558Z",
+    "imdbId": "tt16431404"
+  },
+  "t|Luther: The Fallen Sun|2023": {
+    "fetchedAt": "2026-10-21T07:01:12.124Z",
+    "imdbId": "tt3155298"
+  },
+  "t|All Quiet on the Western Front|2022": {
+    "fetchedAt": "2026-10-21T07:01:12.693Z",
+    "imdbId": "tt1016150"
+  },
+  "t|Lift|2024": {
+    "fetchedAt": "2026-10-21T07:01:13.260Z",
+    "imdbId": "tt14371878"
+  },
+  "t|The Super Mario Bros. Movie|2023": {
+    "fetchedAt": "2026-10-21T07:01:13.829Z",
+    "imdbId": "tt6718170"
+  },
+  "t|The Life List|2025": {
+    "fetchedAt": "2026-10-21T07:01:14.401Z",
+    "imdbId": "tt2172954"
+  },
+  "t|The Tinder Swindler|2022": {
+    "fetchedAt": "2026-10-21T07:01:14.968Z",
+    "imdbId": "tt14992922"
+  },
+  "t|The Man from Toronto|2022": {
+    "fetchedAt": "2026-10-21T07:01:15.534Z",
+    "imdbId": "tt11671006"
+  },
+  "t|Exterritorial|2025": {
+    "fetchedAt": "2026-10-21T07:01:16.099Z",
+    "imdbId": "tt30876483"
+  },
+  "t|Senior Year|2022": {
+    "fetchedAt": "2026-10-21T07:01:16.671Z",
+    "imdbId": "tt5315212"
+  },
+  "t|Voicemails for Isabelle|2026": {
+    "fetchedAt": "2026-10-21T07:01:17.239Z",
+    "imdbId": "tt10375624"
+  },
+  "t|Dr. Seuss' The Grinch|2023": {
+    "fetchedAt": "2026-10-21T07:01:17.809Z",
+    "imdbId": null
+  },
+  "t|Dr. Seuss' The Grinch|2022": {
+    "fetchedAt": "2026-10-21T07:01:18.372Z",
+    "imdbId": null
+  },
+  "t|Dr. Seuss' The Grinch|": {
+    "fetchedAt": "2026-10-21T07:01:18.935Z",
+    "imdbId": null
+  },
+  "s|Dr. Seuss' The Grinch": {
+    "fetchedAt": "2026-10-21T07:01:19.498Z",
+    "hits": [
+      {
+        "imdbId": "tt1723016",
+        "title": "Dr. Seuss and the Grinch: From Whoville to Hollywood",
+        "year": 2006,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|Despicable Me 2|2022": {
+    "fetchedAt": "2026-10-21T07:01:20.071Z",
+    "imdbId": null
+  },
+  "t|Despicable Me 2|2021": {
+    "fetchedAt": "2026-10-21T07:01:20.633Z",
+    "imdbId": null
+  },
+  "t|Despicable Me 2|": {
+    "fetchedAt": "2026-10-21T07:01:21.203Z",
+    "imdbId": "tt1690953"
+  },
+  "t|Enola Holmes 2|2022": {
+    "fetchedAt": "2026-10-21T07:01:21.772Z",
+    "imdbId": "tt14641788"
+  },
+  "t|Nowhere|2023": {
+    "fetchedAt": "2026-10-21T07:01:22.344Z",
+    "imdbId": "tt15789472"
+  },
+  "t|The Great Flood|2025": {
+    "fetchedAt": "2026-10-21T07:01:22.913Z",
+    "imdbId": "tt29927663"
+  },
+  "t|Wake Up Dead Man: A Knives Out Mystery|2025": {
+    "fetchedAt": "2026-10-21T07:01:23.477Z",
+    "imdbId": null
+  },
+  "t|Wake Up Dead Man: A Knives Out Mystery|2024": {
+    "fetchedAt": "2026-10-21T07:01:24.041Z",
+    "imdbId": null
+  },
+  "t|Wake Up Dead Man: A Knives Out Mystery|": {
+    "fetchedAt": "2026-10-21T07:01:24.610Z",
+    "imdbId": null
+  },
+  "s|Wake Up Dead Man: A Knives Out Mystery": {
+    "fetchedAt": "2026-10-21T07:01:25.172Z",
+    "hits": []
+  },
+  "t|The Whisper Man|2026": {
+    "fetchedAt": "2026-10-21T07:01:25.745Z",
+    "imdbId": "tt11561116"
+  },
+  "t|The Whisper Man|2025": {
+    "fetchedAt": "2026-10-21T07:01:26.312Z",
+    "imdbId": null
+  },
+  "t|The Whisper Man|": {
+    "fetchedAt": "2026-10-21T07:01:26.878Z",
+    "imdbId": "tt11561116"
+  },
+  "s|The Whisper Man": {
+    "fetchedAt": "2026-10-21T07:01:27.443Z",
+    "hits": [
+      {
+        "imdbId": "tt3615910",
+        "title": "The Man with the Whisper",
+        "year": 1938,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt11561116",
+        "title": "The Whisper Man",
+        "year": 2026,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|Murder Mystery 2|2023": {
+    "fetchedAt": "2026-10-21T07:01:28.016Z",
+    "imdbId": "tt15255288"
+  },
+  "t|The Boss Baby|2022": {
+    "fetchedAt": "2026-10-21T07:01:28.584Z",
+    "imdbId": "tt23546646"
+  },
+  "t|The Boss Baby|2021": {
+    "fetchedAt": "2026-10-21T07:01:29.152Z",
+    "imdbId": "tt6932874"
+  },
+  "t|The Boss Baby|": {
+    "fetchedAt": "2026-10-21T07:01:29.720Z",
+    "imdbId": "tt3874544"
+  },
+  "t|Army of Thieves|2021": {
+    "fetchedAt": "2026-10-21T07:01:30.288Z",
+    "imdbId": "tt13024674"
+  },
+  "t|The Last House|2026": {
+    "fetchedAt": "2026-10-21T07:01:30.860Z",
+    "imdbId": "tt32268156"
+  },
+  "t|Sing 2|2022": {
+    "fetchedAt": "2026-10-21T07:01:31.425Z",
+    "imdbId": null
+  },
+  "t|Sing 2|2021": {
+    "fetchedAt": "2026-10-21T07:01:32.003Z",
+    "imdbId": "tt6467266"
+  },
+  "t|Me Time|2022": {
+    "fetchedAt": "2026-10-21T07:01:32.579Z",
+    "imdbId": "tt14309446"
+  },
+  "t|A Family Affair|2024": {
+    "fetchedAt": "2026-10-21T07:01:33.148Z",
+    "imdbId": "tt21051906"
+  },
+  "t|You People|2023": {
+    "fetchedAt": "2026-10-21T07:01:33.718Z",
+    "imdbId": "tt14826022"
+  },
+  "t|Day Shift|2022": {
+    "fetchedAt": "2026-10-21T07:01:34.289Z",
+    "imdbId": "tt13314558"
+  },
+  "t|Beverly Hills Cop: Axel F|2024": {
+    "fetchedAt": "2026-10-21T07:01:34.856Z",
+    "imdbId": "tt3083016"
+  },
+  "t|The School for Good and Evil|2022": {
+    "fetchedAt": "2026-10-21T07:01:35.426Z",
+    "imdbId": "tt2935622"
+  },
+  "t|Atlas|2024": {
+    "fetchedAt": "2026-10-21T07:01:35.994Z",
+    "imdbId": "tt14856980"
+  },
+  "t|Sing|2022": {
+    "fetchedAt": "2026-10-21T07:01:36.565Z",
+    "imdbId": "tt9411972"
+  },
+  "t|Sing|2021": {
+    "fetchedAt": "2026-10-21T07:01:37.134Z",
+    "imdbId": "tt6467266"
+  },
+  "t|Sing|": {
+    "fetchedAt": "2026-10-21T07:01:37.704Z",
+    "imdbId": "tt3470600"
+  },
+  "t|Havoc|2025": {
+    "fetchedAt": "2026-10-21T07:01:38.267Z",
+    "imdbId": "tt14123284"
+  },
+  "t|Reptile|2023": {
+    "fetchedAt": "2026-10-21T07:01:38.827Z",
+    "imdbId": "tt13274016"
+  },
+  "t|Blood Red Sky|2021": {
+    "fetchedAt": "2026-10-21T07:01:39.396Z",
+    "imdbId": "tt6402468"
+  },
+  "t|Love Hard|2021": {
+    "fetchedAt": "2026-10-21T07:01:39.965Z",
+    "imdbId": "tt10752004"
+  },
+  "t|Our Little Secret|2024": {
+    "fetchedAt": "2026-10-21T07:01:40.532Z",
+    "imdbId": "tt31022050"
+  },
+  "t|Your Place or Mine|2023": {
+    "fetchedAt": "2026-10-21T07:01:41.101Z",
+    "imdbId": "tt12823454"
+  },
+  "t|Through My Window|2022": {
+    "fetchedAt": "2026-10-21T07:01:41.671Z",
+    "imdbId": "tt14463484"
+  },
+  "t|A HOUSE OF DYNAMITE|2025": {
+    "fetchedAt": "2026-10-21T07:01:42.235Z",
+    "imdbId": "tt32376165"
+  },
+  "t|The Platform|2024": {
+    "fetchedAt": "2026-10-21T07:01:42.801Z",
+    "imdbId": "tt27729779"
+  },
+  "t|The Platform|2023": {
+    "fetchedAt": "2026-10-21T07:01:43.365Z",
+    "imdbId": null
+  },
+  "t|The Platform|": {
+    "fetchedAt": "2026-10-21T07:01:43.935Z",
+    "imdbId": "tt8228288"
+  },
+  "t|My Oxford Year|2025": {
+    "fetchedAt": "2026-10-21T07:01:44.501Z",
+    "imdbId": "tt4978342"
+  },
+  "t|Shrek|2022": {
+    "fetchedAt": "2026-10-21T07:01:45.068Z",
+    "imdbId": "tt24659584"
+  },
+  "t|Shrek|2021": {
+    "fetchedAt": "2026-10-21T07:01:45.633Z",
+    "imdbId": "tt14757694"
+  },
+  "t|Shrek|": {
+    "fetchedAt": "2026-10-21T07:01:46.199Z",
+    "imdbId": "tt0126029"
+  },
+  "t|The Good Nurse|2022": {
+    "fetchedAt": "2026-10-21T07:01:46.766Z",
+    "imdbId": "tt4273800"
+  },
+  "t|Falling for Christmas|2022": {
+    "fetchedAt": "2026-10-21T07:01:47.333Z",
+    "imdbId": "tt14715170"
+  },
+  "t|Luckiest Girl Alive|2022": {
+    "fetchedAt": "2026-10-21T07:01:47.899Z",
+    "imdbId": "tt4595186"
+  },
+  "t|The Kissing Booth 3|2021": {
+    "fetchedAt": "2026-10-21T07:01:48.467Z",
+    "imdbId": "tt12783454"
+  },
+  "t|The Electric State|2025": {
+    "fetchedAt": "2026-10-21T07:01:49.033Z",
+    "imdbId": "tt7766378"
+  },
+  "t|72 HOURS|2026": {
+    "fetchedAt": "2026-10-21T07:01:49.601Z",
+    "imdbId": "tt36304003"
+  },
+  "t|Sweet Girl|2021": {
+    "fetchedAt": "2026-10-21T07:01:50.173Z",
+    "imdbId": "tt10731768"
+  },
+  "t|Back to the Outback|2021": {
+    "fetchedAt": "2026-10-21T07:01:50.741Z",
+    "imdbId": "tt13575806"
+  },
+  "t|The Killer|2023": {
+    "fetchedAt": "2026-10-21T07:01:51.316Z",
+    "imdbId": "tt1136617"
+  },
+  "t|Thrash|2026": {
+    "fetchedAt": "2026-10-21T07:01:51.881Z",
+    "imdbId": "tt32362890"
+  },
+  "t|365 Days: This Day|2022": {
+    "fetchedAt": "2026-10-21T07:01:52.446Z",
+    "imdbId": "tt12996154"
+  },
+  "t|Vivo|2021": {
+    "fetchedAt": "2026-10-21T07:01:53.015Z",
+    "imdbId": "tt6338498"
+  },
+  "t|The Six Triple Eight|2024": {
+    "fetchedAt": "2026-10-21T07:01:53.581Z",
+    "imdbId": "tt24458622"
+  },
+  "t|AKA|2023": {
+    "fetchedAt": "2026-10-21T07:01:54.146Z",
+    "imdbId": "tt27197387"
+  },
+  "t|Trigger Warning|2024": {
+    "fetchedAt": "2026-10-21T07:01:54.711Z",
+    "imdbId": "tt5834874"
+  },
+  "t|The Old Guard 2|2025": {
+    "fetchedAt": "2026-10-21T07:01:55.286Z",
+    "imdbId": "tt14961624"
+  },
+  "t|The Harder They Fall|2021": {
+    "fetchedAt": "2026-10-21T07:01:55.853Z",
+    "imdbId": "tt10696784"
+  },
+  "t|Despicable Me 3|2024": {
+    "fetchedAt": "2026-10-21T07:01:56.415Z",
+    "imdbId": null
+  },
+  "t|Despicable Me 3|2023": {
+    "fetchedAt": "2026-10-21T07:01:56.977Z",
+    "imdbId": null
+  },
+  "t|Despicable Me 3|": {
+    "fetchedAt": "2026-10-21T07:01:57.546Z",
+    "imdbId": "tt3469046"
+  },
+  "t|Office Romance|2026": {
+    "fetchedAt": "2026-10-21T07:01:58.112Z",
+    "imdbId": "tt33397980"
+  },
+  "t|Office Romance|2025": {
+    "fetchedAt": "2026-10-21T07:01:58.675Z",
+    "imdbId": null
+  },
+  "t|Office Romance|": {
+    "fetchedAt": "2026-10-21T07:01:59.240Z",
+    "imdbId": "tt0076727"
+  },
+  "s|Office Romance": {
+    "fetchedAt": "2026-10-21T07:01:59.805Z",
+    "hits": [
+      {
+        "imdbId": "tt0076727",
+        "title": "Office Romance",
+        "year": 1977,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt2087902",
+        "title": "Office Romance 2.0",
+        "year": 2011,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt2233997",
+        "title": "Box Office Romance",
+        "year": 2011,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt3548514",
+        "title": "Office Romance",
+        "year": 2014,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt5440614",
+        "title": "Coming Together: An Office Romance",
+        "year": 2016,
+        "type": "movie"
+      },
+      {
+        "imdbId": "tt33397980",
+        "title": "Office Romance",
+        "year": 2026,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|The Woman in Cabin 10|2025": {
+    "fetchedAt": "2026-10-21T07:02:00.936Z",
+    "imdbId": "tt7130300"
+  },
+  "t|The Thursday Murder Club|2025": {
+    "fetchedAt": "2026-10-21T07:02:01.509Z",
+    "imdbId": "tt12001534"
+  },
+  "t|Slumberland|2022": {
+    "fetchedAt": "2026-10-21T07:02:02.081Z",
+    "imdbId": "tt13320662"
+  },
+  "t|The Guilty|2021": {
+    "fetchedAt": "2026-10-21T07:02:02.650Z",
+    "imdbId": "tt9421570"
+  },
+  "t|People We Meet on Vacation|2026": {
+    "fetchedAt": "2026-10-21T07:02:03.222Z",
+    "imdbId": "tt22740896"
+  },
+  "t|People We Meet on Vacation|2025": {
+    "fetchedAt": "2026-10-21T07:02:03.784Z",
+    "imdbId": null
+  },
+  "t|People We Meet on Vacation|": {
+    "fetchedAt": "2026-10-21T07:02:04.350Z",
+    "imdbId": "tt22740896"
+  },
+  "s|People We Meet on Vacation": {
+    "fetchedAt": "2026-10-21T07:02:04.913Z",
+    "hits": [
+      {
+        "imdbId": "tt22740896",
+        "title": "People We Meet on Vacation",
+        "year": 2026,
+        "type": "movie"
+      }
+    ]
+  },
+  "t|Mother of the Bride|2024": {
+    "fetchedAt": "2026-10-21T07:02:05.484Z",
+    "imdbId": "tt26926267"
+  },
+  "t|Dhurandhar|2026": {
+    "fetchedAt": "2026-10-21T07:02:06.048Z",
+    "imdbId": "tt39139925"
+  },
+  "t|Dhurandhar|2025": {
+    "fetchedAt": "2026-10-21T07:02:06.612Z",
+    "imdbId": "tt33014583"
+  },
+  "t|The Out-Laws|2023": {
+    "fetchedAt": "2026-10-21T07:02:07.181Z",
+    "imdbId": "tt11274492"
+  },
+  "t|Black Crab|2022": {
+    "fetchedAt": "2026-10-21T07:02:07.749Z",
+    "imdbId": "tt6708668"
+  },
+  "t|We Have a Ghost|2023": {
+    "fetchedAt": "2026-10-21T07:02:08.315Z",
+    "imdbId": "tt7798604"
+  },
+  "t|The Secret Life of Pets 2|2022": {
+    "fetchedAt": "2026-10-21T07:02:08.878Z",
+    "imdbId": null
+  },
+  "t|The Secret Life of Pets 2|2021": {
+    "fetchedAt": "2026-10-21T07:02:09.449Z",
+    "imdbId": null
+  },
+  "t|The Secret Life of Pets 2|": {
+    "fetchedAt": "2026-10-21T07:02:10.019Z",
+    "imdbId": "tt5113040"
+  },
+  "t|Minions|2023": {
+    "fetchedAt": "2026-10-21T07:02:10.584Z",
+    "imdbId": null
+  },
+  "t|Minions|2022": {
+    "fetchedAt": "2026-10-21T07:02:11.151Z",
+    "imdbId": "tt5113044"
+  },
+  "t|Minions|": {
+    "fetchedAt": "2026-10-21T07:02:11.720Z",
+    "imdbId": "tt2293640"
+  },
+  "t|Brick|2025": {
+    "fetchedAt": "2026-10-21T07:02:12.291Z",
+    "imdbId": "tt31806049"
+  },
+  "t|Ad Vitam|2025": {
+    "fetchedAt": "2026-10-21T07:02:12.855Z",
+    "imdbId": "tt32138452"
+  },
+  "t|Uglies|2024": {
+    "fetchedAt": "2026-10-21T07:02:13.421Z",
+    "imdbId": "tt13186604"
+  },
+  "t|The Pale Blue Eye|2023": {
+    "fetchedAt": "2026-10-21T07:02:13.987Z",
+    "imdbId": "tt14138650"
+  },
+  "t|Sonic the Hedgehog|2022": {
+    "fetchedAt": "2026-10-21T07:02:14.554Z",
+    "imdbId": "tt12412888"
+  },
+  "t|Sonic the Hedgehog|2021": {
+    "fetchedAt": "2026-10-21T07:02:15.122Z",
+    "imdbId": "tt16156674"
+  },
+  "t|Sonic the Hedgehog|": {
+    "fetchedAt": "2026-10-21T07:02:15.693Z",
+    "imdbId": "tt3794354"
+  },
+  "t|Family Switch|2023": {
+    "fetchedAt": "2026-10-21T07:02:16.262Z",
+    "imdbId": "tt14227048"
+  },
+  "t|Nonnas|2025": {
+    "fetchedAt": "2026-10-21T07:02:16.828Z",
+    "imdbId": "tt28309594"
+  },
+  "t|That Christmas|2024": {
+    "fetchedAt": "2026-10-21T07:02:17.397Z",
+    "imdbId": "tt14855468"
+  },
+  "t|Lou|2022": {
+    "fetchedAt": "2026-10-21T07:02:17.966Z",
+    "imdbId": "tt5315210"
+  }
+}

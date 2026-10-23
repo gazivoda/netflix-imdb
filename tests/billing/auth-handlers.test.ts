@@ -1,4 +1,4 @@
-import { handleGoogleCallback, handleGoogleStart, handleMe, handleSignout, safeNextPath } from '../../lib/billing/auth-handlers'
+import { GOOGLE_START_BUCKET, ME_BUCKET, handleGoogleCallback, handleGoogleStart, handleMe, handleSignout, resetAuthLimitersForTests, safeNextPath } from '../../lib/billing/auth-handlers'
 import { openUsersDb } from '../../lib/billing/db'
 import { parseCookies, SESSION_COOKIE, signSession, verifySession } from '../../lib/billing/session'
 import type { Deps } from '../../lib/billing/deps'
@@ -8,6 +8,7 @@ import type { PaddleApi } from '../../lib/billing/paddle'
 const NOW = Date.parse('2026-10-20T12:00:00Z')
 const BILLING_ENV = ['NEXT_PUBLIC_PADDLE_CLIENT_TOKEN', 'NEXT_PUBLIC_PADDLE_PRICE_ID_MONTHLY', 'NEXT_PUBLIC_PADDLE_PRICE_ID_YEARLY', 'BILLING_DATA_PERSISTENT']
 beforeEach(() => {
+  resetAuthLimitersForTests()
   process.env.JWT_SECRET = 'k'.repeat(40)
   process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN = 'live_clienttoken'
   process.env.NEXT_PUBLIC_PADDLE_PRICE_ID_MONTHLY = 'pri_m'
@@ -220,5 +221,34 @@ describe('handleMe / handleSignout', () => {
     const r = await handleMe(new Request('https://x/api/user/me', { headers: { cookie: `${SESSION_COOKIE}=abc` } }), deps()).json()
     expect(r.access).toBe('no_auth')
     expect(r.billingEnabled).toBe(false)
+  })
+})
+
+describe('per-IP rate limits', () => {
+  const from = (path: string, ip: string) => new Request(`https://rating.watch${path}`, { headers: { 'x-forwarded-for': `1.1.1.1, ${ip}` } })
+
+  test('/api/user/me answers 429 with Retry-After once one IP spends its bucket, and other IPs are unaffected', () => {
+    const d = deps()
+    for (let i = 0; i < ME_BUCKET.capacity; i++) expect(handleMe(from('/api/user/me', '9.9.9.9'), d).status).toBe(200)
+    const limited = handleMe(from('/api/user/me', '9.9.9.9'), d)
+    expect(limited.status).toBe(429)
+    expect(Number(limited.headers.get('Retry-After'))).toBeGreaterThanOrEqual(1)
+    expect(handleMe(from('/api/user/me', '8.8.8.8'), d).status).toBe(200)
+  })
+
+  test('the Google start redirect answers 429 after the burst, and the bucket refills with time', () => {
+    let now = NOW
+    const d = deps({ now: () => now })
+    for (let i = 0; i < GOOGLE_START_BUCKET.capacity; i++) expect(handleGoogleStart(from('/api/auth/google', '9.9.9.9'), d).status).toBe(302)
+    expect(handleGoogleStart(from('/api/auth/google', '9.9.9.9'), d).status).toBe(429)
+    now += 7_000
+    expect(handleGoogleStart(from('/api/auth/google', '9.9.9.9'), d).status).toBe(302)
+  })
+
+  test('a spoofed leftmost X-Forwarded-For does not buy a fresh bucket', () => {
+    const d = deps()
+    for (let i = 0; i < GOOGLE_START_BUCKET.capacity; i++) handleGoogleStart(new Request('https://rating.watch/api/auth/google', { headers: { 'x-forwarded-for': `10.0.0.${i}, 9.9.9.9` } }), d)
+    const r = handleGoogleStart(new Request('https://rating.watch/api/auth/google', { headers: { 'x-forwarded-for': '10.9.9.9, 9.9.9.9' } }), d)
+    expect(r.status).toBe(429)
   })
 })

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "slug": "carry-on-2024",
+  "imdbId": "tt21382296",
+  "status": "review",
+  "published": null,
+  "contentUpdated": "2026-10-21",
+  "h1": "Carry-On: critics score it sharply above IMDb viewers",
+  "description": "Rotten Tomatoes shows {{rt}} for {{title}} while IMDb sits at {{imdb}}, a wide gap that favors critics in this set of Netflix Top 10 films.",
+  "summary": "Critics rate Carry-On sharply higher than audiences do: Rotten Tomatoes shows {{rt}}, while IMDb users settle on {{imdb}}. That is a wide gap of {{gapAbs}} points, with the critic percentage well ahead of the viewer average. Both figures come from OMDb data as of {{asOf}} and will move whenever the source updates.",
+  "sections": [
+    {
+      "id": "why-split",
+      "heading": "Why do reviewers like Carry-On more than viewers?",
+      "paragraphs": [
+        "Reviewers are the warmer side with this film, and by a wide margin. Put the IMDb average on a hundred-point scale and it becomes {{imdbX10}}, which leaves a large gap of {{gapAbs}} points to the {{rt}} on Rotten Tomatoes. Critics rate {{title}} sharply higher than audiences do.",
+        "The Metascore adds a wrinkle. At {{metascore}}, it lands much nearer the viewer figure than the Rotten Tomatoes percentage does. Rotten Tomatoes counts the share of reviews that are positive, while the Metascore averages weighted grades, so one reading is that many reviews approved of the film without being enthusiastic. That is an interpretation, and the [measurement difference between the two systems](/compare/imdb-vs-rotten-tomatoes) is worth knowing before you compare them.",
+        "Vote volume rules out a thin sample on the audience side: {{votes}} IMDb votes sit behind the {{imdb}}. Genre gives context as well. The median difference for the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so the typical title there leans the opposite way from this one, and {{title}} lands {{gapRank}} when all {{setSize}} films are ordered by the size of the difference.",
+        "Put plainly, the two sides are not answering the same question. A viewer average records how much people enjoyed the evening, and a share of positive reviews records how many reviewers found the film competent or better. A title can satisfy the second test easily and still earn only a decent mark on the first."
+      ]
+    },
+    {
+      "id": "the-film",
+      "heading": "Who is in Carry-On and how did it chart?",
+      "paragraphs": [
+        "The setup is a rookie airport screener coerced by an unknown man into waving a hazardous item past the checkpoint on Christmas Eve. {{director}} directed it, with Taron Egerton, Jason Bateman and Sofia Carson billed in the lead roles, and it runs {{runtime}}.",
+        "In Netflix's Top 10 data it peaked at rank {{peakRank}} and held a place for {{weeksInTop10}} weeks, adding up to {{hours}} hours viewed. That puts it {{popularityRank}} by hours among the {{setSize}} films in this set. OMDb files it under {{genre}}, crime and thriller, rates it PG-13, and gives the awards text as 7 nominations total.",
+        "Read together, the chart facts describe a film that drew heavy viewing and kept returning to the weekly rankings across several weeks, rather than appearing once and vanishing."
+      ]
+    },
+    {
+      "id": "who-it-suits",
+      "heading": "Who should trust the critic score on Carry-On?",
+      "paragraphs": [
+        "If you usually follow Rotten Tomatoes, this is a title that clears the bar comfortably. If you go by IMDb averages, the {{imdb}} points to a solid pick rather than a standout one, so expect a good evening more than a favorite.",
+        "Anyone who wants a mainstream {{genre}} thriller of ordinary length will find that {{runtime}} is not a big commitment, and the PG-13 rating keeps it broad. When the two sides disagree this much, the Metascore of {{metascore}} is a useful tiebreaker, since it reflects reviewers yet stays close to what viewers gave.",
+        "Those who build a watchlist from percentages alone should note that the Rotten Tomatoes figure here sits well above the viewer average, so it may work better as a floor for quality than as a promise of fun."
+      ]
+    },
+    {
+      "id": "more",
+      "heading": "Does a high Netflix rank say anything about the scores?",
+      "paragraphs": [
+        "Not directly. Hours viewed measure how many people pressed play, while ratings measure how people judged the film afterward. A title can top the weekly chart and still collect a middling viewer average, which may be what happened here: it reached rank {{peakRank}}, yet the IMDb figure stays modest next to the critic percentage.",
+        "That is one reading, not a finding. Treat the chart position as a sign of reach and the two review scores as separate signals about quality, then check the date on this page, because both scores can drift as more people rate the film."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "How wide is the Carry-On gap between critics and audiences?",
+      "a": "Rotten Tomatoes shows {{rt}} and the IMDb average converts to {{imdbX10}}, so critics are ahead of audiences by {{gapAbs}} points, a wide gap. Ordered by the size of the difference, the film sits {{gapRank}} among {{setSize}} titles, and the {{genre}} median of {{genreMedianGap}} points the opposite way."
+    },
+    {
+      "q": "Does Carry-On have any listed awards or nominations?",
+      "a": "The OMDb record gives the awards text as 7 nominations total. This page makes no further awards claim, because nothing beyond that string is cited here. Anyone who wants a fuller history should check the awarding bodies directly, since each publishes its own complete lists."
+    },
+    {
+      "q": "How popular was Carry-On in Netflix's Top 10 data?",
+      "a": "It ranks {{popularityRank}} of {{setSize}} by hours viewed, at {{hours}} hours, with {{weeksInTop10}} weeks in the Top 10 and a peak rank of {{peakRank}}. Those are viewing measures rather than quality measures, so they sit alongside the review scores without explaining them."
+    }
+  ],
+  "sources": [],
+  "review": {
+    "writer": "Claude (writer agent)",
+    "writtenOn": "2026-10-21",
+    "factChecker": null,
+    "factCheckedOn": null,
+    "cuts": [],
+    "rtCheck": null
+  }
+}

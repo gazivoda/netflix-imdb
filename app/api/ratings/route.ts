@@ -37,6 +37,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: checked.error }, { status: 400 })
   }
   const { titles } = checked
+  // The AR page asks single titles in "light" mode (one OMDb call, enough to tell whether the title exists).
+  const light = titles.length === 1 && (body as Record<string, unknown>).light === true
 
   // A missing key would make every lookup fail quietly as "not found"; say so instead.
   if (!omdbKeyPresent()) {
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest) {
   }
 
   const settled = await Promise.allSettled(
-    titles.map((query) => getRating(query))
+    titles.map((query) => getRating(query, { light }))
   )
 
   const response = settled.map((result, i) => {

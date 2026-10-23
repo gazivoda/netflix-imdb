@@ -180,4 +180,21 @@ describe('getRating', () => {
     await getRating('New Show')
     expect(mockFetch.mock.calls.length).toBeGreaterThan(callsAfterFirst)
   })
+
+  it('a light lookup without a Rotten Tomatoes score is not stored, so the full lookup can still improve on it', async () => {
+    const noRt = { ok: true, json: async () => ({ Response: 'True', imdbID: 'tt1', Title: 'Cover-Up', Year: '1991', Type: 'movie', imdbRating: '5.0', imdbVotes: '2,000', Ratings: [] }) }
+    mockFetch.mockResolvedValue(noRt)
+    const light = await getRating('Cover-Up', { light: true })
+    expect(light?.title).toBe('Cover-Up')
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(getRatingsStore().getFresh('Cover-Up')).toBeUndefined()
+  })
+
+  it('a light lookup that already has scores is stored like a full one', async () => {
+    mockFetch.mockResolvedValue(found())
+    await getRating('Inception', { light: true })
+    expect(getRatingsStore().getFresh('Inception')).toBeTruthy()
+    await getRating('Inception')
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+  })
 })

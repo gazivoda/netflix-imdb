@@ -82,11 +82,19 @@ export class CropHistory<M = undefined> {
 }
 
 /**
- * Whether the cards have stopped moving between two analysis ticks: at least `share` of the boxes now have a box before it whose
- * centre is within `tol` of the box's width (default 4%). A box that just appeared or flickers does not hold everything up. No boxes
- * before or now counts as settled (nothing to wait for).
+ * How far a card's centre may move between two analysis ticks (~110 ms), as a share of its width, and still count as held still.
+ * A hand-held phone drifts a few pixels per frame: a random walk of 6 px per frame at 1920 px is ~2 px in the 640 px analysis image,
+ * ~4 px per tick, which is 4% of a 100 px card (too strict: OCR almost never ran, measured on a jitter simulation) and well inside 10%.
+ * Motion blur is handled by reading the sharpest of the last crops, so the gate only has to stop reads while the view is really sliding.
  */
-export function boxesSettled(prev: Box[], cur: Box[], tol = 0.04, share = 0.7): boolean {
+export const SETTLE_TOL = 0.1
+
+/**
+ * Whether the cards have stopped moving between two analysis ticks: at least `share` of the boxes now have a box before it whose
+ * centre is within `tol` of the box's width (default SETTLE_TOL). A box that just appeared or flickers does not hold everything up. No
+ * boxes before or now counts as settled (nothing to wait for).
+ */
+export function boxesSettled(prev: Box[], cur: Box[], tol = SETTLE_TOL, share = 0.7): boolean {
   if (!prev.length || !cur.length) return true
   const still = cur.filter(c => {
     const cx = c.x + c.w / 2
@@ -106,3 +114,21 @@ export function medianWidth(boxes: Box[]): number {
 
 /** Below this many native camera pixels across, a card's title is too small for OCR; the page asks the user to move closer or zoom. */
 export const MIN_READABLE_TILE_PX = 220
+
+/** Tells the user to hold the phone still once reading has been skipped for motion for a while (and there is something to read). */
+export class HoldSteady {
+  private since: number | null = null
+
+  constructor(private afterMs = 3000) {}
+
+  /** Call once per analysis tick. `blocked`: there are unread cards but reading was skipped because they were moving. */
+  update(now: number, blocked: boolean): boolean {
+    if (!blocked) { this.since = null; return false }
+    if (this.since === null) this.since = now
+    return now - this.since >= this.afterMs
+  }
+
+  reset(): void {
+    this.since = null
+  }
+}

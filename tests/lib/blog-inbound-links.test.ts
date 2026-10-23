@@ -4,7 +4,7 @@
 import { createElement } from 'react';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import type { BlogArticlePage, BlogHubState } from '../../lib/blog/registry.generated';
+import { BLOG_HUB, type BlogArticlePage, type BlogHubState } from '../../lib/blog/registry.generated';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { renderToStaticMarkup } = require('react-dom/server') as { renderToStaticMarkup: (el: unknown) => string };
@@ -66,9 +66,11 @@ describe.each(Object.keys(PAGES) as (keyof typeof PAGES)[])('%s page', (page) =>
   });
 });
 
-describe('the committed registry (no films.json in the repo)', () => {
-  it('renders no /blog link from any of the three pages', () => {
-    for (const page of Object.keys(PAGES) as (keyof typeof PAGES)[]) expect(render(page, null)).not.toMatch(BLOG_LINK);
+describe('the committed registry', () => {
+  it('renders hub links only when the committed hub is ready', () => {
+    for (const page of Object.keys(PAGES) as (keyof typeof PAGES)[]) {
+      expect(BLOG_LINK.test(render(page, null))).toBe(BLOG_HUB.ready);
+    }
   });
 });
 

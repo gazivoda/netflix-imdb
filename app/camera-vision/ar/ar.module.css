@@ -393,3 +393,95 @@
 /* camera zoom slider, shown only when the camera reports a zoom range */
 .zoom { display: inline-flex; align-items: center; gap: 0.6rem; }
 .zoom input[type='range'] { width: min(14rem, 50vw); accent-color: var(--teal); }
+
+/* ratings service trouble: one message for the whole page instead of a label on every card */
+.banner {
+  margin: -8px 0 16px;
+  padding: 10px 14px;
+  font-size: 15px;
+  line-height: 1.45;
+  background: var(--card);
+  border: 3px solid var(--signal);
+}
+
+/* states of an unrecognised card */
+.unknown[data-status='unsure'] { border-color: var(--signal); }
+.unknown[data-status='limit'] { border-color: var(--signal); }
+.unknown[data-status='unsure'] .unknownStatus,
+.unknown[data-status='limit'] .unknownStatus { color: #fff; background: var(--signal); }
+.unknown[data-status='provisional'] { border-style: solid; border-color: var(--gold); justify-content: flex-start; gap: 3px; }
+.unknown[data-status='provisional'] .unknownStatus { color: var(--ink); background: var(--gold); }
+.unknown[data-status='suggest'] { cursor: default; overflow: visible; z-index: 2; justify-content: flex-start; gap: 3px; border-color: var(--gold); }
+.unknown[data-status='suggest'] .unknownStatus { color: var(--ink); background: var(--gold); }
+.provChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 0 3px;
+  pointer-events: none;
+}
+.provChips > span:not(.pill) {
+  --chip-bw: 2px;
+  padding: 0.28em 0.45em;
+  font-size: var(--chip-fs, 12px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+/* one-tap "did you mean" titles: real touch targets */
+.chipList { display: flex; flex-direction: column; align-items: stretch; gap: 3px; padding: 0 3px 3px; }
+.chipBtn {
+  min-height: 44px;
+  padding: 4px 8px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: left;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.chipBtn:hover, .chipBtn:focus-visible { background: var(--gold); outline: none; }
+.chipBtn[data-kind='none'] { color: var(--muted); border-style: dashed; }
+
+/* typed-title autocomplete */
+.optionList {
+  flex: 1 1 100%;
+  max-height: 232px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--card);
+  border: 3px solid var(--ink);
+}
+.option { min-height: 44px; padding: 10px 12px; font-size: 16px; line-height: 1.3; cursor: pointer; border-bottom: 1px solid var(--ink); }
+.option:last-child { border-bottom: 0; }
+.option:hover, .option[aria-selected='true'] { background: var(--gold); }
+
+/* close-up scan */
+.closeupReticle {
+  position: absolute;
+  pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(12, 10, 11, 0.45);
+}
+.closeupReticle span { position: absolute; width: 28px; height: 28px; border: 0 solid var(--gold); }
+.closeupReticle span:nth-child(1) { left: 0; top: 0; border-left-width: 4px; border-top-width: 4px; }
+.closeupReticle span:nth-child(2) { right: 0; top: 0; border-right-width: 4px; border-top-width: 4px; }
+.closeupReticle span:nth-child(3) { left: 0; bottom: 0; border-left-width: 4px; border-bottom-width: 4px; }
+.closeupReticle span:nth-child(4) { right: 0; bottom: 0; border-right-width: 4px; border-bottom-width: 4px; }
+
+.closeupCard { margin-bottom: 24px; padding: clamp(16px, 3vw, 28px); }
+.closeupStatus { margin: 0 0 12px; font-size: 18px; font-weight: 700; line-height: 1.4; }
+.closeupChips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 16px; }
+.closeupChips > span:not(.pill) { --chip-bw: 2px; padding: 0.28em 0.55em; box-shadow: 2px 2px 0 var(--ink); }
+.closeupActions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; padding-bottom: 5px; }
+.closeupRead { margin: 0 0 12px; font-size: 15px; color: var(--muted); overflow-wrap: anywhere; }
+.closeupRead code { padding: 0 3px; background: var(--paper); color: var(--ink); }
+.closeupFoot { margin: 0; font-size: 14px; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .unknown { transition: none; }
+}

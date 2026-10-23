@@ -357,4 +357,17 @@ describe('POST /api/ratings', () => {
       }
     })
   })
+
+  it('"light": true on a single title makes one OMDb call; on several titles it is ignored', async () => {
+    const noRt = () => omdbResponse({ Ratings: [] })
+    mockFetch.mockResolvedValue(noRt())
+    let res = await POST(makeRequest({ titles: ['Inception'], light: true }))
+    expect(res.status).toBe(200)
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    mockFetch.mockClear()
+    await getRatingsStore().flush()
+    res = await POST(makeRequest({ titles: ['Arrival', 'Dune'], light: true }))
+    expect(res.status).toBe(200)
+    expect(mockFetch.mock.calls.length).toBeGreaterThan(2) // each title without RT does its follow-up search
+  })
 })

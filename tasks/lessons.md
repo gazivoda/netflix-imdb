@@ -1,5 +1,7 @@
 # Lessons
 
+- **Run the standalone typecheck after Next.js builds finish.** `next build` replaces `.next/types`; concurrent `tsc --noEmit` can fail with missing generated files even when source types are valid.
+
 - **Distribution changes must update the whole install flow.** When the extension becomes store-listed, use one shared store URL for CTAs, install guides, SoftwareApplication and llms text. Replace tests that enforce pre-launch ZIP claims, and search every public page for stale Developer mode or “not on the store” wording.
 
 - **Agent worktrees: never commit the `node_modules` symlink.** An agent's worktree symlinks `node_modules` to the main repo's; if it is committed and merged, git replaces the real directory with a self-referencing symlink and deletes the dependencies (recovered with `rm node_modules && git rm --cached node_modules && npm ci`). Brief agents to stage by explicit path (`git add <paths>`), never `git add -A`. `.gitignore` now has `node_modules` (no trailing slash, so symlinks match).

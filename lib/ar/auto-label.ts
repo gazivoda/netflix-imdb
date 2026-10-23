@@ -5,9 +5,22 @@
 
 import type { Box } from '../card-tracker'
 import { isUiText } from './title-candidates'
+import type { CardReading, Evaluation, TitleDecision } from './title-confidence'
 
 export interface AutoLabelDeps {
-  readTitles(box: Box): Promise<string[]> // OCR candidates for one card, best first
+  /**
+   * OCR candidates for one card, best first. A reader that also hands back the words of every OCR pass (a CardReading) enables the
+   * confidence-aware decision below; a plain string[] keeps the original behaviour (try the candidates in order against the catalogue).
+   */
+  readTitles(box: Box): Promise<string[] | CardReading>
+  /**
+   * Decision layer over a CardReading (see title-confidence.ts): accept / suggest chips / reject. Without it every reading is decided
+   * by the catalogue alone, as before. With it a vocabulary title is accepted without a lookup, and at most ONE lookup is made for a
+   * reading the vocabulary does not know.
+   */
+  evaluate?(reading: CardReading): Evaluation
+  /** A card that was read but not labelled: `suggest` carries one-tap chips, `reject` means "tap to type". */
+  onOutcome?(item: { box: Box }, outcome: Exclude<TitleDecision, { kind: 'accept' }>): void
   /** Canonical catalogue title, or null if unknown. `voteCount` (IMDb votes, null when the catalogue has none) enables the minVotes guard. */
   lookup(title: string): Promise<{ title: string; voteCount?: number | null } | null>
   /**
@@ -19,8 +32,13 @@ export interface AutoLabelDeps {
 
 export interface AutoLabelOptions {
   minGapMs: number // between two OCR attempts (OCR is the expensive step)
-  retryMs: number // before re-reading the same screen position after a failed attempt
-  cell: number // position quantum (analysis px) that identifies "the same card" across jittery frames
+  retryMs: number // before re-reading the same screen position after a failed attempt; doubles with every further failure
+  maxBackoffMs: number // the retry wait never grows beyond this
+  /** A card that was labelled is looked at again after this long (the second identical answer is what makes a label permanent). */
+  recheckMs: number
+  /** An OCR read that has not answered after this long is abandoned (a terminated worker never answers) so the labeler is not wedged. */
+  readTimeoutMs: number
+  cell: number // distance (analysis px, or 40% of the card width when larger) within which two boxes are "the same card" across jittery frames
   minSimilarity: number // 0..1 between the OCR text and the catalogue title
   maxCandidates: number // OCR guesses tried per attempt (each is one catalogue lookup)
   /**
@@ -38,6 +56,9 @@ export interface AutoLabelOptions {
 export const DEFAULT_AUTO_LABEL: AutoLabelOptions = {
   minGapMs: 1200,
   retryMs: 8000,
+  maxBackoffMs: 60_000,
+  recheckMs: 2500,
+  readTimeoutMs: 20_000,
   cell: 48,
   minSimilarity: 0.8,
   maxCandidates: 4,
@@ -108,26 +129,48 @@ function isWordPrefix(a: string, b: string): boolean {
   return aw.length > 0 && bw.length > aw.length && aw.every((w, i) => bw[i] === w)
 }
 
+/** Whether `a` is the same words as the end of `b` and shorter ("Heist" / "Money Heist"). */
+function isWordSuffix(a: string, b: string): boolean {
+  const aw = wordsOf(a)
+  const bw = wordsOf(b)
+  return aw.length > 0 && bw.length > aw.length && aw.every((w, i) => bw[bw.length - aw.length + i] === w)
+}
+
+// A word that can plausibly be English: 4+ letters with a vowel and no long consonant run. "THINGS" is one, "FLL" and "XKQZ" are not.
+const wordlike = (w: string): boolean => w.length >= 4 && /[aeiouy]/.test(w) && !/[^aeiouy]{5,}/.test(w)
+
 // "Money" is the start of "Money Heist", "Extraction" of "Extraction 2", "Rebel Moon" of "Rebel Moon - Part One": once a longer reading
 // of the same card exists, the shorter one is a fragment, and a lookup would answer it with some other film of that name. The longer
 // reading is tried first; the prefix is only a fallback, and never when it is a single word or when the words it leaves out include a
 // number ("2", "1994", "Part One") - a dropped sequel number names the wrong film.
+// A lone word at either end of a longer reading ("Heist" in "Money Heist", "Stranger" in "Stranger Things") is a fragment whenever the
+// rest looks like real words; it survives only against junk ("OZARK FLL"), where the vocabulary knowing it is the better evidence.
 function droppedByLonger(c: Prepared, others: Prepared[]): boolean {
   return others.some(o => {
-    if (!isWordPrefix(c.text, o.text)) return false
-    const tail = wordsOf(o.text).slice(wordsOf(c.text).length)
-    if (tail.some(w => /^\d+$/.test(w) || NUMBER_WORDS.has(w))) return true
-    // a lone word the vocabulary recognised ("Ozark") is not a fragment of a longer string that is only OCR junk beside it ("OZARK FLL")
-    return wordsOf(c.text).length === 1 && !(c.known && !o.known)
+    const prefix = isWordPrefix(c.raw, o.raw) || isWordPrefix(c.text, o.text)
+    const single = wordsOf(c.raw).length === 1
+    const suffix = single && isWordSuffix(c.raw, o.raw)
+    if (!prefix && !suffix) return false
+    const cw = wordsOf(c.raw)
+    const rest = wordsOf(o.raw).filter((w, i, all) => !(prefix ? i < cw.length : i >= all.length - cw.length))
+    if (prefix && rest.some(w => /^\d+$/.test(w) || NUMBER_WORDS.has(w))) return true
+    if (!single) return false
+    return !(c.known && !o.known) || rest.some(wordlike)
   })
 }
 
-interface Prepared { text: string; repaired: boolean; known: boolean }
+interface Prepared { text: string; raw: string; repaired: boolean; known: boolean }
+
+/** One screen position the labeler has worked on: how often it was tried and when it may be tried again. */
+interface Cell { cx: number; cy: number; w: number; attempts: number; nextAt: number; seenAt: number }
+
+const MAX_CELLS = 96
 
 export class AutoLabeler {
   private busy = false
+  private gen = 0 // bumped by reset(): an attempt that started before it must not touch the labeler any more
   private lastAttempt = -Infinity
-  private cooldown = new Map<string, number>() // cell key -> time it may be tried again
+  private cells: Cell[] = []
   private memo = new Map<string, { at: number; hit: { title: string; voteCount?: number | null } | null }>()
   private o: AutoLabelOptions
 
@@ -135,9 +178,29 @@ export class AutoLabeler {
     this.o = { ...DEFAULT_AUTO_LABEL, ...opts }
   }
 
-  private key(box: Box): string {
-    const q = this.o.cell
-    return `${Math.round((box.x + box.w / 2) / q)}:${Math.round((box.y + box.h / 2) / q)}`
+  // "The same card" across jittery frames: a record whose centre is within `cell` px (or 40% of the card's width) of this box.
+  private cellFor(box: Box, create: boolean): Cell | null {
+    const cx = box.x + box.w / 2
+    const cy = box.y + box.h / 2
+    const reach = Math.max(this.o.cell, 0.4 * box.w)
+    let best: Cell | null = null
+    let bestD = Infinity
+    for (const c of this.cells) {
+      const d = Math.hypot(c.cx - cx, c.cy - cy)
+      if (d <= reach && d < bestD) { best = c; bestD = d }
+    }
+    if (best) {
+      best.cx = cx
+      best.cy = cy
+      best.w = box.w
+      best.seenAt = this.o.now()
+      return best
+    }
+    if (!create) return null
+    if (this.cells.length >= MAX_CELLS) this.cells.sort((a, b) => b.seenAt - a.seenAt).length = MAX_CELLS - 1
+    const fresh: Cell = { cx, cy, w: box.w, attempts: 0, nextAt: 0, seenAt: this.o.now() }
+    this.cells.push(fresh)
+    return fresh
   }
 
   // OCR guesses -> what is worth a lookup, in order: chrome and fragments removed, vocabulary repairs first (they are exact titles).
@@ -145,14 +208,14 @@ export class AutoLabeler {
     const seen = new Set<string>()
     const all: Prepared[] = []
     for (const raw of raws) {
-      const text = raw.trim()
-      if (norm(text).length < 3 || isUiText(text)) continue
-      const fixed = this.deps.repair?.(text) ?? null
-      const use = fixed ?? text
+      const original = raw.trim()
+      if (norm(original).length < 3 || isUiText(original)) continue
+      const fixed = this.deps.repair?.(original) ?? null
+      const use = fixed ?? original
       const k = norm(use)
       if (k.length < 3 || seen.has(k)) continue
       seen.add(k)
-      all.push({ text: use, repaired: fixed !== null && norm(fixed) !== norm(text), known: fixed !== null })
+      all.push({ text: use, raw: original, repaired: fixed !== null && norm(fixed) !== norm(original), known: fixed !== null })
     }
     const kept = all.filter((c, i) => !droppedByLonger(c, all.filter((_, j) => j !== i)))
     const ordered = [...kept.filter(c => c.repaired), ...kept.filter(c => !c.repaired)]
@@ -177,38 +240,83 @@ export class AutoLabeler {
     return hit
   }
 
-  // Tries at most one unrecognised card per call (largest first, so the clearest text goes first).
+  private verified(candidate: string, hit: { title: string; voteCount?: number | null } | null): hit is { title: string; voteCount?: number | null } {
+    if (!hit || !acceptsTitle(candidate, hit.title, this.o.minSimilarity)) return false
+    return !(hit.voteCount !== undefined && (hit.voteCount ?? 0) < this.o.minVotes)
+  }
+
+  /**
+   * A reading -> a decision, without any of the scheduling of next(): the vocabulary first (no lookup), then ONE catalogue lookup for
+   * a reading the vocabulary does not know. A reader without word boxes (a plain string[]) is decided by the catalogue alone: the
+   * candidates in order, the first verified one wins.
+   */
+  async decide(reading: string[] | CardReading): Promise<TitleDecision> {
+    const cardReading: CardReading = Array.isArray(reading) ? { candidates: reading } : reading
+    if (this.deps.evaluate && cardReading.passes?.length) {
+      const ev = this.deps.evaluate(cardReading)
+      const lk = ev.decision.kind !== 'accept' ? ev.lookups[0] : undefined
+      if (lk) {
+        const hit = await this.cachedLookup(lk.text)
+        if (this.verified(lk.text, hit)) return ev.judge(lk, hit.title)
+      }
+      return ev.decision
+    }
+    for (const { text: candidate } of this.prepare(cardReading.candidates).slice(0, this.o.maxCandidates)) {
+      const hit = await this.cachedLookup(candidate)
+      if (this.verified(candidate, hit)) return { kind: 'accept', title: hit.title, source: 'lookup' }
+    }
+    return { kind: 'reject', reason: cardReading.candidates.length ? 'weak' : 'no-text' }
+  }
+
+  // Tries at most one unrecognised card per call: the one that has been tried the fewest times (so cards that cannot be read
+  // never hold up the rest), the largest of those first (the clearest text). A card that fails waits retryMs, then twice that, and so on.
   // Returns the card that was labelled, or null when nothing was attempted or nothing verified.
   async next<T extends { box: Box }>(unknown: T[]): Promise<{ item: T; title: string } | null> {
     const t = this.o.now()
     if (this.busy || t - this.lastAttempt < this.o.minGapMs) return null
 
-    const item = [...unknown]
-      .sort((a, b) => b.box.w * b.box.h - a.box.w * a.box.h)
-      .find(u => (this.cooldown.get(this.key(u.box)) ?? 0) <= t)
-    if (!item) return null
+    let item: T | null = null
+    let cell: Cell | null = null
+    for (const u of unknown) {
+      const c = this.cellFor(u.box, true)!
+      if (c.nextAt > t) continue
+      const better = !cell || c.attempts < cell.attempts || (c.attempts === cell.attempts && u.box.w * u.box.h > item!.box.w * item!.box.h)
+      if (better) { item = u; cell = c }
+    }
+    if (!item || !cell) return null
 
+    const gen = this.gen
     this.busy = true
     this.lastAttempt = t
-    this.cooldown.set(this.key(item.box), t + this.o.retryMs) // set up front: a throwing OCR must not retry every frame
+    cell.attempts++
+    // set up front: a throwing OCR must not retry every frame
+    cell.nextAt = t + Math.min(this.o.maxBackoffMs, this.o.retryMs * 2 ** Math.min(cell.attempts - 1, 10))
+    let timer: ReturnType<typeof setTimeout> | undefined
     try {
-      const raws = await this.deps.readTitles(item.box)
-      for (const { text: candidate } of this.prepare(raws).slice(0, this.o.maxCandidates)) {
-        const hit = await this.cachedLookup(candidate)
-        if (!hit || !acceptsTitle(candidate, hit.title, this.o.minSimilarity)) continue
-        if (hit.voteCount !== undefined && (hit.voteCount ?? 0) < this.o.minVotes) continue
-        return { item, title: hit.title }
+      const timedOut = new Promise<'timeout'>(resolve => { timer = setTimeout(() => resolve('timeout'), this.o.readTimeoutMs) })
+      const read = await Promise.race([this.deps.readTitles(item.box), timedOut])
+      if (read === 'timeout' || gen !== this.gen) return null
+      const decision = await this.decide(read)
+      if (gen !== this.gen) return null
+      if (decision.kind === 'accept') {
+        cell.nextAt = this.o.now() + this.o.recheckMs
+        return { item, title: decision.title }
       }
+      if (this.deps.evaluate) this.deps.onOutcome?.(item, decision)
       return null
     } catch {
       return null
     } finally {
-      this.busy = false
+      clearTimeout(timer)
+      if (gen === this.gen) this.busy = false
     }
   }
 
+  /** Forgets everything about screen positions and frees the labeler (call it when the text reader is replaced or stopped). */
   reset(): void {
-    this.cooldown.clear()
+    this.cells = []
     this.lastAttempt = -Infinity
+    this.busy = false
+    this.gen++
   }
 }

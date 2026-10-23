@@ -100,15 +100,24 @@ async function fetchDetail(url: string): Promise<LookupResult> {
   return classifyDetail(data)
 }
 
+export interface LookupOptions {
+  /**
+   * One OMDb call per lookup: skip the `?s=` search that looks for a newer same-name title with a Rotten Tomatoes score. For callers
+   * that only need to know whether a title exists (the AR page's title check); the full lookup runs when the scores are shown.
+   */
+  light?: boolean
+}
+
 export async function lookupTitle(
   query: string,
-  apiKey = process.env.OMDB_API_KEY ?? ''
+  apiKey = process.env.OMDB_API_KEY ?? '',
+  opts: LookupOptions = {}
 ): Promise<LookupResult> {
   // Step 1: direct lookup — 1 API call for the common case.
   const result = await fetchDetail(`${OMDB_API_BASE}/?t=${encodeURIComponent(query)}&apikey=${apiKey}`)
 
   // Found with RT data, or not found / failed → return immediately (1 call total).
-  if (result.status !== 'found' || result.title.rtRating !== null) return result
+  if (result.status !== 'found' || result.title.rtRating !== null || opts.light) return result
   const direct = result.title
 
   // Found but no RT score: the ?t= endpoint may have picked the wrong entry when

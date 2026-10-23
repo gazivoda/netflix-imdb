@@ -52,15 +52,17 @@ export function tokensFromWords(ws: OcrWordLike[], imageHeight: number, pass = 0
   const out: VocabToken[] = []
   for (const w of ws) {
     const k = key(w.text)
-    if (k.length < 2 || w.confidence < 25) continue
     const height = imageHeight > 0 ? (w.bbox.y1 - w.bbox.y0) / imageHeight : 1
+    // A lone digit is the sequel number of "DESPICABLE ME 2": kept when it is sure and not small print ("Season 2" badges are small).
+    const sequelDigit = /^\d$/.test(k) && w.confidence >= 60 && height >= 0.05
+    if ((k.length < 2 && !sequelDigit) || w.confidence < 25) continue
     if (height < UI_TOKEN_MAX_HEIGHT && isUiText(w.text)) continue // small "TOP" / "NEW" / "MATCH" badges are not title words
     out.push({ text: k, confidence: w.confidence, height, pass })
   }
   return out
 }
 
-interface Entry { title: string; tokens: string[]; content: string[]; letters: number; bare: string }
+interface Entry { title: string; tokens: string[]; content: string[]; letters: number; bare: string; spaced: string; spacedBare: string }
 
 // How close an OCR word must be to a title word: exact for tiny words, one slip for short ones, ~25% for long ones. A word that
 // is the start of the title word ("PROBL" for "problem") also counts when it is long enough to be unambiguous.
@@ -85,7 +87,8 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
       const tokens = words(title)
       let content = tokens.filter(t => !STOP.has(t))
       if (!content.length) content = tokens
-      entries.push({ title, tokens, content, letters: content.reduce((a, t) => a + t.length, 0), bare: bareKey(title) })
+      const spaced = title.toLowerCase().replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()
+      entries.push({ title, tokens, content, letters: content.reduce((a, t) => a + t.length, 0), bare: bareKey(title), spaced, spacedBare: spaced.replace(ARTICLE, '') })
     }
   }
   add(titles)
@@ -93,6 +96,42 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
   return {
     get size() { return entries.length },
     add,
+    /** Every title in the vocabulary, in the order they were added. */
+    titles(): string[] { return entries.map(e => e.title) },
+    /**
+     * Titles to offer while a title is being typed, best first: (0) the title, or the title without its article, starts with the
+     * text; (1) every typed word starts a title word, in order; (2) the text is inside the title (3+ letters); (3) one slip against
+     * the same-length start of the title (4+ letters). Ties: titles in `recent` (most recent first), then the shorter title.
+     */
+    suggest(text: string, max = 5, recent: string[] = []): string[] {
+      const q = text.toLowerCase().replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim()
+      if (q.length < 2) return []
+      const qb = q.replace(ARTICLE, '')
+      const qk = qb.replace(/ /g, '')
+      if (qk.length < 1) return []
+      const qw = q.split(' ')
+      const hits: { e: Entry; tier: number; recency: number }[] = []
+      for (const e of entries) {
+        let tier = 9
+        if (e.spaced.startsWith(q) || e.spacedBare.startsWith(qb) || e.bare.startsWith(qk)) tier = 0
+        else {
+          let i = 0
+          const inOrder = qw.every(w => {
+            while (i < e.tokens.length && !e.tokens[i].startsWith(w)) i++
+            return i < e.tokens.length && ++i > 0
+          })
+          if (inOrder) tier = 1
+          else if (qk.length >= 3 && e.bare.includes(qk)) tier = 2
+          else if (qk.length >= 4 && Math.round((1 - titleSimilarity(qk, e.bare.slice(0, qk.length))) * qk.length) <= 1) tier = 3
+        }
+        if (tier < 9) {
+          const at = recent.findIndex(r => key(r) === key(e.title))
+          hits.push({ e, tier, recency: at >= 0 ? at : 1e6 })
+        }
+      }
+      hits.sort((a, b) => a.tier - b.tier || a.recency - b.recency || a.e.title.length - b.e.title.length)
+      return hits.slice(0, max).map(h => h.e.title)
+    },
     /**
      * Snaps ONE string (a whole OCR candidate such as "Money Heis!") onto the vocabulary title it is a typo of, or returns null.
      * Strict on purpose, because the answer goes straight to the ratings lookup: a title of <= 4 letters must match exactly, longer ones
@@ -124,11 +163,12 @@ export function createVocabulary(titles: string[], opts: Partial<VocabOptions> =
       }
       return null
     },
-    /** Vocabulary titles the tokens point at, best first (at most `max`). */
-    match(tokens: VocabToken[], max = 3): VocabMatch[] {
+    /** Vocabulary titles the tokens point at, best first (at most `max`). `only` restricts the search to the titles it accepts. */
+    match(tokens: VocabToken[], max = 3, only?: (title: string) => boolean): VocabMatch[] {
       if (!tokens.length) return []
       const results: (VocabMatch & { entry: Entry })[] = []
       for (const e of entries) {
+        if (only && !only(e.title)) continue
         let matched = 0
         let sim = 0
         let conf = 0

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "slug": "kpop-demon-hunters-2025",
+  "imdbId": "tt14205554",
+  "status": "review",
+  "published": null,
+  "contentUpdated": "2026-10-21",
+  "h1": "KPop Demon Hunters: critics rate it noticeably above audiences",
+  "description": "{{title}} has IMDb {{imdb}} and {{rt}} on Rotten Tomatoes, so critics sit {{gapAbs}} points above audiences, with a Netflix Top 10 run of {{weeksInTop10}} weeks.",
+  "summary": "Critics like {{title}} more than audiences do: Rotten Tomatoes shows {{rt}} against an IMDb rating of {{imdb}}. Critics rate it noticeably higher than audiences, a clear gap of {{gapAbs}} points, though both sides are positive. It also tops this set by Netflix hours viewed, making it the most watched film here. Figures reflect OMDb data as of {{asOf}}.",
+  "sections": [
+    {
+      "id": "why-split",
+      "heading": "Why do critics rate KPop Demon Hunters above viewers?",
+      "paragraphs": [
+        "Critics come out ahead here, and the margin is a clear one. Converted to the hundred-point scale, the audience score becomes {{imdbX10}}, which leaves Rotten Tomatoes {{gapAbs}} points above it. Critics rate {{title}} noticeably higher than audiences do, yet {{imdb}} is still a warm audience score, so the difference is one of enthusiasm rather than approval against rejection.",
+        "The Metascore of {{metascore}} lines up with the Rotten Tomatoes side more than with IMDb, which suggests the critic enthusiasm is not a quirk of one aggregator. With {{votes}} IMDb votes behind the audience number, the lower figure cannot be put down to a handful of ballots.",
+        "OMDb also records a long list of award wins and nominations for the film, which is consistent with strong professional regard. Awards bodies and review aggregators are different groups of judges, so that list backs the critic side without explaining the audience side.",
+        "Genre adds context. The median difference across the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so reviewers and viewers usually sit close together on animation, and {{title}} departs from that pattern. One reading is that its mix of music and action drew more reviewer approval than casual-viewer approval, an interpretation rather than a measurement.",
+        "The two numbers also measure different things. Rotten Tomatoes counts the share of reviews that are positive, while IMDb averages star ratings, as [this comparison](/compare/imdb-vs-rotten-tomatoes) explains. A film that nearly every reviewer rates as good can reach a very high share even when the average star rating is merely good."
+      ]
+    },
+    {
+      "id": "the-film",
+      "heading": "Who is behind KPop Demon Hunters and how did it chart?",
+      "paragraphs": [
+        "The premise follows a pop trio whose stage careers cover a second life fighting demons. {{director}} directed it, and OMDb lists Maggie Kang as co-director. Arden Cho, May Hong and Ji-young Yoo are billed in the lead roles, and the film runs {{runtime}} with a PG rating.",
+        "In the Netflix Top 10 data it reached a peak rank of {{peakRank}} and stayed {{weeksInTop10}} weeks, which puts it {{popularityRank}} among the {{setSize}} films here by hours viewed, at {{hours}} hours. A run that long suggests the audience figure comes from a film people kept choosing, not from one opening-week burst."
+      ]
+    },
+    {
+      "id": "who-it-suits",
+      "heading": "Who should trust the critic score on KPop Demon Hunters?",
+      "paragraphs": [
+        "If you treat critic scores as a guide to craft, the Rotten Tomatoes figure of {{rt}} is the encouraging signal here, and the Metascore of {{metascore}} backs it. If you lean on audience scores, an IMDb rating of {{imdb}} is still solid, just less glowing.",
+        "At {{runtime}} it is short for a feature, so the time cost of testing it is low. Anyone who already enjoys music-driven action in animated form has the clearest reason to try it, while those who distrust critic enthusiasm can read the audience number as the cautious view. Use the pairing as a pointer, not a ruling, because scores describe other people."
+      ]
+    },
+    {
+      "id": "more",
+      "heading": "How does the long Top 10 run fit with the scores?",
+      "paragraphs": [
+        "Hours viewed and ratings answer different questions. The chart tells you how much time viewers spent, and the review scores tell you how that time was judged. Here the two point the same way, because the film sits first by hours and still carries a Rotten Tomatoes score of {{rt}}.",
+        "That pairing is not automatic, which is why it is worth reading both. A film can gather very many viewing hours and a lukewarm reception, or the reverse. Treat the chart as a measure of reach and the scores as a measure of reaction."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Do critics or audiences rate KPop Demon Hunters higher?",
+      "a": "Critics do. Rotten Tomatoes shows {{rt}}, while IMDb users give {{imdb}}, which is {{imdbX10}} on the hundred-point scale. That leaves a clear gap of {{gapAbs}} points in the critics' favor, so critics rate it noticeably higher than audiences, although an IMDb score of {{imdb}} still shows a positive audience reaction."
+    },
+    {
+      "q": "How long did KPop Demon Hunters stay in Netflix's Top 10?",
+      "a": "Netflix's Top 10 data records {{weeksInTop10}} weeks for the film, with a peak rank of {{peakRank}}. By hours viewed it is {{popularityRank}} among the {{setSize}} films in this set, at {{hours}} hours. Those figures measure viewing, not opinion, so read them next to the scores rather than as a substitute for them."
+    },
+    {
+      "q": "How many IMDb votes support the KPop Demon Hunters rating?",
+      "a": "IMDb shows {{votes}} votes for the film, rounded to {{votesShort}} in headline figures. A pool that size makes it unlikely that the {{imdb}} average swings on a few ballots, though it says nothing about why people voted as they did or why Rotten Tomatoes sits {{gapAbs}} points higher on the common scale."
+    }
+  ],
+  "sources": [],
+  "review": {
+    "writer": "Claude (writer agent)",
+    "writtenOn": "2026-10-21",
+    "factChecker": null,
+    "factCheckedOn": null,
+    "cuts": [],
+    "rtCheck": null
+  }
+}

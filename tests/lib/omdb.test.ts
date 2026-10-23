@@ -305,3 +305,24 @@ describe('OMDb request timeout and budget', () => {
     }
   })
 })
+
+describe('lookupTitle light mode', () => {
+  beforeEach(() => mockFetch.mockReset())
+  const noRt = () => ({
+    ok: true,
+    json: async () => ({ Response: 'True', imdbID: 'tt0099312', Title: 'Cover-Up', Year: '1991', Type: 'movie', imdbRating: '5.0', imdbVotes: '2,000', Ratings: [] }),
+  })
+
+  it('makes exactly one OMDb call even when the hit has no Rotten Tomatoes score', async () => {
+    mockFetch.mockResolvedValue(noRt())
+    const r = await lookupTitle('Cover-Up', 'k', { light: true })
+    expect(r.status).toBe('found')
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('the default lookup still searches for a newer same-name title (the extension keeps its accuracy)', async () => {
+    mockFetch.mockResolvedValueOnce(noRt()).mockResolvedValueOnce({ ok: true, json: async () => ({ Response: 'False', Error: 'Movie not found!' }) })
+    await lookupTitle('Cover-Up', 'k')
+    expect(mockFetch).toHaveBeenCalledTimes(2)
+  })
+})
