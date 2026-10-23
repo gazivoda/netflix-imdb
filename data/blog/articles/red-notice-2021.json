@@ -4,59 +4,59 @@
   "imdbId": "tt7991608",
   "status": "review",
   "published": null,
-  "contentUpdated": "2026-10-21",
-  "h1": "Red Notice scores: why IMDb users and Rotten Tomatoes part ways",
+  "contentUpdated": "2026-10-23",
+  "h1": "Red Notice ratings: reading the IMDb and critic-score gap",
   "description": "{{title}} sits at {{imdb}} on IMDb but {{rt}} on Rotten Tomatoes; see what the audience-versus-critic difference suggests and who it suits.",
-  "summary": "Red Notice earned {{imdb}} from IMDb users and {{rt}} from Rotten Tomatoes, so viewers and reviewers read this action comedy in very different ways. Audiences rate it sharply higher than critics, a wide gap of {{gapAbs}} points, and the score table shows where that lands in the set. These figures are OMDb data as of {{asOf}} and will shift when the source does.",
+  "summary": "Red Notice has IMDb {{imdb}} and Rotten Tomatoes {{rt}} in this snapshot. Audiences score sharply higher than critics in the site's arithmetic comparison, a wide gap of {{gapAbs}} points. IMDb averages viewer ratings; the Tomatometer counts positive critic reviews, so their distance cannot measure the reasons for that response. The source is OMDb as of {{asOf}}.",
   "sections": [
     {
       "id": "why-split",
-      "heading": "What explains the distance between viewers and reviewers on Red Notice?",
+      "heading": "What does the Red Notice critic and audience gap show?",
       "paragraphs": [
-        "Viewers have the upper hand in this comparison. Audiences rate Red Notice sharply higher than critics, a wide gap of {{gapAbs}} points once the IMDb average is put on the same hundred-point scale as Rotten Tomatoes. Sorted by the size of that difference, the film comes {{gapRank}} across the whole set.",
-        "Reviewers look aligned with each other. The Metascore of {{metascore}} sits almost on top of the Rotten Tomatoes figure, so the low critic reading appears on two separate aggregators and is not one site's quirk. One reading is that the critic verdict is consistent, which leaves the audience score as the outlier.",
-        "Genre gives a baseline. The {{genreCount}} {{genre}} films in the set have a median difference of {{genreMedianGap}}, so a mild lean toward audiences is common in the category, yet {{gap}} here is a long way past that norm. A mix of action and comedy may please a broad crowd without winning over reviewers, though that is an interpretation, not a measurement.",
-        "Part of the distance is also how each number is built. Rotten Tomatoes counts the share of reviews that are positive, while IMDb averages star ratings, as [this comparison](/compare/imdb-vs-rotten-tomatoes) explains. A pleasant but unremarkable movie can collect many lukewarm reviews, which drags the percentage down, and still earn solid stars."
+        "IMDb's audience average converts to {{imdbX10}} when multiplied by ten, against a Tomatometer of {{rt}}. Audiences score sharply higher than critics on that arithmetic comparison, with a wide gap of {{gapAbs}} points. The distance ranks {{gapRank}} among {{setSize}} films in this dataset, ordered by absolute difference.",
+        "The Metascore is {{metascore}}, numerically close to the Rotten Tomatoes percentage. That is a second low critic aggregate in this snapshot, although Metacritic averages weighted grades and the Tomatometer counts approving reviews. Their proximity suggests that looking at another critic measure does not remove the contrast; it does not identify which creative choices drew the response.",
+        "Among the {{genreCount}} {{genre}} films in this set, the median difference is {{genreMedianGap}}. Red Notice therefore follows the genre's median direction but with a larger numerical distance. That comparison describes these selected popular films, rather than all action films or all viewers.",
+        "The [comparison of IMDb and Rotten Tomatoes](/compare/imdb-vs-rotten-tomatoes) explains the measurement mismatch. A middling viewer average and a low positive-review percentage can coexist without either database being wrong. Neither number supplies a cause for the reaction or a prediction of your own enjoyment."
       ]
     },
     {
       "id": "the-film",
       "heading": "Who is in Red Notice and how did it perform in the Top 10?",
       "paragraphs": [
-        "A lawman chasing a famed thief ends up working beside a competing crook, and trust between them stays shaky. {{director}} directed and also wrote it, with Dwayne Johnson, Ryan Reynolds and Gal Gadot billed in the lead roles, and it runs {{runtime}}.",
-        "In Netflix's Top 10 data the film reached rank {{peakRank}} and stayed in the global Top 10 for {{weeksInTop10}} weeks. With {{hours}} hours viewed it sits {{popularityRank}} among the {{setSize}} films in this set.",
-        "OMDb lists a PG-13 rating, the genres action, comedy and thriller, and the United States and Italy as countries of origin."
+        "A lawman chasing a famed thief ends up working beside a competing crook, and trust between them stays shaky. {{director}} directed and wrote it, with Dwayne Johnson, Ryan Reynolds and Gal Gadot listed as lead cast. The OMDb snapshot gives a running time of {{runtime}} and a PG-13 classification.",
+        "Netflix's data records a peak rank of {{peakRank}} and {{weeksInTop10}} weeks in the global Top 10. The {{hours}} hours used for its popularity ranking come from the Most Popular list's initial release window, not those weeks added together. It places {{popularityRank}} among the {{setSize}} selected titles under this method.",
+        "The source record lists action, comedy and thriller as genres, and the United States and Italy as countries. These describe the database entry; the chart ranking does not verify any additional production facts."
       ]
     },
     {
       "id": "who-it-suits",
-      "heading": "Is Red Notice a better fit for viewers or for critic-followers?",
+      "heading": "How can Red Notice scores help with your choice?",
       "paragraphs": [
-        "If you want a lively action comedy and give more weight to what ordinary viewers rate, the {{imdb}} from IMDb is the more useful guide. If you follow reviewers, the {{rt}} and the Metascore of {{metascore}} put you on the critics' side of the divide.",
-        "Anyone who has liked other action titles where audiences sit above critics, such as The Gray Man or Heart of Stone, may find a similar pattern here. At {{runtime}} the commitment is a standard one, so the choice comes down to whose judgment you trust."
+        "If your selection habit gives more weight to viewer averages, IMDb's {{imdb}} is the relevant starting point. If you normally follow critical reception, the Tomatometer of {{rt}} and Metascore of {{metascore}} give a different set of signals. Read them according to their definitions rather than averaging them into a new grade.",
+        "For anyone considering an action comedy, the cast, genre and listed duration of {{runtime}} may help decide whether to investigate further. Individual reviews can explain what their authors valued; the aggregate table cannot. A viewer who prefers the audience measure can still inspect the critic objections before choosing, without assuming that every participant shares the same reason for a vote."
       ]
     },
     {
       "id": "more",
-      "heading": "How much weight should the vote count carry here?",
+      "heading": "Does the Red Notice vote total settle the disagreement?",
       "paragraphs": [
-        "The audience side rests on {{votes}} IMDb votes, a pool big enough that a handful of enthusiastic or hostile ballots cannot move the average much. A title that tops a streaming chart for weeks may also collect ratings from people who pressed play casually, which can pull the average toward friendly scores for light entertainment. That is an interpretation, not a measurement.",
-        "The OMDb awards line reads 2 nominations total, so no large awards haul sits against the low critic scores. Both numbers will keep moving as votes and reviews accumulate."
+        "The source snapshot lists {{votes}} IMDb votes. That establishes how many ratings the returned count records, without showing whether the voters represent everyone who watched. Netflix hours come from a different measurement system, so a high popularity rank cannot establish the tastes or demographics of the IMDb participants.",
+        "OMDb's awards field reads 2 nominations total. This page makes no claim about the completeness of that field or a connection between nominations and reception. The scores, vote count and chart record remain separate evidence, and fresh lookups may differ from the dated values shown here."
       ]
     }
   ],
   "faq": [
     {
       "q": "Why does Red Notice score so differently on IMDb and Rotten Tomatoes?",
-      "a": "IMDb averages star ratings from {{votesShort}} voters and lands on {{imdbX10}} on the hundred-point scale, while Rotten Tomatoes reports the share of positive reviews, {{rt}}. The first can reflect broad enjoyment and the second counts how many critics gave a pass mark, so a film can sit comfortably on one and poorly on the other. Here audiences come out sharply higher."
+      "a": "The IMDb average of {{imdb}} becomes {{imdbX10}} on the arithmetic scale here, while Rotten Tomatoes reports {{rt}} positive critic reviews. The resulting {{gapAbs}} points put audiences sharply higher numerically. Different populations and calculations contribute different signals; these aggregates do not establish why individual reviewers or voters reacted as they did."
     },
     {
       "q": "Does Red Notice have any awards listed on OMDb?",
-      "a": "The OMDb record lists 2 nominations total and no other award text. That is the only awards information used on this page, and it cannot be tied to the critic scores in any way we can measure, so treat the score difference as a separate matter."
+      "a": "The OMDb awards field reads 2 nominations total. That is a dated database string rather than a complete verified awards history. It does not explain the critic percentage or audience average, so this page treats the nominations field separately from the rating comparison."
     },
     {
       "q": "How long did Red Notice stay in Netflix's Top 10?",
-      "a": "In Netflix's Top 10 data it appeared for {{weeksInTop10}} weeks and reached rank {{peakRank}} at its highest. It also sits {{popularityRank}} among the {{setSize}} films here by hours viewed, at {{hours}} hours. Popularity and critic scores are separate things: a crowd can press play on a title that reviewers rated low."
+      "a": "The Netflix snapshot records {{weeksInTop10}} global Top 10 weeks and a peak rank of {{peakRank}}. Its {{hours}} viewing hours from the Most Popular list's initial release window place it {{popularityRank}} in this selected set. Those totals describe popularity under the stated method, not unique people, completed watches or favorable reviews."
     }
   ],
   "sources": [],
@@ -66,6 +66,12 @@
     "factChecker": null,
     "factCheckedOn": null,
     "cuts": [],
-    "rtCheck": null
+    "rtCheck": {
+      "checkedOn": "2026-10-23",
+      "url": "https://www.rottentomatoes.com/m/red_notice",
+      "rtSitePercent": 36,
+      "rtSiteReviews": 174,
+      "outcome": "match"
+    }
   }
 }

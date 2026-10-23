@@ -127,9 +127,34 @@ describe('blog film analyses', () => {
     expect(buildLlmsTxt(buildPages([], { ready: false, dataUpdated: null }))).not.toContain(`](${absoluteUrl('/blog')})`);
   });
 
-  it('llms.txt has no dataset link while nothing is published', () => {
-    expect(buildLlmsTxt()).not.toContain('netflix-top-100.json');
-    expect(buildLlmsFullTxt()).not.toContain('## Film analyses');
+  it('exposes the ready hub dataset even before any film analysis is published', () => {
+    const readyWithoutArticles = buildPages([], READY);
+    for (const output of [buildLlmsTxt(readyWithoutArticles), buildLlmsFullTxt(readyWithoutArticles)]) {
+      expect(output).toContain(`](${absoluteUrl('/data/netflix-top-100.json')}):`);
+      expect(output).not.toContain('## Film analyses');
+    }
+  });
+
+  it('exposes the research snapshot whenever its source page is registered', () => {
+    const researchOnly = PAGES.filter((p) => p.path === '/research/imdb-vs-rotten-tomatoes-gap');
+    for (const output of [buildLlmsTxt(researchOnly), buildLlmsFullTxt(researchOnly)]) {
+      expect(output).toContain(`](${absoluteUrl('/data/imdb-rt-gap.json')}):`);
+      expect(output).not.toContain('netflix-top-100.json');
+    }
+  });
+
+  it('omits each dataset when its source page is unavailable', () => {
+    const withoutHub = buildPages([], { ready: false, dataUpdated: null });
+    for (const output of [buildLlmsTxt(withoutHub), buildLlmsFullTxt(withoutHub)]) {
+      expect(output).not.toContain('netflix-top-100.json');
+      expect(output).toContain('/data/imdb-rt-gap.json');
+    }
+    const withoutSources = PAGES.filter((p) => p.path !== '/blog' && p.path !== '/research/imdb-vs-rotten-tomatoes-gap');
+    for (const output of [buildLlmsTxt(withoutSources), buildLlmsFullTxt(withoutSources)]) {
+      expect(output).not.toContain('## Data');
+      expect(output).not.toContain('/data/imdb-rt-gap.json');
+      expect(output).not.toContain('netflix-top-100.json');
+    }
   });
 
   it('llms-full.txt lists every published article in a Film analyses section', () => {

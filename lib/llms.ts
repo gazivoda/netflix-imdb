@@ -63,16 +63,20 @@ export const DATASET_PATH = '/data/netflix-top-100.json';
 
 const articlesOf = (pages: SitePage[]): SitePage[] => pages.filter((p) => p.kind === 'article');
 
-// Only present once the blog has published films; with nothing to list the section is omitted.
-const dataSection = (pages: SitePage[]): string[] =>
-  articlesOf(pages).length > 0
-    ? [
-        '## Data',
-        '',
-        `- [Top 100 Netflix films dataset (JSON)](${url(DATASET_PATH)}): IMDb and Rotten Tomatoes scores for the 100 most-watched Netflix films, with the selection rule and sources.`,
-        '',
-      ]
-    : [];
+// The research data is useful before individual film analyses are published.
+// Gate each download on its source page, so an unavailable hub is never advertised.
+const dataSection = (pages: SitePage[]): string[] => {
+  const paths = new Set(pages.map((p) => p.path));
+  const entries = [
+    ...(paths.has('/blog')
+      ? [`- [Top 100 Netflix films dataset (JSON)](${url(DATASET_PATH)}): IMDb and Rotten Tomatoes scores for 100 popular films selected from Netflix chart data, with eligibility filters, the selection rule and sources.`]
+      : []),
+    ...(paths.has('/research/imdb-vs-rotten-tomatoes-gap')
+      ? [`- [IMDb vs Rotten Tomatoes research snapshot (JSON)](${url('/data/imdb-rt-gap.json')}): Scores for 44 Netflix Original films, with the selection rule, retrieval date and excluded titles.`]
+      : []),
+  ];
+  return entries.length ? ['## Data', '', ...entries, ''] : [];
+};
 
 // One compact line per published article: `- [Title (Year)](url): IMDb x, RT y%, gap z, scores as of d`.
 const filmAnalysesSection = (pages: SitePage[]): string[] => {

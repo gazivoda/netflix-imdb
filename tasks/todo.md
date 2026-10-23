@@ -182,3 +182,34 @@ Phase 1 done and verified: `tsc` clean, `jest` 24 suites / 428 passed, `next bui
 - B SEO: every JSON-LD date is a full date-time (`jsonld-date` rule in `lib/html-seo.ts`); ProfilePage embeds the Person; Pro wording gated on `lib/billing/flag.ts` (build-time); SoftwareApplication only on product pages; camera pages have real copy, debug behind `?debug=1`; Dataset licence and publisher.
 - C UX: compact cookie banner, skip link first, Escape only for the reopened banner, white text on signal red, table captions and regions, tap targets, AR label stacking, `/favicon.ico`.
 - D/E: honest copy, SVODEX in the comparison, `npm run billing:readiness`, SETUP.md updated. Details: `.superpowers/audit/fix-grill-report.md`.
+# SEO + GEO traffic growth swarm (2026-10-23)
+
+**Goal:** Earn more qualified visits with useful, accurate, crawlable content and stronger discovery. User authorizes a specialist swarm, implementation, verification, commit and push.
+
+**Architecture:** Keep the existing Next.js App Router, shared GuideLayout, page registry, server-rendered JSON-LD and generated blog registry. Prepare film analyses for the existing pilot review, add one distinct guide answering Netflix rating-system questions, and expose existing research to readers and machine consumers. No new dependencies, fabricated reviews, search-volume estimates or promised traffic increases.
+
+**Execution:** Superpowers planning, parallel specialists, test-first behavioral fixes, independent review and evidence before completion. Shared clean checkout with disjoint ownership; root integrates shared registry/schema. Existing content and release history are preserved. Root performs final commit/push to the original main branch after review.
+
+## Plan and verification
+
+- [x] Audit live/source SEO technical, sitemap, schema, images, hreflang and performance; record evidence and applicable limitations (technical agent).
+- [x] Audit content, page intent, competitors, programmatic quality and citability; correct the three existing film drafts and record preparatory RT checks (content agent owns the three article JSON files; generated registry unchanged).
+- [x] Audit GEO crawlers, llms, brand mentions, platform readiness, comparisons and reporting; improve dataset discovery with ready/not-ready regression coverage (GEO agent owns lib/llms.ts, its tests and GEO report).
+- [x] Root: add `/how-to/netflix-ratings-explained` using the shared guide and register its canonical metadata/dates. Cover thumbs, Match, maturity, IMDb/RT, device limitations and sourced answers without duplicating the installation guides.
+- [x] Root: make Article/BlogPosting author and publisher attribution self-contained; associate only verified external brand identities. Add behavior assertions before changing schema. Do not invent film imagery or review ratings.
+- [x] Independently review article facts and publication gates. Keep all three revised drafts at review/unpublished: owner scoring and the independent editorial pilot process remain outstanding; generated registry unchanged.
+- [x] Consolidate SEO/GEO findings, all skill applicability, baseline comparison and a measurable 30-day acquisition plan. Administrative CRM/proposal workflows must not create unrelated external side effects.
+- [x] Verify full Jest suite, supported Node 22 production build, sequenced TypeScript check, rendered SEO and internal links, blog lint/registry, desktop/mobile screenshots and IndexNow dry run. Do not claim field CWV, indexing or traffic improvements without measurements.
+- [ ] Review full scoped diff; commit, push and verify remote SHA. Check live rollout if reachable and distinguish deployed from local results.
+
+## Review
+
+Implementation and independent review complete. Baseline clean at c786e2e on main; work integrated on codex/seo-geo-growth-20261023 with disjoint shared-checkout ownership. Added one sourced ratings guide plus contextual links; inlined Article/BlogPosting attribution and verified CWS identity; added attribution validation and gated dataset discovery. Corrected three film drafts while retaining review status and null publication/checker fields. Reports include all SEO/GEO skill applicability, primary evidence, a PDF and a measurable 30-day plan. Existing administrative CRM/proposal and hreflang workflows are inapplicable; no outreach or external posts sent.
+
+Verification: baseline 2073 passing tests / 6 skipped; final **2097 passing tests, 6 skipped, 0 failures, 109 passing suites**. The first integrated run exposed two new-title casing failures in the existing rename guard; changing the guide metadata to sentence case fixed them without weakening tests. Final supported Node 22.20.0 production build passes; sequential standalone TypeScript check passes. SEO validation and internal links each check **all 17 public pages, zero findings**, including request-rendered AR. All 3 blog checks pass all 7 gates; extension ZIP consistency passes. IndexNow dry run includes 17 canonical URLs and sends nothing. Final machine-summary prose precision was checked by 60 targeted llms/blog tests after the full suite. Shared first-load JS remains 87.4kB; no field CWV claim.
+
+Browser verification: 1440px and 320px document widths match viewport, table overflow stays within a named focusable region, official store links are correct, and declining consent leaves analytics unloaded. Fresh reviewer independently verified source facts and RT values; resolved draft status/independence concern and qualified the eligibility-filtered dataset wording. No blocking or important findings remain.
+
+Open external items: www TLS certificate/router and temporary HTTP 307 redirect require hosting configuration absent from this repo. Real search/indexing/traffic/account data are unavailable. Owner pilot scoring and independent editorial checks still gate film publication. Release commit/push evidence follows after execution.
+
+---

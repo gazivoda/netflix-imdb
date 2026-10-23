@@ -156,7 +156,7 @@ export function howTo(opts: {
   };
 }
 
-/** Article node for a registered page; author/publisher resolve to the root-layout entities. */
+/** Article node with author and publisher details available in this JSON-LD block. */
 export function article(path: string): JsonLdNode {
   const page = getPage(path);
   return {
@@ -166,8 +166,8 @@ export function article(path: string): JsonLdNode {
     mainEntityOfPage: absoluteUrl(page.path),
     datePublished: isoDateTime(page.published ?? PUBLISHED_DATE),
     dateModified: isoDateTime(page.updated),
-    author: authorRef,
-    publisher: orgRef,
+    author: authorNode(),
+    publisher: publisherNode(),
     inLanguage: 'en',
   };
 }
@@ -260,8 +260,8 @@ export function blogPosting(path: string, input: BlogPostingInput): JsonLdNode {
     mainEntityOfPage: { '@id': nodeId(path, 'webpage') },
     datePublished: isoDateTime(input.published),
     dateModified: isoDateTime(input.updated),
-    author: authorRef,
-    publisher: orgRef,
+    author: authorNode(),
+    publisher: publisherNode(),
     about: { '@id': nodeId(path, 'film') },
     // Inline (not bare refs): the hub page defines these nodes, this page does not.
     isPartOf: {
@@ -376,6 +376,7 @@ export function softwareApplication(proOnSale: boolean = PRO_ON_SALE): JsonLdNod
     url: SITE_URL,
     installUrl: CHROME_WEB_STORE_URL,
     downloadUrl: CHROME_WEB_STORE_URL,
+    sameAs: CHROME_WEB_STORE_URL,
     softwareVersion: manifest.version,
     datePublished: isoDateTime(PUBLISHED_DATE),
     dateModified: isoDateTime(LAST_UPDATED),

@@ -208,6 +208,31 @@ export function checkPage({ path, html, siteUrl = SITE_URL }: PageInput): SeoFin
     if (!defined.has(id)) fail('jsonld-ref', `{ "@id": "${id}" } is referenced but never defined on this page`);
   }
 
+  // Keep article attribution self-contained: consumers may inspect one JSON-LD
+  // block without joining it to the root layout's separate entity graph.
+  for (const data of parsed) {
+    const entities = new Map<string, JsonObject>();
+    walk(data, (o) => {
+      if (typeof o['@id'] === 'string' && Object.keys(o).length > 1) entities.set(o['@id'], o);
+    });
+    const attributed = (value: Json, requireUrl: boolean): boolean => {
+      const values = Array.isArray(value) ? value : [value];
+      return values.length > 0 && values.every((entry) => {
+        if (!isObject(entry)) return false;
+        const resolved = typeof entry['@id'] === 'string' ? { ...entities.get(entry['@id']), ...entry } : entry;
+        return typeof resolved.name === 'string' && !!resolved.name.trim()
+          && (!requireUrl || (typeof resolved.url === 'string' && isAbsoluteHttps(resolved.url)));
+      });
+    };
+    walk(data, (o) => {
+      if (!typesOf(o).some((type) => type === 'Article' || type === 'BlogPosting')) return;
+      if (!attributed(o.author, true))
+        fail('article-author', 'Article/BlogPosting needs an author name and absolute HTTPS profile URL in its JSON-LD block');
+      if (!attributed(o.publisher, false))
+        fail('article-publisher', 'Article/BlogPosting needs a publisher name in its JSON-LD block');
+    });
+  }
+
   // Date properties: full date-time with a time zone, everywhere in every block.
   const badDates = new Set<string>();
   for (const data of parsed) {

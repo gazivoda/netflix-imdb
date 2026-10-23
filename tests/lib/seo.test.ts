@@ -15,6 +15,7 @@ import {
   blogPosting,
   movie,
   BLOG_DATASET_DESCRIPTION,
+  softwareApplication,
 } from '../../lib/seo';
 import { filmBySlug } from '../blog/fixtures';
 import { existsSync, readFileSync } from 'fs';
@@ -103,6 +104,10 @@ describe('sitemap', () => {
 });
 
 describe('JSON-LD builders', () => {
+  it('links the extension identity to its official store listing', () => {
+    expect(softwareApplication().sameAs).toBe(CHROME_WEB_STORE_URL);
+  });
+
   it('breadcrumbList numbers positions from 1 and uses absolute URLs', () => {
     const b = breadcrumbList([
       { name: 'Home', path: '/' },
@@ -134,10 +139,10 @@ describe('JSON-LD builders', () => {
     expect(h.step[0]['@type']).toBe('HowToStep');
   });
 
-  it('article references the shared author/org entities and real dates', () => {
+  it('article identifies its author and publisher without another JSON-LD block', () => {
     const a = article('/compare/imdb-vs-rotten-tomatoes') as any;
-    expect(a.author).toEqual({ '@id': `${SITE_URL}/#author` });
-    expect(a.publisher).toEqual({ '@id': `${SITE_URL}/#org` });
+    expect(a.author).toMatchObject({ '@type': 'Person', '@id': `${SITE_URL}/#author`, name: 'Igor Gazivoda', url: `${SITE_URL}/about` });
+    expect(a.publisher).toMatchObject({ '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: 'Rating Watch', url: SITE_URL });
     // Full date-times with a zone, like every date in the JSON-LD (see isoDateTime).
     expect(a.datePublished).toBe('2026-06-16T00:00:00+00:00');
     expect(a.dateModified).toBe(`${getPage('/compare/imdb-vs-rotten-tomatoes').updated}T00:00:00+00:00`);
@@ -271,8 +276,8 @@ describe('blog JSON-LD builders (spec 4.5)', () => {
     expect(post['@id']).toBe(`${SITE_URL}${path}#article`);
     expect(post.mainEntityOfPage).toEqual({ '@id': `${SITE_URL}${path}#webpage` });
     expect(post.about).toEqual({ '@id': `${SITE_URL}${path}#film` });
-    expect(post.author).toEqual({ '@id': `${SITE_URL}/#author` });
-    expect(post.publisher).toEqual({ '@id': `${SITE_URL}/#org` });
+    expect(post.author).toMatchObject({ '@type': 'Person', '@id': `${SITE_URL}/#author`, name: 'Igor Gazivoda', url: `${SITE_URL}/about` });
+    expect(post.publisher).toMatchObject({ '@type': 'Organization', '@id': `${SITE_URL}/#org`, name: 'Rating Watch', url: SITE_URL });
     expect(post.datePublished).toBe('2026-10-20T00:00:00+00:00');
     expect(post.dateModified).toBe('2026-10-22T00:00:00+00:00');
     expect(post.wordCount).toBe(712);

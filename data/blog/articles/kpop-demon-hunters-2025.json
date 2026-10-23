@@ -4,59 +4,58 @@
   "imdbId": "tt14205554",
   "status": "review",
   "published": null,
-  "contentUpdated": "2026-10-21",
-  "h1": "KPop Demon Hunters: critics rate it noticeably above audiences",
+  "contentUpdated": "2026-10-23",
+  "h1": "KPop Demon Hunters ratings: approval and average are different",
   "description": "{{title}} has IMDb {{imdb}} and {{rt}} on Rotten Tomatoes, so critics sit {{gapAbs}} points above audiences, with a Netflix Top 10 run of {{weeksInTop10}} weeks.",
-  "summary": "Critics like {{title}} more than audiences do: Rotten Tomatoes shows {{rt}} against an IMDb rating of {{imdb}}. Critics rate it noticeably higher than audiences, a clear gap of {{gapAbs}} points, though both sides are positive. It also tops this set by Netflix hours viewed, making it the most watched film here. Figures reflect OMDb data as of {{asOf}}.",
+  "summary": "KPop Demon Hunters records IMDb {{imdb}} and Rotten Tomatoes {{rt}} in this dataset. The critic percentage is noticeably higher than the audience average scaled by ten, a clear gap of {{gapAbs}} points. Positive-review share and average rating measure different things, so that difference cannot prove critics enjoyed it more. The OMDb snapshot is dated {{asOf}}.",
   "sections": [
     {
       "id": "why-split",
-      "heading": "Why do critics rate KPop Demon Hunters above viewers?",
+      "heading": "What explains the KPop Demon Hunters numerical gap?",
       "paragraphs": [
-        "Critics come out ahead here, and the margin is a clear one. Converted to the hundred-point scale, the audience score becomes {{imdbX10}}, which leaves Rotten Tomatoes {{gapAbs}} points above it. Critics rate {{title}} noticeably higher than audiences do, yet {{imdb}} is still a warm audience score, so the difference is one of enthusiasm rather than approval against rejection.",
-        "The Metascore of {{metascore}} lines up with the Rotten Tomatoes side more than with IMDb, which suggests the critic enthusiasm is not a quirk of one aggregator. With {{votes}} IMDb votes behind the audience number, the lower figure cannot be put down to a handful of ballots.",
-        "OMDb also records a long list of award wins and nominations for the film, which is consistent with strong professional regard. Awards bodies and review aggregators are different groups of judges, so that list backs the critic side without explaining the audience side.",
-        "Genre adds context. The median difference across the {{genreCount}} {{genre}} films in this set is {{genreMedianGap}}, so reviewers and viewers usually sit close together on animation, and {{title}} departs from that pattern. One reading is that its mix of music and action drew more reviewer approval than casual-viewer approval, an interpretation rather than a measurement.",
-        "The two numbers also measure different things. Rotten Tomatoes counts the share of reviews that are positive, while IMDb averages star ratings, as [this comparison](/compare/imdb-vs-rotten-tomatoes) explains. A film that nearly every reviewer rates as good can reach a very high share even when the average star rating is merely good."
+        "The arithmetic starts with the IMDb audience average of {{imdb}}, multiplied by ten to give {{imdbX10}}. Subtract that from the Rotten Tomatoes percentage of {{rt}} and the difference is {{gapAbs}} points. Critics score noticeably higher than audiences in this comparison, with a clear gap under the site's stated grouping rules.",
+        "However, the Metascore of {{metascore}} sits numerically nearer the scaled IMDb figure than the Rotten Tomatoes percentage. It does not provide evidence that the critic aggregates agree at the Tomatometer's level. One reading is that the share of reviews judged positive can exceed the typical strength of their approval, since percentages and average grades have different constructions.",
+        "IMDb lists {{votes}} votes in the source record. That count describes participation in that site's rating system; it is not a representative survey of everyone who watched. The {{genreCount}} {{genre}} films in this selected set have a median difference of {{genreMedianGap}}, placing the typical numerical relationship nearer zero than this film's.",
+        "None of those aggregates identifies a cause for individual reactions to the music, animation or story. For the definitions behind the calculation, see [how IMDb and Rotten Tomatoes measure ratings](/compare/imdb-vs-rotten-tomatoes)."
       ]
     },
     {
       "id": "the-film",
       "heading": "Who is behind KPop Demon Hunters and how did it chart?",
       "paragraphs": [
-        "The premise follows a pop trio whose stage careers cover a second life fighting demons. {{director}} directed it, and OMDb lists Maggie Kang as co-director. Arden Cho, May Hong and Ji-young Yoo are billed in the lead roles, and the film runs {{runtime}} with a PG rating.",
-        "In the Netflix Top 10 data it reached a peak rank of {{peakRank}} and stayed {{weeksInTop10}} weeks, which puts it {{popularityRank}} among the {{setSize}} films here by hours viewed, at {{hours}} hours. A run that long suggests the audience figure comes from a film people kept choosing, not from one opening-week burst."
+        "The premise follows a pop trio whose stage careers cover a second life fighting demons. The OMDb record names {{director}} and Maggie Kang as directors, and Arden Cho, May Hong and Ji-young Yoo among the lead cast. It lists a PG classification and a running time of {{runtime}}; those details belong to this dated database snapshot.",
+        "Netflix's chart data places it {{popularityRank}} among the {{setSize}} selected films by the hours rule used here. Its {{hours}} hours accumulate across {{weeksInTop10}} weeks in the global Top 10, with a peak rank of {{peakRank}}. This is viewing time within the recorded chart period, rather than a count of unique viewers or a lifetime total."
       ]
     },
     {
       "id": "who-it-suits",
-      "heading": "Who should trust the critic score on KPop Demon Hunters?",
+      "heading": "Which KPop Demon Hunters figure is useful for you?",
       "paragraphs": [
-        "If you treat critic scores as a guide to craft, the Rotten Tomatoes figure of {{rt}} is the encouraging signal here, and the Metascore of {{metascore}} backs it. If you lean on audience scores, an IMDb rating of {{imdb}} is still solid, just less glowing.",
-        "At {{runtime}} it is short for a feature, so the time cost of testing it is low. Anyone who already enjoys music-driven action in animated form has the clearest reason to try it, while those who distrust critic enthusiasm can read the audience number as the cautious view. Use the pairing as a pointer, not a ruling, because scores describe other people."
+        "If your question is whether critics tended to approve, the Tomatometer of {{rt}} answers it more directly. If you want the average mark from IMDb participants, use {{imdb}} instead. A reader who cares about the intensity of critical praise should keep the Metascore of {{metascore}} separate from the positive-review percentage.",
+        "For anyone choosing an animated action and adventure film, those genre labels, the listed cast and the PG classification supply context beyond the scores. The numbers cannot predict how someone will respond to its music or premise. Before deciding for children, check the relevant content guidance rather than treating popularity or a critic percentage as age advice."
       ]
     },
     {
       "id": "more",
-      "heading": "How does the long Top 10 run fit with the scores?",
+      "heading": "What can the KPop Demon Hunters chart run tell you?",
       "paragraphs": [
-        "Hours viewed and ratings answer different questions. The chart tells you how much time viewers spent, and the review scores tell you how that time was judged. Here the two point the same way, because the film sits first by hours and still carries a Rotten Tomatoes score of {{rt}}.",
-        "That pairing is not automatic, which is why it is worth reading both. A film can gather very many viewing hours and a lukewarm reception, or the reverse. Treat the chart as a measure of reach and the scores as a measure of reaction."
+        "The {{weeksInTop10}} chart weeks show repeated appearances in the global Top 10, and {{hours}} hours quantify viewing within those appearances. That record establishes chart longevity under this dataset's method. It does not reveal how many individuals finished the film, how often they replayed it or whether the people voting on IMDb were the same viewers.",
+        "Popularity and ratings also have different collection dates and populations. A high placement can coexist with many possible patterns of response, so the Netflix rank cannot resolve the difference between the critic percentage and audience average. Read the dated score table for the measured figures and the hub for the chart cutoff."
       ]
     }
   ],
   "faq": [
     {
-      "q": "Do critics or audiences rate KPop Demon Hunters higher?",
-      "a": "Critics do. Rotten Tomatoes shows {{rt}}, while IMDb users give {{imdb}}, which is {{imdbX10}} on the hundred-point scale. That leaves a clear gap of {{gapAbs}} points in the critics' favor, so critics rate it noticeably higher than audiences, although an IMDb score of {{imdb}} still shows a positive audience reaction."
+      "q": "Are KPop Demon Hunters critics and audience ratings comparable?",
+      "a": "The IMDb average is {{imdb}}, while the Rotten Tomatoes critic percentage is {{rt}}. Scaling IMDb gives {{imdbX10}}, leaving {{gapAbs}} points with critics numerically higher. That is a clear gap in the table, but not evidence of a measured difference in enjoyment: one number averages ratings and the other counts positive reviews."
     },
     {
       "q": "How long did KPop Demon Hunters stay in Netflix's Top 10?",
-      "a": "Netflix's Top 10 data records {{weeksInTop10}} weeks for the film, with a peak rank of {{peakRank}}. By hours viewed it is {{popularityRank}} among the {{setSize}} films in this set, at {{hours}} hours. Those figures measure viewing, not opinion, so read them next to the scores rather than as a substitute for them."
+      "a": "The committed Netflix snapshot records {{weeksInTop10}} weeks in the global Top 10 and a peak rank of {{peakRank}}. The film ranks {{popularityRank}} among {{setSize}} selected titles by {{hours}} viewing hours accumulated across its chart weeks. That is a dated chart record, not its current streaming availability or a unique-viewer count."
     },
     {
       "q": "How many IMDb votes support the KPop Demon Hunters rating?",
-      "a": "IMDb shows {{votes}} votes for the film, rounded to {{votesShort}} in headline figures. A pool that size makes it unlikely that the {{imdb}} average swings on a few ballots, though it says nothing about why people voted as they did or why Rotten Tomatoes sits {{gapAbs}} points higher on the common scale."
+      "a": "The stored IMDb record has {{votes}} votes, shortened to {{votesShort}} in headline figures. They support the {{imdb}} average returned by OMDb at the snapshot date. The count alone does not show how representative those participants are, why they voted, or whether critics and viewers evaluated the same aspects of the film."
     }
   ],
   "sources": [],
@@ -66,6 +65,12 @@
     "factChecker": null,
     "factCheckedOn": null,
     "cuts": [],
-    "rtCheck": null
+    "rtCheck": {
+      "checkedOn": "2026-10-23",
+      "url": "https://www.rottentomatoes.com/m/kpop_demon_hunters",
+      "rtSitePercent": 92,
+      "rtSiteReviews": 107,
+      "outcome": "match"
+    }
   }
 }

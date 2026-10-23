@@ -46,6 +46,7 @@ export const PAGE_UPDATED: Record<string, string> = {
   '/how-to/show-imdb-ratings-on-netflix': '2026-10-23',
   '/how-to/show-rotten-tomatoes-on-netflix': '2026-10-23', // Netflix UI and missing-badge troubleshooting corrected
   '/how-to/find-what-to-watch-on-netflix': '2026-10-23',
+  '/how-to/netflix-ratings-explained': '2026-10-23',
   '/research/imdb-vs-rotten-tomatoes-gap': '2026-10-23',
   '/compare/imdb-vs-rotten-tomatoes': '2026-10-23',
   '/compare/alternatives': '2026-10-23',
@@ -149,6 +150,19 @@ export const staticPages = (proOnSale: boolean): SitePage[] => [
     priority: 0.8,
     group: 'guide',
     label: 'Find what to watch',
+    ogType: 'article',
+  },
+  {
+    path: '/how-to/netflix-ratings-explained',
+    title: 'Netflix ratings explained: thumbs, Match & age',
+    description:
+      'What Netflix thumbs, Match percentages and maturity ratings mean, how they differ from IMDb and Rotten Tomatoes, and how to see independent scores.',
+    published: '2026-10-23',
+    updated: PAGE_UPDATED['/how-to/netflix-ratings-explained'],
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    group: 'guide',
+    label: 'Netflix ratings explained',
     ogType: 'article',
   },
   {

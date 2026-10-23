@@ -176,6 +176,11 @@ export default function ShowRottenTomatoesOnNetflixPage() {
         score, see{' '}
         <a href="/how-to/show-imdb-ratings-on-netflix">how to show IMDb ratings on Netflix</a>.
       </p>
+      <p className={g.p}>
+        A Tomatometer percentage is also separate from Netflix&apos;s thumbs and age labels.
+        Read <a href="/how-to/netflix-ratings-explained">what Netflix ratings mean</a> to tell
+        recommendation feedback, maturity classifications and review scores apart.
+      </p>
     </GuideLayout>
   );
 }

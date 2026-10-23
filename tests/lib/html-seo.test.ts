@@ -11,8 +11,14 @@ const ld = (data: unknown) =>
 const BASE_LD = {
   '@context': 'https://schema.org',
   '@graph': [
-    { '@type': 'Person', '@id': `${SITE}/#author`, name: 'A' },
-    { '@type': 'Article', headline: 'x', author: { '@id': `${SITE}/#author` } },
+    { '@type': 'Person', '@id': `${SITE}/#author`, name: 'A', url: `${SITE}/about` },
+    { '@type': 'Organization', '@id': `${SITE}/#org`, name: 'Rating Watch' },
+    {
+      '@type': 'Article',
+      headline: 'x',
+      author: { '@id': `${SITE}/#author` },
+      publisher: { '@id': `${SITE}/#org` },
+    },
   ],
 };
 
@@ -169,6 +175,61 @@ describe('checkPage', () => {
     });
     it('does not match words that merely contain them', () => {
       expect(rules(page({ body: '<h1>Banana and an undefinedness joke</h1>' }))).not.toContain('bad-value');
+    });
+  });
+
+  describe('article attribution', () => {
+    const author = { '@type': 'Person', name: 'A', url: `${SITE}/about` };
+    const publisher = { '@type': 'Organization', name: 'Rating Watch' };
+    const articlePage = (fields: Record<string, unknown>) =>
+      page({ scripts: [ld({ '@context': 'https://schema.org', '@type': 'Article', author, publisher, ...fields })] });
+
+    it.each(['Article', 'BlogPosting'])('rejects %s without usable author and publisher attribution', (type) => {
+      const found = rules(articlePage({ '@type': type, author: undefined, publisher: undefined }));
+      expect(found).toContain('article-author');
+      expect(found).toContain('article-publisher');
+    });
+
+    it.each([
+      { name: '', url: `${SITE}/about` },
+      { name: '  ', url: `${SITE}/about` },
+      { name: 'A' },
+      { name: 'A', url: '/about' },
+      { name: 'A', url: 'javascript:alert(1)' },
+    ])('rejects an author missing a name or absolute HTTPS profile URL: %j', (invalidAuthor) => {
+      expect(rules(articlePage({ author: invalidAuthor }))).toContain('article-author');
+    });
+
+    it('accepts embedded attribution, including multiple authors', () => {
+      expect(run(articlePage({}))).toEqual([]);
+      expect(run(articlePage({ author: [author, { ...author, name: 'B', url: `${SITE}/about/b` }] }))).toEqual([]);
+    });
+
+    it('does not let a valid author conceal an invalid author in an array', () => {
+      expect(rules(articlePage({ author: [author, { name: 'B' }] }))).toContain('article-author');
+      expect(rules(articlePage({ author: [] }))).toContain('article-author');
+    });
+
+    it('resolves author and publisher references within the same JSON-LD block', () => {
+      expect(run(page())).toEqual([]);
+    });
+
+    it('reports attribution that relies on a separate JSON-LD block', () => {
+      const entities = ld({ '@context': 'https://schema.org', '@graph': BASE_LD['@graph'].slice(0, 2) });
+      const article = ld({ '@context': 'https://schema.org', ...BASE_LD['@graph'][2] });
+      const found = rules(page({ scripts: [entities, article] }));
+      expect(found).not.toContain('jsonld-ref');
+      expect(found).toContain('article-author');
+      expect(found).toContain('article-publisher');
+    });
+
+    it.each([null, '', { name: '' }, { name: '  ' }, []])('rejects a publisher without a name: %j', (invalidPublisher) => {
+      expect(rules(articlePage({ publisher: invalidPublisher }))).toContain('article-publisher');
+    });
+
+    it('does not require article attribution on another schema type', () => {
+      const html = page({ scripts: [ld({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Install' })] });
+      expect(run(html)).toEqual([]);
     });
   });
 

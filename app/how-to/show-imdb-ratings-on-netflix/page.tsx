@@ -133,6 +133,11 @@ export default function ShowImdbRatingsOnNetflixPage() {
         IMDb and read the rating there. It works for a single title, but it gets tedious when you
         are scanning a whole row of options, which is the gap the extension fills.
       </p>
+      <p className={g.p}>
+        Confused by Netflix&apos;s thumbs or a title&apos;s age classification? The{' '}
+        <a href="/how-to/netflix-ratings-explained">Netflix ratings guide</a> separates personal
+        feedback, maturity ratings and external movie scores.
+      </p>
 
       <h2 className={g.h2}>What are the limits?</h2>
       <ul className={g.list}>

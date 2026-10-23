@@ -278,6 +278,8 @@ export default function FindWhatToWatchPage() {
         Related guides:{' '}
         <a href="/how-to/show-imdb-ratings-on-netflix">how to show IMDb ratings on Netflix</a> and{' '}
         <a href="/how-to/show-rotten-tomatoes-on-netflix">how to show Rotten Tomatoes scores on Netflix</a>.
+        {' '}For the difference between thumbs, age labels and external scores, read{' '}
+        <a href="/how-to/netflix-ratings-explained">Netflix ratings explained</a>.
       </p>
     </GuideLayout>
   );
