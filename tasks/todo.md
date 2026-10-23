@@ -182,6 +182,9 @@ Phase 1 done and verified: `tsc` clean, `jest` 24 suites / 428 passed, `next bui
 - B SEO: every JSON-LD date is a full date-time (`jsonld-date` rule in `lib/html-seo.ts`); ProfilePage embeds the Person; Pro wording gated on `lib/billing/flag.ts` (build-time); SoftwareApplication only on product pages; camera pages have real copy, debug behind `?debug=1`; Dataset licence and publisher.
 - C UX: compact cookie banner, skip link first, Escape only for the reopened banner, white text on signal red, table captions and regions, tap targets, AR label stacking, `/favicon.ico`.
 - D/E: honest copy, SVODEX in the comparison, `npm run billing:readiness`, SETUP.md updated. Details: `.superpowers/audit/fix-grill-report.md`.
+
+---
+
 # SEO + GEO traffic growth swarm (2026-10-23)
 
 **Goal:** Earn more qualified visits with useful, accurate, crawlable content and stronger discovery. User authorizes a specialist swarm, implementation, verification, commit and push.
@@ -200,7 +203,7 @@ Phase 1 done and verified: `tsc` clean, `jest` 24 suites / 428 passed, `next bui
 - [x] Independently review article facts and publication gates. Keep all three revised drafts at review/unpublished: owner scoring and the independent editorial pilot process remain outstanding; generated registry unchanged.
 - [x] Consolidate SEO/GEO findings, all skill applicability, baseline comparison and a measurable 30-day acquisition plan. Administrative CRM/proposal workflows must not create unrelated external side effects.
 - [x] Verify full Jest suite, supported Node 22 production build, sequenced TypeScript check, rendered SEO and internal links, blog lint/registry, desktop/mobile screenshots and IndexNow dry run. Do not claim field CWV, indexing or traffic improvements without measurements.
-- [ ] Review full scoped diff; commit, push and verify remote SHA. Check live rollout if reachable and distinguish deployed from local results.
+- [x] Review full scoped diff; commit, push and verify remote SHA. Check live rollout and distinguish deployed from local results.
 
 ## Review
 
@@ -210,6 +213,6 @@ Verification: baseline 2073 passing tests / 6 skipped; final **2097 passing test
 
 Browser verification: 1440px and 320px document widths match viewport, table overflow stays within a named focusable region, official store links are correct, and declining consent leaves analytics unloaded. Fresh reviewer independently verified source facts and RT values; resolved draft status/independence concern and qualified the eligibility-filtered dataset wording. No blocking or important findings remain.
 
-Open external items: www TLS certificate/router and temporary HTTP 307 redirect require hosting configuration absent from this repo. Real search/indexing/traffic/account data are unavailable. Owner pilot scoring and independent editorial checks still gate film publication. Release commit/push evidence follows after execution.
+Open external items: www TLS certificate/router and temporary HTTP 307 redirect require hosting configuration absent from this repo. Real search/indexing/traffic/account data are unavailable. Owner pilot scoring and independent editorial checks still gate film publication. Implementation committed as `8a891aa` and pushed to `origin/main`; `git ls-remote` matched `8a891aafd91311e5a711c321615b8e12584e837c`. [GitHub CI](https://github.com/gazivoda/netflix-imdb/actions/runs/39973193285) passed. After rollout, a robots-aware live crawl fetched all 17 public sitemap pages with HTTP 200; the same rendered SEO validator found zero issues. New guide canonical/cross-links and both updated llms dataset sections were verified live. IndexNow accepted all 17 live URLs with HTTP 202; this is notification acceptance, not indexing proof. Evidence: `docs/seo/SWARM-LIVE-VERIFICATION-2026-10-23.json`. A documentation-only follow-up records the verified release; application source is unchanged.
 
 ---

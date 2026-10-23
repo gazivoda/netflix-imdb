@@ -1,0 +1,124 @@
+{
+  "site": "https://rating.watch",
+  "sitemapUrls": 17,
+  "records": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "bytes": 570
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "bytes": 2922
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 135155
+    },
+    {
+      "path": "/install",
+      "status": 200,
+      "bytes": 61969
+    },
+    {
+      "path": "/how-to/show-imdb-ratings-on-netflix",
+      "status": 200,
+      "bytes": 66564
+    },
+    {
+      "path": "/how-to/show-rotten-tomatoes-on-netflix",
+      "status": 200,
+      "bytes": 68826
+    },
+    {
+      "path": "/how-to/find-what-to-watch-on-netflix",
+      "status": 200,
+      "bytes": 79808
+    },
+    {
+      "path": "/how-to/netflix-ratings-explained",
+      "status": 200,
+      "bytes": 56454
+    },
+    {
+      "path": "/research/imdb-vs-rotten-tomatoes-gap",
+      "status": 200,
+      "bytes": 130598
+    },
+    {
+      "path": "/blog",
+      "status": 200,
+      "bytes": 115268
+    },
+    {
+      "path": "/compare/imdb-vs-rotten-tomatoes",
+      "status": 200,
+      "bytes": 75104
+    },
+    {
+      "path": "/compare/alternatives",
+      "status": 200,
+      "bytes": 77000
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "bytes": 58497
+    },
+    {
+      "path": "/camera-vision",
+      "status": 200,
+      "bytes": 33085
+    },
+    {
+      "path": "/camera-vision/ar",
+      "status": 200,
+      "bytes": 33708
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "bytes": 60361
+    },
+    {
+      "path": "/pricing",
+      "status": 200,
+      "bytes": 36250
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "bytes": 36459
+    },
+    {
+      "path": "/refund-policy",
+      "status": 200,
+      "bytes": 31793
+    },
+    {
+      "path": "/llms.txt",
+      "status": 200,
+      "bytes": 5500
+    },
+    {
+      "path": "/llms-full.txt",
+      "status": 200,
+      "bytes": 10673
+    }
+  ],
+  "checks": "All 17 public pages HTTP 200; new guide/cross-links, canonical and dataset summaries verified",
+  "verifiedAt": "2026-10-23T14:57:14.829Z",
+  "seoFindings": [],
+  "implementationCommit": "8a891aafd91311e5a711c321615b8e12584e837c",
+  "ci": {
+    "conclusion": "success",
+    "url": "https://github.com/gazivoda/netflix-imdb/actions/runs/39973193285"
+  },
+  "indexNow": {
+    "submittedUrls": 17,
+    "httpStatus": 202,
+    "meaning": "Accepted notification; indexing is not verified"
+  }
+}
