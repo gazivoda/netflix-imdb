@@ -41,10 +41,10 @@ describe('next.config.js', () => {
     expect(policy).toContain('payment=(self "https://*.paddle.com")')
   })
 
-  it('lets only itself and stepto.net frame the site, via frame-ancestors alone', async () => {
+  it('lets only itself, stepto.net and local dev frame the site, via frame-ancestors alone', async () => {
     const h = headersFor(await rules(), '/:path*')
     expect(h['X-Frame-Options']).toBeUndefined()
-    expect(h['Content-Security-Policy']).toBe("frame-ancestors 'self' https://stepto.net https://www.stepto.net")
+    expect(h['Content-Security-Policy']).toBe("frame-ancestors 'self' https://stepto.net https://www.stepto.net http://localhost:*")
   })
 
   it('does not set a script-src CSP or cross-origin isolation (would break tfjs/tesseract CDN loads)', async () => {

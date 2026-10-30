@@ -10,9 +10,10 @@
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  // stepto.net embeds the homepage as a live reference. frame-ancestors replaces
+  // stepto.net embeds the homepage as a live reference (localhost so the embed
+  // also works while developing that site). frame-ancestors replaces
   // X-Frame-Options; no other site may frame us.
-  { key: 'Content-Security-Policy', value: "frame-ancestors 'self' https://stepto.net https://www.stepto.net" },
+  { key: 'Content-Security-Policy', value: "frame-ancestors 'self' https://stepto.net https://www.stepto.net http://localhost:*" },
   { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
   {
     key: 'Permissions-Policy',
