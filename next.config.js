@@ -3,12 +3,16 @@
 // as a second, conflicting Cache-Control line.
 //
 // /camera-vision uses getUserMedia, so camera must stay allowed for same-origin.
-// No CSP: that page loads tesseract.js workers/WASM and tfjs models from CDNs,
-// and a script-src policy would break it without a verified allowlist.
+// No script-src/default-src CSP: that page loads tesseract.js workers/WASM and tfjs
+// models from CDNs, and a script-src policy would break it without a verified
+// allowlist. The only CSP directive set is frame-ancestors (below), which limits
+// who may frame us and restricts nothing we load.
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  // stepto.net embeds the homepage as a live reference. frame-ancestors replaces
+  // X-Frame-Options; no other site may frame us.
+  { key: 'Content-Security-Policy', value: "frame-ancestors 'self' https://stepto.net https://www.stepto.net" },
   { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
   {
     key: 'Permissions-Policy',

@@ -28,7 +28,6 @@ describe('next.config.js', () => {
     const h = headersFor(await rules(), '/:path*')
     expect(h['X-Content-Type-Options']).toBe('nosniff')
     expect(h['Referrer-Policy']).toBe('strict-origin-when-cross-origin')
-    expect(h['X-Frame-Options']).toBe('SAMEORIGIN')
     expect(h['Strict-Transport-Security']).toBe('max-age=31536000; includeSubDomains')
   })
 
@@ -42,9 +41,14 @@ describe('next.config.js', () => {
     expect(policy).toContain('payment=(self "https://*.paddle.com")')
   })
 
-  it('does not set a CSP or cross-origin isolation (would break tfjs/tesseract CDN loads)', async () => {
+  it('lets only itself and stepto.net frame the site, via frame-ancestors alone', async () => {
+    const h = headersFor(await rules(), '/:path*')
+    expect(h['X-Frame-Options']).toBeUndefined()
+    expect(h['Content-Security-Policy']).toBe("frame-ancestors 'self' https://stepto.net https://www.stepto.net")
+  })
+
+  it('does not set a script-src CSP or cross-origin isolation (would break tfjs/tesseract CDN loads)', async () => {
     const keys = (await rules()).flatMap((r) => r.headers.map((h) => h.key.toLowerCase()))
-    expect(keys).not.toContain('content-security-policy')
     expect(keys).not.toContain('cross-origin-embedder-policy')
     expect(keys).not.toContain('cross-origin-opener-policy')
   })
