@@ -66,7 +66,7 @@ export default function PromoVideo() {
               type="button"
               className={styles.play}
               onClick={handlePlay}
-              aria-label={`Play video: ${PROMO_VIDEO.title}`}
+              aria-label={`${PROMO_VIDEO.playLabel}: ${PROMO_VIDEO.title}`}
             >
               <span className={styles.playIcon} aria-hidden>
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" focusable="false">

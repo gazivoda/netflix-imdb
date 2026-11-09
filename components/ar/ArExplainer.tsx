@@ -11,7 +11,8 @@ export default function ArExplainer() {
         <p>
           AR Ratings uses your phone camera to read a Netflix screen on a TV and draw IMDb and Rotten Tomatoes scores on top of
           the title cards it can read in the live view. It is a companion to the Rating Watch extension for the moments when the screen
-          you are looking at is a TV rather than a browser.
+          you are looking at is a TV rather than a browser. For what works on a TV, a phone or Safari, see{' '}
+          <a href="/how-to/netflix-ratings-on-tv-and-phone">IMDb ratings on Netflix on TV, phone or Safari</a>.
         </p>
       </section>
       <section aria-labelledby="ar-how">

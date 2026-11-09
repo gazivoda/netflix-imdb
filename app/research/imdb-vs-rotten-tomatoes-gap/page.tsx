@@ -14,6 +14,8 @@ export const metadata = pageMetadata(PATH);
 // Everything below is derived from the committed JSON at build time. No runtime API calls.
 const DATA_PATH = '/data/imdb-rt-gap.json';
 const DATA_URL = `${SITE_URL}${DATA_PATH}`;
+const CSV_PATH = '/data/imdb-rt-gap.csv';
+const CSV_URL = `${SITE_URL}${CSV_PATH}`;
 
 interface Title {
   title: string;
@@ -84,7 +86,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Can I reproduce these numbers or reuse the data?',
-    a: `Yes. The raw data is a single JSON file you can download from this page. It lists every title with its IMDb and Rotten Tomatoes scores, the excluded titles with reasons, and the snapshot date, and the method above shows how each statistic is derived. A fresh OMDb lookup may return different scores, because both sites change over time.`,
+    a: `Yes. The raw data is a JSON file and a CSV file you can download from this page. The JSON lists every title with its IMDb and Rotten Tomatoes scores, the excluded titles with reasons, and the snapshot date, and the method above shows how each statistic is derived. A fresh OMDb lookup may return different scores, because both sites change over time.`,
   },
 ];
 
@@ -101,6 +103,7 @@ const datasetNode = {
   license: licenseNode(raw.license),
   datePublished: isoDateTime(page.published ?? isoDate),
   dateModified: raw.fetchedAt, // already a full ISO 8601 date-time with Z
+  version: isoDate, // the data changes only when the snapshot is re-fetched, so its date is its version
   inLanguage: 'en',
   isAccessibleForFree: true,
   keywords: ['IMDb', 'Rotten Tomatoes', 'Netflix', 'ratings', 'critics vs audience', 'OMDb'],
@@ -118,6 +121,14 @@ const datasetNode = {
       encodingFormat: 'application/json',
       contentUrl: DATA_URL,
       name: 'imdb-rt-gap.json',
+      dateModified: raw.fetchedAt,
+    },
+    {
+      '@type': 'DataDownload',
+      encodingFormat: 'text/csv',
+      contentUrl: CSV_URL,
+      name: 'imdb-rt-gap.csv',
+      dateModified: raw.fetchedAt,
     },
   ],
 };
@@ -227,7 +238,8 @@ export default function Page() {
         </li>
       </ul>
       <p className={g.p}>
-        Every title, score and exclusion is in the downloadable JSON file below. The same OMDb
+        Every title, score and exclusion is in the downloadable JSON file below, and the usable
+        films are also in a CSV file. The same OMDb
         database powers the{' '}
         <a href="/install">Rating Watch extension</a>, so these are the numbers it shows on
         Netflix cards.
@@ -322,14 +334,19 @@ export default function Page() {
 
       <h2 className={g.h2} id="data">Where can I get the data?</h2>
       <p className={g.p}>
-        The raw data is one JSON file: every included film with its IMDb ID, scores and vote
+        The raw data is a JSON file and a CSV copy of the same rows. The JSON has every included film with its IMDb ID, scores and vote
         count, the excluded titles with reasons, the selection rule, the fetch date and the
-        computed summary. Cite it as:
+        computed summary. The CSV has one row per film for spreadsheets: title, year, type, IMDb
+        ID, IMDb rating and votes, IMDb &times; 10, Rotten Tomatoes %, gap and a flag for the
+        disputed OMDb value. Cite it as:
       </p>
       <pre className={s.cite}>{citation}</pre>
       <p>
         <a className={`ds-btn ${s.download}`} href={DATA_PATH} download>
           Download imdb-rt-gap.json
+        </a>{' '}
+        <a className={`ds-btn ${s.download}`} href={CSV_PATH} download>
+          Download imdb-rt-gap.csv
         </a>
       </p>
       <p className={g.p}>

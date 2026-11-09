@@ -41,7 +41,7 @@ The extension reads the title from each card's accessible label on netflix.com (
 
 PRIVACY
 - Only two site permissions: www.netflix.com (to show badges) and www.omdbapi.com (to fetch ratings)
-- The only data that leaves your browser is the title name of each card, sent to OMDb to get its rating
+- The title name of each card and the OMDb API key (bundled, or your own if you add one in the options) are sent to OMDb to get its rating; as with any web request, OMDb also sees your IP address and browser user agent
 - No analytics, no telemetry, no tracking, no backend server
 - Does not read your Netflix account, watch history, cookies or session
 - Privacy policy: https://rating.watch/privacy
@@ -96,7 +96,7 @@ Rating Watch has one purpose: to display IMDb and Rotten Tomatoes ratings as bad
 The manifest has an empty `permissions` array and two host permissions.
 
 - **Host permission `https://www.netflix.com/*`:** "Required to run the content script that reads the accessible label (title name) of each title card on Netflix and to draw the rating badge on that card. The extension does nothing on any other site."
-- **Host permission `https://www.omdbapi.com/*`:** "Required for the background service worker to request the IMDb rating and Rotten Tomatoes score for a title from the OMDb API. Only the title name is sent."
+- **Host permission `https://www.omdbapi.com/*`:** "Required for the background service worker to request the IMDb rating and Rotten Tomatoes score for a title from the OMDb API. The title name and an OMDb API key are sent."
 - **Remote code:** **No, I am not using remote code.** All JavaScript is bundled in the package. The extension only fetches JSON data from OMDb and never evaluates it as code.
 - No other permissions (tabs, storage, history, cookies, activeTab, scripting) are requested, so none need justification. Ratings and the optional OMDb key are stored in the extension's own IndexedDB, which needs no permission.
 
@@ -114,10 +114,10 @@ Answer these from the code. Review each against your own judgement before certif
 | Web history | **No** | Does not read browsing history or URLs |
 | User activity (clicks, keystrokes, mouse) | **No** | Only observes DOM changes to find new cards |
 | Authentication information | **Yes (optional)** | Only if the user adds their own OMDb API key on the settings page: stored locally, sent only to omdbapi.com. Tick this to be safe, with that explanation. |
-| Website content | **Yes, transmitted, not stored by the developer** | The title name of each Netflix card (text of its aria-label) is sent to OMDb to fetch its rating. This is the only data that leaves the browser. |
+| Website content | **Yes, transmitted, not stored by the developer** | The title name of each Netflix card (text of its aria-label) is sent to OMDb to fetch its rating, together with an OMDb API key (bundled, or the user's own). OMDb also sees the IP address and user agent of the request. This is the only data that leaves the browser. |
 
 Certifications to tick (all true per the source):
-- I do not sell or transfer user data to third parties, outside of the approved use cases. (The only transfer is the title name to OMDb, which is the extension's core function.)
+- I do not sell or transfer user data to third parties, outside of the approved use cases. (The only transfer is the title name and API key to OMDb, which is the extension's core function.)
 - I do not use or transfer user data for purposes unrelated to the item's single purpose.
 - I do not use or transfer user data to determine creditworthiness or for lending purposes.
 

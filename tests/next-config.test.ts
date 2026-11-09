@@ -53,8 +53,25 @@ describe('next.config.js', () => {
     expect(keys).not.toContain('cross-origin-opener-policy')
   })
 
-  it('leaves Cache-Control to Next (a config header would duplicate its own)', async () => {
-    const keys = (await rules()).flatMap((r) => r.headers.map((h) => h.key.toLowerCase()))
+  it('leaves Cache-Control to Next on every route except the static /data/ files (a config header would duplicate its own)', async () => {
+    const dataSources = ['/data/:file*.json', '/data/:file*.csv']
+    const keys = (await rules())
+      .filter((r) => !dataSources.includes(r.source))
+      .flatMap((r) => r.headers.map((h) => h.key.toLowerCase()))
     expect(keys).not.toContain('cache-control')
+  })
+
+  it('serves /data/*.json and /data/*.csv cross-origin and cacheable', async () => {
+    for (const source of ['/data/:file*.json', '/data/:file*.csv']) {
+      const h = headersFor(await rules(), source)
+      expect(h['Access-Control-Allow-Origin']).toBe('*')
+      expect(h['Cache-Control']).toBe('public, max-age=86400, stale-while-revalidate=604800')
+    }
+  })
+
+  it('keeps the security headers (via /:path*) and adds no CORS header to pages', async () => {
+    const h = headersFor(await rules(), '/:path*')
+    expect(h['Content-Security-Policy']).toContain('frame-ancestors')
+    expect(h['Access-Control-Allow-Origin']).toBeUndefined()
   })
 })

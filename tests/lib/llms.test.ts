@@ -139,6 +139,7 @@ describe('blog film analyses', () => {
     const researchOnly = PAGES.filter((p) => p.path === '/research/imdb-vs-rotten-tomatoes-gap');
     for (const output of [buildLlmsTxt(researchOnly), buildLlmsFullTxt(researchOnly)]) {
       expect(output).toContain(`](${absoluteUrl('/data/imdb-rt-gap.json')}):`);
+      expect(output).toContain(`](${absoluteUrl('/data/imdb-rt-gap.csv')}):`);
       expect(output).not.toContain('netflix-top-100.json');
     }
   });

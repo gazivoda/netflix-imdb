@@ -72,7 +72,8 @@ const dataSection = (pages: SitePage[]): string[] => {
       ? [`- [Top 100 Netflix films dataset (JSON)](${url(DATASET_PATH)}): IMDb and Rotten Tomatoes scores for 100 popular films selected from Netflix chart data, with eligibility filters, the selection rule and sources.`]
       : []),
     ...(paths.has('/research/imdb-vs-rotten-tomatoes-gap')
-      ? [`- [IMDb vs Rotten Tomatoes research snapshot (JSON)](${url('/data/imdb-rt-gap.json')}): Scores for 44 Netflix Original films, with the selection rule, retrieval date and excluded titles.`]
+      ? [`- [IMDb vs Rotten Tomatoes research snapshot (JSON)](${url('/data/imdb-rt-gap.json')}): Scores for 44 Netflix Original films, with the selection rule, retrieval date and excluded titles.`,
+         `- [IMDb vs Rotten Tomatoes research snapshot (CSV)](${url('/data/imdb-rt-gap.csv')}): The same 44 films as one row per title (title, year, IMDb rating and votes, Rotten Tomatoes %, gap), for spreadsheets.`]
       : []),
   ];
   return entries.length ? ['## Data', '', ...entries, ''] : [];

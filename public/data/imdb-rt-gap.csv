@@ -1,0 +1,45 @@
+title,year,type,imdb_id,imdb_rating,imdb_votes,imdb_x10,rt_percent,gap,omdb_rt_flagged
+Roma,2018,movie,tt6155172,7.6,179999,76,96,20,false
+The Irishman,2019,movie,tt1302006,7.8,480837,78,95,17,false
+Marriage Story,2019,movie,tt7653254,7.9,376077,79,95,16,false
+Bird Box,2018,movie,tt2737304,6.6,428283,66,64,-2,false
+All Quiet on the Western Front,2022,movie,tt1016150,7.8,347635,78,90,12,false
+The Power of the Dog,2021,movie,tt10293406,6.8,245292,68,94,26,false
+Red Notice,2021,movie,tt7991608,6.3,361059,63,36,-27,false
+The Gray Man,2022,movie,tt1649418,6.5,279552,65,45,-20,false
+Extraction,2020,movie,tt8936646,6.8,294732,68,67,-1,false
+The Adam Project,2022,movie,tt2463208,6.7,263145,67,68,1,false
+Enola Holmes,2020,movie,tt7846844,6.7,256059,67,91,24,false
+Klaus,2019,movie,tt4729430,8.2,243321,82,95,13,false
+The Mitchells vs. the Machines,2021,movie,tt7979580,7.6,145255,76,97,21,false
+Okja,2017,movie,tt3967856,7.3,143489,73,87,14,false
+The Two Popes,2019,movie,tt8404614,7.6,148274,76,89,13,false
+Mudbound,2017,movie,tt2396589,7.4,55422,74,97,23,false
+Bright,2017,movie,tt5519340,6.3,211307,63,26,-37,false
+Army of the Dead,2021,movie,tt0993840,5.8,203317,58,68,10,false
+The Old Guard,2020,movie,tt7556122,6.7,213164,67,80,13,false
+Project Power,2020,movie,tt7550000,6.0,104739,60,61,1,false
+6 Underground,2019,movie,tt8106534,6.1,213997,61,36,-25,false
+Triple Frontier,2019,movie,tt1488606,6.5,163933,65,71,6,false
+Murder Mystery,2019,movie,tt1618434,6.1,193830,61,43,-18,false
+The Kissing Booth,2018,movie,tt3799232,5.9,106300,59,17,-42,false
+To All the Boys I've Loved Before,2018,movie,tt3846674,7.0,143495,70,96,26,false
+"tick, tick... BOOM!",2021,movie,tt8721424,7.5,130365,75,87,12,false
+The Trial of the Chicago 7,2020,movie,tt1070874,7.7,207540,77,89,12,false
+Ma Rainey's Black Bottom,2020,movie,tt10514222,6.9,78809,69,97,28,false
+Mank,2020,movie,tt10618286,6.8,105916,68,83,15,false
+Da 5 Bloods,2020,movie,tt9777644,6.5,58011,65,92,27,false
+I'm Thinking of Ending Things,2020,movie,tt7939766,6.5,112438,65,82,17,false
+Hustle,2022,movie,tt8009428,7.3,167669,73,94,21,false
+Guillermo del Toro's Pinocchio,2022,movie,tt1488589,7.6,167410,76,27,-49,true
+Nimona,2023,movie,tt19500164,7.5,63688,75,92,17,false
+Leave the World Behind,2023,movie,tt12747748,6.4,248187,64,73,9,false
+Rebel Moon - Part One: A Child of Fire,2023,movie,tt14998742,5.6,142713,56,22,-34,false
+Atlas,2024,movie,tt14856980,5.7,61048,57,17,-40,false
+Carry-On,2024,movie,tt21382296,6.5,199562,65,87,22,false
+Spenser Confidential,2020,movie,tt8629748,6.2,107874,62,35,-27,false
+The Midnight Sky,2020,movie,tt10539608,5.7,95573,57,50,-7,false
+Moxie,2021,movie,tt6432466,6.7,31076,67,70,3,false
+Malcolm & Marie,2021,movie,tt12676326,6.6,44369,66,57,-9,false
+Rustin,2023,movie,tt14160834,6.5,14959,65,83,18,false
+Lift,2024,movie,tt14371878,5.6,53838,56,30,-26,false

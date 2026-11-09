@@ -135,7 +135,18 @@ export const MARQUEE: Array<{ title: string } & ShowcaseScore> = [
 // free to try, which is what the app does while billing is off.
 export const AR_MODE_NAME = PRO_ON_SALE ? 'Pro AR mode' : 'AR mode';
 
-export function buildFaqs(onSale: boolean) {
+/**
+ * One home FAQ entry. `a` is the plain text used for the FAQPage JSON-LD and as the visible answer.
+ * `link` turns the phrase `link.text` (which must appear verbatim in `a`) into an internal link in the
+ * visible answer, so the page text and the structured data stay word for word the same.
+ */
+export interface HomeFaq {
+  q: string;
+  a: string;
+  link?: { text: string; href: string };
+}
+
+export function buildFaqs(onSale: boolean): HomeFaq[] {
   return [
   {
     q: 'What is Rating Watch?',
@@ -153,7 +164,8 @@ export function buildFaqs(onSale: boolean) {
   },
   {
     q: 'How is the Rotten Tomatoes score defined?',
-    a: 'The Tomatometer is the percentage of professional critic reviews that are positive, according to Rotten Tomatoes. It is a head-count, not an average of how good the reviews were. A title is labelled Fresh when at least 60% of reviews are positive and Rotten below that. The IMDb number is a separate 1 to 10 audience rating.',
+    a: 'The Tomatometer is the percentage of professional critic reviews that are positive, according to Rotten Tomatoes. It is a head-count, not an average of how good the reviews were. A title is labelled Fresh when at least 60% of reviews are positive and Rotten below that. The IMDb number is a separate 1 to 10 audience rating. Netflix thumbs, Match and age labels are different again: see Netflix ratings explained.',
+    link: { text: 'Netflix ratings explained', href: '/how-to/netflix-ratings-explained' },
   },
   {
     q: 'Does it show ratings for every title?',
@@ -165,7 +177,8 @@ export function buildFaqs(onSale: boolean) {
   },
   {
     q: 'Does it work on the Netflix mobile app or TV?',
-    a: `No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there. ${onSale ? 'AR mode (Pro)' : 'AR mode'} is the way to get scores for a TV, through your phone camera.`,
+    a: `No. Rating Watch is a browser extension, and its manifest only covers www.netflix.com, so it works when you browse Netflix on a computer in Chrome, Edge, Brave or another Chromium browser. Browser extensions do not run inside the Netflix app on phones, tablets, smart TVs or game consoles, so no badges appear there. ${onSale ? 'AR mode (Pro)' : 'AR mode'} is the way to get scores for a TV, through your phone camera. For every option by device, see IMDb ratings on Netflix on TV, phone or Safari.`,
+    link: { text: 'IMDb ratings on Netflix on TV, phone or Safari', href: '/how-to/netflix-ratings-on-tv-and-phone' },
   },
   {
     q: 'Does it slow Netflix down?',

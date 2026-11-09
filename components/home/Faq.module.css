@@ -92,3 +92,9 @@
   .faqChevron::before,
   .faqChevron::after { transition: none; }
 }
+
+.faqA a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

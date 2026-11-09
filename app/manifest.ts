@@ -3,7 +3,7 @@ import { HOME_DESCRIPTION } from '../lib/pages';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Rating Watch',
+    name: 'Rating Watch: IMDb & Rotten Tomatoes for Netflix',
     short_name: 'Rating Watch',
     description: HOME_DESCRIPTION,
     start_url: '/',

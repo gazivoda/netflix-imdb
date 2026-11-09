@@ -14,6 +14,7 @@
     "blog:registry": "node scripts/blog/build-registry.mjs",
     "blog:brief": "node scripts/blog/brief.mjs",
     "blog:check": "node scripts/blog/check.mjs",
+    "research:csv": "node scripts/research/imdb-rt-gap-csv.mjs",
     "seo:indexnow": "node scripts/ping-indexnow.mjs",
     "seo:indexnow:dry": "node scripts/ping-indexnow.mjs --local --dry-run",
     "seo:links": "node scripts/check-links.mjs",

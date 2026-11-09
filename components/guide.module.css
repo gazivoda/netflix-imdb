@@ -55,6 +55,19 @@
 }
 .callout p a:hover { background: var(--card); }
 
+/* A button inside prose or a callout keeps its own colours: the content-link rules above are more specific. */
+.p a.btnPrimary,
+.callout p a.btnPrimary {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.p a.btnPrimary:hover,
+.p a.btnPrimary:active,
+.callout p a.btnPrimary:hover {
+  background: var(--red-dark);
+}
+
 .list {
   margin: 0 0 22px;
   padding-left: 26px;

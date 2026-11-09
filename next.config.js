@@ -1,6 +1,7 @@
-// Cache-Control is intentionally not set here: Next emits its own for metadata
+// Cache-Control is intentionally not set site-wide: Next emits its own for metadata
 // routes (OG/Twitter images, robots, sitemap) and a config header would be sent
-// as a second, conflicting Cache-Control line.
+// as a second, conflicting Cache-Control line. The one exception is the static
+// research datasets under /data/ (see dataHeaders), which are plain files from public/.
 //
 // /camera-vision uses getUserMedia, so camera must stay allowed for same-origin.
 // No script-src/default-src CSP: that page loads tesseract.js workers/WASM and tfjs
@@ -22,6 +23,11 @@ const securityHeaders = [
   },
 ]
 
+const dataHeaders = [
+  { key: 'Access-Control-Allow-Origin', value: '*' },
+  { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+]
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
@@ -34,6 +40,11 @@ const nextConfig = {
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },
+      // Public research datasets: readable from any origin (notebooks, browser-based tools) and
+      // cacheable for a day, with a week of stale-while-revalidate. Only static files under
+      // public/data/ match, so Next's own metadata routes keep their own Cache-Control.
+      { source: '/data/:file*.json', headers: dataHeaders },
+      { source: '/data/:file*.csv', headers: dataHeaders },
     ]
   },
 }

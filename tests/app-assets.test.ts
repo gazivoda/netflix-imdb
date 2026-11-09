@@ -19,8 +19,8 @@ describe('web manifest', () => {
   const m = manifest();
 
   it('uses the brand name, home description and paper theme colors', () => {
-    expect(m.name).toBe('Rating Watch');
-    expect(m.short_name).toBeTruthy();
+    expect(m.name).toBe('Rating Watch: IMDb & Rotten Tomatoes for Netflix');
+    expect(m.short_name).toBe('Rating Watch');
     expect(m.description).toBe(HOME_DESCRIPTION);
     expect(m.theme_color).toBe('#ece6d8');
     expect(m.background_color).toBe('#ece6d8');
