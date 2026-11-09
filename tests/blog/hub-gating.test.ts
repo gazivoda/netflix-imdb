@@ -31,6 +31,34 @@ describe('/blog hub route (I9)', () => {
   });
 });
 
+describe('/blog hub copy with no published analysis (R4 kept, no empty promise)', () => {
+  const src = read('app/blog/page.tsx');
+
+  it('states the published count in the lede for every state', () => {
+    expect(src).toMatch(/no film-by-film analysis is published yet/);
+    expect(src).toMatch(/A full analysis is published for \$\{sum\.publishedCount\} of \$\{sum\.total\} films so far/);
+  });
+
+  it('shows the agreed-films card instead of "0 Full analyses published" when nothing is published', () => {
+    expect(src).toMatch(/sum\.publishedCount === 0 \? agreed : sum\.publishedCount/);
+    expect(src).toMatch(/Films where the scores agree within 9 points/);
+  });
+
+  it('keeps the published count on the page and does not describe nonexistent articles', () => {
+    expect(src).toMatch(/No film-by-film analysis is published yet \(0 of \{total\} films\)/);
+    expect(src).toMatch(/sum\.publishedCount === 0 \? <HowScoresAreChecked total=\{sum\.total\} \/> : <HowArticlesAreMade \/>/);
+    // The zero-state section reuses no article-only claims.
+    const zero = src.slice(src.indexOf('function HowScoresAreChecked'), src.indexOf('function HowArticlesAreMade'));
+    expect(zero).not.toMatch(/\bAI\b|\barticles?\b|fact-check/i);
+  });
+
+  it('has an in-body install CTA and a link to the find-what-to-watch guide, plus the research link', () => {
+    expect(src).toMatch(/href=\{CHROME_WEB_STORE_URL\}/);
+    expect(src).toMatch(/href="\/how-to\/find-what-to-watch-on-netflix"/);
+    expect(src).toMatch(/href="\/research\/imdb-vs-rotten-tomatoes-gap"/);
+  });
+});
+
 describe('inbound link helpers (I8)', () => {
   const entries = [
     {

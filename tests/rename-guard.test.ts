@@ -46,7 +46,8 @@ describe('rename to Rating Watch', () => {
     expect(hits(/netflix-ratings\.app/)).toEqual([])
   })
   it('leaves no "Ratings for Netflix" extension name', () => {
-    expect(hits(/Ratings for Netflix/)).toEqual([])
+    // "IMDb Ratings for Netflix" is a competitor's real extension name (the /compare/alternatives row), not our old brand.
+    expect(hits(/(?<!IMDb )Ratings for Netflix/)).toEqual([])
   })
   it('names the extension, site and package correctly', () => {
     const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'extension/manifest.json'), 'utf8'))

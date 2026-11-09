@@ -195,6 +195,21 @@ ul > li.slip strong { color: var(--ink); }
 
 .small { font-size: 14px; }
 
+/* ---------- citation block ---------- */
+.cite {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  background: var(--card);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
 /* ---------- download ---------- */
 .download {
   display: inline-flex;

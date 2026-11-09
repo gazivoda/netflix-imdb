@@ -13,6 +13,7 @@ const PAGES: [string, () => { default: () => JSX.Element }][] = [
   ['/how-to/show-imdb-ratings-on-netflix', () => require('../../app/how-to/show-imdb-ratings-on-netflix/page')],
   ['/how-to/show-rotten-tomatoes-on-netflix', () => require('../../app/how-to/show-rotten-tomatoes-on-netflix/page')],
   ['/how-to/find-what-to-watch-on-netflix', () => require('../../app/how-to/find-what-to-watch-on-netflix/page')],
+  ['/how-to/netflix-ratings-on-tv-and-phone', () => require('../../app/how-to/netflix-ratings-on-tv-and-phone/page')],
   ['/research/imdb-vs-rotten-tomatoes-gap', () => require('../../app/research/imdb-vs-rotten-tomatoes-gap/page')],
   ['/compare/imdb-vs-rotten-tomatoes', () => require('../../app/compare/imdb-vs-rotten-tomatoes/page')],
   ['/compare/alternatives', () => require('../../app/compare/alternatives/page')],

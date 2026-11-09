@@ -5,6 +5,7 @@ import h from '../how-to.module.css';
 import { howTo, pageMetadata } from '../../../lib/seo';
 import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { isBlogHubReady } from '../../../lib/blog/inbound';
+import { GAP_STUDY } from '../../../lib/gap-study';
 
 const PATH = '/how-to/find-what-to-watch-on-netflix';
 export const metadata = pageMetadata(PATH);
@@ -93,7 +94,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'What IMDb and Rotten Tomatoes scores count as good?',
-    a: 'There is no official cutoff, so pick a starting point and adjust it to your taste. A reasonable approach is to shortlist titles that are comfortably above the middle on both scores, for example well over 6 out of 10 on IMDb and well over 60% on Rotten Tomatoes. If your picks feel too hit-or-miss, raise the bar.',
+    a: 'IMDb publishes no cutoff for a good rating. Rotten Tomatoes labels a title Fresh at 60% or higher, meaning at least six in ten counted critic reviews were positive. A practical starting point is to shortlist titles comfortably above 6 out of 10 on IMDb and above 60% on Rotten Tomatoes. If your picks feel hit-or-miss, raise the bar.',
   },
   {
     q: 'Should I trust ratings on a brand-new title?',
@@ -147,8 +148,10 @@ export default function FindWhatToWatchPage() {
       </p>
       <ul className={g.list}>
         <li>
-          <strong>Both high:</strong> the safest pick. Audiences and critics rarely agree by
-          accident.
+          <strong>Both high:</strong> the safest pick. The two scores are related but distinct
+          (correlation r = {GAP_STUDY.pearson} across {GAP_STUDY.n} Netflix Original films in Rating
+          Watch&rsquo;s {GAP_STUDY.date} <a href={GAP_STUDY.path}>snapshot</a>), so a title both
+          groups rate highly has cleared two separate tests.
         </li>
         <li>
           <strong>High IMDb, lower Rotten Tomatoes:</strong> a crowd-pleaser. Good when you want
@@ -172,10 +175,11 @@ export default function FindWhatToWatchPage() {
 
       <h2 className={g.h2}>How do I choose what to watch on Netflix in 60 seconds?</h2>
       <p className={g.p}>
-        This routine assumes you have{' '}
-        <a href="/install">installed the Rating Watch extension</a>, which adds a badge to the
-        top-right corner of title cards showing the IMDb rating and, where OMDb has one, the
-        Rotten Tomatoes percentage. Without it, you would be opening two other sites for every title.
+        This 60-second routine works fastest when both scores are already on the card. The free{' '}
+        <a href="/install">Rating Watch extension</a> adds a badge to the top-right corner of each
+        Netflix title card, showing the IMDb rating out of 10 and, where OMDb has one (mostly
+        films), the Rotten Tomatoes percentage. Without it, every title needs a separate lookup on
+        IMDb and Rotten Tomatoes.
       </p>
       <div className={h.stubs}>
         <ol className={g.steps}>

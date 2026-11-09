@@ -216,3 +216,23 @@ Browser verification: 1440px and 320px document widths match viewport, table ove
 Open external items: www TLS certificate/router and temporary HTTP 307 redirect require hosting configuration absent from this repo. Real search/indexing/traffic/account data are unavailable. Owner pilot scoring and independent editorial checks still gate film publication. Implementation committed as `8a891aa` and pushed to `origin/main`; `git ls-remote` matched `8a891aafd91311e5a711c321615b8e12584e837c`. [GitHub CI](https://github.com/gazivoda/netflix-imdb/actions/runs/39973193285) passed. After rollout, a robots-aware live crawl fetched all 17 public sitemap pages with HTTP 200; the same rendered SEO validator found zero issues. New guide canonical/cross-links and both updated llms dataset sections were verified live. IndexNow accepted all 17 live URLs with HTTP 202; this is notification acceptance, not indexing proof. Evidence: `docs/seo/SWARM-LIVE-VERIFICATION-2026-10-23.json`. A documentation-only follow-up records the verified release; application source is unchanged.
 
 ---
+
+---
+
+# SEO/GEO traffic swarm 2 (2026-11-09)
+
+Goal: grow qualified inbound traffic (Google + AI search) after the 2026-10-23 swarm. Phase 1: four read-only research agents (SERP/intent, live technical, GEO probe + entity, on-page/links); the technical agent hit a rate limit and was redone by the hub implementer. Phase 2: three implementers with disjoint file ownership. Reports: docs/seo/SWARM-{SERP,GEO,ONPAGE,TECH}-2026-11-06.md.
+
+- [x] New guide /how-to/netflix-ratings-on-tv-and-phone (TV, phone, Safari, Firefox; dated third-party facts; no price/trial promises).
+- [x] GEO passage rewrites R1.1-R6.3: answer-first, numbers rendered from data/imdb-rt-gap.json via new lib/gap-study.ts.
+- [x] Research page: disputed OMDb value excluded from "audiences higher" list, 37-of-38 series wording, copyable cite block with URL, H2 ids.
+- [x] Internal links: compare, find, research, RT, alternatives, hub, pricing -> AR; hub label "Top 100 Netflix films"; hub no longer advertises "0 analyses"; hub install CTA.
+- [x] Titles/descriptions: home, RT guide, alternatives, AR (AR title now carries the site suffix via absolute title in pageMetadata).
+- [x] /compare/alternatives: three dated competitor rows (2026-11-06), method note moved below table. /install troubleshooting heading and bullets verified against extension source.
+- [x] SoftwareApplication alternateName = store name.
+
+## Review
+
+Verification: full jest 110 suites / 2117 pass, 6 skipped; Node 22.20 production build and tsc pass; seo:validate 18 pages OK; seo:links no findings; /blog HTML 115,739 bytes (budget 120 KB). tests/rename-guard.test.ts exempts only the competitor's real name "IMDb Ratings for Netflix".
+
+Not done / owner-only: no film article published (fact-check, pilot composition, owner scoring gates open, docs/seo/SWARM-ONPAGE-2026-11-06.md section 5); Chrome Web Store description/contact/screenshots/reviews, Reddit/YouTube/AlternativeTo/awesome-chrome (SWARM-GEO section 5); www TLS and permanent http redirect (hosting). PageSpeed returned 429; no field CWV measured. No traffic or ranking uplift is claimed.

@@ -246,7 +246,7 @@ export default function CameraVision() {
           </Link>
           <h1 className={`ds-display ${s.title}`}>Camera Vision <em className="ds-serif">Demo</em></h1>
           <p className={s.sub}>
-            Real-time OCR text detection and movie title recognition
+            Point your camera at a title to see its IMDb and Rotten Tomatoes scores
             {isProcessing && <span className={s.processing}><span className={`${s.dot} ${s.dotLive}`} aria-hidden />Processing...</span>}
           </p>
         </div>

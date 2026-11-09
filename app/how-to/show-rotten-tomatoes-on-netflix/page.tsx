@@ -3,6 +3,7 @@ import g from '../../../components/guide.module.css';
 import h from '../how-to.module.css';
 import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { howTo, pageMetadata } from '../../../lib/seo';
+import { GAP_STUDY } from '../../../lib/gap-study';
 
 const PATH = '/how-to/show-rotten-tomatoes-on-netflix';
 export const metadata = pageMetadata(PATH);
@@ -47,7 +48,15 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Can I show Rotten Tomatoes scores on Netflix on my phone or TV?',
-    a: 'Not with this extension. Rating Watch is a Chromium desktop browser extension, so it works on www.netflix.com in Chrome, Edge and Brave. It has not been tested in Firefox or Safari, and it cannot add badges to the Netflix app on phones, tablets or smart TVs.',
+    a: 'Not with this extension. Rating Watch is a Chromium desktop browser extension, so it works on www.netflix.com in Chrome, Edge and Brave. It has not been tested in Firefox or Safari, and it cannot add badges to the Netflix app on phones, tablets or smart TVs. For other options, see IMDb ratings on Netflix on TV, phone or Safari.',
+    aNode: (
+      <>
+        Not with this extension. Rating Watch is a Chromium desktop browser extension, so it works on www.netflix.com in
+        Chrome, Edge and Brave. It has not been tested in Firefox or Safari, and it cannot add badges to the Netflix app on
+        phones, tablets or smart TVs. For other options, see{' '}
+        <a href="/how-to/netflix-ratings-on-tv-and-phone">IMDb ratings on Netflix on TV, phone or Safari</a>.
+      </>
+    ),
   },
   {
     q: 'Does it cost anything or need a Rotten Tomatoes account?',
@@ -68,8 +77,9 @@ export default function ShowRottenTomatoesOnNetflixPage() {
             the top-right corner of title cards where OMDb has a score.
           </strong>{' '}
           It works in Chrome, Edge and Brave, and needs no account. Scores
-          are mostly available for films, not TV series. Not
-          affiliated with Netflix or Rotten Tomatoes.
+          are mostly available for films, not TV series (in <a href={GAP_STUDY.path}>our data study</a>,
+          OMDb returned no Rotten Tomatoes score for {GAP_STUDY.seriesNoRt} of the {GAP_STUDY.seriesTotal} Netflix
+          series it checked). Not affiliated with Netflix or Rotten Tomatoes.
         </>
       }
       faqs={FAQS}
@@ -104,10 +114,14 @@ export default function ShowRottenTomatoesOnNetflixPage() {
         the <a href="/install">install page</a>.
       </p>
       <p className={g.p}>
-        Netflix explains its own thumbs-based recommendations in{' '}
+        Netflix itself shows no critic scores. Its help page{' '}
         <a href="https://help.netflix.com/en/node/9898" target="_blank" rel="noopener noreferrer">
           How to rate TV shows and movies
-        </a>. These are separate from the critic scores shown by the extension.
+        </a>{' '}
+        describes personal ratings (&ldquo;Not for me&rdquo;, &ldquo;I like this&rdquo;,
+        &ldquo;Love this!&rdquo;) that tune your recommendations, and a Most Liked label for titles
+        with the most positive ratings. None of these is a Rotten Tomatoes score, which counts
+        professional critic reviews.
       </p>
 
       <h2 className={g.h2}>What does the Rotten Tomatoes percentage on Netflix mean?</h2>
@@ -131,11 +145,10 @@ export default function ShowRottenTomatoesOnNetflixPage() {
         </p>
       </div>
       <p className={g.p}>
-        The key point is that it is a share, not an average. Imagine ten critics who each call a
-        film &ldquo;decent&rdquo; and give it a lukewarm 6 out of 10. All ten reviews are
-        positive, so the Tomatometer reads 100%, even though nobody loved it. A film that eight
-        critics rate 10 out of 10 and two pan scores 80%. So a high percentage tells you critics
-        broadly approved, not that the film is a masterpiece.
+        The Tomatometer is a share of positive reviews, not an average rating. If ten critics each
+        give a film a lukewarm but positive review, it scores 100% even though nobody loved it. If
+        eight critics rate it 10 out of 10 and two pan it, it scores 80%. A high Tomatometer means
+        critics broadly approved, not that the film is a masterpiece.
       </p>
       <aside className={g.note}>
         <strong>One detail of the badge:</strong> the extension always draws the same tomato icon,
@@ -168,9 +181,11 @@ export default function ShowRottenTomatoesOnNetflixPage() {
 
       <h2 className={g.h2}>Should I trust Rotten Tomatoes or IMDb on Netflix?</h2>
       <p className={g.p}>
-        Use both. Rotten Tomatoes tells you whether critics approved; IMDb is an audience rating
-        out of 10 and tells you whether viewers enjoyed it. They often disagree, and the
-        disagreement is informative.{' '}
+        Use both, because they measure different groups. Rotten Tomatoes shows whether critics
+        approved; IMDb shows how viewers rated a title out of 10. In Rating Watch&rsquo;s{' '}
+        <a href={GAP_STUDY.path}>{GAP_STUDY.date} snapshot</a> of {GAP_STUDY.n} Netflix Original
+        films, {GAP_STUDY.bigPct} had scores {GAP_STUDY.threshold} or more points apart (IMDb &times;
+        10 vs Tomatometer), so a split is common and tells you what kind of title it is.{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes: which rating to trust</a>{' '}
         explains how the two are built and when each one misleads. If you only want the audience
         score, see{' '}

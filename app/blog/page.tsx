@@ -18,7 +18,7 @@ import {
   periodRows,
   topByArchetype,
 } from './_lib/hub-view';
-import { AUTHOR_NAME, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
+import { AUTHOR_NAME, CHROME_WEB_STORE_URL, SITE_URL, SUPPORT_EMAIL } from '../../lib/content';
 import { formatAsOf, formatSigned } from '../../lib/blog/format';
 import { articleLabel, displayTitle } from '../../lib/blog/title';
 import { getPage } from '../../lib/pages';
@@ -97,6 +97,42 @@ function datasetNode(data: BlogData) {
   };
 }
 
+function Byline() {
+  return (
+    <p className={g.p}>
+      Written and maintained by <a href="/about">{AUTHOR_NAME}</a>. Rating Watch is an independent
+      project. It is not affiliated with or endorsed by Netflix, IMDb or Rotten Tomatoes; those names belong to
+      their owners.
+    </p>
+  );
+}
+
+// While no film analysis is published there are no articles to describe, so the closing section only
+// states what is true of the list itself (and keeps the published count on the page, spec R4).
+function HowScoresAreChecked({ total }: { total: number }) {
+  return (
+    <>
+      <h2 className={g.h2} id="how-scores-are-checked">How reliable are these scores?</h2>
+      <p className={g.p}>No film-by-film analysis is published yet (0 of {total} films).</p>
+      <ul className={g.list}>
+        <li>
+          <strong>Numbers come from data, not from the text.</strong> Every score, vote count and rank in the tables
+          is filled in from the data file you can download above.
+        </li>
+        <li>
+          <strong>Scores can be wrong.</strong> OMDb relays IMDb and Rotten Tomatoes values, and they can lag or err.
+          Treat the gap as a rough signal, not a verdict.
+        </li>
+        <li>
+          <strong>Corrections.</strong> If you spot an error, write to{' '}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> and it will be fixed.
+        </li>
+      </ul>
+      <Byline />
+    </>
+  );
+}
+
 function HowArticlesAreMade() {
   return (
     <>
@@ -125,11 +161,7 @@ function HowArticlesAreMade() {
           <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> and it will be fixed.
         </li>
       </ul>
-      <p className={g.p}>
-        Written and maintained by <a href="/about">{AUTHOR_NAME}</a>. Rating Watch is an independent
-        project. It is not affiliated with or endorsed by Netflix, IMDb or Rotten Tomatoes; those names belong to
-        their owners.
-      </p>
+      <Byline />
     </>
   );
 }
@@ -168,6 +200,8 @@ export default function Page() {
           {asOf}, via OMDb.{' '}
           {sum.publishedCount >= sum.total
             ? `All ${sum.total} films have a full analysis.`
+            : sum.publishedCount === 0
+            ? `All ${sum.total} films are listed below with their scores; no film-by-film analysis is published yet.`
             : `A full analysis is published for ${sum.publishedCount} of ${sum.total} films so far; the rest are listed below with their scores.`}
         </>
       }
@@ -189,8 +223,10 @@ export default function Page() {
           <span className={s.statLabel}>Films where audiences scored higher</span>
         </div>
         <div className={`${s.stat} ${s.statPaper}`}>
-          <span className={s.statValue}>{sum.publishedCount}</span>
-          <span className={s.statLabel}>Full analyses published</span>
+          <span className={s.statValue}>{sum.publishedCount === 0 ? agreed : sum.publishedCount}</span>
+          <span className={s.statLabel}>
+            {sum.publishedCount === 0 ? 'Films where the scores agree within 9 points' : 'Full analyses published'}
+          </span>
         </div>
       </div>
 
@@ -240,8 +276,12 @@ export default function Page() {
         </table>
       </div>
       <p className={`${g.p} ${s.small}`}>
-        Gap in points: positive means Rotten Tomatoes is higher, negative means IMDb (times ten) is higher. Titles that
-        are links have a full analysis; the others do not yet.
+        Gap in points: positive means Rotten Tomatoes is higher, negative means IMDb (times ten) is higher.
+        {sum.publishedCount > 0 && ' Titles that are links have a full analysis; the others do not yet.'}
+      </p>
+      <p className={g.p}>
+        To see these scores on Netflix cards as you browse, <a href={CHROME_WEB_STORE_URL}>add Rating Watch to Chrome</a>,
+        or read <a href="/how-to/find-what-to-watch-on-netflix">how to find what to watch on Netflix</a>.
       </p>
 
       <h2 className={g.h2} id="where-critics-and-audiences-split">Where do critics and audiences split most?</h2>
@@ -328,7 +368,7 @@ export default function Page() {
         </>
       )}
 
-      <HowArticlesAreMade />
+      {sum.publishedCount === 0 ? <HowScoresAreChecked total={sum.total} /> : <HowArticlesAreMade />}
     </GuideLayout>
   );
 }

@@ -41,27 +41,28 @@ export interface SitePage {
  * (lib/content.ts) to the newest date here.
  */
 export const PAGE_UPDATED: Record<string, string> = {
-  '/': '2026-10-23', // official Chrome Web Store installation
-  '/install': '2026-10-23', // Chrome Web Store steps replace ZIP installation
-  '/how-to/show-imdb-ratings-on-netflix': '2026-10-23',
-  '/how-to/show-rotten-tomatoes-on-netflix': '2026-10-23', // Netflix UI and missing-badge troubleshooting corrected
-  '/how-to/find-what-to-watch-on-netflix': '2026-10-23',
-  '/how-to/netflix-ratings-explained': '2026-10-23',
-  '/research/imdb-vs-rotten-tomatoes-gap': '2026-10-23',
-  '/compare/imdb-vs-rotten-tomatoes': '2026-10-23',
-  '/compare/alternatives': '2026-10-23',
+  '/': '2026-11-09', // title and description rewrite
+  '/install': '2026-11-09', // "Rating Watch not working? Fixes" section
+  '/how-to/show-imdb-ratings-on-netflix': '2026-11-09',
+  '/how-to/show-rotten-tomatoes-on-netflix': '2026-11-09', // title rewrite, links to the device guide
+  '/how-to/find-what-to-watch-on-netflix': '2026-11-09',
+  '/how-to/netflix-ratings-explained': '2026-11-09',
+  '/how-to/netflix-ratings-on-tv-and-phone': '2026-11-09', // new device guide
+  '/research/imdb-vs-rotten-tomatoes-gap': '2026-11-09',
+  '/compare/imdb-vs-rotten-tomatoes': '2026-11-09',
+  '/compare/alternatives': '2026-11-09', // Safari, Firefox and IMDb Ratings for Netflix rows read 2026-11-06
   '/about': '2026-10-23',
   '/camera-vision': '2026-10-20',
-  '/camera-vision/ar': '2026-10-20',
+  '/camera-vision/ar': '2026-11-09', // title and description lead with the TV use case
   '/privacy': '2026-10-21',
-  '/pricing': '2026-10-23', // official store installation link
+  '/pricing': '2026-11-09', // AR mode links to its page
   '/terms': '2026-10-21',
   '/refund-policy': '2026-10-21',
 };
 
-export const HOME_TITLE = 'Rating Watch: IMDb & Rotten Tomatoes on Netflix Cards';
+export const HOME_TITLE = 'Rating Watch: Free Netflix Extension for IMDb & Rotten Tomatoes';
 export const HOME_DESCRIPTION =
-  'Free Chrome extension that shows IMDb ratings, and Rotten Tomatoes scores where available, on Netflix title cards as you browse. The extension needs no account.';
+  'Free Chrome extension that adds IMDb ratings, and Rotten Tomatoes scores where available, to Netflix title cards. No account. Chrome, Edge and Brave.';
 
 /**
  * The /blog hub. Registered (sitemap, footer, llms.txt) only when the generated registry says the
@@ -74,11 +75,11 @@ export const BLOG_HUB_PAGE: SitePage = {
     description:
       'The 100 most-watched Netflix films with IMDb and Rotten Tomatoes scores side by side, where critics and audiences split most, and how the list is built.',
     published: '2026-10-20',
-    updated: '2026-10-20',
+    updated: '2026-11-09', // hub copy edited
     changeFrequency: 'monthly',
     priority: 0.7,
     group: 'guide',
-    label: 'Blog',
+    label: 'Top 100 Netflix films',
     ogType: 'article',
   };
 
@@ -128,9 +129,9 @@ export const staticPages = (proOnSale: boolean): SitePage[] => [
   },
   {
     path: '/how-to/show-rotten-tomatoes-on-netflix',
-    title: 'Show Rotten Tomatoes Scores on Netflix',
+    title: 'Rotten Tomatoes on Netflix: Free Chrome Extension',
     description:
-      'Netflix has no Rotten Tomatoes scores. Install the free Rating Watch extension to see the Tomatometer where OMDb has one, and what the percentage means.',
+      'Netflix has no Rotten Tomatoes scores. This free Chrome extension adds the Tomatometer to Netflix cards where OMDb has one. Edge and Brave too.',
     published: '2026-10-15',
     updated: PAGE_UPDATED['/how-to/show-rotten-tomatoes-on-netflix'],
     changeFrequency: 'monthly',
@@ -166,6 +167,19 @@ export const staticPages = (proOnSale: boolean): SitePage[] => [
     ogType: 'article',
   },
   {
+    path: '/how-to/netflix-ratings-on-tv-and-phone',
+    title: 'IMDb Ratings on Netflix on TV, Phone or Safari',
+    description:
+      'Can you see IMDb ratings on Netflix on a TV, iPhone, Android, Safari or Firefox? What works on each device, what does not, and why. Checked November 2026.',
+    published: '2026-11-09',
+    updated: PAGE_UPDATED['/how-to/netflix-ratings-on-tv-and-phone'],
+    changeFrequency: 'monthly',
+    priority: 0.8,
+    group: 'guide',
+    label: 'Netflix ratings on TV and phone',
+    ogType: 'article',
+  },
+  {
     path: '/research/imdb-vs-rotten-tomatoes-gap',
     title: 'IMDb vs Rotten Tomatoes Gap: Netflix Data Study',
     description:
@@ -193,9 +207,9 @@ export const staticPages = (proOnSale: boolean): SitePage[] => [
   },
   {
     path: '/compare/alternatives',
-    title: 'Ratings on Netflix: Reelgood, JustWatch & More',
+    title: 'Netflix Rating Extensions Compared: SVODEX & More',
     description:
-      'Rating Watch vs Reelgood, JustWatch, IMDb, Rotten Tomatoes and other extensions for seeing ratings on Netflix. A fair table, with sources, verified Oct 2026.',
+      'Netflix ratings extensions compared: Rating Watch, RateFlix, SVODEX, IMDb Ratings for Netflix and Safari or Firefox options. Sourced, dated table.',
     published: '2026-10-15',
     updated: PAGE_UPDATED['/compare/alternatives'],
     changeFrequency: 'monthly',
@@ -232,10 +246,10 @@ export const staticPages = (proOnSale: boolean): SitePage[] => [
   },
   {
     path: '/camera-vision/ar',
-    title: 'AR Ratings: Netflix Scores Over the TV Screen',
+    title: 'IMDb Ratings on Netflix TV: Phone AR Mode',
     description: proOnSale
-      ? 'AR mode for Rating Watch Pro: point your camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. 3-day free trial.'
-      : 'AR mode for Rating Watch: point your phone camera at a TV showing Netflix and see IMDb and Rotten Tomatoes scores over each tile. Free to try for now.',
+      ? 'See IMDb ratings on Netflix on your TV: Rating Watch Pro AR mode uses your phone camera to add IMDb and Rotten Tomatoes scores to each tile. 3-day free trial.'
+      : 'See IMDb ratings on Netflix on your TV: AR mode uses your phone camera to put IMDb and Rotten Tomatoes scores on each tile. Free to try for now.',
     published: '2026-10-20',
     updated: PAGE_UPDATED['/camera-vision/ar'],
     changeFrequency: 'monthly',

@@ -3,6 +3,7 @@ import g from '../../../components/guide.module.css';
 import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { BLOG_HUB } from '../../../lib/blog/registry.generated';
 import { pageMetadata } from '../../../lib/seo';
+import { GAP_STUDY } from '../../../lib/gap-study';
 
 const PATH = '/how-to/netflix-ratings-explained';
 export const metadata = pageMetadata(PATH);
@@ -56,26 +57,27 @@ export default function NetflixRatingsExplainedPage() {
 
       <h2 className={g.h2}>What do Netflix thumbs and Most Liked mean?</h2>
       <p className={g.p}>
-        Netflix lets you mark a title with a thumbs down, thumbs up or double thumbs up.
-        These choices tell Netflix about your preferences. Its{' '}
-        <a href="https://help.netflix.com/en/node/9898">rating help page</a> also explains that
-        titles receiving the most positive feedback get a Most Liked label. Neither label is
-        an IMDb score or a Rotten Tomatoes critic percentage.
+        A Netflix thumbs up means &ldquo;I like this&rdquo;: personal feedback that helps Netflix
+        recommend titles to you, not a public review score. Netflix&apos;s{' '}
+        <a href="https://help.netflix.com/en/node/9898">rating help page</a> lists three choices:
+        thumbs down (&ldquo;Not for me&rdquo;), thumbs up (&ldquo;I like this&rdquo;) and double
+        thumbs up (&ldquo;Love this!&rdquo;). Titles with the most positive ratings get a Most
+        Liked label. None of these is an IMDb or Rotten Tomatoes score.
       </p>
 
       <h2 className={g.h2}>What does a Netflix Match percentage mean?</h2>
       <p className={g.p}>
-        If you see a percentage such as 98% Match, read it as a prediction about your taste,
-        not as the percentage of viewers who enjoyed the film. Netflix described this meaning
-        in its <a href="https://about.netflix.com/en/news/goodbye-stars-hello-thumbs">2017 introduction of Match</a>.
-        That announcement explains the term; it does not establish what every current app displays.
+        A Netflix Match percentage, such as 98% Match, is a prediction of how well a title fits
+        your taste, not the share of viewers who enjoyed it. Netflix described Match this way in
+        its <a href="https://about.netflix.com/en/news/goodbye-stars-hello-thumbs">2017 introduction of Match</a>.
+        Current Netflix apps may show a double thumbs up recommendation icon instead, so a Match
+        percentage does not appear on every device.
       </p>
       <p className={g.p}>
         Netflix&apos;s <a href="https://help.netflix.com/en/node/100639">current recommendation guide</a>{' '}
         describes predictions based on viewing history, feedback, similar tastes and information
         about titles. Different profiles can therefore get different suggestions for the same film.
-        Its current rating guide also describes a double thumbs up recommendation icon, so do
-        not expect a Match percentage on every device.
+        Its current rating guide also describes the double thumbs up recommendation icon.
       </p>
 
       <h2 className={g.h2}>Are TV-MA and PG-13 quality scores?</h2>
@@ -95,17 +97,19 @@ export default function NetflixRatingsExplainedPage() {
         <a href="https://www.rottentomatoes.com/about">Rotten Tomatoes Tomatometer</a> counts
         the share of critic reviews that are positive. An 80% Tomatometer is not an average
         review of 8 out of 10. Our <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes comparison</a>{' '}
-        explains how to read disagreements.
+        explains how to read disagreements, and Rating Watch&apos;s{' '}
+        <a href={GAP_STUDY.path}>{GAP_STUDY.n}-film study</a> measures how far apart the two scores
+        are on Netflix Originals.
         {BLOG_HUB.ready && <> The <a href="/blog">100-film dataset</a> lets you compare real examples with dated source values.</>}
       </p>
 
       <h2 className={g.h2}>How do I see independent scores while browsing Netflix?</h2>
       <p className={g.p}>
-        On a desktop computer, Rating Watch adds available IMDb and Rotten Tomatoes scores to
-        Netflix title cards in Chrome, Edge or Brave. The extension is free and needs no account.
-        It gets third-party scores from OMDb; some titles have only one score or none, and cached
-        values can differ from the source sites. It does not change Netflix&apos;s maturity settings
-        or calculate a replacement Match percentage.
+        Netflix itself shows no IMDb or Rotten Tomatoes scores, so seeing them while browsing
+        needs a desktop browser extension. Rating Watch, free for Chrome, Edge and Brave, adds the
+        IMDb rating and, where OMDb has one, the Rotten Tomatoes percentage to Netflix title cards.
+        Some titles show one score or none, and cached values can differ from the source sites. It
+        does not change maturity settings or recreate Match.
       </p>
       <div className={g.callout}>
         <p className={g.calloutTitle}>Compare before you press play</p>

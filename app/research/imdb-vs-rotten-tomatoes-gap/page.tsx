@@ -41,7 +41,9 @@ const bigCount = Math.round(stats.shareBigGap * stats.n);
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 const fetchedDate = fmtDate(raw.fetchedAt);
+const fetchedFromDate = fmtDate(raw.fetchedFrom);
 const isoDate = raw.fetchedAt.slice(0, 10);
+const citation = `${AUTHOR_NAME} (${raw.fetchedAt.slice(0, 4)}). ${raw.name}. Rating Watch. Snapshot ${isoDate}. ${SITE_URL}${PATH}`;
 const signed = (n: number) => (n > 0 ? `+${n}` : `${n}`);
 const years = titles.map((t) => t.year);
 
@@ -49,13 +51,18 @@ const seriesExcluded = raw.excluded.filter((e) => e.type === 'series').length;
 const seriesNoRt = raw.excluded.filter((e) => e.type === 'series' && /Rotten Tomatoes/.test(e.reason)).length;
 const filmsExcluded = raw.excluded.filter((e) => e.type === 'movie');
 const seriesTotal = seriesExcluded + titles.filter((t) => t.type === 'series').length;
+const seriesNotFound = seriesTotal - seriesNoRt; // series OMDb could not find at all
 
 // Title cells link a published blog analysis of the same film, matched by IMDb id (I8).
 const articleHref = (imdbId: string): string | null => articlePathForImdbId(imdbId);
 
 const maxGap = Math.max(...rows.map((r) => Math.abs(r.gap)), 1);
 const topCritics = rows.slice(0, 5);
-const topAudience = [...rows].reverse().slice(0, 5);
+// OMDb values the study found to be wrong (flagged) are left out of the "largest gap" lists.
+const topAudience = [...rows]
+  .filter((r) => !flagged.some((f) => f.title === r.title))
+  .reverse()
+  .slice(0, 5);
 const nameList = (rs: typeof rows) => rs.map((r) => `${r.title} (${signed(r.gap)})`).join(', ');
 
 const FAQS: Faq[] = [
@@ -73,7 +80,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Why are TV series missing from the study?',
-    a: `OMDb returned no Rotten Tomatoes score for any of the ${seriesTotal} Netflix series on the candidate list, which included Stranger Things, The Crown and Squid Game. Rather than mix in numbers from another source, the study covers films only. Series appear in the excluded list in the raw JSON file.`,
+    a: `OMDb returned no Rotten Tomatoes score for ${seriesNoRt} of the ${seriesTotal} Netflix series on the candidate list, including Stranger Things, The Crown and Squid Game${seriesNotFound > 0 ? `, and could not find ${seriesNotFound === 1 ? 'the other one' : `the other ${seriesNotFound}`} at all` : ''}. Rather than mix in numbers from another source, the study covers films only. Every excluded series is listed with its reason in the raw JSON file.`,
   },
   {
     q: 'Can I reproduce these numbers or reuse the data?',
@@ -154,21 +161,25 @@ export default function Page() {
         </div>
       </div>
 
-      <h2 className={g.h2}>What did the study find?</h2>
+      <h2 className={g.h2} id="findings">What did the study find?</h2>
       <p className={g.p}>
-        The typical Netflix Original film in this sample has an IMDb score (times ten) and a
-        Rotten Tomatoes percentage that are about {stats.medianAbsGap} points apart. Only{' '}
-        {stats.n - bigCount} of {stats.n} films were less than {stats.bigGapThreshold} points
-        apart. Critics came out ahead more often ({stats.criticsHigherCount} films), but the average
-        signed gap is small ({signed(stats.meanSignedGap)} points) because the biggest
-        disagreements run both ways.
+        In Rating Watch&rsquo;s study of {stats.n} Netflix Original films (OMDb data,{' '}
+        {fetchedDate}), the median gap between the IMDb score times ten and the Rotten Tomatoes
+        percentage was {stats.medianAbsGap} points. Only {stats.n - bigCount} of {stats.n} films
+        were within {stats.bigGapThreshold} points. Critics scored higher for{' '}
+        {stats.criticsHigherCount} films and audiences for {stats.audienceHigherCount}, but the mean
+        signed gap was only {signed(stats.meanSignedGap)} points because large disagreements run
+        both ways.
       </p>
       <ul className={g.list}>
         <li>
           <strong>Critics higher than audiences (largest gaps):</strong> {nameList(topCritics)}.
         </li>
         <li>
-          <strong>Audiences higher than critics (largest gaps):</strong> {nameList(topAudience)}.
+          <strong>
+            Audiences higher than critics (largest gaps, excluding {flagged.length === 1 ? 'one OMDb value' : `${flagged.length} OMDb values`} the study found to be wrong):
+          </strong>{' '}
+          {nameList(topAudience)}.
         </li>
       </ul>
       <p className={g.p}>
@@ -176,7 +187,9 @@ export default function Page() {
         ten. Scores on the two sites are different kinds of number, so a gap says the sites
         disagree about a film, not that either one is wrong. For how each score is built and when
         to lean on which, see{' '}
-        <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.
+        <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>. To turn the pattern
+        into a pick, see{' '}
+        <a href="/how-to/find-what-to-watch-on-netflix">how to find what to watch on Netflix</a>.
       </p>
       {isBlogHubReady() && (
         <p className={g.p}>
@@ -186,7 +199,7 @@ export default function Page() {
         </p>
       )}
 
-      <h2 className={g.h2}>How was the study done?</h2>
+      <h2 className={g.h2} id="method">How was the study done?</h2>
       <ul className={g.list}>
         <li>
           <strong>Selection rule:</strong> {raw.candidates} Netflix Original films and series that are widely
@@ -220,11 +233,11 @@ export default function Page() {
         Netflix cards.
       </p>
 
-      <h2 className={g.h2}>What are the limitations?</h2>
+      <h2 className={g.h2} id="limitations">What are the limitations?</h2>
       <ul className={g.list}>
         <li>
-          <strong>Snapshot in time.</strong> Scores were fetched between{' '}
-          {fmtDate(raw.fetchedFrom)} and {fetchedDate}. Both IMDb ratings and Rotten Tomatoes
+          <strong>Snapshot in time.</strong> Scores were fetched{' '}
+          {fetchedFromDate === fetchedDate ? `on ${fetchedDate}` : `between ${fetchedFromDate} and ${fetchedDate}`}. Both IMDb ratings and Rotten Tomatoes
           percentages move as more people vote and review, especially for recent releases.
         </li>
         <li>
@@ -252,7 +265,7 @@ export default function Page() {
         </li>
       </ul>
 
-      <h2 className={g.h2}>What does the data look like?</h2>
+      <h2 className={g.h2} id="table">What does the data look like?</h2>
       <p className={g.p}>
         All {stats.n} films, sorted from the biggest &ldquo;critics higher&rdquo; gap to the
         biggest &ldquo;audience higher&rdquo; gap. Scores as returned by OMDb on {fetchedDate}.
@@ -307,13 +320,13 @@ export default function Page() {
         OMDb value differs from the Rotten Tomatoes page (see limitations).
       </p>
 
-      <h2 className={g.h2}>Where can I get the data?</h2>
+      <h2 className={g.h2} id="data">Where can I get the data?</h2>
       <p className={g.p}>
         The raw data is one JSON file: every included film with its IMDb ID, scores and vote
         count, the excluded titles with reasons, the selection rule, the fetch date and the
-        computed summary. Cite it as {AUTHOR_NAME}, &ldquo;{raw.name}&rdquo;, Rating Watch,{' '}
-        {fetchedDate}.
+        computed summary. Cite it as:
       </p>
+      <pre className={s.cite}>{citation}</pre>
       <p>
         <a className={`ds-btn ${s.download}`} href={DATA_PATH} download>
           Download imdb-rt-gap.json

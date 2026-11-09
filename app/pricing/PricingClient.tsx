@@ -34,7 +34,7 @@ export function ProCard() {
       )}
       {copy.comingSoon && <p className={s.body}>{copy.comingSoon}</p>}
       <ul className={s.list}>
-        <li>AR mode: point your phone at the TV</li>
+        <li><a href="/camera-vision/ar">AR mode</a>: point your phone at the TV</li>
         {copy.terms && <li>3-day free trial, no card</li>}
         {copy.terms && <li>Cancel any time, refund within 14 days of the first payment</li>}
       </ul>

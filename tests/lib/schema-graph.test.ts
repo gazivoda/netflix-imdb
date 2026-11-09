@@ -114,6 +114,14 @@ describe('softwareApplication (product pages only)', () => {
     expect(off.browserRequirements).toBeTruthy();
   });
 
+  it('joins the brand name to the Chrome Web Store name via alternateName (GEO M4)', () => {
+    for (const app of [off, on]) {
+      expect(app.name).toBe('Rating Watch');
+      expect(app.alternateName).toBe('Rating Watch: IMDb & Rotten Tomatoes for Netflix');
+      expect(app.alternateName).toBe(manifest.name);
+    }
+  });
+
   it('operatingSystem is a short platform value, not a sentence', () => {
     expect(off.operatingSystem).toBe('Chrome, Web browser');
     expect((off.operatingSystem as string).length).toBeLessThan(40);

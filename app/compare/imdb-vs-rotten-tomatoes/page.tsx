@@ -5,6 +5,7 @@ import { ImdbChip, RtChip } from '../../../components/ScoreChip';
 import { pageMetadata } from '../../../lib/seo';
 import { isBlogHubReady } from '../../../lib/blog/inbound';
 import { CHROME_WEB_STORE_URL } from '../../../lib/content';
+import { GAP_STUDY } from '../../../lib/gap-study';
 
 const PATH = '/compare/imdb-vs-rotten-tomatoes';
 
@@ -38,10 +39,12 @@ const ROWS = [
   },
   {
     aspect: 'Blind spot',
-    imdb: 'Fan brigading and nostalgia can inflate scores.',
+    imdb: 'Coordinated voting can skew scores; IMDb says it changes its weighting when it detects unusual activity.',
     rt: 'A 90% can hide films critics found merely "fine," not excellent.',
   },
 ];
+
+const TV_PHONE_ANCHOR = 'IMDb ratings on Netflix on TV, phone or Safari';
 
 const FAQS = [
   {
@@ -62,15 +65,24 @@ const FAQS = [
   },
   {
     q: 'Which rating is more reliable, IMDb or Rotten Tomatoes?',
-    a: 'Neither is universally better. Rotten Tomatoes is a good guide to critical opinion, especially for new releases. IMDb is a better signal of broad audience enjoyment once ratings have settled. For the most reliable read, compare both: agreement is a strong signal, and disagreement shows whether a title leans crowd-pleaser or critics’ darling.',
+    a: `Neither IMDb nor Rotten Tomatoes is more reliable overall; they answer different questions. The Tomatometer guides you to critical consensus, especially on new releases. IMDb reflects audience enjoyment once votes settle. The two are correlated but not interchangeable: r = ${GAP_STUDY.pearson} across ${GAP_STUDY.n} Netflix Original films in Rating Watch’s ${GAP_STUDY.date} snapshot. When both are high, that is the strongest signal.`,
   },
   {
     q: 'Why do IMDb and Rotten Tomatoes scores disagree?',
-    a: 'They disagree because they measure different things and poll different people. One is an average of audience ratings out of 10, the other is the share of critics who gave a positive review. Critics tend to reward originality, direction and writing; general audiences often reward entertainment and emotional payoff, so big gaps are common.',
+    a: `IMDb and Rotten Tomatoes disagree because they measure different things and poll different people. IMDb is a weighted average of registered users’ ratings out of 10; the Tomatometer is the share of professional critic reviews that are positive. Big gaps are common: in a ${GAP_STUDY.n}-film Netflix Originals snapshot from ${GAP_STUDY.date}, ${GAP_STUDY.bigPct} of films differed by ${GAP_STUDY.threshold} points or more.`,
   },
   {
     q: 'Can I see both scores while browsing Netflix?',
-    a: 'Yes, on a computer. The free Rating Watch extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title. Rotten Tomatoes scores are mostly available for films, so TV series usually show IMDb only.',
+    a: `Yes, on a computer. The free Rating Watch extension for Chrome, Edge, Brave and other Chromium browsers shows the IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the OMDb database has for that title. Rotten Tomatoes scores are mostly available for films, so TV series usually show IMDb only. For TV, phone and Safari options, see ${TV_PHONE_ANCHOR}.`,
+    aNode: (
+      <>
+        Yes, on a computer. The free Rating Watch extension for Chrome, Edge, Brave and other Chromium browsers shows the
+        IMDb rating and the Rotten Tomatoes score in a badge on Netflix title cards. A badge shows only the scores that the
+        OMDb database has for that title. Rotten Tomatoes scores are mostly available for films, so TV series usually show
+        IMDb only. For TV, phone and Safari options, see{' '}
+        <a href="/how-to/netflix-ratings-on-tv-and-phone">{TV_PHONE_ANCHOR}</a>.
+      </>
+    ),
   },
 ];
 
@@ -78,11 +90,13 @@ export default function ComparePage() {
   return (
     <GuideLayout
       path={PATH}
-      h1="IMDb vs Rotten Tomatoes"
+      h1="IMDb vs Rotten Tomatoes: which rating should you trust?"
       lede={
         <>
-          Two of the most-quoted ratings in film disagree all the time, because they measure
-          different things.{' '}
+          IMDb and Rotten Tomatoes often disagree because they measure different things. In Rating
+          Watch&apos;s <a href={GAP_STUDY.path}>{GAP_STUDY.date} snapshot</a> of {GAP_STUDY.n} Netflix
+          Original films, the two scores differed by {GAP_STUDY.meanAbsGap} points on average
+          (IMDb &times; 10 vs Tomatometer).{' '}
           <strong>
             IMDb is an average audience score out of 10. Rotten Tomatoes is the percentage of
             critics who liked a film.
@@ -176,6 +190,12 @@ export default function ComparePage() {
         <li><strong>High RT, lower IMDb</strong>: a critics&apos; darling that didn&apos;t land with everyone. Worth it if you&apos;re in the mood for something ambitious.</li>
         <li><strong>Both low</strong>: usually safe to skip.</li>
       </ul>
+      <p className={g.p}>
+        How often do they split? In our <a href={GAP_STUDY.path}>study of {GAP_STUDY.n} Netflix Original films</a>,{' '}
+        {GAP_STUDY.bigCount} were {GAP_STUDY.threshold} or more points apart. To turn that into a quick
+        decision, see{' '}
+        <a href="/how-to/find-what-to-watch-on-netflix">how to find what to watch on Netflix</a>.
+      </p>
       {isBlogHubReady() && (
         <p className={g.p}>
           For both scores side by side on the films people actually watch, see{' '}
@@ -217,8 +237,14 @@ export default function ComparePage() {
         <p>
           The free <strong>Rating Watch</strong> extension puts the IMDb rating and the Rotten
           Tomatoes score on Netflix title cards as you browse in Chrome, Edge or Brave, so you can
-          compare audience and critics at a glance. Install it free from the Chrome Web Store
-          in about a minute.
+          compare audience and critics at a glance. Install it free from the Chrome Web Store in
+          about a minute. Setup is covered in{' '}
+          <a href="/how-to/show-imdb-ratings-on-netflix">how to show IMDb ratings on Netflix</a> and{' '}
+          <a href="/how-to/show-rotten-tomatoes-on-netflix">how to show Rotten Tomatoes scores</a>;
+          other tools are compared in{' '}
+          <a href="/compare/alternatives">ways to see ratings on Netflix</a>. For what Netflix&apos;s own
+          thumbs, Match and age labels mean, see{' '}
+          <a href="/how-to/netflix-ratings-explained">Netflix ratings explained</a>.
         </p>
         <a href={CHROME_WEB_STORE_URL} className={g.btnPrimary}>
           Add to Chrome <span aria-hidden>→</span>

@@ -10,12 +10,12 @@ describe('/compare/alternatives', () => {
     const page = getPage(PATH);
     expect(page.priority).toBe(0.8);
     expect(page.group).toBe('compare');
-    expect(page.updated).toBe('2026-10-23');
+    expect(page.updated).toBe('2026-11-09');
     expect(pagesInGroup('compare').map((p) => p.path)).toContain(PATH);
   });
 
   it('carries the verification date and links to /install and the IMDb vs RT page', () => {
-    expect(src).toContain('Last verified: 2026-10-15');
+    expect(src).toContain('Last verified: 2026-11-06');
     expect(src).toContain('href="/install"');
     expect(src).toContain('/compare/imdb-vs-rotten-tomatoes');
   });

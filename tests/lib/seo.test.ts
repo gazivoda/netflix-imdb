@@ -78,6 +78,8 @@ describe('pageMetadata', () => {
     const isArticle = getPage(path).kind === 'article';
     const m = pageMetadata(path, isArticle ? { fileImages: true } : undefined);
     expect(m.alternates?.canonical).toBe(path);
+    // <title> is absolute and carries the suffix itself, so it never depends on layout nesting (/camera-vision/ar).
+    expect(m.title).toEqual({ absolute: renderedTitle(getPage(path)) });
     expect(m.openGraph).toMatchObject({ url: absoluteUrl(path), siteName: 'Rating Watch' });
     expect(m.twitter).toMatchObject({ card: 'summary_large_image' });
     if (isArticle) {
@@ -344,7 +346,7 @@ describe('blog pages in the registry', () => {
     title: 'Fake Film (2020): IMDb 6.3 vs RT 36%',
     description: 'Fake Film (2020) has IMDb 6.3 and Rotten Tomatoes 36%, a wide gap. A synthetic registry entry used only by the tests.',
     published: '2026-10-20',
-    updated: '2026-10-25',
+    updated: '2026-11-12',
     label: 'Fake Film (2020)',
     scores: { imdb: 6.3, rt: 36, gap: -27, asOf: '2026-10-15' },
     imdbId: 'tt0000001',
@@ -354,7 +356,7 @@ describe('blog pages in the registry', () => {
   const NOT_READY: BlogHubState = { ready: false, dataUpdated: null };
 
   it('defines the /blog hub page for the guide group (registered only when ready)', () => {
-    expect(BLOG_HUB_PAGE).toMatchObject({ path: '/blog', group: 'guide', label: 'Blog', priority: 0.7, changeFrequency: 'monthly', ogType: 'article' });
+    expect(BLOG_HUB_PAGE).toMatchObject({ path: '/blog', group: 'guide', label: 'Top 100 Netflix films', priority: 0.7, changeFrequency: 'monthly', ogType: 'article' });
     expect(BLOG_HUB_PAGE.title).toBe('Top 100 Netflix Films Rated by Critics and Fans');
     expect(BLOG_HUB_PAGE.kind).toBeUndefined();
     expect(STATIC_PAGES.some((p) => p.path === '/blog')).toBe(false);
@@ -363,7 +365,7 @@ describe('blog pages in the registry', () => {
   it('I9: /blog is not registered while the hub is not ready (no sitemap, footer or llms line)', () => {
     const pages = buildPages([], NOT_READY);
     expect(pages.some((p) => p.path === '/blog')).toBe(false);
-    expect(pages.filter((p) => p.group === 'guide').map((p) => p.label)).not.toContain('Blog');
+    expect(pages.filter((p) => p.group === 'guide').map((p) => p.label)).not.toContain('Top 100 Netflix films');
     if (!BLOG_HUB.ready) {
       expect(PAGES.some((p) => p.path === '/blog')).toBe(false);
       expect(() => getPage('/blog')).toThrow();
@@ -373,7 +375,7 @@ describe('blog pages in the registry', () => {
   it('I9: a ready hub is registered in the guide group right after the research study', () => {
     const pages = buildPages([], READY);
     const hub = pages.find((p) => p.path === '/blog')!;
-    expect(hub).toMatchObject({ group: 'guide', label: 'Blog' });
+    expect(hub).toMatchObject({ group: 'guide', label: 'Top 100 Netflix films' });
     const paths = pages.map((p) => p.path);
     expect(paths.indexOf('/blog')).toBe(paths.indexOf('/research/imdb-vs-rotten-tomatoes-gap') + 1);
   });
@@ -394,7 +396,7 @@ describe('blog pages in the registry', () => {
       title: fake.title,
       description: fake.description,
       published: '2026-10-20',
-      updated: '2026-10-25',
+      updated: '2026-11-12',
       label: 'Fake Film (2020)',
       kind: 'article',
       priority: 0.5,
@@ -418,15 +420,15 @@ describe('blog pages in the registry', () => {
     const base = BLOG_HUB_PAGE;
     const hubOf = (pages: SitePage[]) => pages.find((x) => x.path === '/blog')!;
     expect(hubOf(buildPages([], { ready: true, dataUpdated: null })).updated).toBe(base.updated);
-    expect(hubOf(buildPages([fake], READY)).updated).toBe('2026-10-25');
+    expect(hubOf(buildPages([fake], READY)).updated).toBe('2026-11-12');
     expect(hubOf(buildPages([{ ...fake, updated: '2020-01-01', published: '2020-01-01' }], READY)).updated).toBe(base.updated);
   });
 
   it('I10: the hub lastmod also follows max(films dataChangedAt), so unpublished rows count', () => {
     const hubOf = (pages: SitePage[]) => pages.find((x) => x.path === '/blog')!;
-    expect(hubOf(buildPages([], { ready: true, dataUpdated: '2026-11-05' })).updated).toBe('2026-11-05');
-    expect(hubOf(buildPages([fake], { ready: true, dataUpdated: '2026-11-05' })).updated).toBe('2026-11-05');
-    expect(hubOf(buildPages([fake], { ready: true, dataUpdated: '2026-10-01' })).updated).toBe('2026-10-25');
+    expect(hubOf(buildPages([], { ready: true, dataUpdated: '2026-11-20' })).updated).toBe('2026-11-20');
+    expect(hubOf(buildPages([fake], { ready: true, dataUpdated: '2026-11-20' })).updated).toBe('2026-11-20');
+    expect(hubOf(buildPages([fake], { ready: true, dataUpdated: '2026-10-01' })).updated).toBe('2026-11-12');
   });
 
   it('article pages use file-based og/twitter images; other pages keep the config images', () => {

@@ -4,10 +4,15 @@ import { ImdbChip } from '../../../components/ScoreChip';
 import h from '../how-to.module.css';
 import { CHROME_WEB_STORE_URL } from '../../../lib/content';
 import { howTo, pageMetadata } from '../../../lib/seo';
+import { GAP_STUDY } from '../../../lib/gap-study';
 import { STEPS } from './steps';
 
 const PATH = '/how-to/show-imdb-ratings-on-netflix';
 export const metadata = pageMetadata(PATH);
+
+const TV_PHONE_LEAD =
+  'No. Rating Watch is a Chromium browser extension, so it works on netflix.com in desktop Chrome, Edge and Brave. It cannot add badges to the Netflix app on phones, tablets, smart TVs or streaming sticks. It has not been tested in Firefox or Safari.';
+const TV_PHONE_ANCHOR = 'IMDb ratings on Netflix on TV, phone or Safari';
 
 const FAQS: Faq[] = [
   {
@@ -24,7 +29,13 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Does this work on the Netflix mobile app or a TV?',
-    a: 'No. Rating Watch is a Chromium browser extension, so it works on netflix.com in desktop Chrome, Edge and Brave. It cannot add badges to the Netflix app on phones, tablets, smart TVs or streaming sticks. It has not been tested in Firefox or Safari.',
+    a: `${TV_PHONE_LEAD} For other options, see ${TV_PHONE_ANCHOR}.`,
+    aNode: (
+      <>
+        {TV_PHONE_LEAD} For other options, see{' '}
+        <a href="/how-to/netflix-ratings-on-tv-and-phone">{TV_PHONE_ANCHOR}</a>.
+      </>
+    ),
   },
   {
     q: 'Is it free, and what does it send?',
@@ -76,7 +87,8 @@ export default function ShowImdbRatingsOnNetflixPage() {
       </p>
       <p className={g.p}>
         The <a href="/install">install guide</a> covers Chrome Web Store installation,
-        permissions and troubleshooting if badges do not appear.
+        permissions and troubleshooting if badges do not appear. Prefer another tool? See{' '}
+        <a href="/compare/alternatives">other ways to see ratings on Netflix</a>.
       </p>
 
       <h2 className={g.h2}>What does the IMDb rating on the badge mean?</h2>
@@ -102,10 +114,12 @@ export default function ShowImdbRatingsOnNetflixPage() {
         </p>
       </div>
       <p className={g.p}>
-        Where available, the badge also shows a Rotten Tomatoes percentage, the share of critics
-        who gave the title a positive review. The two often disagree, and the{' '}
-        <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes comparison</a> explains
-        why and when to trust each. If you mainly want the critics&rsquo; number, see{' '}
+        Where OMDb has one (mostly films), the badge also shows the Rotten Tomatoes Tomatometer,
+        the share of critics who reviewed the title positively. The two scores often disagree: in
+        Rating Watch&rsquo;s <a href={GAP_STUDY.path}>study</a> of {GAP_STUDY.n} Netflix Original
+        films (OMDb data, {GAP_STUDY.date}), they differed by {GAP_STUDY.meanAbsGap} points on
+        average. The <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes comparison</a>{' '}
+        explains why and when to trust each. If you mainly want the critics&rsquo; number, see{' '}
         <a href="/how-to/show-rotten-tomatoes-on-netflix">how to show Rotten Tomatoes scores on Netflix</a>.
       </p>
 
@@ -121,17 +135,20 @@ export default function ShowImdbRatingsOnNetflixPage() {
 
       <h2 className={g.h2}>Can you see IMDb ratings on Netflix without an extension?</h2>
       <p className={g.p}>
-        Netflix uses its own recommendation signals. Its{' '}
+        No. Netflix does not display IMDb ratings. Its{' '}
         <a href="https://help.netflix.com/en/node/9898" target="_blank" rel="noopener noreferrer">
           guide to rating TV shows and movies
         </a>{' '}
-        describes thumbs-up and double-thumbs-up ratings, which help personalize recommendations.
-        These are separate from IMDb user ratings, so they can point in different directions.
+        describes three personal ratings, &ldquo;Not for me&rdquo;, &ldquo;I like this&rdquo; and
+        &ldquo;Love this!&rdquo;, which Netflix uses to recommend titles. These are separate from
+        the IMDb user rating, a 1-to-10 weighted average of IMDb members&rsquo; votes, so the two
+        can point in different directions.
       </p>
       <p className={g.p}>
-        Without an extension the workaround is manual: open a second tab, search for the title on
-        IMDb and read the rating there. It works for a single title, but it gets tedious when you
-        are scanning a whole row of options, which is the gap the extension fills.
+        Without an extension, the only way to check an IMDb rating while browsing Netflix is
+        manual: search the title on IMDb in a second tab and read the score there. That works for
+        one title but is slow when comparing a whole row. The free Rating Watch extension removes
+        that step by showing the IMDb rating on each Netflix title card.
       </p>
       <p className={g.p}>
         Confused by Netflix&apos;s thumbs or a title&apos;s age classification? The{' '}

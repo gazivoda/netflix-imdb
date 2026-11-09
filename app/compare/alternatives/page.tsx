@@ -7,7 +7,8 @@ import { absoluteUrl, pageMetadata } from '../../../lib/seo';
 const PATH = '/compare/alternatives';
 export const metadata = pageMetadata(PATH);
 
-// Every third-party claim below was read on the cited page on 2026-10-15.
+// Every third-party claim below was read on the cited page on 2026-10-15, except where a row or sentence says another
+// date (SVODEX 2026-10-21; IMDb Ratings for Netflix, Popcorn for Safari and the Firefox add-on 2026-11-06).
 // Where a page did not say something, the table says "not stated", never a guess.
 const SRC = {
   justwatch: 'https://www.justwatch.com/us',
@@ -20,6 +21,10 @@ const SRC = {
   overlay: 'https://www.chromeboard.com/extension/netflix-imdb-overlay-cnhpjpnmjlgcpkdngmdoembbdgiobodc',
   // Read on 2026-10-21 (after the other sources, which were read on 2026-10-15).
   svodex: 'https://chromewebstore.google.com/detail/svodex/malgjkedapomgdnolihjjfbdagghmljb',
+  // Read on 2026-11-06.
+  imdbForNetflix: 'https://chromewebstore.google.com/detail/imdb-ratings-for-netflix/dnbpnlalaijjbogmjbpdkdcohoibjcmp',
+  popcorn: 'https://apps.apple.com/us/app/id1535719670',
+  firefoxAddon: 'https://addons.mozilla.org/en-US/firefox/addon/imdb-ratings-on-netflix/',
 };
 
 /** Cells that say "Not stated." get the muted mono style. */
@@ -37,6 +42,8 @@ interface Row {
   where: ReactNode;
   tab: ReactNode;
   cost: ReactNode;
+  /** ISO date this row's source was last read, when it differs from the page-wide 2026-10-15. */
+  checked?: string;
 }
 
 const ROWS: Row[] = [
@@ -97,6 +104,33 @@ const ROWS: Row[] = [
     cost: 'Not stated.',
   },
   {
+    name: 'IMDb Ratings for Netflix™',
+    url: SRC.imdbForNetflix,
+    what: <>Chrome extension whose {ext(SRC.imdbForNetflix, 'Chrome Web Store listing')} says it adds IMDb ratings to Netflix. Its tooltip adds more details such as the Metascore. 10,000 users, rated 1.5 out of 5 (482 ratings), version 4.1.3 updated 2024-10-17.</>,
+    where: 'On Netflix titles; the IMDb rating has a tooltip with more details.',
+    tab: 'Not stated.',
+    cost: <>The listing calls it &quot;free and lightweight&quot;.</>,
+    checked: '2026-11-06',
+  },
+  {
+    name: 'Popcorn for Safari',
+    url: SRC.popcorn,
+    what: <>Safari extension whose {ext(SRC.popcorn, 'Mac App Store listing')} says it shows IMDb, Metascore and Rotten Tomatoes ratings on Netflix. Mac only (macOS 11.0 or later, Safari 14 or later), version 3.0 dated 2022-10-14.</>,
+    where: 'On Netflix in Safari on a Mac. The listing says to expand a title to see its ratings.',
+    tab: 'Not stated.',
+    cost: 'Listed as free, with optional in-app tips.',
+    checked: '2026-11-06',
+  },
+  {
+    name: 'IMDb ratings on Netflix (Firefox)',
+    url: SRC.firefoxAddon,
+    what: <>Firefox add-on by Pawannitj, whose {ext(SRC.firefoxAddon, 'Firefox Add-ons page')} lists IMDb, Rotten Tomatoes and Metacritic. 401 users, rated 2.8 (24 ratings), version 0.149 last updated 2020-09-25.</>,
+    where: 'On Netflix in Firefox.',
+    tab: 'Not stated.',
+    cost: 'Not stated.',
+    checked: '2026-11-06',
+  },
+  {
     name: 'Netflix IMDb Overlay',
     url: SRC.overlay,
     what: <>Extension that {ext(SRC.overlay, 'overlays IMDb ratings on Netflix thumbnails')}.</>,
@@ -117,7 +151,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Are there other Chrome extensions that add ratings to Netflix?',
-    a: 'Yes. On 2026-10-15 I found RateFlix, which lists IMDb and Rotten Tomatoes ratings on Netflix titles, and Netflix IMDb Overlay, which shows IMDb ratings only and needs your own free OMDb API key. Both listings were thin on details such as source code, so check reviews and permissions before installing any of them. On 2026-10-21 I also read the Chrome Web Store listing for SVODEX, which says it shows IMDb and Rotten Tomatoes ratings on Netflix, Disney+ and HBO Max.',
+    a: 'Yes. On 2026-10-15 I found RateFlix, which lists IMDb and Rotten Tomatoes ratings on Netflix titles, and Netflix IMDb Overlay, which shows IMDb ratings only and needs your own free OMDb API key. Both listings were thin on details such as source code, so check reviews and permissions before installing any of them. On 2026-10-21 I also read the Chrome Web Store listing for SVODEX, which says it shows IMDb and Rotten Tomatoes ratings on Netflix, Disney+ and HBO Max. On 2026-11-06 I read the listings for IMDb Ratings for Netflix™ (Chrome), Popcorn for Safari (Mac only) and a Firefox add-on, and the table gives their dates and figures.',
   },
   {
     q: 'Is Rating Watch on the Chrome Web Store?',
@@ -125,7 +159,7 @@ const FAQS: Faq[] = [
   },
   {
     q: 'Are these services affiliated with Rating Watch?',
-    a: 'No. Rating Watch is an independent project and is not affiliated with Netflix, IMDb, Rotten Tomatoes, JustWatch, Reelgood, RateFlix, SVODEX or any other product named here. All names belong to their owners and are used only to identify the products being compared.',
+    a: 'No. Rating Watch is an independent project and is not affiliated with Netflix, IMDb, Rotten Tomatoes, JustWatch, Reelgood, RateFlix, SVODEX, IMDb Ratings for Netflix™, Popcorn for Safari, the Firefox add-on or any other product named here. All names belong to their owners and are used only to identify the products being compared.',
   },
 ];
 
@@ -162,16 +196,6 @@ export default function AlternativesPage() {
         </>
       }
     >
-      <p className={s.note}>
-        <strong className={s.stamp}>Last verified: 2026-10-15.</strong> Every claim about another product comes from
-        the page linked beside it, read on that date; the SVODEX row is the exception and comes from its Chrome Web
-        Store listing as read on 2026-10-21. Where a page said nothing, the table says
-        &quot;not stated&quot;. reelgood.com and imdb.com refused my automated requests, so Reelgood is
-        described from its App Store listing and IMDb from its help page. Things change; check the
-        source before you decide. Rating Watch&apos;s own Chrome Web Store availability was checked
-        on 2026-10-23.
-      </p>
-
       <h2 className={`ds-display ${s.h2}`}>How do the options <em className="ds-serif">compare</em>?</h2>
       <div className={s.tableWrap} role="region" aria-label="Comparison table, scrolls sideways on small screens" tabIndex={0}>
         <table className={s.table}>
@@ -189,7 +213,15 @@ export default function AlternativesPage() {
             {ROWS.map((r, i) => (
               <tr key={r.name} className={i === 0 ? s.mine : undefined}>
                 <th scope="row">{r.name}</th>
-                <td className={cellClass(r.what)}>{r.what}</td>
+                <td className={cellClass(r.what)}>
+                  {r.what}
+                  {r.checked && (
+                    <>
+                      <br />
+                      <small>Last checked {r.checked}.</small>
+                    </>
+                  )}
+                </td>
                 <td className={cellClass(r.where)}>{r.where}</td>
                 <td className={cellClass(r.tab)}>{r.tab}</td>
                 <td className={cellClass(r.cost)}>{r.cost}</td>
@@ -199,6 +231,17 @@ export default function AlternativesPage() {
         </table>
       </div>
 
+      <p className={s.note}>
+        <strong className={s.stamp}>Last verified: 2026-11-06 for the three newest rows, 2026-10-15 for the rest.</strong> The IMDb Ratings for Netflix™, Popcorn for
+        Safari and Firefox add-on rows come from the pages linked in them, read on 2026-11-06. Every other claim about
+        another product comes from the page linked beside it, read on 2026-10-15; the SVODEX row is the exception and
+        comes from its Chrome Web Store listing as read on 2026-10-21. Where a page said nothing, the table says
+        &quot;not stated&quot;. reelgood.com and imdb.com refused my automated requests, so Reelgood is
+        described from its App Store listing and IMDb from its help page. Things change; check the
+        source before you decide. Rating Watch&apos;s own Chrome Web Store availability was checked
+        on 2026-10-23.
+      </p>
+
       <h2 className={`ds-display ${s.h2}`}>When is Rating Watch the <em className="ds-serif">right choice</em>?</h2>
       <p className={s.p}>
         When you mostly browse Netflix and want the audience score (IMDb, out of 10) and the critic
@@ -207,7 +250,10 @@ export default function AlternativesPage() {
         shared daily limit), and asks for access to only netflix.com and omdbapi.com.
         Rating lookups send title names and the OMDb API key to OMDb, which also sees your IP
         address; the <a href="/privacy">privacy policy</a> explains the details. There is also an optional {AR_MODE_NAME} that shows
-        the same scores over a TV screen through your phone camera. Not sure
+        the same scores over a TV screen through your phone camera. Setup steps are in{' '}
+        <a href="/how-to/show-imdb-ratings-on-netflix">how to show IMDb ratings on Netflix</a>, and{' '}
+        <a href="/how-to/netflix-ratings-on-tv-and-phone">IMDb ratings on Netflix on TV, phone or Safari</a>{' '}
+        covers the devices an extension cannot reach. Not sure
         how the two scores differ? See{' '}
         <a href="/compare/imdb-vs-rotten-tomatoes">IMDb vs Rotten Tomatoes</a>.
       </p>
@@ -228,7 +274,9 @@ export default function AlternativesPage() {
         </li>
         <li>
           <strong>You use another browser.</strong> Rating Watch targets Chromium browsers and is
-          untested in Firefox and Safari.
+          untested in Firefox and Safari. The table lists a Safari and a Firefox option with the dates
+          they were read; <a href="/how-to/netflix-ratings-on-tv-and-phone">what works on a TV, phone or
+          Safari</a> goes through each device.
         </li>
       </ul>
 

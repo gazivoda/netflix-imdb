@@ -49,7 +49,9 @@ export function pageMetadata(path: string, opts: { fileImages?: boolean } = {}):
   // config images are omitted and Next's file-based convention supplies them.
   const images = !opts.fileImages;
   return {
-    title: page.path === '/' ? { absolute: page.title } : page.title,
+    // Absolute everywhere: the root layout's title template did not reach /camera-vision/ar (nested layouts
+    // that both set a title), which rendered <title> without the suffix. renderedTitle() is the same string.
+    title: { absolute: renderedTitle(page) },
     description: page.description,
     alternates: { canonical: page.path },
     openGraph: {
@@ -366,6 +368,8 @@ export function softwareApplication(proOnSale: boolean = PRO_ON_SALE): JsonLdNod
     '@type': 'SoftwareApplication',
     '@id': appRef['@id'],
     name: SITE_NAME,
+    // The Chrome Web Store / manifest name, so entity resolution joins the brand and the store listing.
+    alternateName: manifest.name,
     applicationCategory: 'BrowserApplication',
     applicationSubCategory: 'Browser extension',
     // Short platform names, not a sentence; the long form lives in browserRequirements.

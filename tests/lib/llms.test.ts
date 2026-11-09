@@ -113,7 +113,7 @@ describe('blog film analyses', () => {
     const all = sectionsFor(withArticle).flatMap((s) => s.pages.map((p) => p.path));
     expect(all).not.toContain(fake.path);
     expect(all).toContain('/blog'); // the hub is a normal guide
-    expect(sectionsFor(withArticle).find((s) => s.heading === 'Guides')!.pages.map((p) => p.label)).toContain('Blog');
+    expect(sectionsFor(withArticle).find((s) => s.heading === 'Guides')!.pages.map((p) => p.label)).toContain('Top 100 Netflix films');
   });
 
   it('llms.txt links the hub but no article URL, and adds the dataset link once articles exist', () => {

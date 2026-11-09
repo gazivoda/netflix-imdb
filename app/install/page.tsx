@@ -107,7 +107,7 @@ export default function InstallPage() {
         &ldquo;More Like This&rdquo; suggestions are rated automatically as they load.
       </p>
 
-      <h2 className={g.h2}>If the badges do not appear</h2>
+      <h2 className={g.h2}>Rating Watch not working? Fixes</h2>
       <ul className={s.check}>
         <li>Reload the Netflix tab after installing, so the extension can attach to the page.</li>
         <li>
@@ -116,13 +116,27 @@ export default function InstallPage() {
         </li>
         <li>Make sure you are on <code>www.netflix.com</code>; the extension only runs there.</li>
         <li>
-          Seeing a red exclamation mark on the toolbar icon, or a notice that ratings are paused?
-          The shared daily lookup allowance is used up. It resets daily, or open the extension
-          options (click the icon) and add a free personal key from{' '}
+          Seeing a red exclamation mark on the toolbar icon, or a notice on Netflix saying
+          &ldquo;Ratings paused: shared OMDb daily limit reached&rdquo;? The shared daily lookup
+          allowance (1,000 lookups a day across all users) is used up. It resets daily, or open the
+          extension options (click the icon, or use the &ldquo;Add your free key&rdquo; button in the
+          notice) and add a free personal key from{' '}
           <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener noreferrer">
             omdbapi.com
           </a>
           .
+        </li>
+        <li>
+          After the limit, the extension stops calling OMDb for about 30 minutes, and an open Netflix
+          tab re-checks the skipped cards about every 5 minutes. Saving a key in the options makes
+          it retry straight away.
+        </li>
+        <li>
+          A score looks like it belongs to another title? Ratings are matched by title name through
+          OMDb, so two titles that share a name can be mixed up. When the first match has no Rotten
+          Tomatoes score, the extension looks for a newer title with exactly the same name and uses it
+          only if it has one. There is no setting to pick a different match, and scores are cached for
+          up to 7 days (1 day when OMDb had no score), so check the title on IMDb if it matters.
         </li>
         <li>
           Still stuck? Email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
